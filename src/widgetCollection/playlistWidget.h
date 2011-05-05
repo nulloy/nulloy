@@ -1,0 +1,64 @@
+/********************************************************************
+**  Nulloy Music Player, http://nulloy.com
+**  Copyright (C) 2010-2011 Sergey Vlasov <sergey@vlasov.me>
+**
+**  This program can be distributed under the terms of the GNU
+**  General Public License version 3.0 as published by the Free
+**  Software Foundation and appearing in the file LICENSE.GPL3
+**  included in the packaging of this file.  Please review the
+**  following information to ensure the GNU General Public License
+**  version 3.0 requirements will be met:
+**
+**  http://www.gnu.org/licenses/gpl-3.0.html
+**
+*********************************************************************/
+
+#ifndef N_PLAYLIST_WIDGET_H
+#define N_PLAYLIST_WIDGET_H
+
+#include <QListWidget>
+
+class NPlaylistWidget : public QListWidget
+{
+	Q_OBJECT
+
+private:
+	QListWidgetItem *m_currentActivatedItem;
+
+	void setCurrentItem(QListWidgetItem *item);
+	void activateItem(QListWidgetItem *item);
+	QListWidgetItem* createItemFromPath(const QString &path);
+	bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
+	QStringList mimeTypes() const;
+	QMimeData* mimeData(const QList<QListWidgetItem *> items) const;
+	void keyPressEvent(QKeyEvent *e);
+
+public:
+	NPlaylistWidget(QWidget *parent = 0);
+	~NPlaylistWidget();
+
+	QStringList mediaList();
+	int currentRow();
+
+public slots:
+	void activateFirst();
+	void activateNext();
+	void activatePrev();
+	void setCurrentRow(int row);
+	void activateRow(int row);
+	void appendMediaList(const QStringList &pathList);
+	void setMediaList(const QStringList &pathList);
+	void activateMediaList(const QStringList &pathList) { setMediaList(pathList); activateFirst(); }
+
+private slots:
+	void on_itemActivated(QListWidgetItem *item);
+	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+
+signals:
+	void itemActivated2(const QString &path);
+	void closed();
+};
+
+#endif
+
+/* vim: set ts=4 sw=4: */

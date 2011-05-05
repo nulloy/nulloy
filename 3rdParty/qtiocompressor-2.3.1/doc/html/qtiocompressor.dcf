@@ -1,0 +1,26 @@
+<!DOCTYPE DCF>
+<DCF ref="index.html" icon="qtiocompressor.png" imagedir="../../gif" title="Qt Solutions: QtIOCompressor Documentation">
+<section ref="classes.html" title="Classes">
+    <section ref="qtiocompressor.html" title="QtIOCompressor Class Reference">
+        <keyword ref="qtiocompressor.html">QtIOCompressor</keyword>
+        <keyword ref="qtiocompressor.html#StreamFormat-enum">StreamFormat</keyword>
+        <keyword ref="qtiocompressor.html#StreamFormat-enum">QtIOCompressor::RawZipFormat</keyword>
+        <keyword ref="qtiocompressor.html#StreamFormat-enum">QtIOCompressor::ZlibFormat</keyword>
+        <keyword ref="qtiocompressor.html#StreamFormat-enum">QtIOCompressor::GzipFormat</keyword>
+        <keyword ref="qtiocompressor.html#bytesAvailable">bytesAvailable</keyword>
+        <keyword ref="qtiocompressor.html#close">close</keyword>
+        <keyword ref="qtiocompressor.html#flush">flush</keyword>
+        <keyword ref="qtiocompressor.html#isGzipSupported">isGzipSupported</keyword>
+        <keyword ref="qtiocompressor.html#open">open</keyword>
+        <keyword ref="qtiocompressor.html#setStreamFormat">setStreamFormat</keyword>
+        <keyword ref="qtiocompressor.html#streamFormat">streamFormat</keyword>
+        <section ref="qtiocompressor-members.html" title="List of all members"/>
+    </section>
+</section>
+<section ref="overviews.html" title="Overviews">
+    <section ref="index.html" title="QtIOCompressor">
+        <keyword ref="index.html">QtIOCompressor</keyword>
+    </section>
+</section>
+<section ref="examples.html" title="Tutorial &amp; Examples"/>
+</DCF>

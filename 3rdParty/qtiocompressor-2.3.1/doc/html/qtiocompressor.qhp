@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>com.nokia.qtsolutions.qtiocompressor_2.3</namespace>
+    <virtualFolder>qdoc</virtualFolder>
+    <customFilter name="Qt Solutions: QtIOCompressor">
+        <filterAttribute>qt</filterAttribute>
+        <filterAttribute>solutions</filterAttribute>
+        <filterAttribute>qtiocompressor</filterAttribute>
+    </customFilter>
+    <filterSection>
+        <filterAttribute>qt</filterAttribute>
+        <filterAttribute>solutions</filterAttribute>
+        <filterAttribute>qtiocompressor</filterAttribute>
+        <toc>
+            <section ref="index.html" title="Qt Solutions: QtIOCompressor Documentation">
+                <section ref="index.html" title="QtIOCompressor"/>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="QtIOCompressor" id="QtIOCompressor" ref="index.html"/>
+        </keywords>
+        <files>
+            <file>index.html</file>
+            <file>classic.css</file>
+            <file>images/qt-logo.png</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

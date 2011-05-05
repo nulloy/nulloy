@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- qtiocompressor-2.3_1-opensource/src/qtiocompressor.cpp -->
+<head>
+  <title>QtIOCompressor Class Reference</title>
+  <link href="classic.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td align="left" valign="top" width="32"><img src="images/qt-logo.png" align="left" width="57" height="67" border="0" /></td>
+<td width="1">&nbsp;&nbsp;</td><td class="postheader" valign="center"><a href="index.html"><font color="#004faf">Home</font></a></td>
+</tr></table><h1 class="title">QtIOCompressor Class Reference</h1>
+<p>The QtIOCompressor class is a <a href="http://qt.nokia.com/doc/4.5/qiodevice.html">QIODevice</a> that compresses data streams. <a href="#details">More...</a></p>
+<pre> #include &lt;QtIOCompressor&gt;</pre><p>Inherits <a href="http://qt.nokia.com/doc/4.5/qiodevice.html">QIODevice</a>.</p>
+<ul>
+<li><a href="qtiocompressor-members.html">List of all members, including inherited members</a></li>
+</ul>
+<a name="public-types"></a>
+<h3>Public Types</h3>
+<ul>
+<li><div class="fn"></div>enum <b><a href="qtiocompressor.html#StreamFormat-enum">StreamFormat</a></b> { ZlibFormat, GzipFormat, RawZipFormat }</li>
+</ul>
+<a name="public-functions"></a>
+<h3>Public Functions</h3>
+<ul>
+<li><div class="fn"></div><b><a href="qtiocompressor.html#QtIOCompressor">QtIOCompressor</a></b> ( QIODevice * <i>device</i>, int <i>compressionLevel</i> = 6, int <i>bufferSize</i> = 65500 )</li>
+<li><div class="fn"></div><b><a href="qtiocompressor.html#dtor.QtIOCompressor">~QtIOCompressor</a></b> ()</li>
+<li><div class="fn"></div>virtual qint64 <b><a href="qtiocompressor.html#bytesAvailable">bytesAvailable</a></b> () const</li>
+<li><div class="fn"></div>virtual void <b><a href="qtiocompressor.html#close">close</a></b> ()</li>
+<li><div class="fn"></div>void <b><a href="qtiocompressor.html#flush">flush</a></b> ()</li>
+<li><div class="fn"></div>bool <b><a href="qtiocompressor.html#open">open</a></b> ( OpenMode <i>mode</i> )</li>
+<li><div class="fn"></div>void <b><a href="qtiocompressor.html#setStreamFormat">setStreamFormat</a></b> ( StreamFormat <i>format</i> )</li>
+<li><div class="fn"></div>StreamFormat <b><a href="qtiocompressor.html#streamFormat">streamFormat</a></b> () const</li>
+</ul>
+<ul>
+<li><div class="fn"></div>33 public functions inherited from <a href="http://qt.nokia.com/doc/4.5/qiodevice.html#public-functions">QIODevice</a></li>
+<li><div class="fn"></div>29 public functions inherited from <a href="http://qt.nokia.com/doc/4.5/qobject.html#public-functions">QObject</a></li>
+</ul>
+<a name="static-public-members"></a>
+<h3>Static Public Members</h3>
+<ul>
+<li><div class="fn"></div>bool <b><a href="qtiocompressor.html#isGzipSupported">isGzipSupported</a></b> ()</li>
+</ul>
+<ul>
+<li><div class="fn"></div>4 static public members inherited from <a href="http://qt.nokia.com/doc/4.5/qobject.html#static-public-members">QObject</a></li>
+</ul>
+<h3>Additional Inherited Members</h3>
+<ul>
+<li><div class="fn"></div>1 property inherited from <a href="http://qt.nokia.com/doc/4.5/qobject.html#properties">QObject</a></li>
+<li><div class="fn"></div>1 public slot inherited from <a href="http://qt.nokia.com/doc/4.5/qobject.html#public-slots">QObject</a></li>
+<li><div class="fn"></div>4 signals inherited from <a href="http://qt.nokia.com/doc/4.5/qiodevice.html#signals">QIODevice</a></li>
+<li><div class="fn"></div>1 signal inherited from <a href="http://qt.nokia.com/doc/4.5/qobject.html#signals">QObject</a></li>
+<li><div class="fn"></div>1 public type inherited from <a href="http://qt.nokia.com/doc/4.5/qobject.html#public-variables">QObject</a></li>
+<li><div class="fn"></div>5 protected functions inherited from <a href="http://qt.nokia.com/doc/4.5/qiodevice.html#protected-functions">QIODevice</a></li>
+<li><div class="fn"></div>7 protected functions inherited from <a href="http://qt.nokia.com/doc/4.5/qobject.html#protected-functions">QObject</a></li>
+<li><div class="fn"></div>2 protected variables inherited from <a href="http://qt.nokia.com/doc/4.5/qobject.html#protected-variables">QObject</a></li>
+</ul>
+<a name="details"></a>
+<hr />
+<h2>Detailed Description</h2>
+<p>The QtIOCompressor class is a <a href="http://qt.nokia.com/doc/4.5/qiodevice.html">QIODevice</a> that compresses data streams.</p>
+<p>A QtIOCompressor object is constructed with a pointer to an underlying <a href="http://qt.nokia.com/doc/4.5/qiodevice.html">QIODevice</a>. Data written to the QtIOCompressor object will be compressed before it is written to the underlying <a href="http://qt.nokia.com/doc/4.5/qiodevice.html">QIODevice</a>. Similary, if you read from the QtIOCompressor object, the data will be read from the underlying device and then decompressed.</p>
+<p>QtIOCompressor is a sequential device, which means that it does not support seeks or random access. Internally, QtIOCompressor uses the zlib library to compress and uncompress data.</p>
+<p>Usage examples: Writing compressed data to a file:</p>
+<pre> QFile file(&quot;foo&quot;);
+ QtIOCompressor compressor(&amp;file);
+ compressor.open(QIODevice::WriteOnly);
+ compressor.write(QByteArray() &lt;&lt; &quot;The quick brown fox&quot;);
+ compressor.close();</pre>
+<p>Reading compressed data from a file:</p>
+<pre> QFile file(&quot;foo&quot;);
+ QtIOCompressor compressor(&amp;file);
+ compressor.open(QIODevice::ReadOnly);
+ const QByteArray text = compressor.readAll();
+ compressor.close();</pre>
+<p>QtIOCompressor can also read and write compressed data in different compressed formats, ref. <a href="qtiocompressor.html#StreamFormat-enum">StreamFormat</a>. Use <a href="qtiocompressor.html#setStreamFormat">setStreamFormat</a>() before <a href="qtiocompressor.html#open">open</a>() to select format.</p>
+<hr />
+<h2>Member Type Documentation</h2>
+<h3 class="fn"><a name="StreamFormat-enum"></a>enum QtIOCompressor::StreamFormat</h3>
+<p>This enum specifies which stream format to use.</p>
+<p><table border="1" cellpadding="2" cellspacing="1" width="100%">
+<tr><th width="25%">Constant</th><th width="15%">Value</th><th width="60%">Description</th></tr>
+<tr><td valign="top"><tt>QtIOCompressor::ZlibFormat</tt></td><td align="center" valign="top"><tt>0</tt></td><td valign="top">: This is the default and has the smallest overhead.</td></tr>
+<tr><td valign="top"><tt>QtIOCompressor::GzipFormat</tt></td><td align="center" valign="top"><tt>1</tt></td><td valign="top">: This format is compatible with the gzip file format, but has more overhead than ZlibFormat. Note: requires zlib version 1.2&#x2e;x or higher at runtime.</td></tr>
+<tr><td valign="top"><tt>QtIOCompressor::RawZipFormat</tt></td><td align="center" valign="top"><tt>2</tt></td><td valign="top">: This is compatible with the most common compression method of the data blocks contained in ZIP archives. Note: ZIP file headers are not read or generated, so setting this format, by itself, does not let <a href="qtiocompressor.html">QtIOCompressor</a> read or write ZIP files. Ref. the ziplist example program.</td></tr>
+</table></p>
+<p>See also <a href="qtiocompressor.html#setStreamFormat">setStreamFormat</a>().</p>
+<hr />
+<h2>Member Function Documentation</h2>
+<h3 class="fn"><a name="QtIOCompressor"></a>QtIOCompressor::QtIOCompressor ( <a href="http://qt.nokia.com/doc/4.5/qiodevice.html">QIODevice</a> * <i>device</i>, int <i>compressionLevel</i> = 6, int <i>bufferSize</i> = 65500 )</h3>
+<p>Constructs a <a href="qtiocompressor.html">QtIOCompressor</a> using the given <i>device</i> as the underlying device.</p>
+<p>The allowed value range for <i>compressionLevel</i> is 0 to 9, where 0 means no compression and 9 means maximum compression. The default value is 6.</p>
+<p><i>bufferSize</i> specifies the size of the internal buffer used when reading from and writing to the underlying device. The default value is 65KB. Using a larger value allows for faster compression and deompression at the expense of memory usage.</p>
+<h3 class="fn"><a name="dtor.QtIOCompressor"></a>QtIOCompressor::~QtIOCompressor ()</h3>
+<p>Destroys the <a href="qtiocompressor.html">QtIOCompressor</a>, closing it if neccesary.</p>
+<h3 class="fn"><a name="bytesAvailable"></a><a href="http://qt.nokia.com/doc/4.5/qtglobal.html#qint64-typedef">qint64</a> QtIOCompressor::bytesAvailable () const&nbsp;&nbsp;<tt> [virtual]</tt></h3>
+<p>Returns 1 if there might be data available for reading, or 0 if there is no data available.</p>
+<p>There is unfortunately no way of knowing how much data there is available when dealing with compressed streams.</p>
+<p>Also, since the remaining compressed data might be a part of the meta-data that ends the compressed stream (and therefore will yield no uncompressed data), you cannot assume that a read after getting a 1 from this function will return data.</p>
+<p>Reimplemented from <a href="http://qt.nokia.com/doc/4.5/qiodevice.html#bytesAvailable">QIODevice</a>.</p>
+<h3 class="fn"><a name="close"></a>void QtIOCompressor::close ()&nbsp;&nbsp;<tt> [virtual]</tt></h3>
+<p>Closes the <a href="qtiocompressor.html">QtIOCompressor</a>, and also the underlying device if it was opened by <a href="qtiocompressor.html">QtIOCompressor</a>.</p>
+<p>Reimplemented from <a href="http://qt.nokia.com/doc/4.5/qiodevice.html#close">QIODevice</a>.</p>
+<p>See also <a href="qtiocompressor.html#open">open</a>().</p>
+<h3 class="fn"><a name="flush"></a>void QtIOCompressor::flush ()</h3>
+<p>Flushes the internal buffer.</p>
+<p>Each time you call flush, all data written to the <a href="qtiocompressor.html">QtIOCompressor</a> is compressed and written to the underlying device. Calling this function can reduce the compression ratio. The underlying device is not flushed.</p>
+<p>Calling this function when <a href="qtiocompressor.html">QtIOCompressor</a> is in <a href="http://qt.nokia.com/doc/4.5/qiodevice.html#OpenModeFlag-enum">ReadOnly</a> mode has no effect.</p>
+<h3 class="fn"><a name="isGzipSupported"></a>bool QtIOCompressor::isGzipSupported ()&nbsp;&nbsp;<tt> [static]</tt></h3>
+<p>Returns true if the zlib library in use supports the gzip format, false otherwise.</p>
+<h3 class="fn"><a name="open"></a>bool QtIOCompressor::open ( <a href="http://qt.nokia.com/doc/4.5/qiodevice.html#OpenMode-typedef">OpenMode</a> <i>mode</i> )</h3>
+<p>Opens the <a href="qtiocompressor.html">QtIOCompressor</a> in <i>mode</i>. Only <a href="http://qt.nokia.com/doc/4.5/qiodevice.html#OpenModeFlag-enum">ReadOnly</a> and <a href="http://qt.nokia.com/doc/4.5/qiodevice.html#OpenModeFlag-enum">WriteOnly</a> is supported. This functon will return false if you try to open in other modes.</p>
+<p>If the underlying device is not opened, this function will open it in a suitable mode. If this happens the device will also be closed when <a href="qtiocompressor.html#close">close</a>() is called.</p>
+<p>If the underlying device is already opened, its openmode must be compatable with <i>mode</i>.</p>
+<p>Returns true on success, false on error.</p>
+<p>See also <a href="qtiocompressor.html#close">close</a>().</p>
+<h3 class="fn"><a name="setStreamFormat"></a>void QtIOCompressor::setStreamFormat ( <a href="qtiocompressor.html#StreamFormat-enum">StreamFormat</a> <i>format</i> )</h3>
+<p>Sets the format on the compressed stream to <i>format</i>.</p>
+<p>See also <a href="qtiocompressor.html#streamFormat">streamFormat</a>() and <a href="qtiocompressor.html#StreamFormat-enum">QtIOCompressor::StreamFormat</a>.</p>
+<h3 class="fn"><a name="streamFormat"></a><a href="qtiocompressor.html#StreamFormat-enum">StreamFormat</a> QtIOCompressor::streamFormat () const</h3>
+<p>Returns the format set on the compressed stream.</p>
+<p>See also <a href="qtiocompressor.html#setStreamFormat">setStreamFormat</a>() and <a href="qtiocompressor.html#StreamFormat-enum">QtIOCompressor::StreamFormat</a>.</p>
+<p /><address><hr /><div align="center">
+<table width="100%" cellspacing="0" border="0"><tr class="address">
+<td width="30%" align="left">Copyright &copy; 2009 Nokia Corporation and/or its subsidiary(-ies)</td>
+<td width="40%" align="center"><a href="http://qt.nokia.com/doc/trademarks.html">Trademarks</a></td>
+<td width="30%" align="right"><div align="right">Qt Solutions</div></td>
+</tr></table></div></address></body>
+</html>

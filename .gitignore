@@ -1,0 +1,6 @@
+.tmp
+Makefile*
+*.a
+*.so
+qrc_*.cpp
+ui_*.h

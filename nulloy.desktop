@@ -1,0 +1,13 @@
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Encoding=UTF-8
+Name=Nulloy
+GenericName=Audio Player
+Comment=Music player with a waveform progress bar
+Categories=AudioVideo;Audio;Player;
+Terminal=false
+MimeType=audio/mp3;audio/x-mp3;application/x-flac;audio/x-flac;audio/x-wav;application/ogg;application/x-ogg;audio/x-vorbis+ogg;x-content/audio-player;audio/mpeg;audio/x-mpeg;
+Icon=nulloy
+Exec=nulloy %U

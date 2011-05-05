@@ -1,0 +1,39 @@
+/*!
+	\page index.html
+	\title QtIOCompressor
+
+    	\section1 Description
+	
+	    QtIOCompressor is a QIODevice that compresses data streams.
+	
+
+	
+	    The class works on top of a QIODevice subclass, compressing data before
+            it is written and decompressing it when it is read. 
+
+	    Since QtIOCompressor works on streams, it does not have to see
+	    the entire data set before compressing or decompressing it. This
+	    can reduce the memory requirements when working on large data sets.
+        
+
+    	
+        \section1 Classes
+	    \list
+	 \i  QtIOCompressor\endlist
+	
+    
+
+    	
+
+    	
+    		\section1 Tested platforms
+		\list
+		\i Qt 4.4, 4.5 / Windows XP / MSVC.NET 2005
+		    \i Qt 4.4, 4.5 / Linux / gcc
+		    \i Qt 4.4, 4.5 / MacOS X 10.5 / gcc
+		    \endlist
+
+    	
+
+	
+	*/

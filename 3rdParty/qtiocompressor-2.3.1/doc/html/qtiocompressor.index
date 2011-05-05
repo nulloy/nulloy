@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Qt Solutions: QtIOCompressor Documentation" version="">
+    <namespace access="public" threadsafety="unspecified" status="commendable" name="" href="" location="" module="">
+        <class access="public" threadsafety="unspecified" status="commendable" name="QtIOCompressor" href="qtiocompressor.html" location="qtiocompressor.h" bases="QIODevice" module="">
+            <enum access="public" threadsafety="unspecified" status="commendable" name="StreamFormat" fullname="QtIOCompressor::StreamFormat" href="qtiocompressor.html#StreamFormat-enum" location="qtiocompressor.h">
+                <value name="ZlibFormat" value="0"/>
+                <value name="GzipFormat" value="1"/>
+                <value name="RawZipFormat" value="2"/>
+            </enum>
+            <function access="public" threadsafety="unspecified" status="commendable" name="QtIOCompressor" fullname="QtIOCompressor::QtIOCompressor" href="qtiocompressor.html#QtIOCompressor" location="qtiocompressor.h" virtual="non" meta="constructor" const="false" static="false" overload="false" type="" signature="QtIOCompressor(QIODevice * device, int compressionLevel, int bufferSize)">
+                <parameter left="QIODevice *" right="" name="device" default=""/>
+                <parameter left="int" right="" name="compressionLevel" default="6"/>
+                <parameter left="int" right="" name="bufferSize" default="65500"/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="~QtIOCompressor" fullname="QtIOCompressor::~QtIOCompressor" href="qtiocompressor.html#dtor.QtIOCompressor" location="qtiocompressor.h" virtual="non" meta="destructor" const="false" static="false" overload="false" type="" signature="~QtIOCompressor()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="setStreamFormat" fullname="QtIOCompressor::setStreamFormat" href="qtiocompressor.html#setStreamFormat" location="qtiocompressor.h" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="setStreamFormat(StreamFormat format)">
+                <parameter left="StreamFormat" right="" name="format" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="streamFormat" fullname="QtIOCompressor::streamFormat" href="qtiocompressor.html#streamFormat" location="qtiocompressor.h" virtual="non" meta="plain" const="true" static="false" overload="false" type="StreamFormat" signature="streamFormat() const"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="isGzipSupported" fullname="QtIOCompressor::isGzipSupported" href="qtiocompressor.html#isGzipSupported" location="qtiocompressor.h" virtual="non" meta="plain" const="false" static="true" overload="false" type="bool" signature="isGzipSupported()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="open" fullname="QtIOCompressor::open" href="qtiocompressor.html#open" location="qtiocompressor.h" virtual="non" meta="plain" const="false" static="false" overload="false" type="bool" signature="open(OpenMode mode)">
+                <parameter left="OpenMode" right="" name="mode" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="close" fullname="QtIOCompressor::close" href="qtiocompressor.html#close" location="qtiocompressor.h" virtual="impure" meta="plain" const="false" static="false" overload="false" type="void" signature="close()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="flush" fullname="QtIOCompressor::flush" href="qtiocompressor.html#flush" location="qtiocompressor.h" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="flush()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="bytesAvailable" fullname="QtIOCompressor::bytesAvailable" href="qtiocompressor.html#bytesAvailable" location="qtiocompressor.h" virtual="impure" meta="plain" const="true" static="false" overload="false" type="qint64" signature="bytesAvailable() const"/>
+        </class>
+        <page access="public" status="commendable" name="index.html" href="index.html" subtype="page" title="QtIOCompressor" fulltitle="QtIOCompressor" subtitle="" location="index.qdoc">
+            <contents name="description" title="Description" level="1"/>
+            <contents name="classes" title="Classes" level="1"/>
+            <contents name="tested-platforms" title="Tested platforms" level="1"/>
+        </page>
+    </namespace>
+</INDEX>
