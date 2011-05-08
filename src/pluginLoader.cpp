@@ -34,8 +34,8 @@ static QStringList _identifiers;
 static NPlaybackEngineInterface *_playback = NULL;
 static NWaveformBuilderInterface *_waveform = NULL;
 
-static QString _playbackPrefer = "Gstreamer";
-static QString _wavefowmPrefer = "Gstreamer";
+static QString _playbackPrefer = "GStreamer";
+static QString _wavefowmPrefer = "GStreamer";
 
 static void _loadPlugins(QSettings *settings)
 {

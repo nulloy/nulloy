@@ -42,7 +42,7 @@ public:
 	NPlaybackEngineVlc(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
 	~NPlaybackEngineVlc();
 	void init();
-	QString identifier() { return "Nulloy/Playback/Vlc/0.1"; }
+	QString identifier() { return "Nulloy/Playback/VLC/0.1"; }
 	QString interface() { return PLAYBACK_INTERFACE; }
 
 	bool hasMedia();

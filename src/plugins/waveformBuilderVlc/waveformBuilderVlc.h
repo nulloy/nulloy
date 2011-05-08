@@ -40,7 +40,7 @@ public:
 	NWaveformBuilderVlc(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
 	~NWaveformBuilderVlc();
 	void init();
-	QString identifier() { return "Nulloy/Waveform/Vlc/0.1"; }
+	QString identifier() { return "Nulloy/Waveform/VLC/0.1"; }
 	QString interface() { return WAVEFORM_INTERFACE; }
 
 	void startFile(const QString &file);
