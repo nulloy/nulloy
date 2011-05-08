@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 	QApplication::setQuitOnLastWindowClosed(FALSE);
 
 	QCoreApplication::setApplicationName("Nulloy");
-	QCoreApplication::setApplicationVersion("0.1 Alpha");
+	QCoreApplication::setApplicationVersion("0.1.1 Alpha");
 
 #if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
 	int res;

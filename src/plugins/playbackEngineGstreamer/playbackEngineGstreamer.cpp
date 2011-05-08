@@ -47,6 +47,10 @@ void NPlaybackEngineGStreamer::init()
 	if (m_init)
 		return;
 
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+	_putenv("GST_PLUGIN_PATH=Plugins\\GStreamer");
+#endif
+
 	int argc;
 	const char **argv;
 	c_args(&argc, &argv);

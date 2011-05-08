@@ -46,7 +46,7 @@ public:
 	NWaveformBuilderGstreamer(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
 	~NWaveformBuilderGstreamer();
 	void init();
-	QString identifier() { return "Nulloy/Waveform/Gstreamer/0.1"; }
+	QString identifier() { return "Nulloy/Waveform/Gstreamer/0.2"; }
 	QString interface() { return WAVEFORM_INTERFACE; }
 
 	void startFile(const QString &file);
