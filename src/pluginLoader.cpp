@@ -74,6 +74,20 @@ static void _loadPlugins(QSettings *settings)
 	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin")
 		pluginsDirList << "../share/nulloy/plugins";
 #endif
+
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+		QStringList subDirsList;
+		foreach (QString dirStr, pluginsDirList) {
+			QDir dir(dirStr);
+			if (dir.exists()) {
+				foreach (QString subDir, dir.entryList(QDir::Dirs))
+					subDirsList << dirStr + "/" + subDir;
+			}
+		}
+		_putenv(QString("PATH=" + pluginsDirList.join(";") + ";" +
+				subDirsList.join(";") + ";" + getenv("PATH")).toAscii());
+#endif
+
 	foreach (QString dirStr, pluginsDirList) {
 		QDir dir(dirStr);
 		if (dir.exists()) {
