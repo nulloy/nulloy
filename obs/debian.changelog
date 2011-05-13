@@ -1,0 +1,19 @@
+nulloy (0.1.2-1) unstable; urgency=low
+
+  * Added files for building in OBS
+
+ -- Sergey Vlasov <sergey@vlasov.me>  Fri, 13 May 2011 00:00:00 +0000
+
+nulloy (0.1.1-1) unstable; urgency=low
+
+  * Shipping GStreamer along with the Windows package
+
+ -- Sergey Vlasov <sergey@vlasov.me>  Sun, 8 May 2011 00:00:00 +0000
+
+
+nulloy (0.1-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Sergey Vlasov <sergey@vlasov.me>  Thu, 5 May 2011 00:00:00 +0000
+

@@ -1,0 +1,22 @@
+Source: nulloy
+Section: sound
+Priority: extra
+Maintainer: Sergey Vlasov <sergey@vlasov.me>
+Homepage: http://nulloy.com
+Build-Depends: debhelper (>= 5), libqt4-dev, qt4-qmake, libgstreamer0.10-dev, libphonon-dev, zip
+
+Package: nulloy
+Architecture: any
+Suggests: nulloy-gstreamer
+Description: Music player with a waveform progress bar
+
+Package: nulloy-gstreamer
+Architecture: any
+Depends: nulloy
+Description: GStreamer backend for Nulloy
+
+Package: nulloy-phonon
+Architecture: any
+Depends: nulloy
+Description: Phonon backend for Nulloy
+

@@ -1,0 +1,39 @@
+#!/usr/bin/make -f
+
+export DH_COMPAT=5
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	qmake -config plugins_gstreamer -config plugins_phonon -config silent "PREFIX=/usr"
+	make
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	make clean || true
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	make install INSTALL_ROOT=$(CURDIR)/debian/tmp
+
+binary-indep: build install
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_install
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install
+
