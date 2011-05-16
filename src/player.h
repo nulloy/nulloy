@@ -54,6 +54,7 @@ private slots:
 	void mainWindowClosed();
 	void on_playbackEngine_message(QMessageBox::Icon icon, const QString &title, const QString &msg);
 	void on_playbackEngine_mediaChanged(const QString &path);
+	void on_alwaysOnTopAction_toggled(bool checked);
 
 public slots:
 	void quit();

@@ -112,6 +112,10 @@ NPlayer::NPlayer()
 										tr("About") + " " + QCoreApplication::applicationName(), this);
 	connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutMessageBox()));
 
+	QAction *alwaysOnTopAction = new QAction(tr("Always On Top"), this);
+	alwaysOnTopAction->setCheckable(TRUE);
+	alwaysOnTopAction->setObjectName("alwaysOnTopAction");
+
 	// tray icon
 	QMenu *trayIconMenu = new QMenu(this);
 	trayIconMenu->addAction(playAction);
@@ -129,6 +133,7 @@ NPlayer::NPlayer()
 	m_mainWindow->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 	m_contextMenu->addAction(fileDialogAction);
+	m_contextMenu->addAction(alwaysOnTopAction);
 	m_contextMenu->addAction(preferencesAction);
 	m_contextMenu->addSeparator();
 	m_contextMenu->addAction(aboutAction);
@@ -203,6 +208,13 @@ void NPlayer::loadSettings()
 	m_preferencesDialog->loadSettings();
 	m_playbackEngine->setVolume(settings()->value("Volume", 0.8).toFloat());
 	m_trayIcon->setVisible(settings()->value("GUI/TrayIcon").toBool());
+
+	bool onTop = settings()->value("GUI/AlwaysOnTop", FALSE).toBool();
+	if (onTop) {
+		QAction *alwaysOnTopAction = qFindChild<QAction *>(this, "alwaysOnTopAction");
+		alwaysOnTopAction->setChecked(TRUE);
+		on_alwaysOnTopAction_toggled(TRUE);
+	}
 }
 
 void NPlayer::saveSettings()
@@ -210,6 +222,9 @@ void NPlayer::saveSettings()
 	settings()->setValue("Volume", QString::number(m_playbackEngine->volume()));
 	m_mainWindow->saveSettings();
 	m_preferencesDialog->saveSettings();
+
+	QAction *alwaysOnTopAction = qFindChild<QAction *>(this, "alwaysOnTopAction");
+	settings()->setValue("GUI/AlwaysOnTop", alwaysOnTopAction->isChecked());
 }
 
 void NPlayer::preferencesDialogSettingsChanged()
@@ -279,6 +294,17 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 		title = "";
 	m_mainWindow->setTitle(title);
 	m_trayIcon->setToolTip(title);
+}
+
+void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
+{
+	Qt::WindowFlags flags = m_mainWindow->windowFlags();
+	if (checked)
+		flags |= Qt::WindowStaysOnTopHint;
+	else
+		flags ^= Qt::WindowStaysOnTopHint;
+	m_mainWindow->setWindowFlags(flags);
+	m_mainWindow->show();
 }
 
 void NPlayer::showPreferencesDialog()
