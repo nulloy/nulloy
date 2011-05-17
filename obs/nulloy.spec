@@ -50,7 +50,7 @@ Requires: nulloy
 GStreamer backend for Nulloy.
 %files gstreamer
 %defattr(-,root,root)
-%{_datadir}/%{name}/plugins/lib*_gstreamer.so
+%{_libdir}/%{name}/plugins/lib*_gstreamer.so
 
 %package  phonon
 Summary:  Phonon backend for Nulloy
@@ -59,7 +59,7 @@ Requires: nulloy
 Phonon backend for Nulloy.
 %files phonon
 %defattr(-,root,root)
-%{_datadir}/%{name}/plugins/lib*_phonon.so
+%{_libdir}/%{name}/plugins/lib*_phonon.so
 
 %changelog
 * Fri May 13 2011 Sergey Vlasov <sergey@vlasov.me> 0.1.2-1

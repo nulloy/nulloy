@@ -66,7 +66,7 @@ unix {
 	target.path = $$prefix.path/bin
 
 	plugins.files = ../plugins/*
-	plugins.path = $$prefix.path/share/nulloy/plugins
+	plugins.path = $$prefix.path/lib/nulloy/plugins
 
 	skins.files = ../skins/*
 	skins.path = $$prefix.path/share/nulloy/skins

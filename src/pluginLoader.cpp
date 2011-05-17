@@ -72,7 +72,7 @@ static void _loadPlugins(QSettings *settings)
 	if (rcDir() != QCoreApplication::applicationDirPath())
 		pluginsDirList << rcDir() + "/plugins";
 	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin")
-		pluginsDirList << "../share/nulloy/plugins";
+		pluginsDirList << "../lib/nulloy/plugins";
 #endif
 
 #if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
