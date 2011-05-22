@@ -1,0 +1,8 @@
+* 0.1.2, Fri May 13 2011
+- Added files for building in OBS
+
+* 0.1.1, Sun May 8 2011
+- Shipping GStreamer along with the Windows package
+
+* 0.1, Thu May 5 2011
+- Initial release

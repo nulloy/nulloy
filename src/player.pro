@@ -36,6 +36,10 @@ build_pass:CONFIG(static, static|shared){
 	DEFINES += _N_SHARED_BUILD_
 }
 
+
+include(version.pri)
+DEFINES += _N_VERSION_=\""\\\"$${VERSION}\\\""\"
+
 include(../3rdParty/qtsingleapplication-2.6.1/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 

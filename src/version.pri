@@ -1,0 +1,1 @@
+VERSION = $$system(./version.sh)

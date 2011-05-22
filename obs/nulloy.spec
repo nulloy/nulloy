@@ -62,11 +62,4 @@ Phonon backend for Nulloy.
 %{_libdir}/%{name}/plugins/lib*_phonon.so
 
 %changelog
-* Fri May 13 2011 Sergey Vlasov <sergey@vlasov.me> 0.1.2-1
-- Added files for building in OBS
 
-* Sun May 8 2011 Sergey Vlasov <sergey@vlasov.me> 0.1.1-1
-- Shipping GStreamer along with the Windows package
-
-* Thu May 5 2011 Sergey Vlasov <sergey@vlasov.me> 0.1-1
-- Initial release

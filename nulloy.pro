@@ -33,3 +33,15 @@ plugins_vlc {
 
 src.file = src/player.pro
 SUBDIRS += src
+
+include(src/version.pri)
+release.commands += rm -rf $${TARGET}-$${VERSION} &&
+release.commands += mkdir $${TARGET}-$${VERSION} &&
+release.commands += GIT_WORK_TREE=$${TARGET}-$${VERSION} git checkout -f &&
+release.commands += cd $${TARGET}-$${VERSION} &&
+release.commands += rm -f .gitignore &&
+release.commands += src/changelog.sh -i ChangeLog -c \"Sergey Vlasov <sergey@vlasov.me>\" -p nulloy -r obs/nulloy.changes -d obs/debian.changelog &&
+release.commands += cd - &&
+release.commands += tar zcpf $${TARGET}-$${VERSION}.tar.gz $${TARGET}-$${VERSION} &&
+release.commands += rm -rf $${TARGET}-$${VERSION}
+QMAKE_EXTRA_TARGETS += release
