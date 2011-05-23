@@ -31,11 +31,17 @@ public:
 	~NPreferencesDialog();
 
 public slots:
+	void show();
+	void setVersionLabel(QString text);
 	void saveSettings();
 	void loadSettings();
 
+private slots:
+	void on_versionCheckButton_clicked();
+
 signals:
 	void settingsChanged();
+	void versionCheckOnline();
 };
 
 #endif

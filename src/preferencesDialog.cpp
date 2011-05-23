@@ -35,12 +35,30 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	setWindowTitle(QCoreApplication::applicationName() + " Preferences");
 }
 
+void NPreferencesDialog::show()
+{
+	ui.versionLabel->setText("");
+	QDialog::show();
+}
+
+void NPreferencesDialog::setVersionLabel(QString text)
+{
+	ui.versionLabel->setText(text);
+}
+
+void NPreferencesDialog::on_versionCheckButton_clicked()
+{
+	ui.versionLabel->setText("Checking...");
+	versionCheckOnline();
+}
+
 void NPreferencesDialog::loadSettings()
 {
 	ui.minimizeToTrayCheckBox->setChecked(settings()->value("GUI/MinimizeToTray", FALSE).toBool());
 	ui.restorePlaybackCheckBox->setChecked(settings()->value("RestorePlayback", TRUE).toBool());
 	ui.singleInstanseCheckBox->setChecked(settings()->value("SingleInstanse", FALSE).toBool());
 	ui.trayIconCheckBox->setChecked(settings()->value("GUI/TrayIcon", FALSE).toBool());
+	ui.versionCheckBox->setChecked(settings()->value("AutoCheckUpdates", TRUE).toBool());
 
 	// plugins
 	foreach (QString str, pluginIdentifiers(settings())) {
@@ -84,6 +102,7 @@ void NPreferencesDialog::saveSettings()
 	settings()->setValue("RestorePlayback", ui.restorePlaybackCheckBox->isChecked());
 	settings()->setValue("SingleInstanse", ui.singleInstanseCheckBox->isChecked());
 	settings()->setValue("GUI/TrayIcon", ui.trayIconCheckBox->isChecked());
+	settings()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 
 	// plugins
 	bool showPluginMessage = FALSE;

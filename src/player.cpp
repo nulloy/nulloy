@@ -30,6 +30,7 @@
 #include <QFileDialog>
 #include <QDesktopServices>
 #include <QMetaObject>
+#include <QNetworkRequest>
 
 #include <QDebug>
 
@@ -47,6 +48,9 @@ NPlayer::NPlayer()
 {
 	setObjectName("NPlayer");
 
+	m_networkManager = new QNetworkAccessManager(this);
+	m_networkManager->setObjectName("networkManager");
+
 	m_localPlaylist = rcDir() + "/" + applicationBinaryName() + ".m3u";
 
 	settings()->setParent(this);
@@ -60,6 +64,7 @@ NPlayer::NPlayer()
 
 	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
 	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(preferencesDialogSettingsChanged()));
+	connect(m_preferencesDialog, SIGNAL(versionCheckOnline()), this, SLOT(versionCheckOnline()));
 
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
 
@@ -209,6 +214,9 @@ void NPlayer::loadSettings()
 	m_playbackEngine->setVolume(settings()->value("Volume", 0.8).toFloat());
 	m_trayIcon->setVisible(settings()->value("GUI/TrayIcon").toBool());
 
+	if (settings()->value("AutoCheckUpdates", FALSE).toBool())
+		versionCheckOnline();
+
 	bool onTop = settings()->value("GUI/AlwaysOnTop", FALSE).toBool();
 	if (onTop) {
 		QAction *alwaysOnTopAction = qFindChild<QAction *>(this, "alwaysOnTopAction");
@@ -236,12 +244,48 @@ QString NPlayer::about()
 {
 	return QString() +
 			"<b>" +  QCoreApplication::applicationName() + "</b> Music Player, " +
-				"<a href='http://nulloy.com'>http://nulloy.com</a><br>" +
+				"<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
+					QCoreApplication::organizationDomain() + "</a><br>" +
 			"Version: " + QCoreApplication::applicationVersion() +
 				(QString(_N_TIME_STAMP_).isEmpty() ? "" : " (Build " + QString(_N_TIME_STAMP_) + ")") + "<br><br>" +
 			"Copyright (C) 2010-2011  Sergey Vlasov &lt;<a href='mailto:Sergey Vlasov <sergey@vlasov.me>" +
 				"?subject=" + QCoreApplication::applicationName() + " " +
 				QCoreApplication::applicationVersion() + "'>sergey@vlasov.me</a>&gt;";
+}
+
+void NPlayer::versionCheckOnline()
+{
+	QString suffix;
+#if defined Q_WS_WIN
+	suffix = "win";
+#elif defined Q_WS_X11
+	suffix = "x11";
+#elif defined Q_WS_MAC
+	suffix = "mac";
+#endif
+
+	if (!suffix.isEmpty())
+		m_networkManager->get(QNetworkRequest(QUrl("http://nulloy.com/version_" + suffix)));
+}
+
+void NPlayer::on_networkManager_finished(QNetworkReply *reply)
+{
+    if (!reply->error()) {
+		QString versionOnline = reply->readAll().simplified();
+
+		if (m_preferencesDialog->isVisible())
+			m_preferencesDialog->setVersionLabel("Latest: " + versionOnline);
+
+		if (QCoreApplication::applicationVersion() < versionOnline) {
+			QMessageBox::information(m_mainWindow,
+				QCoreApplication::applicationName() + " Update",
+				"A newer version is available: " + versionOnline + "<br><br>" +
+				"<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
+					QCoreApplication::organizationDomain() + "</a>");
+		}
+	}
+
+	reply->deleteLater();
 }
 
 void NPlayer::mainWindowClosed()

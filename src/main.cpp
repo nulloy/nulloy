@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 
 	QCoreApplication::setApplicationName("Nulloy");
 	QCoreApplication::setApplicationVersion(QString(_N_VERSION_) + " Alpha");
+	QCoreApplication::setOrganizationDomain("nulloy.com");
 
 #if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
 	int res;

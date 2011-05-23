@@ -24,6 +24,8 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QtScript>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 class NPlayer : public QWidget
 {
@@ -38,6 +40,7 @@ private:
 	QMenu *m_contextMenu;
 	NPlaylistWidget *m_playlistWidget;
 	QString m_localPlaylist;
+	QNetworkAccessManager *m_networkManager;
 
 public:
 	NPlayer();
@@ -55,6 +58,8 @@ private slots:
 	void on_playbackEngine_message(QMessageBox::Icon icon, const QString &title, const QString &msg);
 	void on_playbackEngine_mediaChanged(const QString &path);
 	void on_alwaysOnTopAction_toggled(bool checked);
+	void versionCheckOnline();
+	void on_networkManager_finished(QNetworkReply *reply);
 
 public slots:
 	void quit();
