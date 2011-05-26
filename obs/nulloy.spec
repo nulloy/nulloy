@@ -2,7 +2,7 @@ Name:          nulloy
 URL:           http://nulloy.com
 License:       GPLv3
 Summary:       Music player with a waveform progress bar
-Version:       0.1.2
+Version:       _N_VERS_
 Release:       1
 Source:        %{name}-%{version}.tar.gz
 %if 0%{?fedora_version} || 0%{?suse_version}
