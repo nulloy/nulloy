@@ -299,16 +299,30 @@ void NPlayer::mainWindowClosed()
 
 void NPlayer::on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
 {
-	if (reason == QSystemTrayIcon::DoubleClick) {
-		if (settings()->value("GUI/MinimizeToTray").toBool()) {
-			m_mainWindow->setVisible(!m_mainWindow->isVisible());
-			if (m_mainWindow->isVisible())
-				m_mainWindow->activateWindow();
-			if (!settings()->value("GUI/TrayIcon").toBool())
-					m_trayIcon->setVisible(!m_mainWindow->isVisible());
-		} else {
+	bool visible = m_mainWindow->isVisible();
+	bool minimized = (bool)(m_mainWindow->windowState() & Qt::WindowMinimized);
+	if (reason == QSystemTrayIcon::Trigger) {
+		if (!minimized && visible) {
 			m_mainWindow->showNormal();
 			m_mainWindow->activateWindow();
+		}
+	} else if (reason == QSystemTrayIcon::DoubleClick) {
+		if (settings()->value("GUI/MinimizeToTray").toBool()) {
+			if (minimized && visible) {
+				m_mainWindow->showNormal();
+				m_mainWindow->activateWindow();
+			} else {
+				m_mainWindow->setVisible(!visible);
+			}
+			if (!settings()->value("GUI/TrayIcon").toBool())
+				m_trayIcon->setVisible(!visible);
+		} else {
+			if (!minimized) {
+				m_mainWindow->showMinimized();
+			} else {
+				m_mainWindow->showNormal();
+				m_mainWindow->activateWindow();
+			}
 		}
 	}
 }
