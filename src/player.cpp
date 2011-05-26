@@ -24,6 +24,7 @@
 #include "widgetPrototype.h"
 #include "playlist.h"
 #include "arguments.h"
+#include "action.h"
 
 #include <QFileInfo>
 #include <QPluginLoader>
@@ -87,37 +88,49 @@ NPlayer::NPlayer()
 	QScriptValue programmObject = constructor.construct(QScriptValueList() << windowScriptObject << playbackEngineObject);
 
 	// actions
-	QAction *playAction = new QAction(style()->standardIcon(QStyle::SP_MediaPlay), tr("Play / Pause"), this);
+	NAction *playAction = new NAction(style()->standardIcon(QStyle::SP_MediaPlay), tr("Play / Pause"), this);
+	playAction->setObjectName("playAction");
+	playAction->setStatusTip(tr("Toggle playback"));
+	playAction->setGlobal(TRUE);
 	connect(playAction, SIGNAL(triggered()), m_playbackEngine, SLOT(play()));
 
-	QAction *stopAction = new QAction(style()->standardIcon(QStyle::SP_MediaStop), tr("Stop"), this);
+	NAction *stopAction = new NAction(style()->standardIcon(QStyle::SP_MediaStop), tr("Stop"), this);
+	stopAction->setObjectName("stopAction");
+	stopAction->setStatusTip(tr("Stop playback"));
+	stopAction->setGlobal(TRUE);
 	connect(stopAction, SIGNAL(triggered()), m_playbackEngine, SLOT(stop()));
 
-	QAction *prevAction = new QAction(style()->standardIcon(QStyle::SP_MediaSkipBackward), tr("Previous"), this);
+	NAction *prevAction = new NAction(style()->standardIcon(QStyle::SP_MediaSkipBackward), tr("Previous"), this);
+	prevAction->setObjectName("prevAction");
+	prevAction->setStatusTip(tr("Play previous track in playlist"));
+	prevAction->setGlobal(TRUE);
 	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activatePrev()));
 
-	QAction *nextAction = new QAction(style()->standardIcon(QStyle::SP_MediaSkipBackward), tr("Next"), this);
+	NAction *nextAction = new NAction(style()->standardIcon(QStyle::SP_MediaSkipBackward), tr("Next"), this);
+	nextAction->setObjectName("nextAction");
+	nextAction->setStatusTip(tr("Play next track in playlist"));
+	nextAction->setGlobal(TRUE);
 	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activateNext()));
 
-	QAction *preferencesAction = new QAction(QIcon::fromTheme("preferences-desktop",
+	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
 											style()->standardIcon(QStyle::SP_MessageBoxInformation)),
 											tr("Preferences..."), this);
 	connect(preferencesAction, SIGNAL(triggered()), this, SLOT(showPreferencesDialog()));
 
-	QAction *exitAction = new QAction(QIcon::fromTheme("exit",
+	NAction *exitAction = new NAction(QIcon::fromTheme("exit",
 										style()->standardIcon(QStyle::SP_DialogCloseButton)),
 										tr("Exit"), this);
 	connect(exitAction, SIGNAL(triggered()), this, SLOT(quit()));
 
-	QAction *fileDialogAction = new QAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Open Files..."), this);
+	NAction *fileDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Open Files..."), this);
 	connect(fileDialogAction, SIGNAL(triggered()), this, SLOT(showFileDialog()));
 
-	QAction *aboutAction = new QAction(QIcon::fromTheme("help-about",
+	NAction *aboutAction = new NAction(QIcon::fromTheme("help-about",
 										style()->standardIcon(QStyle::SP_MessageBoxQuestion)),
 										tr("About") + " " + QCoreApplication::applicationName(), this);
 	connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutMessageBox()));
 
-	QAction *alwaysOnTopAction = new QAction(tr("Always On Top"), this);
+	NAction *alwaysOnTopAction = new NAction(tr("Always On Top"), this);
 	alwaysOnTopAction->setCheckable(TRUE);
 	alwaysOnTopAction->setObjectName("alwaysOnTopAction");
 
@@ -154,6 +167,8 @@ NPlayer::NPlayer()
 		}
 		m_playlistWidget->activateMediaList(pathList);
 	}
+
+	m_preferencesDialog->initShortcuts();
 
 	loadSettings();
 	saveSettings();
@@ -219,7 +234,7 @@ void NPlayer::loadSettings()
 
 	bool onTop = settings()->value("GUI/AlwaysOnTop", FALSE).toBool();
 	if (onTop) {
-		QAction *alwaysOnTopAction = qFindChild<QAction *>(this, "alwaysOnTopAction");
+		NAction *alwaysOnTopAction = qFindChild<NAction *>(this, "alwaysOnTopAction");
 		alwaysOnTopAction->setChecked(TRUE);
 		on_alwaysOnTopAction_toggled(TRUE);
 	}
@@ -231,7 +246,7 @@ void NPlayer::saveSettings()
 	m_mainWindow->saveSettings();
 	m_preferencesDialog->saveSettings();
 
-	QAction *alwaysOnTopAction = qFindChild<QAction *>(this, "alwaysOnTopAction");
+	NAction *alwaysOnTopAction = qFindChild<NAction *>(this, "alwaysOnTopAction");
 	settings()->setValue("GUI/AlwaysOnTop", alwaysOnTopAction->isChecked());
 }
 

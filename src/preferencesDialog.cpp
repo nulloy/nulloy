@@ -35,6 +35,21 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	setWindowTitle(QCoreApplication::applicationName() + " Preferences");
 }
 
+void NPreferencesDialog::initShortcuts()
+{
+	foreach (QWidget *widget, QApplication::topLevelWidgets()) {
+		NPlayer *player = qobject_cast<NPlayer *>(widget);
+		if (player) {
+			QList<NAction *> allActions = player->findChildren<NAction *>();
+			for (int i = 0; i < allActions.size(); ++i) {
+				NAction *action = allActions.at(i);
+				if (action->parent() == player && action->isGlobal())
+					m_globalActionList << action;
+			}
+		}
+	}
+}
+
 void NPreferencesDialog::show()
 {
 	ui.versionLabel->setText("");
@@ -94,6 +109,14 @@ void NPreferencesDialog::loadSettings()
 	index = ui.skinComboBox->findData(settings()->value("GUI/Skin"));
 	if (index != -1)
 		ui.skinComboBox->setCurrentIndex(index);
+
+	// shortcuts
+	for (int i = 0; i < m_globalActionList.size(); ++i) {
+		QString strSeq = settings()->value("GlobalShortcuts/" + m_globalActionList.at(i)->objectName()).toString();
+		if (!strSeq.isEmpty())
+			m_globalActionList.at(i)->setShortcut(QKeySequence(strSeq));
+	}
+	ui.globalShortcutEditorWidget->init(m_globalActionList);
 }
 
 void NPreferencesDialog::saveSettings()
@@ -136,6 +159,20 @@ void NPreferencesDialog::saveSettings()
 	if (!message.isEmpty()) {
 		QMessageBox box(QMessageBox::Information, windowTitle(), message, QMessageBox::Close, this);
 		box.exec();
+	}
+
+	// shortcuts
+	ui.globalShortcutEditorWidget->applyShortcuts();
+	for (int i = 0; i < m_globalActionList.size(); ++i) {
+		QList<QKeySequence> shortcut = m_globalActionList.at(i)->shortcuts();
+		QStringList strSeqList;
+		foreach (QKeySequence seq, shortcut)
+			strSeqList << seq.toString();
+
+		if (!strSeqList.isEmpty())
+			settings()->setValue("GlobalShortcuts/" + m_globalActionList.at(i)->objectName(), strSeqList.join(", "));
+		else
+			settings()->remove("GlobalShortcuts/" + m_globalActionList.at(i)->objectName());
 	}
 
 	emit settingsChanged();

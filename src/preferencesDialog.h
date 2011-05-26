@@ -25,10 +25,12 @@ class NPreferencesDialog : public QDialog
 
 private:
 	Ui::PreferencesDialog ui;
+	QList<NAction *> m_globalActionList;
 
 public:
 	NPreferencesDialog(QWidget *parent = 0);
 	~NPreferencesDialog();
+	void initShortcuts();
 
 public slots:
 	void show();
