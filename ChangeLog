@@ -1,5 +1,7 @@
-* 0.1.2, Fri May 13 2011
-- Added files for building in OBS
+* 0.2, Thu May 26 2011
+- Global Shortcuts implemented
+- Checking for updates online
+- "Always On Top" context menu item
 
 * 0.1.1, Sun May 8 2011
 - Shipping GStreamer along with the Windows package
