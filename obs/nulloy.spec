@@ -10,7 +10,7 @@ BuildRequires: qt-devel gstreamer-devel phonon-devel gcc-c++
 %else
 BuildRequires: libqt-devel gstreamer-devel libphonon-devel
 %endif
-BuildRequires: zip
+BuildRequires: zip libX11-devel
 BuildRoot:     %{_topdir}/%{name}-%{version}-root
 Patch1: nulloy-fedora.patch
 
@@ -39,7 +39,6 @@ make
 %defattr(-,root,root)
 %{_bindir}/%{name}
 %{_datadir}/%{name}/*
-%exclude %{_datadir}/%{name}/plugins
 %{_datadir}/icons/%{name}.png
 %{_datadir}/applications/%{name}.desktop
 

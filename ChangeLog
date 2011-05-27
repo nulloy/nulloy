@@ -1,3 +1,6 @@
+* 0.2.1, Fri May 27 2011
+- Fixes for building in OBS
+
 * 0.2, Thu May 26 2011
 - Global Shortcuts implemented
 - Checking for updates online

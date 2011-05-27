@@ -9,3 +9,12 @@
  # We need to find zlib.h. If it's not in the system includes, this will
  # find the one includes with Qt, assuming a developer-style "in-place" install.
  # Otherwise, edit this to point at the directory where zlib.h resides.
+--- a/3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri
++++ b/3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri
+@@ -1,5 +1,6 @@
+ DEFINES += QXT_STATIC
+ 
++unix:LIBS       += -lX11
+ win32:LIBS      += -luser32
+ macx:LIBS       += -framework Carbon
+ 
