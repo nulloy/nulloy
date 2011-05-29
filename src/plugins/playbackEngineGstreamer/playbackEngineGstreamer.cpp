@@ -266,6 +266,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 
 void NPlaybackEngineGStreamer::emitFinished()
 {
+	stop();
 	emit finished();
 }
 
