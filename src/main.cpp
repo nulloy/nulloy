@@ -25,8 +25,10 @@ int main(int argc, char *argv[])
 
 	QString msg;
 	if (QCoreApplication::arguments().size() > 1) {
+		QStringList argList = QCoreApplication::arguments();
+		argList.takeFirst();
 		QStringList pathList;
-		foreach (QString arg, QCoreApplication::arguments()) {
+		foreach (QString arg, argList) {
 			if (QFile(arg).exists())
 				pathList << arg;
 		}
