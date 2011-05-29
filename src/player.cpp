@@ -138,6 +138,8 @@ NPlayer::NPlayer()
 	QMenu *trayIconMenu = new QMenu(this);
 	trayIconMenu->addAction(playAction);
 	trayIconMenu->addAction(stopAction);
+	trayIconMenu->addAction(prevAction);
+	trayIconMenu->addAction(nextAction);
 	trayIconMenu->addAction(preferencesAction);
 	trayIconMenu->addSeparator();
 	trayIconMenu->addAction(exitAction);
