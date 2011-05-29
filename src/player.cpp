@@ -106,7 +106,7 @@ NPlayer::NPlayer()
 	prevAction->setGlobal(TRUE);
 	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activatePrev()));
 
-	NAction *nextAction = new NAction(style()->standardIcon(QStyle::SP_MediaSkipBackward), tr("Next"), this);
+	NAction *nextAction = new NAction(style()->standardIcon(QStyle::SP_MediaSkipForward), tr("Next"), this);
 	nextAction->setObjectName("nextAction");
 	nextAction->setStatusTip(tr("Play next track in playlist"));
 	nextAction->setGlobal(TRUE);
