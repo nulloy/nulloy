@@ -206,7 +206,11 @@ void NPlayer::restorePlaylist()
 	if (!playlistRowValues.isEmpty()) {
 		if (settings()->value("RestorePlayback").toBool()) {
 			m_playlistWidget->activateRow(playlistRowValues.at(0).toInt());
-			m_playbackEngine->setPosition(playlistRowValues.at(1).toFloat());
+			qreal pos = playlistRowValues.at(1).toFloat();
+			if (pos != 0 && pos != 1)
+				m_playbackEngine->setPosition(pos);
+			else
+				m_playbackEngine->stop();
 		} else {
 			m_playlistWidget->setCurrentRow(playlistRowValues.at(0).toInt());
 		}
