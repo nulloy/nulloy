@@ -42,6 +42,7 @@ void NPlaylistWidget::setCurrentItem(QListWidgetItem *item)
 	f.setBold(TRUE);
 	item->setFont(f);
 
+	scrollToItem(item);
 	m_currentActivatedItem = item;
 }
 
