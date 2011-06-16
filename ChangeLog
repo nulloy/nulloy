@@ -1,5 +1,8 @@
+* 0.2.3, Thu Jun 16 2011
+- Fixed restoring playlist only if no files passed within arguments
+
 * 0.2.2, Sun May 29 2011
-- Bug fixes
+- Minor bug fixes
 
 * 0.2, Thu May 26 2011
 - Global Shortcuts implemented
