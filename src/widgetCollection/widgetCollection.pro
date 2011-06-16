@@ -8,4 +8,3 @@ include(widgetCollection.pri)
 
 OBJECTS_DIR = ../.tmp
 MOC_DIR = ../.tmp
-

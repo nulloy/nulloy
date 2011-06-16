@@ -18,6 +18,7 @@
 #include "waveformSliderPlugin.h"
 #include "sliderPlugin.h"
 #include "playlistWidgetPlugin.h"
+#include "labelPlugin.h"
 #include <QtPlugin>
 
 NWidgetCollection::NWidgetCollection(QObject *parent) : QObject(parent)
@@ -27,6 +28,7 @@ NWidgetCollection::NWidgetCollection(QObject *parent) : QObject(parent)
 	m_plugins.push_back(new NWaveformSliderPlugin(group, this));
 	m_plugins.push_back(new NSliderPlugin(group, this));
 	m_plugins.push_back(new NPlaylistWidgetPlugin(group, this));
+	m_plugins.push_back(new NLabelPlugin(group, this));
 }
 
 QList<QDesignerCustomWidgetInterface *> NWidgetCollection::customWidgets() const
@@ -35,6 +37,5 @@ QList<QDesignerCustomWidgetInterface *> NWidgetCollection::customWidgets() const
 }
 
 Q_EXPORT_PLUGIN2(widget_collection, NWidgetCollection)
-
 
 /* vim: set ts=4 sw=4: */

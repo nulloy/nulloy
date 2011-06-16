@@ -59,6 +59,10 @@ function Program(window, playbackEngine)
 	this.closeButton.clicked.connect(this.window.close);
 	this.minimizeButton.clicked.connect(this.window.minimize);
 
+	this.titleLabel.shadowEnabled = true;
+	this.titleLabel.setShadowColor("#FFFFFF");
+	this.titleLabel.setShadowOffset(0, 1);
+
 	this.window["newTitle(const QString &)"].connect(this, "setTitle");
 	this.window.resized.connect(this, "on_resized");
 
@@ -72,7 +76,7 @@ function Program(window, playbackEngine)
 	this.shadowWidget.setParent(this.playlistWidget);
 	this.shadowWidget.show();
 
-//	print("script loaded");
+	//print("script loaded");
 }
 
 Program.prototype.updatePlayButtonIcon = function(playState)

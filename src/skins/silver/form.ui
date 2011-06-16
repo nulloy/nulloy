@@ -14,7 +14,10 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#borderWidget {
+   <string notr="true">#titleLabel {
+	color : #141414;
+}
+#borderWidget {
 	background-color: qlineargradient(x1: 0, y1: 0,
 															x2: 0, y2: 1,
 															stop: 0 #767676,
@@ -247,13 +250,13 @@
                    <property name="minimumSize">
                     <size>
                      <width>16</width>
-                     <height>16</height>
+                     <height>17</height>
                     </size>
                    </property>
                    <property name="maximumSize">
                     <size>
                      <width>16</width>
-                     <height>16</height>
+                     <height>17</height>
                     </size>
                    </property>
                   </widget>
@@ -275,7 +278,7 @@
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QLabel" name="titleLabel">
+                  <widget class="NLabel" name="titleLabel">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -284,6 +287,7 @@
                    </property>
                    <property name="font">
                     <font>
+                     <pointsize>9</pointsize>
                      <weight>75</weight>
                      <bold>true</bold>
                     </font>
@@ -684,13 +688,13 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>13</height>
+             <height>11</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>13</height>
+             <height>11</height>
             </size>
            </property>
           </widget>
@@ -785,6 +789,11 @@ QScrollBar::add-line, QScrollBar::sub-line, QScrollBar::add-page, QScrollBar::su
    <class>NPlaylistWidget</class>
    <extends>QListWidget</extends>
    <header>playlistWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>NLabel</class>
+   <extends>QLabel</extends>
+   <header>label.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

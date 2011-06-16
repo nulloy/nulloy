@@ -14,8 +14,10 @@
 *********************************************************************/
 
 #include "widgetPrototype.h"
+
 #include <QWidget>
 #include <QPushButton>
+
 #include <QStyle>
 #include <QScriptValue>
 #include <QScriptEngine>
@@ -78,6 +80,5 @@ void NWidgetPrototype::setStandardIcon(QString name, QString fallback)
 	if (button)
 		button->setIcon(QIcon::fromTheme(name, QIcon(fallback)));
 }
-
 
 /* vim: set ts=4 sw=4: */

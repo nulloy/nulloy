@@ -1,5 +1,6 @@
-* 0.2.3, Thu Jun 16 2011
+* 0.2.3, Fri Jun 17 2011
 - Fixed restoring playlist only if no files passed within arguments
+- Silver Skin improvements
 
 * 0.2.2, Sun May 29 2011
 - Minor bug fixes
