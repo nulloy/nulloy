@@ -288,7 +288,8 @@ void NPlayer::versionCheckOnline()
 #endif
 
 	if (!suffix.isEmpty())
-		m_networkManager->get(QNetworkRequest(QUrl("http://nulloy.com/version_" + suffix)));
+		m_networkManager->get(QNetworkRequest(QUrl("http://" +
+								QCoreApplication::organizationDomain() + "/version_" + suffix)));
 }
 
 void NPlayer::on_networkManager_finished(QNetworkReply *reply)
@@ -304,7 +305,7 @@ void NPlayer::on_networkManager_finished(QNetworkReply *reply)
 				QCoreApplication::applicationName() + " Update",
 				"A newer version is available: " + versionOnline + "<br><br>" +
 				"<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
-					QCoreApplication::organizationDomain() + "</a>");
+					QCoreApplication::organizationDomain() + "/download</a>");
 		}
 	}
 
