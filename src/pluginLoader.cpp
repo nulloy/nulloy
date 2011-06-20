@@ -114,8 +114,10 @@ static void _loadPlugins(QSettings *settings)
 
 	int index;
 
-	QString playbackStr = settings->value("Playback", _playbackPrefer).toString();
-	index = _identifiers.indexOf(QRegExp("Nulloy/Playback/" + playbackStr + ".*"));
+	QString playbackStr = settings->value("Playback").toString();
+	index = _identifiers.indexOf(QRegExp("Nulloy/Playback/" + playbackStr));
+	if (index == -1)
+		index = _identifiers.indexOf(QRegExp("Nulloy/Playback/" + _playbackPrefer + ".*"));
 	if (index == -1)
 		index = _identifiers.indexOf(QRegExp("Nulloy/Playback.*"));
 	if (index != -1) {
@@ -136,8 +138,10 @@ static void _loadPlugins(QSettings *settings)
 		settings->setValue("Playback", _identifiers.at(index).section('/', 2));
 	}
 
-	QString waveformStr = settings->value("Waveform", _wavefowmPrefer).toString();
-	index = _identifiers.indexOf(QRegExp("Nulloy/Waveform/" + waveformStr + ".*"));
+	QString waveformStr = settings->value("Waveform").toString();
+	index = _identifiers.indexOf(QRegExp("Nulloy/Waveform/" + waveformStr));
+	if (index == -1)
+		index = _identifiers.indexOf(QRegExp("Nulloy/Waveform/" + _wavefowmPrefer + ".*"));
 	if (index == -1)
 		index = _identifiers.indexOf(QRegExp("Nulloy/Waveform.*"));
 	if (index != -1) {

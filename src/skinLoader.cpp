@@ -139,9 +139,12 @@ static void _loadSkins(QSettings *settings)
 		_identifiers.insert(i, id);
 	}
 
-	QString skinStr = settings->value("GUI/Skin", _skinPrefer).toString();
+	QString skinStr = settings->value("GUI/Skin").toString();
 	QStringList values = _identifiers.values();
-	int index = values.indexOf(QRegExp("Nulloy/Skin/" + skinStr + ".*"));
+	int index;
+	index = values.indexOf(QRegExp("Nulloy/Skin/" + skinStr));
+	if (index == -1)
+		index = values.indexOf(QRegExp("Nulloy/Skin/" + _skinPrefer + ".*"));
 	if (index == -1)
 		index = 0;
 
