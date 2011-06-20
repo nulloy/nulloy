@@ -167,6 +167,8 @@ NPlayer::NPlayer()
 
 	QMetaObject::connectSlotsByName(this);
 
+	m_mainWindow->setTitle("");
+
 	QStringList pathList;
 	if (QCoreApplication::arguments().size() > 1) {
 		for (int i = 1; i < QCoreApplication::arguments().size(); ++i) {
@@ -180,7 +182,6 @@ NPlayer::NPlayer()
 	else
 		restorePlaylist();
 
-	m_mainWindow->setTitle("");
 	m_mainWindow->show();
 	QResizeEvent e(m_mainWindow->size(), m_mainWindow->size());
 	QCoreApplication::sendEvent(m_mainWindow, &e);
