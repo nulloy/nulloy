@@ -15,28 +15,48 @@
 
 #include "logDialog.h"
 
-#include <QDialogButtonBox>
+#include "settings.h"
+#include <QPushButton>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QSpacerItem>
+#include <QCoreApplication>
 #include <QDebug>
 
 NLogDialog::NLogDialog(QWidget *parent) : QDialog(parent)
 {
 	QVBoxLayout *layout = new QVBoxLayout(this);
+	setLayout(layout);
 
 	m_textBrowser = new QTextBrowser;
 	m_textBrowser->setStyleSheet("QTextBrowser { background: transparent; }");
 	m_textBrowser->setFrameShape(QFrame::NoFrame);
 	layout->addWidget(m_textBrowser);
 
-	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-	connect(buttonBox, SIGNAL(rejected()), this, SLOT(close()));
-	layout->addWidget(buttonBox);
+	QHBoxLayout *hLayout = new QHBoxLayout;
+	layout->addLayout(hLayout);
 
-	setLayout(layout);
+	m_checkBox = new QCheckBox("Don't show this dialog anymore");
+	connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(on_checkBox_stateChanged(int)));
+	hLayout->addWidget(m_checkBox);
+
+	hLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum));
+
+	QPushButton *closeButton = new QPushButton("Close");
+	connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+	hLayout->addWidget(closeButton);
+
+	setWindowTitle(QCoreApplication::applicationName() + " Log");
+
 	setMinimumWidth(500);
 }
 
 NLogDialog::~NLogDialog() {}
+
+void NLogDialog::on_checkBox_stateChanged(int state)
+{
+	settings()->setValue("DisplayLogDialog", (Qt::CheckState)state != Qt::Checked);
+}
 
 void NLogDialog::showMessage(QMessageBox::Icon icon, const QString &title, const QString &msg)
 {
@@ -67,6 +87,11 @@ void NLogDialog::showMessage(QMessageBox::Icon icon, const QString &title, const
 	QTextCursor cur = m_textBrowser->textCursor();
 	cur.movePosition(QTextCursor::End);
 	m_textBrowser->setTextCursor(cur);
+
+	m_checkBox->setChecked(!settings()->value("DisplayLogDialog").toBool());
+
+	if (!settings()->value("DisplayLogDialog").toBool())
+		return;
 
 	showNormal();
 	activateWindow();

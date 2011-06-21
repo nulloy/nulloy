@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>406</width>
-    <height>260</height>
+    <width>400</width>
+    <height>284</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,6 +27,9 @@
        <string>General</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="skinLabel">
          <property name="text">
@@ -58,7 +61,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QCheckBox" name="versionCheckBox">
          <property name="minimumSize">
           <size>
@@ -71,7 +74,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QPushButton" name="versionCheckButton">
@@ -107,13 +110,20 @@
          </item>
         </layout>
        </item>
-       <item row="5" column="0">
+       <item row="6" column="0">
         <widget class="QCheckBox" name="singleInstanseCheckBox">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="text">
           <string>Allow multiple instances</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="displayLogDialogCheckBox">
+         <property name="text">
+          <string>Display log dialog in case of errors</string>
          </property>
         </widget>
        </item>

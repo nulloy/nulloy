@@ -19,6 +19,7 @@
 #include <QDialog>
 #include <QTextBrowser>
 #include <QMessageBox>
+#include <QCheckBox>
 
 class NLogDialog : public QDialog
 {
@@ -26,6 +27,7 @@ class NLogDialog : public QDialog
 
 private:
 	QTextBrowser *m_textBrowser;
+	QCheckBox *m_checkBox;
 	QString m_oldTitle;
 	QString m_text;
 
@@ -37,6 +39,9 @@ public:
 
 public slots:
 	void showMessage(QMessageBox::Icon icon, const QString &title, const QString &msg);
+
+private slots:
+	void on_checkBox_stateChanged(int state);
 };
 
 #endif

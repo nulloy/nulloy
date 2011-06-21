@@ -33,13 +33,13 @@ public:
 	void initShortcuts();
 
 public slots:
-	void show();
 	void setVersionLabel(QString text);
 	void saveSettings();
 	void loadSettings();
 
 private slots:
 	void on_versionCheckButton_clicked();
+	void showEvent(QShowEvent *event);
 
 signals:
 	void settingsChanged();

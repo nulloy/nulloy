@@ -50,10 +50,12 @@ void NPreferencesDialog::initShortcuts()
 	}
 }
 
-void NPreferencesDialog::show()
+void NPreferencesDialog::showEvent(QShowEvent *event)
 {
+	Q_UNUSED(event);
+
 	ui.versionLabel->setText("");
-	QDialog::show();
+	ui.displayLogDialogCheckBox->setChecked(settings()->value("DisplayLogDialog").toBool());
 }
 
 void NPreferencesDialog::setVersionLabel(QString text)
@@ -74,6 +76,7 @@ void NPreferencesDialog::loadSettings()
 	ui.singleInstanseCheckBox->setChecked(settings()->value("SingleInstanse", FALSE).toBool());
 	ui.trayIconCheckBox->setChecked(settings()->value("GUI/TrayIcon", FALSE).toBool());
 	ui.versionCheckBox->setChecked(settings()->value("AutoCheckUpdates", TRUE).toBool());
+	ui.displayLogDialogCheckBox->setChecked(settings()->value("DisplayLogDialog", TRUE).toBool());
 
 	// plugins
 	foreach (QString str, pluginIdentifiers(settings())) {
@@ -126,6 +129,7 @@ void NPreferencesDialog::saveSettings()
 	settings()->setValue("SingleInstanse", ui.singleInstanseCheckBox->isChecked());
 	settings()->setValue("GUI/TrayIcon", ui.trayIconCheckBox->isChecked());
 	settings()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
+	settings()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 
 	// plugins
 	bool showPluginMessage = FALSE;

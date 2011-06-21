@@ -390,7 +390,7 @@ void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 
 void NPlayer::showPreferencesDialog()
 {
-	m_preferencesDialog->show();
+	m_preferencesDialog->exec();
 }
 
 void NPlayer::showAboutMessageBox()
