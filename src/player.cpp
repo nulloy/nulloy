@@ -69,6 +69,10 @@ NPlayer::NPlayer()
 
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
 
+	m_logDialog = new NLogDialog(m_mainWindow);
+	connect(m_playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)),
+			m_logDialog, SLOT(showMessage(QMessageBox::Icon, const QString &, const QString &)));
+
 	// loading script
 	m_scriptEngine = new QScriptEngine(this);
 	QString scriptFileName(skinScriptFile(settings()));
@@ -356,12 +360,6 @@ void NPlayer::quit()
 	savePlaylist();
 	saveSettings();
 	QCoreApplication::quit();
-}
-
-void NPlayer::on_playbackEngine_message(QMessageBox::Icon icon, const QString &title, const QString &msg)
-{
-	QMessageBox box(icon, title, msg, QMessageBox::Close, m_mainWindow);
-	box.exec();
 }
 
 void NPlayer::on_playbackEngine_mediaChanged(const QString &path)

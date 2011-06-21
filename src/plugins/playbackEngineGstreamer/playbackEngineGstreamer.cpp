@@ -272,7 +272,7 @@ void NPlaybackEngineGStreamer::emitFinished()
 
 void NPlaybackEngineGStreamer::emitError(QString error)
 {
-	emit message(QMessageBox::Critical, QObject::tr("Playback Error"), m_currentMedia + ": " + error);
+	emit message(QMessageBox::Critical, m_currentMedia, error);
 }
 
 #ifndef _N_GSTREAMER_PLUGINS_BUILTIN_

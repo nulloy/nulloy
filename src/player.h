@@ -21,6 +21,7 @@
 #include "preferencesDialog.h"
 #include "playlistWidget.h"
 #include "mainWindow.h"
+#include "logDialog.h"
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QtScript>
@@ -39,6 +40,7 @@ private:
 	QSystemTrayIcon *m_trayIcon;
 	QMenu *m_contextMenu;
 	NPlaylistWidget *m_playlistWidget;
+	NLogDialog *m_logDialog;
 	QString m_localPlaylist;
 	QNetworkAccessManager *m_networkManager;
 
@@ -55,7 +57,6 @@ private slots:
 	void preferencesDialogSettingsChanged();
 	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
 	void mainWindowClosed();
-	void on_playbackEngine_message(QMessageBox::Icon icon, const QString &title, const QString &msg);
 	void on_playbackEngine_mediaChanged(const QString &path);
 	void on_alwaysOnTopAction_toggled(bool checked);
 	void versionCheckOnline();
