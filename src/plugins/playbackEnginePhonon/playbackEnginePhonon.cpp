@@ -45,7 +45,7 @@ void NPlaybackEnginePhonon::setMedia(const QString &file)
 		return;
 
 	if (!QFile(file).exists()) {
-		emit message(QMessageBox::Warning, QObject::tr("Open File Error"), QObject::tr("No such file or directory: ") + file);
+		emit message(QMessageBox::Warning, file, "No such file or directory");
 		emit mediaChanged("");
 		return;
 	}

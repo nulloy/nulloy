@@ -30,7 +30,7 @@ function Program(window, playbackEngine)
 	this.minimizeButton = window.findChild("minimizeButton");
 	this.titleLabel = window.findChild("titleLabel");
 
-	this.playButton.clicked.connect(this.playbackEngine.play);
+	this.playButton.clicked.connect(this.playlistWidget.activateCurrent);
 	this.stopButton.clicked.connect(this.playbackEngine.stop);
 	this.prevButton.clicked.connect(this.playlistWidget.activatePrev);
 	this.nextButton.clicked.connect(this.playlistWidget.activateNext);
@@ -44,7 +44,8 @@ function Program(window, playbackEngine)
 	this.playbackEngine["playStateChanged(bool)"].connect(this, "updatePlayButtonIcon");
 	this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
 	this.playbackEngine["finished()"].connect(this.playlistWidget.activateNext);
-	this.playlistWidget["itemActivated2(const QString &)"].connect(this, "play");
+	this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
+	this.playlistWidget["currentActivated()"].connect(this.playbackEngine.play);
 
 	this.volumeSlider["sliderMoved(int)"].connect(this, "on_volumeSlider_sliderMoved");
 	this.playbackEngine["volumeChanged(qreal)"].connect(this, "volumeSlider_setValue");
@@ -96,12 +97,6 @@ Program.prototype.on_resized = function()
 									this.playlistToggleButton.height);
 
 	this.shadowWidget.resize(this.playlistWidget.width, this.shadowWidget.height);
-}
-
-Program.prototype.play = function(path)
-{
-	this.playbackEngine.setMedia(path);
-	this.playbackEngine.play();
 }
 
 Program.prototype.on_playlistToggleButtonClicked = function()

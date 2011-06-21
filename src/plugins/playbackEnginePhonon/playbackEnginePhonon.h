@@ -36,23 +36,23 @@ public:
 	NPlaybackEnginePhonon(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
 	~NPlaybackEnginePhonon();
 	void init();
-	QString identifier() { return "Nulloy/Playback/Phonon/0.1"; }
+	QString identifier() { return "Nulloy/Playback/Phonon/0.1.1"; }
 	QString interface() { return PLAYBACK_INTERFACE; }
 
-	bool hasMedia();
-	QString currentMedia();
+	Q_INVOKABLE bool hasMedia();
+	Q_INVOKABLE QString currentMedia();
 
-	qreal volume();
-	qreal position();
+	Q_INVOKABLE qreal volume();
+	Q_INVOKABLE qreal position();
 
 public slots:
-	void setVolume(qreal volume);
-	void setPosition(qreal pos);
-	void setMedia(const QString &file);
+	Q_INVOKABLE void setMedia(const QString &file);
+	Q_INVOKABLE void setVolume(qreal volume);
+	Q_INVOKABLE void setPosition(qreal pos);
 
-	void play();
-	void stop();
-	void pause();
+	Q_INVOKABLE void play();
+	Q_INVOKABLE void stop();
+	Q_INVOKABLE void pause();
 
 private slots:
 	void on_tick(qint64 ms);

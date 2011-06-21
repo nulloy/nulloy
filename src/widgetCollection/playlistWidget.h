@@ -23,7 +23,7 @@ class NPlaylistWidget : public QListWidget
 	Q_OBJECT
 
 private:
-	QListWidgetItem *m_currentActivatedItem;
+	QListWidgetItem *m_currentItem;
 
 	void setCurrentItem(QListWidgetItem *item);
 	void activateItem(QListWidgetItem *item);
@@ -44,6 +44,7 @@ public slots:
 	void activateFirst();
 	void activateNext();
 	void activatePrev();
+	void activateCurrent();
 	void setCurrentRow(int row);
 	void activateRow(int row);
 	void appendMediaList(const QStringList &pathList);
@@ -55,7 +56,8 @@ private slots:
 	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
 
 signals:
-	void itemActivated2(const QString &path);
+	void currentActivated();
+	void mediaSet(const QString &path);
 	void closed();
 };
 

@@ -41,7 +41,7 @@ public:
 	NPlaybackEngineGStreamer(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
 	~NPlaybackEngineGStreamer();
 	void init();
-	QString identifier() { return "Nulloy/Playback/GStreamer/0.2"; }
+	QString identifier() { return "Nulloy/Playback/GStreamer/0.2.1"; }
 	QString interface() { return PLAYBACK_INTERFACE; }
 
 	Q_INVOKABLE bool hasMedia();
@@ -51,15 +51,16 @@ public:
 	Q_INVOKABLE qreal position();
 
 public slots:
-	void setMedia(const QString &file);
-	void setVolume(qreal volume);
-	void setPosition(qreal pos);
-	void emitFinished();
-	void emitError(QString error);
+	Q_INVOKABLE void setMedia(const QString &file);
+	Q_INVOKABLE void setVolume(qreal volume);
+	Q_INVOKABLE void setPosition(qreal pos);
 
-	void play();
-	void stop();
-	void pause();
+	Q_INVOKABLE void play();
+	Q_INVOKABLE void stop();
+	Q_INVOKABLE void pause();
+
+	void _emitFinished();
+	void _emitError(QString error);
 
 private slots:
 	void checkStatus();

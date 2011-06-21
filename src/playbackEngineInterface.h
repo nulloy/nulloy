@@ -36,13 +36,13 @@ public:
 	static QString INTERFACE() { return PLAYBACK_INTERFACE; }
 
 public slots:
-	virtual void setMedia(const QString &file) = 0;
-	virtual void setVolume(qreal volume) = 0;
-	virtual void setPosition(qreal pos) = 0;
+	Q_INVOKABLE virtual void setMedia(const QString &file) = 0;
+	Q_INVOKABLE virtual void setVolume(qreal volume) = 0;
+	Q_INVOKABLE virtual void setPosition(qreal pos) = 0;
 
-	virtual void play() = 0;
-	virtual void stop() = 0;
-	virtual void pause() = 0;
+	Q_INVOKABLE virtual void play() = 0;
+	Q_INVOKABLE virtual void stop() = 0;
+	Q_INVOKABLE virtual void pause() = 0;
 
 signals:
 	virtual void positionChanged(qreal pos) = 0;

@@ -22,7 +22,7 @@ static void _eventHandler(const libvlc_event_t *event, void *userData)
 {
 	if (event->type == libvlc_MediaPlayerEndReached) {
 		NPlaybackEngineVlc *obj = reinterpret_cast<NPlaybackEngineVlc *>(userData);
-		obj->emitFinished();
+		obj->_emitFinished();
 	}
 }
 
@@ -74,7 +74,7 @@ void NPlaybackEngineVlc::setMedia(const QString &file)
 		return;
 
 	if (!QFile(file).exists()) {
-		emit message(QMessageBox::Warning, QObject::tr("Open File Error"), QObject::tr("No such file or directory: ") + file);
+		emit message(QMessageBox::Warning, file, "No such file or directory");
 		emit mediaChanged("");
 		return;
 	}
@@ -178,7 +178,7 @@ void NPlaybackEngineVlc::checkStatus()
 	}
 }
 
-void NPlaybackEngineVlc::emitFinished()
+void NPlaybackEngineVlc::_emitFinished()
 {
 	emit finished();
 }
