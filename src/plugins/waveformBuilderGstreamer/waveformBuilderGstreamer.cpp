@@ -168,7 +168,7 @@ void NWaveformBuilderGstreamer::startFile(const QString &file)
 	gst_object_unref(bus);
 #endif
 
-	gchar *uri = g_filename_to_uri(file.toUtf8().constData(), NULL, NULL);
+	gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL, NULL);
 	GstElement *uridecodebin = gst_bin_get_by_name(GST_BIN(m_playbin), "w_uridecodebin");
 	g_object_set(uridecodebin, "uri", uri, NULL);
 	gst_object_unref(uridecodebin);

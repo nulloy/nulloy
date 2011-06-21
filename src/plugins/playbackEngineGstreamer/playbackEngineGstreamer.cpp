@@ -106,7 +106,7 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 		return;
 	}
 
-	gchar *uri = g_filename_to_uri(file.toUtf8().constData(), NULL, NULL);
+	gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL, NULL);
 	if (uri)
 		m_currentMedia = file;
 	g_object_set(m_playbin, "uri", uri, NULL);
