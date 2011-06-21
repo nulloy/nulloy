@@ -38,6 +38,7 @@ static void _on_error(GstBus *bus, GstMessage *msg, gpointer userData)
 
 	NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
 	obj->_emitError(err->message);
+	obj->_emitFinished();
 
 	g_error_free(err);
 }
