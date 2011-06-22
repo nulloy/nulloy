@@ -32,6 +32,10 @@ NPlaylistWidget::~NPlaylistWidget() {}
 
 void NPlaylistWidget::setCurrentItem(QListWidgetItem *item)
 {
+	QBrush b = item->foreground();
+	b.setColor(QPalette::Text);
+	item->setForeground(b);
+
 	QFont f = item->font();
 
 	if (m_currentItem) {
@@ -46,6 +50,13 @@ void NPlaylistWidget::setCurrentItem(QListWidgetItem *item)
 	m_currentItem = item;
 
 	emit mediaSet(item->data(Qt::UserRole).toString());
+}
+
+void NPlaylistWidget::setCurrentFailed()
+{
+	QBrush b = m_currentItem->foreground();
+	b.setColor(QPalette().color(QPalette::Dark));
+	m_currentItem->setForeground(b);
 }
 
 int NPlaylistWidget::currentRow()

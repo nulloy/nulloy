@@ -45,6 +45,7 @@ public slots:
 	void activateNext();
 	void activatePrev();
 	void activateCurrent();
+	void setCurrentFailed();
 	void setCurrentRow(int row);
 	void activateRow(int row);
 	void appendMediaList(const QStringList &pathList);

@@ -76,7 +76,7 @@ void NPlaybackEngineVlc::setMedia(const QString &file)
 	if (!QFile(file).exists()) {
 		emit message(QMessageBox::Warning, file, "No such file or directory");
 		emit mediaChanged("");
-		emit finished();
+		emit failed();
 		return;
 	}
 

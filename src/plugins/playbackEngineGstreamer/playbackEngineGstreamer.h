@@ -60,6 +60,7 @@ public slots:
 	Q_INVOKABLE void pause();
 
 	void _emitFinished();
+	void _emitFailed();
 	void _emitError(QString error);
 
 private slots:
@@ -71,6 +72,7 @@ signals:
 	void message(QMessageBox::Icon icon, const QString &file, const QString &msg);
 	void mediaChanged(const QString &file);
 	void finished();
+	void failed();
 	void playStateChanged(bool);
 };
 

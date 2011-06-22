@@ -50,6 +50,7 @@ signals:
 	virtual void message(QMessageBox::Icon icon, const QString &title, const QString &msg) = 0;
 	virtual void mediaChanged(const QString &file) = 0;
 	virtual void finished() = 0;
+	virtual void failed() = 0;
 	virtual void playStateChanged(bool) = 0;
 };
 

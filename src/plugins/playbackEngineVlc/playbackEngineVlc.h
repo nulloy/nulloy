@@ -71,6 +71,7 @@ signals:
 	void message(QMessageBox::Icon icon, const QString &title, const QString &msg);
 	void mediaChanged(const QString &file);
 	void finished();
+	void failed();
 	void playStateChanged(bool);
 };
 

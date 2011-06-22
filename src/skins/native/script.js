@@ -46,6 +46,7 @@ function Program(window, playbackEngine)
 	this.playbackEngine["playStateChanged(bool)"].connect(this, "updatePlayButtonIcon");
 	this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
 	this.playbackEngine["finished()"].connect(this.playlistWidget.activateNext);
+	this.playbackEngine["failed()"].connect(this, "on_failed");
 	this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
 	this.playlistWidget["currentActivated()"].connect(this.playbackEngine.play);
 
@@ -68,6 +69,12 @@ Program.prototype.updatePlayButtonIcon = function(playState)
 	} else {
 		this.playButton.setStandardIcon("media-playback-start", ":/trolltech/styles/commonstyle/images/media-play-16.png");
 	}
+}
+
+Program.prototype.on_failed = function()
+{
+	this.playlistWidget.setCurrentFailed();
+	this.playlistWidget.activateNext();
 }
 
 Program.prototype.on_volumeSlider_sliderMoved = function(value)
