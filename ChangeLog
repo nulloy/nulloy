@@ -1,3 +1,8 @@
+* 0.2.4, Thu Jun 23 2011
+- Showing errors in a separate dialog
+- Dimming unsupported track in playlist
+- Minor bug fixes and improvements
+
 * 0.2.3, Fri Jun 17 2011
 - Fixed restoring playlist only if no files passed within arguments
 - Silver Skin improvements
