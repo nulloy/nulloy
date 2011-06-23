@@ -142,7 +142,7 @@ static void _loadSkins(QSettings *settings)
 	QString skinStr = settings->value("GUI/Skin").toString();
 	QStringList values = _identifiers.values();
 	int index;
-	index = values.indexOf(QRegExp("Nulloy/Skin/" + skinStr));
+	index = values.indexOf("Nulloy/Skin/" + skinStr);
 	if (index == -1)
 		index = values.indexOf(QRegExp("Nulloy/Skin/" + _skinPrefer + ".*"));
 	if (index == -1)

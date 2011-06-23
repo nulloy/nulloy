@@ -96,7 +96,7 @@ void NPreferencesDialog::loadSettings()
 	index = ui.playbackComboBox->findData(settings()->value("Playback"));
 	if (index != -1)
 		ui.playbackComboBox->setCurrentIndex(index);
-	index = ui.playbackComboBox->findData(settings()->value("Waveform"));
+	index = ui.waveformComboBox->findData(settings()->value("Waveform"));
 	if (index != -1)
 		ui.waveformComboBox->setCurrentIndex(index);
 
