@@ -41,11 +41,15 @@
 
 #playlistWidget::item {
 	background: white;
- }
+}
+
+#playlistWidget::item:alternate{
+	background: #EEEEEE;
+}
 
 #playlistWidget::item:selected {
 	background: #BBBBBB;
- }
+}
 
 #playlistToggleButton {
 	border-image: url(playlist_toggle.png);
