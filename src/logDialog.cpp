@@ -37,7 +37,6 @@ NLogDialog::NLogDialog(QWidget *parent) : QDialog(parent)
 	layout->addLayout(hLayout);
 
 	m_checkBox = new QCheckBox("Don't show this dialog anymore");
-	connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(on_checkBox_stateChanged(int)));
 	hLayout->addWidget(m_checkBox);
 
 	hLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum));
@@ -52,11 +51,6 @@ NLogDialog::NLogDialog(QWidget *parent) : QDialog(parent)
 }
 
 NLogDialog::~NLogDialog() {}
-
-void NLogDialog::on_checkBox_stateChanged(int state)
-{
-	settings()->setValue("DisplayLogDialog", (Qt::CheckState)state != Qt::Checked);
-}
 
 void NLogDialog::showMessage(QMessageBox::Icon icon, const QString &title, const QString &msg)
 {
@@ -88,9 +82,9 @@ void NLogDialog::showMessage(QMessageBox::Icon icon, const QString &title, const
 	cur.movePosition(QTextCursor::End);
 	m_textBrowser->setTextCursor(cur);
 
-	m_checkBox->setChecked(!settings()->value("DisplayLogDialog").toBool());
+	m_checkBox->setChecked(!NSettings::value("DisplayLogDialog").toBool());
 
-	if (!settings()->value("DisplayLogDialog").toBool())
+	if (!NSettings::value("DisplayLogDialog").toBool())
 		return;
 
 	showNormal();
@@ -100,6 +94,8 @@ void NLogDialog::showMessage(QMessageBox::Icon icon, const QString &title, const
 void NLogDialog::closeEvent(QCloseEvent *event)
 {
 	Q_UNUSED(event);
+
+	NSettings::setValue("DisplayLogDialog", !m_checkBox->isChecked());
 
 	m_textBrowser->clear();
 	m_text.clear();

@@ -18,10 +18,14 @@
 
 #include "waveformBuilderInterface.h"
 #include "playbackEngineInterface.h"
+#include <QStringList>
 
-NPlaybackEngineInterface* playbackPlugin(QSettings *settings);
-NWaveformBuilderInterface* waveformPlugin(QSettings *settings);
-QStringList pluginIdentifiers(QSettings *settings);
+namespace NPluginLoader
+{
+	NPlaybackEngineInterface* playbackPlugin();
+	NWaveformBuilderInterface* waveformPlugin();
+	QStringList pluginIdentifiers();
+}
 
 #endif
 

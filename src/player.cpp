@@ -48,24 +48,24 @@ public:
 NPlayer::NPlayer()
 {
 	setObjectName("NPlayer");
+	NSettings::init(this);
 
 	m_networkManager = new QNetworkAccessManager(this);
 	m_networkManager->setObjectName("networkManager");
 
 	m_localPlaylist = rcDir() + "/" + applicationBinaryName() + ".m3u";
 
-	settings()->setParent(this);
-	m_playbackEngine = playbackPlugin(settings());
+	m_playbackEngine = NPluginLoader::playbackPlugin();
 	m_playbackEngine->setParent(this);
 	m_playbackEngine->setObjectName("playbackEngine");
 
 	m_mainWindow = new NMainWindow();
 	connect(m_mainWindow, SIGNAL(closed()), this, SLOT(mainWindowClosed()));
-	m_mainWindow->init(skinUiFormFile(settings()));
+	m_mainWindow->init(NSkinLoader::skinUiFormFile());
 
 	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
 	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(preferencesDialogSettingsChanged()));
-	connect(m_preferencesDialog, SIGNAL(versionCheckOnline()), this, SLOT(versionCheckOnline()));
+	connect(m_preferencesDialog, SIGNAL(versionOnlineRequested()), this, SLOT(versionOnlineFetch()));
 
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
 
@@ -75,7 +75,7 @@ NPlayer::NPlayer()
 
 	// loading script
 	m_scriptEngine = new QScriptEngine(this);
-	QString scriptFileName(skinScriptFile(settings()));
+	QString scriptFileName(NSkinLoader::skinScriptFile());
 	QFile scriptFile(scriptFileName);
 	scriptFile.open(QIODevice::ReadOnly);
 	m_scriptEngine->evaluate(scriptFile.readAll(), scriptFileName);
@@ -119,7 +119,7 @@ NPlayer::NPlayer()
 	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
 											style()->standardIcon(QStyle::SP_MessageBoxInformation)),
 											tr("Preferences..."), this);
-	connect(preferencesAction, SIGNAL(triggered()), this, SLOT(showPreferencesDialog()));
+	connect(preferencesAction, SIGNAL(triggered()), m_preferencesDialog, SLOT(exec()));
 
 	NAction *exitAction = new NAction(QIcon::fromTheme("exit",
 										style()->standardIcon(QStyle::SP_DialogCloseButton)),
@@ -167,7 +167,6 @@ NPlayer::NPlayer()
 	m_preferencesDialog->initShortcuts();
 
 	loadSettings();
-	saveSettings();
 
 	QMetaObject::connectSlotsByName(this);
 
@@ -210,9 +209,9 @@ void NPlayer::restorePlaylist()
 		return;
 	m_playlistWidget->setMediaList(files);
 
-	QStringList playlistRowValues = settings()->value("PlaylistRow", QStringList()).toStringList();
+	QStringList playlistRowValues = NSettings::value("PlaylistRow").toStringList();
 	if (!playlistRowValues.isEmpty()) {
-		if (settings()->value("RestorePlayback").toBool()) {
+		if (NSettings::value("RestorePlayback").toBool()) {
 			qreal pos = playlistRowValues.at(1).toFloat();
 			if (pos != 0 && pos != 1) {
 				m_playlistWidget->activateRow(playlistRowValues.at(0).toInt());
@@ -232,40 +231,34 @@ void NPlayer::savePlaylist()
 
 	int row = m_playlistWidget->currentRow();
 	qreal pos = m_playbackEngine->position();
-	settings()->setValue("PlaylistRow", QStringList() << QString::number(row) << QString::number(pos));
+	NSettings::setValue("PlaylistRow", QStringList() << QString::number(row) << QString::number(pos));
 }
 
 void NPlayer::loadSettings()
 {
-	m_mainWindow->loadSettings();
-	m_preferencesDialog->loadSettings();
-	m_playbackEngine->setVolume(settings()->value("Volume", 0.8).toFloat());
-	m_trayIcon->setVisible(settings()->value("GUI/TrayIcon").toBool());
+	m_trayIcon->setVisible(NSettings::value("GUI/TrayIcon").toBool());
 
-	if (settings()->value("AutoCheckUpdates", FALSE).toBool())
-		versionCheckOnline();
+	if (NSettings::value("AutoCheckUpdates").toBool())
+		versionOnlineFetch();
 
-	bool onTop = settings()->value("GUI/AlwaysOnTop", FALSE).toBool();
+	bool onTop = NSettings::value("GUI/AlwaysOnTop").toBool();
 	if (onTop) {
 		NAction *alwaysOnTopAction = qFindChild<NAction *>(this, "alwaysOnTopAction");
 		alwaysOnTopAction->setChecked(TRUE);
 		on_alwaysOnTopAction_toggled(TRUE);
 	}
+
+	m_playbackEngine->setVolume(NSettings::value("Volume").toFloat());
 }
 
 void NPlayer::saveSettings()
 {
-	settings()->setValue("Volume", QString::number(m_playbackEngine->volume()));
-	m_mainWindow->saveSettings();
-	m_preferencesDialog->saveSettings();
-
-	NAction *alwaysOnTopAction = qFindChild<NAction *>(this, "alwaysOnTopAction");
-	settings()->setValue("GUI/AlwaysOnTop", alwaysOnTopAction->isChecked());
+	NSettings::setValue("Volume", QString::number(m_playbackEngine->volume()));
 }
 
 void NPlayer::preferencesDialogSettingsChanged()
 {
-	m_trayIcon->setVisible(settings()->value("GUI/TrayIcon").toBool());
+	m_trayIcon->setVisible(NSettings::value("GUI/TrayIcon").toBool());
 }
 
 QString NPlayer::about()
@@ -281,7 +274,7 @@ QString NPlayer::about()
 				QCoreApplication::applicationVersion() + "'>sergey@vlasov.me</a>&gt;";
 }
 
-void NPlayer::versionCheckOnline()
+void NPlayer::versionOnlineFetch()
 {
 	QString suffix;
 #if defined Q_WS_WIN
@@ -319,7 +312,7 @@ void NPlayer::on_networkManager_finished(QNetworkReply *reply)
 
 void NPlayer::mainWindowClosed()
 {
-	if (settings()->value("GUI/MinimizeToTray", FALSE).toBool()) {
+	if (NSettings::value("GUI/MinimizeToTray").toBool()) {
 		m_trayIcon->setVisible(TRUE);
 	} else {
 		quit();
@@ -336,14 +329,14 @@ void NPlayer::on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
 			m_mainWindow->activateWindow();
 		}
 	} else if (reason == QSystemTrayIcon::DoubleClick) {
-		if (settings()->value("GUI/MinimizeToTray").toBool()) {
+		if (NSettings::value("GUI/MinimizeToTray").toBool()) {
 			if (minimized && visible) {
 				m_mainWindow->showNormal();
 				m_mainWindow->activateWindow();
 			} else {
 				m_mainWindow->setVisible(!visible);
 			}
-			if (!settings()->value("GUI/TrayIcon").toBool())
+			if (!NSettings::value("GUI/TrayIcon").toBool())
 				m_trayIcon->setVisible(!visible);
 		} else {
 			if (!minimized) {
@@ -379,6 +372,8 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 
 void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 {
+	NSettings::setValue("GUI/AlwaysOnTop", checked);
+
 	Qt::WindowFlags flags = m_mainWindow->windowFlags();
 	if (checked)
 		flags |= Qt::WindowStaysOnTopHint;
@@ -386,11 +381,6 @@ void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 		flags ^= Qt::WindowStaysOnTopHint;
 	m_mainWindow->setWindowFlags(flags);
 	m_mainWindow->show();
-}
-
-void NPlayer::showPreferencesDialog()
-{
-	m_preferencesDialog->exec();
 }
 
 void NPlayer::showAboutMessageBox()

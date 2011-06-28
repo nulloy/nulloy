@@ -29,6 +29,8 @@ private:
 	QString m_styleSheet;
 
 	bool eventFilter(QObject *obj, QEvent *event);
+	void showEvent(QShowEvent *event);
+	void hideEvent(QHideEvent *event);
 	void closeEvent(QCloseEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
@@ -40,11 +42,13 @@ public:
 	void init(const QString &uiFile);
 
 public slots:
-	void saveSettings();
-	void loadSettings();
 	void setTitle(QString title);
 	void minimize();
 	void toggleVisibility();
+
+private slots:
+	void loadSettings();
+	void saveSettings();
 
 signals:
 	void closed();

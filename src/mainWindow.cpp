@@ -49,7 +49,7 @@ void NMainWindow::init(const QString &uiFile)
 	setSizeGripEnabled(TRUE);
 
 	NWaveformSlider *waveformSlider = qFindChild<NWaveformSlider *>(this, "waveformSlider");
-	waveformSlider->setBuilder(waveformPlugin(settings()));
+	waveformSlider->setBuilder(NPluginLoader::waveformPlugin());
 
 	// enabling dragging window from any point
 	QList<QWidget *> widgets = findChildren<QWidget *>();
@@ -94,11 +94,11 @@ void NMainWindow::toggleVisibility()
 
 void NMainWindow::loadSettings()
 {
-	QStringList posList = settings()->value("GUI/Position").toStringList();
+	QStringList posList = NSettings::value("GUI/Position").toStringList();
 	if (!posList.isEmpty())
 		move(posList.at(0).toInt(), posList.at(1).toInt());
 
-	QStringList sizeList = settings()->value("GUI/Size").toStringList();
+	QStringList sizeList = NSettings::value("GUI/Size").toStringList();
 	if (!sizeList.isEmpty())
 		resize(sizeList.at(0).toInt(), sizeList.at(1).toInt());
 	else
@@ -107,8 +107,8 @@ void NMainWindow::loadSettings()
 
 void NMainWindow::saveSettings()
 {
-	settings()->setValue("GUI/Position", QStringList() << QString::number(pos().x()) << QString::number(pos().y()));
-	settings()->setValue("GUI/Size", QStringList() << QString::number(width()) << QString::number(height()));
+	NSettings::setValue("GUI/Position", QStringList() << QString::number(pos().x()) << QString::number(pos().y()));
+	NSettings::setValue("GUI/Size", QStringList() << QString::number(width()) << QString::number(height()));
 }
 
 void NMainWindow::setTitle(QString title)
@@ -155,8 +155,22 @@ void NMainWindow::resizeEvent(QResizeEvent *event)
 	emit resized();
 }
 
+
+void NMainWindow::showEvent(QShowEvent *event)
+{
+	loadSettings();
+	QDialog::showEvent(event);
+}
+
+void NMainWindow::hideEvent(QHideEvent *event)
+{
+	saveSettings();
+	QDialog::hideEvent(event);
+}
+
 void NMainWindow::closeEvent(QCloseEvent *event)
 {
+	saveSettings();
 	QDialog::closeEvent(event);
 	emit closed();
 }

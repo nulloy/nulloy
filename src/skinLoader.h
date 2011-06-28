@@ -16,11 +16,14 @@
 #ifndef N_SKIN_LOADER_H
 #define N_SKIN_LOADER_H
 
-#include "settings.h"
+#include <QStringList>
 
-QStringList skinIdentifiers(QSettings *settings);
-QString skinUiFormFile(QSettings *settings);
-QString skinScriptFile(QSettings *settings);
+namespace NSkinLoader
+{
+	QStringList skinIdentifiers();
+	QString skinUiFormFile();
+	QString skinScriptFile();
+}
 
 #endif
 

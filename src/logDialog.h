@@ -39,9 +39,6 @@ public:
 
 public slots:
 	void showMessage(QMessageBox::Icon icon, const QString &title, const QString &msg);
-
-private slots:
-	void on_checkBox_stateChanged(int state);
 };
 
 #endif

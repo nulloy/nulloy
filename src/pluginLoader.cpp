@@ -16,6 +16,7 @@
 #include "pluginLoader.h"
 
 #include "rcDir.h"
+#include "settings.h"
 #include "pluginInterface.h"
 #include "waveformBuilderInterface.h"
 #include "playbackEngineInterface.h"
@@ -29,15 +30,20 @@
 #include "waveformBuilderGstreamer.h"
 #endif
 
-static bool _init = FALSE;
-static QStringList _identifiers;
-static NPlaybackEngineInterface *_playback = NULL;
-static NWaveformBuilderInterface *_waveform = NULL;
+namespace NPluginLoader
+{
+	bool _init = FALSE;
+	QStringList _identifiers;
+	NPlaybackEngineInterface *_playback = NULL;
+	NWaveformBuilderInterface *_waveform = NULL;
 
-static QString _playbackPrefer = "GStreamer";
-static QString _wavefowmPrefer = "GStreamer";
+	QString _playbackPrefer = "GStreamer";
+	QString _wavefowmPrefer = "GStreamer";
 
-static void _loadPlugins(QSettings *settings)
+	void _loadPlugins();
+}
+
+void NPluginLoader::_loadPlugins()
 {
 	if (_init)
 		return;
@@ -114,7 +120,7 @@ static void _loadPlugins(QSettings *settings)
 
 	int index;
 
-	QString playbackStr = settings->value("Playback").toString();
+	QString playbackStr = NSettings::value("Playback").toString();
 	index = _identifiers.indexOf("Nulloy/Playback/" + playbackStr);
 	if (index == -1)
 		index = _identifiers.indexOf(QRegExp("Nulloy/Playback/" + _playbackPrefer + ".*"));
@@ -135,10 +141,10 @@ static void _loadPlugins(QSettings *settings)
 		_playback = qobject_cast<NPlaybackEngineInterface *>(objects.at(index));
 		qobject_cast<NPluginInterface *>(objects.at(index))->init();
 		usedFlags[index] = TRUE;
-		settings->setValue("Playback", _identifiers.at(index).section('/', 2));
+		NSettings::setValue("Playback", _identifiers.at(index).section('/', 2));
 	}
 
-	QString waveformStr = settings->value("Waveform").toString();
+	QString waveformStr = NSettings::value("Waveform").toString();
 	index = _identifiers.indexOf("Nulloy/Waveform/" + waveformStr);
 	if (index == -1)
 		index = _identifiers.indexOf(QRegExp("Nulloy/Waveform/" + _wavefowmPrefer + ".*"));
@@ -159,7 +165,7 @@ static void _loadPlugins(QSettings *settings)
 		_waveform = qobject_cast<NWaveformBuilderInterface *>(objects.at(index));
 		qobject_cast<NPluginInterface *>(objects.at(index))->init();
 		usedFlags[index] = TRUE;
-		settings->setValue("Waveform", _identifiers.at(index).section('/', 2));
+		NSettings::setValue("Waveform", _identifiers.at(index).section('/', 2));
 	}
 
 	for (int i = 0; i < loaders.size(); ++i) {
@@ -180,21 +186,21 @@ static void _loadPlugins(QSettings *settings)
 	}
 }
 
-NPlaybackEngineInterface* playbackPlugin(QSettings *settings)
+NPlaybackEngineInterface* NPluginLoader::playbackPlugin()
 {
-	_loadPlugins(settings);
+	_loadPlugins();
 	return _playback;
 }
 
-NWaveformBuilderInterface* waveformPlugin(QSettings *settings)
+NWaveformBuilderInterface* NPluginLoader::waveformPlugin()
 {
-	_loadPlugins(settings);
+	_loadPlugins();
 	return _waveform;
 }
 
-QStringList pluginIdentifiers(QSettings *settings)
+QStringList NPluginLoader::pluginIdentifiers()
 {
-	_loadPlugins(settings);
+	_loadPlugins();
 	return _identifiers;
 }
 

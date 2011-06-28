@@ -111,7 +111,7 @@
         </layout>
        </item>
        <item row="6" column="0">
-        <widget class="QCheckBox" name="singleInstanseCheckBox">
+        <widget class="QCheckBox" name="multipleInstansesCheckBox">
          <property name="enabled">
           <bool>false</bool>
          </property>

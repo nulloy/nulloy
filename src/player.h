@@ -50,21 +50,22 @@ public:
 	QString about();
 
 private slots:
-	void restorePlaylist();
-	void savePlaylist();
 	void loadSettings();
 	void saveSettings();
+
+	void restorePlaylist();
+	void savePlaylist();
+
 	void preferencesDialogSettingsChanged();
 	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
 	void mainWindowClosed();
 	void on_playbackEngine_mediaChanged(const QString &path);
 	void on_alwaysOnTopAction_toggled(bool checked);
-	void versionCheckOnline();
+	void versionOnlineFetch();
 	void on_networkManager_finished(QNetworkReply *reply);
 
 public slots:
 	void quit();
-	void showPreferencesDialog();
 	void showAboutMessageBox();
 	void showFileDialog();
 	void showContextMenu(QPoint pos);

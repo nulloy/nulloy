@@ -16,9 +16,16 @@
 #ifndef N_SETTINGS_H
 #define N_SETTINGS_H
 
-#include <QSettings>
+#include <QVariant>
 
-QSettings* settings();
+namespace NSettings
+{
+	void init(QObject *parent = 0);
+
+	QVariant value(const QString &key);
+	void setValue(const QString &key, const QVariant &value);
+	void remove(const QString &key);
+}
 
 #endif
 
