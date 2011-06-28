@@ -7,5 +7,5 @@ CONFIG += link_pkgconfig
 PKGCONFIG += libvlc vlc-plugin
 
 HEADERS += *.h
-SOURCES += *.cpp ../../arguments.cpp
+SOURCES += *.cpp
 

@@ -15,7 +15,7 @@
 
 #include "pluginLoader.h"
 
-#include "rcDir.h"
+#include "core.h"
 #include "settings.h"
 #include "pluginInterface.h"
 #include "waveformBuilderInterface.h"
@@ -75,8 +75,8 @@ void NPluginLoader::_loadPlugins()
 	QStringList pluginsDirList;
 	pluginsDirList << "plugins";
 #if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
-	if (rcDir() != QCoreApplication::applicationDirPath())
-		pluginsDirList << rcDir() + "/plugins";
+	if (NCore::rcDir() != QCoreApplication::applicationDirPath())
+		pluginsDirList << NCore::rcDir() + "/plugins";
 	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin")
 		pluginsDirList << "../lib/nulloy/plugins";
 #endif

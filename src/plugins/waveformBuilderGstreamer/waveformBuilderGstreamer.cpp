@@ -17,7 +17,7 @@
 
 #include <QFile>
 #include <QDebug>
-#include "arguments.h"
+#include "core.h"
 
 static QMutex _mutex;
 
@@ -90,7 +90,7 @@ void NWaveformBuilderGstreamer::init()
 
 	int argc;
 	const char **argv;
-	c_args(&argc, &argv);
+	NCore::cArgs(&argc, &argv);
 	gst_init(&argc, (char ***)&argv);
 
 	m_playbin = NULL;

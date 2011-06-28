@@ -18,7 +18,7 @@
 #include <QMutex>
 #include <QFile>
 #include <QDebug>
-#include "arguments.h"
+#include "core.h"
 
 static QMutex _mutex;
 
@@ -87,7 +87,7 @@ void NWaveformBuilderVlc::init()
 
 	int argc;
 	const char **argv;
-	c_args(&argc, &argv);
+	NCore::cArgs(&argc, &argv);
 
 	QVector<const char *> argVector;
 	for (int i = 0; i < argc; ++i)

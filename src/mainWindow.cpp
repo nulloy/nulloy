@@ -15,13 +15,13 @@
 
 #include "mainWindow.h"
 
+#include "core.h"
 #include "settings.h"
 #include "pluginInterface.h"
 #include "pluginLoader.h"
 #include "waveformSlider.h"
 #include "dropArea.h"
 #include "skinFileSystem.h"
-#include "rcDir.h"
 
 #include <QUiLoader>
 #include <QLayout>
@@ -61,7 +61,7 @@ void NMainWindow::init(const QString &uiFile)
 	iconList << "icon.";
 	QDir parentDir(QCoreApplication::applicationDirPath());
 	if (parentDir.dirName() == "bin") {
-		iconList << rcDir() + "/icon.";
+		iconList << NCore::rcDir() + "/icon.";
 		iconList << "../share/nulloy/icon.";
 	}
 #endif

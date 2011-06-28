@@ -14,9 +14,7 @@
 *********************************************************************/
 
 #include "settings.h"
-#include "rcDir.h"
-#include "arguments.h"
-
+#include "core.h"
 #include <QSettings>
 
 namespace NSettings
@@ -29,8 +27,8 @@ void NSettings::init(QObject *parent)
 	if (_instance)
 		return;
 
-	_instance = new QSettings(rcDir() + "/" +
-					applicationBinaryName() + ".cfg",
+	_instance = new QSettings(NCore::rcDir() + "/" +
+					NCore::applicationBinaryName() + ".cfg",
 					QSettings::IniFormat, parent);
 
 	_instance->setValue("GUI/MinimizeToTray", _instance->value("GUI/MinimizeToTray", FALSE).toBool());

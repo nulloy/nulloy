@@ -15,7 +15,7 @@
 
 #include "playbackEngineGstreamer.h"
 #include <QtGlobal>
-#include "arguments.h"
+#include "core.h"
 
 static void _on_eos(GstBus *bus, GstMessage *msg, gpointer userData)
 {
@@ -54,7 +54,7 @@ void NPlaybackEngineGStreamer::init()
 
 	int argc;
 	const char **argv;
-	c_args(&argc, &argv);
+	NCore::cArgs(&argc, &argv);
 	gst_init(&argc, (char ***)&argv);
 
 	m_playbin = gst_element_factory_make("playbin2", NULL);

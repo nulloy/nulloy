@@ -16,14 +16,13 @@
 #include "player.h"
 
 #include "settings.h"
-#include "rcDir.h"
 #include "pluginInterface.h"
 #include "pluginLoader.h"
 #include "skinLoader.h"
 #include "skinFileSystem.h"
 #include "widgetPrototype.h"
 #include "playlist.h"
-#include "arguments.h"
+#include "core.h"
 #include "action.h"
 
 #include <QFileInfo>
@@ -53,7 +52,7 @@ NPlayer::NPlayer()
 	m_networkManager = new QNetworkAccessManager(this);
 	m_networkManager->setObjectName("networkManager");
 
-	m_localPlaylist = rcDir() + "/" + applicationBinaryName() + ".m3u";
+	m_localPlaylist = NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".m3u";
 
 	m_playbackEngine = NPluginLoader::playbackPlugin();
 	m_playbackEngine->setParent(this);

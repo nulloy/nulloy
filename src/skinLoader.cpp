@@ -15,7 +15,7 @@
 
 #include "skinLoader.h"
 
-#include "rcDir.h"
+#include "core.h"
 #include "settings.h"
 #include "skinFileSystem.h"
 #include <qtiocompressor.h>
@@ -87,8 +87,8 @@ void NSkinLoader::_loadSkins()
 	QStringList skinsDirList;
 	skinsDirList << ":skins" << "skins";
 #if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
-	if (rcDir() != QCoreApplication::applicationDirPath())
-		skinsDirList << rcDir() + "/skins";
+	if (NCore::rcDir() != QCoreApplication::applicationDirPath())
+		skinsDirList << NCore::rcDir() + "/skins";
 	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin")
 		skinsDirList << "../share/nulloy/skins";
 #endif

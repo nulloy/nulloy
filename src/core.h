@@ -13,33 +13,19 @@
 **
 *********************************************************************/
 
-#include "rcDir.h"
-#include <QCoreApplication>
+#ifndef N_CORE_H
+#define N_CORE_H
+
 #include <QStringList>
-#include <QDir>
 
-static bool _rcDir_init = FALSE;
-static QString _rcDir;
-
-QString rcDir()
+namespace NCore
 {
-	if (!_rcDir_init) {
-#if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
-		QDir parentDir(QCoreApplication::applicationDirPath());
-		if (parentDir.dirName() == "bin")
-			_rcDir = QDir::homePath() + "/.nulloy";
-		else
-			_rcDir = QCoreApplication::applicationDirPath();
-#else
-		_rcDir = QCoreApplication::applicationDirPath();
-#endif
-		QDir dir(_rcDir);
-		if (!dir.exists())
-			dir.mkdir(_rcDir);
-
-		_rcDir_init = TRUE;
-	}
-	return _rcDir;
+	void cArgs(int *argc, const char ***argv);
+	QString applicationBinaryName();
+	QString rcDir();
+	QStringList dirListRecursive(const QString &path);
 }
+
+#endif
 
 /* vim: set ts=4 sw=4: */

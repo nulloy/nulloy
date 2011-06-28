@@ -5,4 +5,4 @@ include(../common.pri)
 include(../gstreamer.pri)
 
 HEADERS += *.h
-SOURCES += *.cpp ../../arguments.cpp ../../waveformBuilderInterface.cpp ../../waveformPeaks.cpp
+SOURCES += *.cpp ../../waveformBuilderInterface.cpp ../../waveformPeaks.cpp

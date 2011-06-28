@@ -14,15 +14,14 @@
 *********************************************************************/
 
 #include "waveformBuilderInterface.h"
-#include "arguments.h"
+#include "core.h"
 #include "settings.h"
-#include "rcDir.h"
 #include <QCryptographicHash>
 
 NWaveformBuilderInterface::NWaveformBuilderInterface(QObject *parent) : QThread(parent)
 {
 	m_cacheLoaded = FALSE;
-	m_cacheFile = rcDir() + "/" + applicationBinaryName() + ".peaks";
+	m_cacheFile = NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".peaks";
 }
 
 NWaveformBuilderInterface::~NWaveformBuilderInterface() {}

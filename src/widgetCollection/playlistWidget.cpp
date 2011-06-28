@@ -15,7 +15,7 @@
 
 #include "playlistWidget.h"
 
-#include "dirProcessor.h"
+#include "core.h"
 #include <QFileInfo>
 #include <QtGui>
 
@@ -161,7 +161,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
 {
 	Q_UNUSED(action);
 	foreach (QUrl url, data->urls()) {
-		foreach (QString file, dirListRecursive(url.toLocalFile())) {
+		foreach (QString file, NCore::dirListRecursive(url.toLocalFile())) {
 			QListWidgetItem *item = createItemFromPath(file);
 			insertItem(index, item);
 			++index;

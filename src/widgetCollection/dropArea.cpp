@@ -14,7 +14,8 @@
 *********************************************************************/
 
 #include "dropArea.h"
-#include "dirProcessor.h"
+
+#include "core.h"
 #include <QUrl>
 #include <QFile>
 
@@ -41,7 +42,7 @@ void NDropArea::dropEvent(QDropEvent *event)
 	if (data->hasUrls()) {
 		QStringList files;
 		foreach (QUrl url, data->urls())
-			files << dirListRecursive(url.toLocalFile());
+			files << NCore::dirListRecursive(url.toLocalFile());
 		emit filesDropped(files);
 	}
 

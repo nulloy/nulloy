@@ -16,7 +16,7 @@
 #include "playbackEngineVlc.h"
 #include <QtGlobal>
 
-#include "arguments.h"
+#include "core.h"
 
 static void _eventHandler(const libvlc_event_t *event, void *userData)
 {
@@ -30,7 +30,7 @@ void NPlaybackEngineVlc::init()
 {
 	int argc;
 	const char **argv;
-	c_args(&argc, &argv);
+	NCore::cArgs(&argc, &argv);
 
 	QVector<const char *> argVector;
 	for (int i = 0; i < argc; ++i)
