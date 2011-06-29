@@ -210,16 +210,11 @@ void NPlayer::restorePlaylist()
 
 	QStringList playlistRowValues = NSettings::value("PlaylistRow").toStringList();
 	if (!playlistRowValues.isEmpty()) {
-		if (NSettings::value("RestorePlayback").toBool()) {
-			qreal pos = playlistRowValues.at(1).toFloat();
-			if (pos != 0 && pos != 1) {
-				m_playlistWidget->activateRow(playlistRowValues.at(0).toInt());
-				m_playbackEngine->setPosition(pos);
-			} else {
-				m_playlistWidget->setCurrentRow(playlistRowValues.at(0).toInt());
-			}
-		} else {
-			m_playlistWidget->setCurrentRow(playlistRowValues.at(0).toInt());
+		m_playlistWidget->setCurrentRow(playlistRowValues.at(0).toInt());
+		qreal pos = playlistRowValues.at(1).toFloat();
+		if (NSettings::value("RestorePlayback").toBool() && pos != 0 && pos != 1) {
+			m_playbackEngine->play();
+			m_playbackEngine->setPosition(pos);
 		}
 	}
 }
