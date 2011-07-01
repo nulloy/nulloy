@@ -86,7 +86,7 @@ void NWaveformPeaks::append(qreal value)
 		}
 
 		m_counter = 0;
-		m_index = i + 1;
+		m_index = i;
 
 		for (i = m_index; i < m_vector.size(); ++i) {
 			m_vector[i].first = 0;
