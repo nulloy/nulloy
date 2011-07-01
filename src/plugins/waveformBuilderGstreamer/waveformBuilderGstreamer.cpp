@@ -165,7 +165,9 @@ void NWaveformBuilderGstreamer::startFile(const QString &file)
 #if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
 	gst_bus_add_signal_watch(bus);
+#if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
 	g_signal_connect(bus, "message::error", G_CALLBACK(_on_error), this);
+#endif
 	g_signal_connect(bus, "message::eos", G_CALLBACK(_on_eos), this);
 	gst_object_unref(bus);
 #endif
@@ -214,7 +216,9 @@ void NWaveformBuilderGstreamer::update()
 			_on_eos(bus, msg, this);
 			break;
 		case GST_MESSAGE_ERROR:
+#if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
 			_on_error(bus, msg, this);
+#endif
 			break;
 		default:
 			break;
