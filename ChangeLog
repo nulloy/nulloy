@@ -1,3 +1,6 @@
+*
+- Waveform fix for Ogg Vorbis
+
 * 0.2.4, Thu Jun 23 2011
 - Showing errors in a separate dialog
 - Dimming unsupported track in playlist

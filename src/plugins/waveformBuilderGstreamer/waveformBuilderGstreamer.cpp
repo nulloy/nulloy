@@ -158,7 +158,9 @@ void NWaveformBuilderGstreamer::startFile(const QString &file)
 		return;
 	m_currentFile = file;
 
-	m_playbin = gst_parse_launch("uridecodebin name=w_uridecodebin ! fakesink name=w_sink", NULL);
+	m_playbin = gst_parse_launch("uridecodebin name=w_uridecodebin \
+								! audioconvert ! audio/x-raw-int, width=16, signed=true \
+								! fakesink name=w_sink", NULL);
 
 #if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
