@@ -36,16 +36,18 @@ SUBDIRS += src
 
 unix {
 	include(src/version.pri)
-	release.commands += rm -rf $${TARGET}-$${VERSION} &&
-	release.commands += mkdir $${TARGET}-$${VERSION} &&
-	release.commands += GIT_WORK_TREE=$${TARGET}-$${VERSION} git checkout -f &&
-	release.commands += cd $${TARGET}-$${VERSION} &&
-	release.commands += sed -i \'s/$${LITERAL_HASH}\\(VERSION=\\)_N_VERS_/\\1$${VERSION}/g\' src/version.sh &&
-	release.commands += find obs -type f -exec sed -i \'s/_N_VERS_/$${VERSION}/g\' {} + &&
-	release.commands += rm -f .gitignore &&
-	release.commands += src/changelog.sh -i ChangeLog -c \"Sergey Vlasov <sergey@vlasov.me>\" -p nulloy -r obs/nulloy.changes -d obs/debian.changelog &&
-	release.commands += cd - &&
-	release.commands += tar zcpf $${TARGET}-$${VERSION}.tar.gz $${TARGET}-$${VERSION} &&
-	release.commands += rm -rf $${TARGET}-$${VERSION}
+	release.commands =	rm -rf $${TARGET}-$${VERSION} && \
+						mkdir $${TARGET}-$${VERSION} && \
+						GIT_WORK_TREE=$${TARGET}-$${VERSION} git checkout -f && \
+						cd $${TARGET}-$${VERSION} && \
+						sed -i \'s/$${LITERAL_HASH}\\(VERSION=\\)_N_VERS_/\\1$${VERSION}/g\' src/version.sh && \
+						find obs -type f -exec sed -i \'s/_N_VERS_/$${VERSION}/g\' {} + && \
+						rm -f .gitignore && \
+						src/changelog.sh -i ChangeLog -c \"Sergey Vlasov <sergey@vlasov.me>\" -p nulloy -r obs/nulloy.changes -d obs/debian.changelog && \
+						cd - && \
+						tar zcpf $${TARGET}-$${VERSION}.tar.gz $${TARGET}-$${VERSION} && \
+						rm -rf $${TARGET}-$${VERSION}
 	QMAKE_EXTRA_TARGETS += release
 }
+
+# vim: set ts=4 sw=4: #

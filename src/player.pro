@@ -1,4 +1,7 @@
 TEMPLATE = app
+QT += script
+CONFIG += uitools
+
 unix:TARGET = nulloy
 win32:TARGET = Nulloy
 DESTDIR = ..
@@ -6,14 +9,11 @@ DESTDIR = ..
 DEPENDPATH += . ux/
 INCLUDEPATH += . ux/
 
-QT += script
-CONFIG += uitools
+HEADERS += *.h ux/*.h
+SOURCES += *.cpp ux/*.cpp
 
 FORMS += *.ui
 RESOURCES += *.qrc
-
-HEADERS += *.h ux/*.h
-SOURCES += *.cpp ux/*.cpp
 
 OBJECTS_DIR = .tmp
 MOC_DIR = .tmp
@@ -26,17 +26,15 @@ win32 {
 	RC_FILE = icon.rc
 	DEFINES += _N_TIME_STAMP_=__TIMESTAMP__
 }
-
 unix {
 	DEFINES += _N_TIME_STAMP_=\""\\\"`date +\\\"%a %b %d %T %Y\\\"`\\\""\"
 }
 
-build_pass:CONFIG(static, static|shared){
+build_pass:CONFIG(static, static|shared) {
 	DEFINES += _N_STATIC_BUILD_
-} else{
+} else {
 	DEFINES += _N_SHARED_BUILD_
 }
-
 
 include(version.pri)
 DEFINES += _N_VERSION_=\""\\\"$${VERSION}\\\""\"
@@ -56,15 +54,16 @@ plugins_gstreamer_builtin {
 
 unix {
 	silver_skin.target = ../skins/silver.nzs
-	silver_skin.commands = cd .tmp; cp -r ../skins/silver .; \
-						cd silver; rm design.svg;  zip ../../../skins/silver.nzs *
 	silver_skin.depends = skins/silver/*
-
+	silver_skin.commands =	mkdir ../skins && \
+							cd .tmp && \
+							cp -r ../skins/silver . && \
+							cd silver && \
+							rm design.svg && \
+							zip ../../../skins/silver.nzs *
 	QMAKE_EXTRA_TARGETS += silver_skin
+	POST_TARGETDEPS += $$silver_skin.target
 }
-
-system(mkdir ../skins; mkdir .tmp; cd .tmp; cp -r ../skins/silver .; \
-		cd silver; rm design.svg;  zip ../../../skins/silver.nzs *)
 
 # qmake "PREFIX=/usr"
 unix {
@@ -80,7 +79,7 @@ unix {
 	icon.files = icon.png
 	icon.path = $$prefix.path/share/nulloy
 
-	icon_post.extra = cd "$(INSTALL_ROOT)"$$prefix.path/share/icons; ln -s ../nulloy/icon.png nulloy.png
+	icon_post.extra = cd "$(INSTALL_ROOT)"$$prefix.path/share/icons && ln -s ../nulloy/icon.png nulloy.png
 	icon_post.path = $$prefix.path/share/icons/
 
 	desktop.files = ../nulloy.desktop
