@@ -23,6 +23,7 @@
 #include "widgetPrototype.h"
 #include "core.h"
 #include "action.h"
+#include "systemTray.h"
 
 #include <QFileInfo>
 #include <QPluginLoader>
@@ -145,10 +146,9 @@ NPlayer::NPlayer()
 	trayIconMenu->addAction(preferencesAction);
 	trayIconMenu->addSeparator();
 	trayIconMenu->addAction(exitAction);
-	m_trayIcon = new QSystemTrayIcon(this);
-	m_trayIcon->setObjectName("trayIcon");
-	m_trayIcon->setContextMenu(trayIconMenu);
-	m_trayIcon->setIcon(m_mainWindow->windowIcon());
+	NSystemTray::init(this);
+	NSystemTray::setContextMenu(trayIconMenu);
+	NSystemTray::setIcon(m_mainWindow->windowIcon());
 
 	// context menu
 	m_contextMenu = new QMenu(m_mainWindow);
@@ -226,7 +226,7 @@ void NPlayer::savePlaylist()
 
 void NPlayer::loadSettings()
 {
-	m_trayIcon->setVisible(NSettings::value("GUI/TrayIcon").toBool());
+	NSystemTray::setEnabled(NSettings::value("GUI/TrayIcon").toBool());
 
 	if (NSettings::value("AutoCheckUpdates").toBool())
 		versionOnlineFetch();
@@ -248,7 +248,7 @@ void NPlayer::saveSettings()
 
 void NPlayer::preferencesDialogSettingsChanged()
 {
-	m_trayIcon->setVisible(NSettings::value("GUI/TrayIcon").toBool());
+	NSystemTray::setEnabled(NSettings::value("GUI/TrayIcon").toBool());
 }
 
 QString NPlayer::about()
@@ -303,7 +303,7 @@ void NPlayer::on_networkManager_finished(QNetworkReply *reply)
 void NPlayer::mainWindowClosed()
 {
 	if (NSettings::value("GUI/MinimizeToTray").toBool()) {
-		m_trayIcon->setVisible(TRUE);
+		NSystemTray::setEnabled(TRUE);
 	} else {
 		quit();
 	}
@@ -327,7 +327,7 @@ void NPlayer::on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
 				m_mainWindow->setVisible(!visible);
 			}
 			if (!NSettings::value("GUI/TrayIcon").toBool())
-				m_trayIcon->setVisible(!visible);
+				NSystemTray::setEnabled(!visible);
 		} else {
 			if (!minimized) {
 				m_mainWindow->showMinimized();
@@ -357,7 +357,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	else
 		title = "";
 	m_mainWindow->setTitle(title);
-	m_trayIcon->setToolTip(title);
+	NSystemTray::setToolTip(title);
 }
 
 void NPlayer::on_alwaysOnTopAction_toggled(bool checked)

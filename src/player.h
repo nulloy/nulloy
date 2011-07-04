@@ -22,8 +22,7 @@
 #include "playlistWidget.h"
 #include "mainWindow.h"
 #include "logDialog.h"
-#include <QSystemTrayIcon>
-#include <QMenu>
+
 #include <QtScript>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -37,7 +36,6 @@ private:
 	NMainWindow *m_mainWindow;
 	NPreferencesDialog *m_preferencesDialog;
 	NPlaybackEngineInterface *m_playbackEngine;
-	QSystemTrayIcon *m_trayIcon;
 	QMenu *m_contextMenu;
 	NPlaylistWidget *m_playlistWidget;
 	NLogDialog *m_logDialog;

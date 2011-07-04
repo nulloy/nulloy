@@ -3,8 +3,8 @@ unix:TARGET = nulloy
 win32:TARGET = Nulloy
 DESTDIR = ..
 
-DEPENDPATH += .
-INCLUDEPATH += .
+DEPENDPATH += . ux/
+INCLUDEPATH += . ux/
 
 QT += script
 CONFIG += uitools
@@ -12,8 +12,8 @@ CONFIG += uitools
 FORMS += *.ui
 RESOURCES += *.qrc
 
-HEADERS += *.h
-SOURCES += *.cpp
+HEADERS += *.h ux/*.h
+SOURCES += *.cpp ux/*.cpp
 
 OBJECTS_DIR = .tmp
 MOC_DIR = .tmp
