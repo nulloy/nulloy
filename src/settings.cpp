@@ -19,7 +19,7 @@
 
 namespace NSettings
 {
-	QSettings *_instance = FALSE;
+	QSettings *_instance = NULL;
 }
 
 void NSettings::init(QObject *parent)
