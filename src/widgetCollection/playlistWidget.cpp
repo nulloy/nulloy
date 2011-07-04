@@ -109,6 +109,65 @@ void NPlaylistWidget::setMediaList(const QStringList &pathList)
 		addItem(createItemFromPath(path));
 }
 
+void NPlaylistWidget::setMediaListFromPlaylist(const QString &path)
+{
+	clear();
+	m_currentItem = NULL;
+	bool failed = FALSE;
+
+	QString prefix = "#NULLOY:";
+
+	QString line;
+	QFile playlist(path);
+	if (playlist.exists() && playlist.open(QFile::ReadOnly)) {
+		QTextStream in(&playlist);
+		while(!in.atEnd()) {
+			line = in.readLine();
+			if (line.startsWith("#")) {
+				if (line.startsWith(prefix)) {
+					line.remove(0, prefix.size());
+					float time = line.section(',', 0).toFloat();
+					if (time == -1)
+						failed = TRUE;
+				}
+			} else {
+				NPlaylistItem *item = createItemFromPath(line);
+				item->setData(NPlaylistItem::FailedRole, failed);
+				addItem(item);
+
+				failed = FALSE;
+			}
+		}
+		playlist.close();
+	}
+}
+
+void NPlaylistWidget::writePlaylist(const QString &path)
+{
+	QFile playlist(path);
+	if (playlist.open(QFile::WriteOnly | QFile::Truncate)) {
+		QTextStream out(&playlist);
+		out << "#EXTM3U\n";
+
+		QDir dir = QFileInfo(path).absoluteDir();
+
+		for(int i = 0; i < count(); ++i) {
+			float time = 0;
+			if (item(i)->data(NPlaylistItem::FailedRole).toBool())
+				time = -1;
+			if (time != 0)
+				out << "#NULLOY:" << time << "\n";
+
+			QString file = dir.relativeFilePath(item(i)->data(NPlaylistItem::PathRole).toString());
+			out << "#EXTINF:-1, " << QFileInfo(file).fileName() << "\n";
+			if (file.startsWith("../"))
+				file = QFileInfo(file).absoluteFilePath();
+			out << file << "\n";
+		}
+		playlist.close();
+	}
+}
+
 void NPlaylistWidget::activateNext()
 {
 	int row = currentRow();
@@ -202,6 +261,5 @@ NPlaylistItem* NPlaylistWidget::item(int row)
 {
 	return dynamic_cast<NPlaylistItem *>(QListWidget::item(row));
 }
-
 
 /* vim: set ts=4 sw=4: */

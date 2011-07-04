@@ -54,6 +54,8 @@ public slots:
 	void appendMediaList(const QStringList &pathList);
 	void setMediaList(const QStringList &pathList);
 	void activateMediaList(const QStringList &pathList) { setMediaList(pathList); activateFirst(); }
+	void setMediaListFromPlaylist(const QString &path);
+	void writePlaylist(const QString &path);
 
 private slots:
 	void on_itemActivated(QListWidgetItem *item);

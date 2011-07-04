@@ -21,7 +21,6 @@
 #include "skinLoader.h"
 #include "skinFileSystem.h"
 #include "widgetPrototype.h"
-#include "playlist.h"
 #include "core.h"
 #include "action.h"
 
@@ -203,10 +202,7 @@ void NPlayer::message(const QString &str)
 
 void NPlayer::restorePlaylist()
 {
-	QStringList files = playlistParse(m_localPlaylist);
-	if (files.isEmpty())
-		return;
-	m_playlistWidget->setMediaList(files);
+	m_playlistWidget->setMediaListFromPlaylist(m_localPlaylist);
 
 	QStringList playlistRowValues = NSettings::value("PlaylistRow").toStringList();
 	if (!playlistRowValues.isEmpty()) {
@@ -221,7 +217,7 @@ void NPlayer::restorePlaylist()
 
 void NPlayer::savePlaylist()
 {
-	playlistWrite(m_localPlaylist, m_playlistWidget->mediaList());
+	m_playlistWidget->writePlaylist(m_localPlaylist);
 
 	int row = m_playlistWidget->currentRow();
 	qreal pos = m_playbackEngine->position();
