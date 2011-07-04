@@ -16,6 +16,7 @@
 #ifndef N_PLAYLIST_WIDGET_H
 #define N_PLAYLIST_WIDGET_H
 
+#include "playlistItem.h"
 #include <QListWidget>
 
 class NPlaylistWidget : public QListWidget
@@ -23,19 +24,21 @@ class NPlaylistWidget : public QListWidget
 	Q_OBJECT
 
 private:
-	QListWidgetItem *m_currentItem;
+	NPlaylistItem *m_currentItem;
 
-	void setCurrentItem(QListWidgetItem *item);
-	void activateItem(QListWidgetItem *item);
-	QListWidgetItem* createItemFromPath(const QString &path);
+	void setCurrentItem(NPlaylistItem *item);
+	void activateItem(NPlaylistItem *item);
+	NPlaylistItem* createItemFromPath(const QString &path);
 	bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
 	QStringList mimeTypes() const;
-	QMimeData* mimeData(const QList<QListWidgetItem *> items) const;
+	QMimeData* mimeData(const QList<NPlaylistItem *> items) const;
 	void keyPressEvent(QKeyEvent *e);
 
 public:
 	NPlaylistWidget(QWidget *parent = 0);
 	~NPlaylistWidget();
+
+	NPlaylistItem* item(int row);
 
 	QStringList mediaList();
 	int currentRow();

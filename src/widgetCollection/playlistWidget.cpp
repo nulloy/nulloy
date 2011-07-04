@@ -24,39 +24,33 @@
 NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 {
 	connect(this, SIGNAL(itemActivated(QListWidgetItem *)), this, SLOT(on_itemActivated(QListWidgetItem *)));
-
+	setItemDelegate(new NPlaylistItemDelegate);
 	m_currentItem = NULL;
 }
 
 NPlaylistWidget::~NPlaylistWidget() {}
 
-void NPlaylistWidget::setCurrentItem(QListWidgetItem *item)
+void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 {
-	QBrush b = item->foreground();
-	b.setColor(QPalette::Text);
-	item->setForeground(b);
+	item->setData(NPlaylistItem::FailedRole, FALSE);
 
 	QFont f = item->font();
-
 	if (m_currentItem) {
 		f.setBold(FALSE);
 		m_currentItem->setFont(f);
 	}
-
 	f.setBold(TRUE);
 	item->setFont(f);
 
 	scrollToItem(item);
 	m_currentItem = item;
 
-	emit mediaSet(item->data(Qt::UserRole).toString());
+	emit mediaSet(item->data(NPlaylistItem::PathRole).toString());
 }
 
 void NPlaylistWidget::setCurrentFailed()
 {
-	QBrush b = m_currentItem->foreground();
-	b.setColor(QPalette().color(QPalette::Dark));
-	m_currentItem->setForeground(b);
+	m_currentItem->setData(NPlaylistItem::FailedRole, TRUE);
 }
 
 int NPlaylistWidget::currentRow()
@@ -79,15 +73,16 @@ void NPlaylistWidget::activateRow(int row)
 		activateItem(item(row));
 }
 
-void NPlaylistWidget::activateItem(QListWidgetItem *item)
+void NPlaylistWidget::activateItem(NPlaylistItem *item)
 {
 	emit itemActivated(item);
 }
 
 void NPlaylistWidget::on_itemActivated(QListWidgetItem *item)
 {
-	if (m_currentItem != item)
-		setCurrentItem(item);
+	NPlaylistItem *item2 = dynamic_cast<NPlaylistItem *>(item);
+	if (m_currentItem != item2)
+		setCurrentItem(item2);
 	emit currentActivated();
 }
 
@@ -95,7 +90,7 @@ QStringList NPlaylistWidget::mediaList()
 {
 	QStringList list;
 	for(int i = 0; i < count(); ++i)
-		list << item(i)->data(Qt::UserRole).toString();
+		list << item(i)->data(NPlaylistItem::PathRole).toString();
 
 	return list;
 }
@@ -149,10 +144,10 @@ void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &parent, int start,
 	}
 }
 
-QListWidgetItem* NPlaylistWidget::createItemFromPath(const QString &path)
+NPlaylistItem* NPlaylistWidget::createItemFromPath(const QString &path)
 {
-	QListWidgetItem *item = new QListWidgetItem();
-	item->setData(Qt::UserRole, path);
+	NPlaylistItem *item = new NPlaylistItem();
+	item->setData(NPlaylistItem::PathRole, path);
 	item->setText(QFileInfo(path).fileName());
 	return item;
 }
@@ -162,7 +157,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
 	Q_UNUSED(action);
 	foreach (QUrl url, data->urls()) {
 		foreach (QString file, NCore::dirListRecursive(url.toLocalFile())) {
-			QListWidgetItem *item = createItemFromPath(file);
+			NPlaylistItem *item = createItemFromPath(file);
 			insertItem(index, item);
 			++index;
 		}
@@ -178,12 +173,12 @@ QStringList NPlaylistWidget::mimeTypes() const
 	return qstrList;
 }
 
-QMimeData* NPlaylistWidget::mimeData(const QList<QListWidgetItem *> items) const
+QMimeData* NPlaylistWidget::mimeData(const QList<NPlaylistItem *> items) const
 {
 	QList<QUrl> urls;
 
-	foreach (QListWidgetItem *item, items)
-		urls << QUrl::fromLocalFile(item->data(Qt::UserRole).toString());
+	foreach (NPlaylistItem *item, items)
+		urls << QUrl::fromLocalFile(item->data(NPlaylistItem::PathRole).toString());
 
 	QMimeData *data = new QMimeData();
 	data->setUrls(urls);
@@ -202,5 +197,11 @@ void NPlaylistWidget::keyPressEvent(QKeyEvent *e)
 		update();
 	}
 }
+
+NPlaylistItem* NPlaylistWidget::item(int row)
+{
+	return dynamic_cast<NPlaylistItem *>(QListWidget::item(row));
+}
+
 
 /* vim: set ts=4 sw=4: */

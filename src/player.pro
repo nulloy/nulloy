@@ -20,6 +20,7 @@ MOC_DIR = .tmp
 
 INCLUDEPATH += widgetCollection
 LIBS += -LwidgetCollection -lwidget_collection
+PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
 
 win32 {
 	RC_FILE = icon.rc
