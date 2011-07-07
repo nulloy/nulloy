@@ -5,15 +5,15 @@ TRY_HELP="Try \`$BASENAME --help' for more information"
 
 echo_help()
 {
-	echo "Usage: $BASENAME [options]"
-	echo '-i, --input       input changelog file'
-	echo '-d, --deb         output changelog file in deb format'
-	echo '-r, --rpm         output changelog file in rpm format'
-	echo '-c, --commiter    comitter name and email'
-	echo '-p, --package     package name'
-	echo '-h, --help        print this message'
+	echo "Usage:  $BASENAME [options]"
+	echo '   -i, --input       input changelog file'
+	echo '   -d, --deb         output changelog file in deb format'
+	echo '   -r, --rpm         output changelog file in rpm format'
+	echo '   -c, --commiter    comitter name and email'
+	echo '   -p, --package     package name'
+	echo '   -h, --help        print this message'
 	echo
-	echo "Version 0.1"
+	echo "Version 0.2"
 	echo 'Copyright (C) 2011 Sergey Vlasov <sergey@vlasov.me>'
 }
 
@@ -25,19 +25,19 @@ fi
 
 eval set -- $args
 while [[ $# -gt 0 ]]; do
-	if [[ $1 == -i ]] || [[ $1 == --input ]]; then
+	if [[ $1 == "-i" || $1 == "--input" ]]; then
 		shift; INPUT=$1
-	elif [[ $1 == -d ]] || [[ $1 == --deb ]]; then
+	elif [[ $1 == "-d" || $1 == "--deb" ]]; then
 		shift; OUT_DEB=$1
-	elif [[ $1 == -r ]] || [[ $1 == --rpm ]]; then
+	elif [[ $1 == "-r" || $1 == "--rpm" ]]; then
 		shift; OUT_RPM=$1
-	elif [[ $1 == -c ]] || [[ $1 == --commiter ]]; then
+	elif [[ $1 == "-c" || $1 == "--commiter" ]]; then
 		shift; COMMITER=$1
-	elif [[ $1 == -p ]] || [[ $1 == --package ]]; then
+	elif [[ $1 == "-p" || $1 == "--package" ]]; then
 		shift; PACKAGE=$1
-	elif [[ $1 == -h ]]; then
+	elif [[ $1 == "-h" || $1 == "--help" ]]; then
 		echo_help; exit 0
-	elif [[ $1 == -- ]]; then
+	elif [[ $1 == "--" ]]; then
 		shift
 		if [[ $# -ne 0 ]]; then
 			echo "$BASENAME: invalid arguments"
