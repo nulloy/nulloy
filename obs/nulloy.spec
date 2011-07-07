@@ -29,7 +29,7 @@ Music player with a waveform progress bar.
 %else
 %define QMAKE qmake
 %endif
-%{QMAKE} -config plugins_gstreamer -config plugins_phonon -config silent "PREFIX=%{buildroot}%{_prefix}"
+QMAKE=%{QMAKE} ./configure --phonon --prefix=%{buildroot}%{_prefix}
 make
 
 %install

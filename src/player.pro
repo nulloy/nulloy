@@ -43,8 +43,8 @@ include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
 include(../3rdParty/qtsingleapplication-2.6.1/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 
-# qmake -config plugins_gstreamer_builtin
-plugins_gstreamer_builtin {
+# qmake -config embed-gstreamer
+embed-gstreamer {
 	include(plugins/gstreamer.pri)
 	DEFINES += _N_GSTREAMER_PLUGINS_BUILTIN_
 	HEADERS += plugins/waveformBuilderGstreamer/*.h plugins/playbackEngineGstreamer/*.h

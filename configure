@@ -1,0 +1,121 @@
+#! /bin/bash
+
+BASENAME=`basename $0`
+TRY_HELP="Try \`$BASENAME --help' for more information"
+
+PREFIX=/usr
+DEBUG=no
+
+HAVE_GSTREAMER=no
+HAVE_VLC=no
+
+BUILD_GSTREAMER=yes
+EMBED_GSTREAMER=no
+BUILD_VLC=no
+BUILD_PHONON=no
+
+echo_help()
+{
+	echo "Usage:  $BASENAME [options]"
+	echo '    --no-gstreamer    do not build GStreamer plugins'
+	echo '    --embed-gstreamer embed GStreamer plugins statically'
+	echo '    --vlc             build VLC plugins'
+	echo '    --phonon          build Phonon plugins'
+	echo '    --debug           build in debug mode'
+	echo
+}
+
+args=`getopt -n$BASENAME -o h --longoptions="no-gstreamer embed-gstreamer vlc phonon debug prefix: help" -- "$@"`
+if test $? != 0; then
+	echo $TRY_HELP
+	exit 1
+fi
+
+eval set -- $args
+while [ $# -gt 0 ]; do
+	if [ $1 == "--prefix" ]; then
+		shift; PREFIX=$1
+	elif [ $1 == "--debug" ]; then
+		 DEBUG=yes
+	elif [ $1 == "--no-gstreamer" ]; then
+		BUILD_GSTREAMER=no
+	elif [ $1 == "--embed-gstreamer" ]; then
+		EMBED_GSTREAMER=yes
+	elif [ $1 == "--vlc" ]; then
+		BUILD_VLC=yes
+	elif [ $1 == "--phonon" ]; then
+		BUILD_PHONON=yes
+	elif [[ $1 == "-h"  || $1 == "--help" ]]; then
+		echo_help; exit 0
+	elif [ $1 == "--" ]; then
+		shift
+		if [ $# -ne 0 ]; then
+			echo "$BASENAME: invalid arguments"
+			echo $TRY_HELP; exit 1
+		fi
+		break
+	fi
+	shift
+done
+
+if [[ ! -n $QMAKE && ! -f $QMAKE ]]; then
+	QMAKE=`which qmake` 2> /dev/null
+	if [ ! -f $QMAKE ]; then
+		QMAKE=$QTDIR/bin/qmake
+		if [ ! -f $QMAKE ]; then
+			echo "$BASENAME: Unable to find qmake. Try \`QTDIR=/path/to/qt $0' or \`QMAKE=/path/to/qmake $0'."
+			exit 1
+		fi
+	fi
+fi
+
+which pkg-config > /dev/null
+if [ $? -eq 0 ]; then
+	if [[ $BUILD_GSTREAMER == "yes" || $EMBED_GSTREAMER == "yes" ]]; then
+		pkg-config --exists gstreamer-0.10
+		if [ $? -eq 0 ]; then
+			echo "found gstreamer-0.10"
+		else
+			echo "Package 'gstreamer-0.10' was not found in the pkg-config search path."
+			echo "Perhaps you should add the directory containing \`gstreamer-0.10.pc'"
+			echo "to the PKG_CONFIG_PATH environment variable."
+			exit 1
+		fi
+	fi
+	if [ "$BUILD_VLC" == "yes" ]; then
+		pkg-config --exists libvlc
+		if [ $? -eq 0 ]; then
+			echo "found libvlc"
+		else
+			echo "Package 'libvlc' was not found in the pkg-config search path."
+			echo "Perhaps you should add the directory containing \`libvlc.pc'"
+			echo "to the PKG_CONFIG_PATH environment variable."
+			exit 1
+		fi
+	fi
+fi
+
+[ $BUILD_GSTREAMER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG gstreamer"
+[ $EMBED_GSTREAMER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG embed-gstreamer"
+[ $BUILD_VLC == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG vlc"
+[ $BUILD_PHONON == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG phonon"
+if [ $DEBUG == "yes" ]; then
+	QMAKE_CONFIG="$QMAKE_CONFIG debug"
+else
+	QMAKE_CONFIG="$QMAKE_CONFIG release"
+fi
+
+echo
+echo "Running qmake..."
+
+$QMAKE "CONFIG+=$QMAKE_CONFIG" PREFIX="$PREFIX"
+if [ $? -ne 0 ]; then
+    echo "$BASENAME: qmake failed"
+    exit 1
+fi
+
+echo "Install prefix: $PREFIX"
+echo "Nulloy has been configured. Now run \`make'."
+echo
+
+exit 0

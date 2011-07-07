@@ -5,7 +5,7 @@ export DH_COMPAT=5
 build: build-stamp
 build-stamp:
 	dh_testdir
-	qmake -config plugins_gstreamer -config plugins_phonon -config silent "PREFIX=/usr"
+	./configure --phonon --prefix=/usr
 	make
 	touch build-stamp
 
