@@ -1,1 +1,1 @@
-VERSION = $$system(./version.sh)
+VERSION = $$system($$PWD/version.sh)
