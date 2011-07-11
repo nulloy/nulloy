@@ -18,12 +18,15 @@
 #include "settings.h"
 #include "pluginInterface.h"
 #include "pluginLoader.h"
-#include "skinLoader.h"
-#include "skinFileSystem.h"
 #include "widgetPrototype.h"
 #include "core.h"
 #include "action.h"
 #include "systemTray.h"
+
+#ifndef _N_NO_SKINS_
+#include "skinLoader.h"
+#include "skinFileSystem.h"
+#endif
 
 #include <QFileInfo>
 #include <QPluginLoader>
@@ -60,7 +63,11 @@ NPlayer::NPlayer()
 
 	m_mainWindow = new NMainWindow();
 	connect(m_mainWindow, SIGNAL(closed()), this, SLOT(mainWindowClosed()));
+#ifndef _N_NO_SKINS_
 	m_mainWindow->init(NSkinLoader::skinUiFormFile());
+#else
+	m_mainWindow->init(QString());
+#endif
 
 	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
 	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(preferencesDialogSettingsChanged()));
@@ -74,7 +81,11 @@ NPlayer::NPlayer()
 
 	// loading script
 	m_scriptEngine = new QScriptEngine(this);
+#ifndef _N_NO_SKINS_
 	QString scriptFileName(NSkinLoader::skinScriptFile());
+#else
+	QString scriptFileName(":skins/native/script.js");
+#endif
 	QFile scriptFile(scriptFileName);
 	scriptFile.open(QIODevice::ReadOnly);
 	m_scriptEngine->evaluate(scriptFile.readAll(), scriptFileName);

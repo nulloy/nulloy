@@ -36,6 +36,11 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
 
 	setWindowTitle(QCoreApplication::applicationName() + " Preferences");
+
+	#ifdef _N_NO_SKINS_
+		ui.skinLabel->hide();
+		ui.skinComboBox->hide();
+	#endif
 }
 
 void NPreferencesDialog::initShortcuts()
@@ -103,6 +108,7 @@ void NPreferencesDialog::loadSettings()
 	if (index != -1)
 		ui.waveformComboBox->setCurrentIndex(index);
 
+#ifndef _N_NO_SKINS_
 	// skins
 	foreach (QString str, NSkinLoader::skinIdentifiers()) {
 		QString id = str.section('/', 2);
@@ -115,6 +121,7 @@ void NPreferencesDialog::loadSettings()
 	index = ui.skinComboBox->findData(NSettings::value("GUI/Skin"));
 	if (index != -1)
 		ui.skinComboBox->setCurrentIndex(index);
+#endif
 
 	// shortcuts
 	for (int i = 0; i < m_globalActionList.size(); ++i) {
@@ -146,6 +153,7 @@ void NPreferencesDialog::saveSettings()
 	NSettings::setValue("Playback", playbackVariant);
 	NSettings::setValue("Waveform", waveformVariant);
 
+#ifndef _N_NO_SKINS_
 	// skins
 	bool showSkinMessage = FALSE;
 	QVariant skinVariant = ui.skinComboBox->itemData(ui.skinComboBox->currentIndex());
@@ -167,6 +175,7 @@ void NPreferencesDialog::saveSettings()
 		QMessageBox box(QMessageBox::Information, windowTitle(), message, QMessageBox::Close, this);
 		box.exec();
 	}
+#endif
 
 	// shortcuts
 	ui.globalShortcutEditorWidget->applyShortcuts();

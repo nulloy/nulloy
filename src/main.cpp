@@ -15,9 +15,11 @@
 
 #include "player.h"
 #include <qtsingleapplication.h>
-#include "skinFileSystem.h"
 
+#ifndef _N_NO_SKINS_
+#include "skinFileSystem.h"
 Q_IMPORT_PLUGIN(widget_collection)
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -48,7 +50,9 @@ int main(int argc, char *argv[])
 	res = chdir(QCoreApplication::applicationDirPath().toAscii().data());
 #endif
 
+#ifndef _N_NO_SKINS_
 	NSkinFileSystem::init();
+#endif
 
 	NPlayer p;
 	QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),

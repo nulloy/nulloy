@@ -21,9 +21,12 @@
 #include "pluginLoader.h"
 #include "waveformSlider.h"
 #include "dropArea.h"
-#include "skinFileSystem.h"
 
+#ifndef _N_NO_SKINS_
+#include "skinFileSystem.h"
 #include <QUiLoader>
+#endif
+
 #include <QLayout>
 #include <QIcon>
 
@@ -34,6 +37,7 @@ NMainWindow::~NMainWindow() {}
 
 void NMainWindow::init(const QString &uiFile)
 {
+#ifndef _N_NO_SKINS_
 	QUiLoader loader;
 	QFile formFile(uiFile);
 	formFile.open(QIODevice::ReadOnly);
@@ -47,6 +51,10 @@ void NMainWindow::init(const QString &uiFile)
 	setStyleSheet(form->styleSheet());
 
 	setSizeGripEnabled(TRUE);
+#else
+	Q_UNUSED(uiFile)
+    ui.setupUi(this);
+#endif
 
 	NWaveformSlider *waveformSlider = qFindChild<NWaveformSlider *>(this, "waveformSlider");
 	waveformSlider->setBuilder(NPluginLoader::waveformPlugin());

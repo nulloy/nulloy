@@ -1,6 +1,5 @@
 TEMPLATE = app
 QT += script
-CONFIG += uitools
 
 unix:TARGET = nulloy
 win32:TARGET = Nulloy
@@ -13,14 +12,54 @@ HEADERS += *.h ux/*.h
 SOURCES += *.cpp ux/*.cpp
 
 FORMS += *.ui
-RESOURCES += *.qrc
 
 OBJECTS_DIR = .tmp
 MOC_DIR = .tmp
 
-INCLUDEPATH += widgetCollection
-LIBS += -LwidgetCollection -lwidget_collection
-PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
+# qmake -config no-skins
+!no-skins {
+	CONFIG += uitools
+	INCLUDEPATH += widgetCollection
+	LIBS += -LwidgetCollection -lwidget_collection
+	PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
+	RESOURCES = resources.qrc
+
+	unix {
+		silver_skin.target = ../skins/silver.nzs
+		silver_skin.depends = skins/silver/*
+		silver_skin.commands =	mkdir ../skins && \
+								cd .tmp && \
+								cp -r ../skins/silver . && \
+								cd silver && \
+								rm design.svg && \
+								zip ../../../skins/silver.nzs *
+		QMAKE_EXTRA_TARGETS += silver_skin
+		POST_TARGETDEPS += $$silver_skin.target
+	}
+} else {
+	DEFINES += _N_NO_SKINS_
+
+	HEADERS -= skinFileSystem.h   skinLoader.h
+	SOURCES -= skinFileSystem.cpp skinLoader.cpp
+	HEADERS +=	widgetCollection/dropArea.h \
+				widgetCollection/label.h \
+				widgetCollection/playlistWidget.h \
+				widgetCollection/slider.h \
+				widgetCollection/waveformSlider.h \
+				widgetCollection/playlistItem.h
+	SOURCES +=	widgetCollection/dropArea.cpp \
+				widgetCollection/label.cpp \
+				widgetCollection/playlistWidget.cpp \
+				widgetCollection/slider.cpp \
+				widgetCollection/waveformSlider.cpp \
+				widgetCollection/playlistItem.cpp
+
+	DEPENDPATH += widgetCollection/
+	INCLUDEPATH += widgetCollection/
+
+	RESOURCES = resources_no-skins.qrc
+	FORMS += skins/native/form.ui
+}
 
 win32 {
 	RC_FILE = icon.rc
@@ -52,19 +91,6 @@ embed-gstreamer {
 	INCLUDEPATH += plugins/waveformBuilderGstreamer plugins/playbackEngineGstreamer
 }
 
-unix {
-	silver_skin.target = ../skins/silver.nzs
-	silver_skin.depends = skins/silver/*
-	silver_skin.commands =	mkdir ../skins && \
-							cd .tmp && \
-							cp -r ../skins/silver . && \
-							cd silver && \
-							rm design.svg && \
-							zip ../../../skins/silver.nzs *
-	QMAKE_EXTRA_TARGETS += silver_skin
-	POST_TARGETDEPS += $$silver_skin.target
-}
-
 # qmake "PREFIX=/usr"
 unix {
 	prefix.path = $$PREFIX
@@ -72,9 +98,6 @@ unix {
 
 	plugins.files = ../plugins/*
 	plugins.path = $$prefix.path/lib/nulloy/plugins
-
-	skins.files = ../skins/*
-	skins.path = $$prefix.path/share/nulloy/skins
 
 	icon.files = icon.png
 	icon.path = $$prefix.path/share/nulloy
@@ -85,7 +108,13 @@ unix {
 	desktop.files = ../nulloy.desktop
 	desktop.path = $$prefix.path/share/applications
 
-	INSTALLS += target plugins skins icon icon_post desktop
+	INSTALLS += target plugins icon icon_post desktop
+
+	!no-skins {
+		skins.files = ../skins/*
+		skins.path = $$prefix.path/share/nulloy/skins
+		INSTALLS += skins
+	}
 }
 
 # vim: set ts=4 sw=4: #

@@ -13,6 +13,7 @@ BUILD_GSTREAMER=yes
 EMBED_GSTREAMER=no
 BUILD_VLC=no
 BUILD_PHONON=no
+BUILD_SKINS=yes
 
 echo_help()
 {
@@ -21,11 +22,12 @@ echo_help()
 	echo '    --embed-gstreamer embed GStreamer plugins statically'
 	echo '    --vlc             build VLC plugins'
 	echo '    --phonon          build Phonon plugins'
+	echo '    --no-skins        disable skins support'
 	echo '    --debug           build in debug mode'
 	echo
 }
 
-args=`getopt -n$BASENAME -o h --longoptions="no-gstreamer embed-gstreamer vlc phonon debug prefix: help" -- "$@"`
+args=`getopt -n$BASENAME -o h --longoptions="no-gstreamer embed-gstreamer vlc phonon no-skins debug prefix: help" -- "$@"`
 if test $? != 0; then
 	echo $TRY_HELP
 	exit 1
@@ -45,6 +47,8 @@ while [ $# -gt 0 ]; do
 		BUILD_VLC=yes
 	elif [ $1 == "--phonon" ]; then
 		BUILD_PHONON=yes
+	elif [ $1 == "--no-skins" ]; then
+		BUILD_SKINS=no
 	elif [[ $1 == "-h"  || $1 == "--help" ]]; then
 		echo_help; exit 0
 	elif [ $1 == "--" ]; then
@@ -99,6 +103,7 @@ fi
 [ $EMBED_GSTREAMER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG embed-gstreamer"
 [ $BUILD_VLC == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG vlc"
 [ $BUILD_PHONON == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG phonon"
+[ $BUILD_SKINS == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-skins"
 if [ $DEBUG == "yes" ]; then
 	QMAKE_CONFIG="$QMAKE_CONFIG debug"
 else

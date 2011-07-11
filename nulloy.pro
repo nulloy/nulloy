@@ -1,8 +1,11 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-widgets.subdir = src/widgetCollection
-SUBDIRS += widgets
+# qmake -config no-skins
+!no-skins {
+	widgets.subdir = src/widgetCollection
+	SUBDIRS += widgets
+}
 
 # qmake -config gstreamer
 gstreamer {

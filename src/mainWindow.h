@@ -17,12 +17,18 @@
 #define N_MAIN_WINDOW_H
 
 #include <QDialog>
+#ifdef _N_NO_SKINS_
+#include "ui_form.h"
+#endif
 
 class NMainWindow : public QDialog
 {
 	Q_OBJECT
 
 private:
+#ifdef _N_NO_SKINS_
+	Ui::Dialog ui;
+#endif
 	bool m_dragActive;
 	bool m_skinEnabled;
 	QPoint m_dragPoint;

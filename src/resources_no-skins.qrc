@@ -1,0 +1,6 @@
+<RCC>
+  <qresource>
+    <file>icon.png</file>
+    <file>skins/native/script.js</file>
+  </qresource>
+</RCC>
