@@ -13,8 +13,10 @@ SOURCES += *.cpp ux/*.cpp
 
 FORMS += *.ui
 
-OBJECTS_DIR = .tmp
-MOC_DIR = .tmp
+OBJECTS_DIR	= .tmp
+MOC_DIR		= .tmp
+RCC_DIR		= .tmp
+UI_DIR		= .tmp
 
 # qmake -config no-skins
 !no-skins {
