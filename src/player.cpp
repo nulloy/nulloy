@@ -16,8 +16,6 @@
 #include "player.h"
 
 #include "settings.h"
-#include "pluginInterface.h"
-#include "pluginLoader.h"
 #include "widgetPrototype.h"
 #include "core.h"
 #include "action.h"
@@ -26,6 +24,12 @@
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
 #include "skinFileSystem.h"
+#endif
+
+#ifndef _N_NO_PLUGINS_
+#include "pluginLoader.h"
+#else
+#include "playbackEngineGstreamer.h"
 #endif
 
 #include <QFileInfo>
@@ -57,7 +61,23 @@ NPlayer::NPlayer()
 
 	m_localPlaylist = NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".m3u";
 
+#ifndef _N_NO_PLUGINS_
 	m_playbackEngine = NPluginLoader::playbackPlugin();
+#else
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+		QString pluginsDir = "plugins";
+		QStringList subDirsList;
+		QDir dir(pluginsDir);
+		if (dir.exists()) {
+			foreach (QString subDir, dir.entryList(QDir::Dirs))
+				subDirsList << pluginsDir + "/" + subDir;
+		}
+		_putenv(QString("PATH=" + pluginsDir + ";" +
+				subDirsList.join(";") + ";" + getenv("PATH")).toAscii());
+#endif
+	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(new NPlaybackEngineGStreamer());
+	dynamic_cast<NPluginInterface *>(m_playbackEngine)->init();
+#endif
 	m_playbackEngine->setParent(this);
 	m_playbackEngine->setObjectName("playbackEngine");
 

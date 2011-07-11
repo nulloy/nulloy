@@ -13,7 +13,8 @@ BUILD_GSTREAMER=yes
 EMBED_GSTREAMER=no
 BUILD_VLC=no
 BUILD_PHONON=no
-BUILD_SKINS=yes
+SUPPORT_SKINS=yes
+SUPPORT_PLUGINS=yes
 
 echo_help()
 {
@@ -23,11 +24,12 @@ echo_help()
 	echo '    --vlc             build VLC plugins'
 	echo '    --phonon          build Phonon plugins'
 	echo '    --no-skins        disable skins support'
+	echo '    --no-plugins      disable plugins support'
 	echo '    --debug           build in debug mode'
 	echo
 }
 
-args=`getopt -n$BASENAME -o h --longoptions="no-gstreamer embed-gstreamer vlc phonon no-skins debug prefix: help" -- "$@"`
+args=`getopt -n$BASENAME -o h --longoptions="no-gstreamer embed-gstreamer vlc phonon no-skins no-plugins debug prefix: help" -- "$@"`
 if test $? != 0; then
 	echo $TRY_HELP
 	exit 1
@@ -48,7 +50,9 @@ while [ $# -gt 0 ]; do
 	elif [ $1 == "--phonon" ]; then
 		BUILD_PHONON=yes
 	elif [ $1 == "--no-skins" ]; then
-		BUILD_SKINS=no
+		SUPPORT_SKINS=no
+	elif [ $1 == "--no-plugins" ]; then
+		SUPPORT_PLUGINS=no
 	elif [[ $1 == "-h"  || $1 == "--help" ]]; then
 		echo_help; exit 0
 	elif [ $1 == "--" ]; then
@@ -99,11 +103,33 @@ if [ $? -eq 0 ]; then
 	fi
 fi
 
+if [ $SUPPORT_PLUGINS == "no" ]; then
+	if [ $BUILD_GSTREAMER == "no" ]; then
+		echo "'--no-gstreamer' cannot be used along with '--no-plugins'"
+		exit 1
+	else
+		BUILD_GSTREAMER=no
+	fi
+	if [ $EMBED_GSTREAMER == "yes" ]; then
+		echo "'--embed-gstreamer' cannot be used along with '--no-plugins'"
+		exit 1
+	fi
+	if [ $BUILD_PHONON == "yes" ]; then
+		echo "'--phonon' cannot be used along with '--no-plugins'"
+		exit 1
+	fi
+	if [ $BUILD_VLC == "yes" ]; then
+		echo "'--vlc' cannot be used along with '--no-plugins'"
+		exit 1
+	fi
+fi
+
 [ $BUILD_GSTREAMER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG gstreamer"
 [ $EMBED_GSTREAMER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG embed-gstreamer"
 [ $BUILD_VLC == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG vlc"
 [ $BUILD_PHONON == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG phonon"
-[ $BUILD_SKINS == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-skins"
+[ $SUPPORT_SKINS == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-skins"
+[ $SUPPORT_PLUGINS == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-plugins"
 if [ $DEBUG == "yes" ]; then
 	QMAKE_CONFIG="$QMAKE_CONFIG debug"
 else

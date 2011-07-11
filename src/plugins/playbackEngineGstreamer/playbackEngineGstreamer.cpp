@@ -283,7 +283,7 @@ void NPlaybackEngineGStreamer::_emitError(QString error)
 	emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), error);
 }
 
-#ifndef _N_GSTREAMER_PLUGINS_BUILTIN_
+#if !defined _N_GSTREAMER_PLUGINS_BUILTIN_ && !defined _N_NO_PLUGINS_
 Q_EXPORT_PLUGIN2(playback_gstreamer, NPlaybackEngineGStreamer)
 #endif
 

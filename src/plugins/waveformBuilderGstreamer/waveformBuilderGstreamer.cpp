@@ -229,7 +229,7 @@ void NWaveformBuilderGstreamer::update()
 }
 #endif
 
-#ifndef _N_GSTREAMER_PLUGINS_BUILTIN_
+#if !defined _N_GSTREAMER_PLUGINS_BUILTIN_ && !defined _N_NO_PLUGINS_
 Q_EXPORT_PLUGIN2(waveform_gstreamer, NWaveformBuilderGstreamer)
 #endif
 

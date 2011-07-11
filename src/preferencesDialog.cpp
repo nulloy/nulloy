@@ -16,9 +16,16 @@
 #include "preferencesDialog.h"
 
 #include "settings.h"
-#include "pluginLoader.h"
-#include "skinLoader.h"
 #include "player.h"
+
+#ifndef _N_NO_SKINS_
+#include "skinLoader.h"
+#endif
+
+#ifndef _N_NO_PLUGINS_
+#include "pluginLoader.h"
+#endif
+
 #include <QMessageBox>
 #include <QPushButton>
 
@@ -37,10 +44,14 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 
 	setWindowTitle(QCoreApplication::applicationName() + " Preferences");
 
-	#ifdef _N_NO_SKINS_
-		ui.skinLabel->hide();
-		ui.skinComboBox->hide();
-	#endif
+#ifdef _N_NO_SKINS_
+	ui.skinLabel->hide();
+	ui.skinComboBox->hide();
+#endif
+
+#ifdef _N_NO_PLUGINS_
+	ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
+#endif
 }
 
 void NPreferencesDialog::initShortcuts()
@@ -86,6 +97,9 @@ void NPreferencesDialog::loadSettings()
 	ui.versionCheckBox->setChecked(NSettings::value("AutoCheckUpdates").toBool());
 	ui.displayLogDialogCheckBox->setChecked(NSettings::value("DisplayLogDialog").toBool());
 
+	int index;
+
+#ifndef _N_NO_PLUGINS_
 	// plugins
 	foreach (QString str, NPluginLoader::pluginIdentifiers()) {
 		QString id = str.section('/', 2);
@@ -100,13 +114,13 @@ void NPreferencesDialog::loadSettings()
 	if (ui.waveformComboBox->count() == 1)
 		ui.waveformComboBox->setEnabled(FALSE);
 
-	int index;
 	index = ui.playbackComboBox->findData(NSettings::value("Playback"));
 	if (index != -1)
 		ui.playbackComboBox->setCurrentIndex(index);
 	index = ui.waveformComboBox->findData(NSettings::value("Waveform"));
 	if (index != -1)
 		ui.waveformComboBox->setCurrentIndex(index);
+#endif
 
 #ifndef _N_NO_SKINS_
 	// skins
@@ -141,8 +155,11 @@ void NPreferencesDialog::saveSettings()
 	NSettings::setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 
-	// plugins
 	bool showPluginMessage = FALSE;
+	bool showSkinMessage = FALSE;
+
+#ifndef _N_NO_PLUGINS_
+	// plugins
 	QVariant playbackVariant = ui.playbackComboBox->itemData(ui.playbackComboBox->currentIndex());
 	if (NSettings::value("Playback").isValid() && playbackVariant != NSettings::value("Playback"))
 		showPluginMessage = TRUE;
@@ -152,15 +169,16 @@ void NPreferencesDialog::saveSettings()
 
 	NSettings::setValue("Playback", playbackVariant);
 	NSettings::setValue("Waveform", waveformVariant);
+#endif
 
 #ifndef _N_NO_SKINS_
 	// skins
-	bool showSkinMessage = FALSE;
 	QVariant skinVariant = ui.skinComboBox->itemData(ui.skinComboBox->currentIndex());
 	if (NSettings::value("GUI/Skin").isValid() && skinVariant != NSettings::value("GUI/Skin"))
 		showSkinMessage = TRUE;
 
 	NSettings::setValue("GUI/Skin", skinVariant);
+#endif
 
 	QString message;
 	if (showPluginMessage && showSkinMessage) {
@@ -175,7 +193,6 @@ void NPreferencesDialog::saveSettings()
 		QMessageBox box(QMessageBox::Information, windowTitle(), message, QMessageBox::Close, this);
 		box.exec();
 	}
-#endif
 
 	// shortcuts
 	ui.globalShortcutEditorWidget->applyShortcuts();

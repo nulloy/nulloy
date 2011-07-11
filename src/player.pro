@@ -82,8 +82,16 @@ include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
 include(../3rdParty/qtsingleapplication-2.6.1/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 
+# qmake -config no-skins
+!no-plugins {
+	HEADERS -= pluginLoader.h
+	SOURCES -= pluginLoader.cpp
+} else {
+	DEFINES += _N_NO_PLUGINS_
+}
+
 # qmake -config embed-gstreamer
-embed-gstreamer {
+embed-gstreamer|no-plugins {
 	include(plugins/gstreamer.pri)
 	DEFINES += _N_GSTREAMER_PLUGINS_BUILTIN_
 	HEADERS += plugins/waveformBuilderGstreamer/*.h plugins/playbackEngineGstreamer/*.h
@@ -96,9 +104,6 @@ unix {
 	prefix.path = $$PREFIX
 	target.path = $$prefix.path/bin
 
-	plugins.files = ../plugins/*
-	plugins.path = $$prefix.path/lib/nulloy/plugins
-
 	icon.files = icon.png
 	icon.path = $$prefix.path/share/nulloy
 
@@ -108,12 +113,18 @@ unix {
 	desktop.files = ../nulloy.desktop
 	desktop.path = $$prefix.path/share/applications
 
-	INSTALLS += target plugins icon icon_post desktop
+	INSTALLS += target icon icon_post desktop
 
 	!no-skins {
 		skins.files = ../skins/*
 		skins.path = $$prefix.path/share/nulloy/skins
 		INSTALLS += skins
+	}
+
+	!no-plugins {
+		plugins.files = ../plugins/*
+		plugins.path = $$prefix.path/lib/nulloy/plugins
+		INSTALLS += plugins
 	}
 }
 
