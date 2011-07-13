@@ -6,18 +6,22 @@ TRY_HELP="Try \`$BASENAME --help' for more information"
 echo_help()
 {
 	echo "Usage:  $BASENAME [options]"
-	echo '   -i, --input       input changelog file'
-	echo '   -d, --deb         output changelog file in deb format'
-	echo '   -r, --rpm         output changelog file in rpm format'
-	echo '   -c, --commiter    comitter name and email'
-	echo '   -p, --package     package name'
-	echo '   -h, --help        print this message'
+	echo '   -i, --input [FILE]              input changelog file'
+	echo '   -d, --deb [FILE]                output changelog file in deb format'
+	echo '   -r, --rpm [FILE]                output changelog file in rpm format'
+	echo '   -c, --commiter [NAME <EMAIL>]   comitter name and email'
+	echo '   -p, --package [NAME]            package name'
+	echo '   -u, --use-version [VERSION]     latest version if not found in changelog'
+	echo '   -h, --help                      print this message'
 	echo
-	echo "Version 0.2"
+	echo 'Example:'
+	echo "    $BASENAME -i ChangeLog -c \"John Doe <john@doe.com>\" -p coolapp"
+	echo "              -r rpm.changes -d debian.changelog -u 0.1"
+	echo "Version 0.3"
 	echo 'Copyright (C) 2011 Sergey Vlasov <sergey@vlasov.me>'
 }
 
-args=`getopt -n$BASENAME -o i:d:r:c:p:h --longoptions="input: deb: rpm: commiter: package: help" -- "$@"`
+args=`getopt -n$BASENAME -o i:d:r:c:p:u:h --longoptions="input: deb: rpm: commiter: package: use-version: help" -- "$@"`
 if test $? != 0; then
 	echo $TRY_HELP
 	exit 1
@@ -35,6 +39,8 @@ while [[ $# -gt 0 ]]; do
 		shift; COMMITER=$1
 	elif [[ $1 == "-p" || $1 == "--package" ]]; then
 		shift; PACKAGE=$1
+	elif [[ $1 == "-u" || $1 == "--use-version" ]]; then
+		shift; USE_VERSION=$1
 	elif [[ $1 == "-h" || $1 == "--help" ]]; then
 		echo_help; exit 0
 	elif [[ $1 == "--" ]]; then
@@ -91,11 +97,26 @@ if [[ -n "$OUT_RPM" ]]; then
 	done 3< $INPUT
 fi
 
-END_LINE=""
+FOUND_VERSION=no
+FIRST_LINE=""
+
 if [[ -n "$OUT_DEB" ]]; then
 	rm -rf $OUT_DEB
 	while IFS= read -r line <&3; do
+		if [[ ! -n "$FIRST_LINE" ]]; then
+			FIRST_LINE=yes
+		elif [[ "$FIRST_LINE" == "yes" ]]; then
+			FIRST_LINE=no
+		fi
 		if [[ "$line" =~ \*[[:space:]]([0-9\.]+),[[:space:]](.*) ]]; then
+			if [[ "$FIRST_LINE" == "yes" ]]; then
+				FOUND_VERSION=yes
+			fi
+			if [[ "$FIRST_LINE" != "yes" && "$FOUND_VERSION" != yes && ! -n "$USE_VERSION" ]]; then
+				echo "$BASENAME: cannot detect version from \`$INPUT', use '--use-version' option"
+				echo $TRY_HELP
+				exit 1
+			fi
 			if [[ "$END_LINE" != "" ]]; then
 				echo "$END_LINE" >> $OUT_DEB
 				END_LINE=""
@@ -104,7 +125,13 @@ if [[ -n "$OUT_DEB" ]]; then
 			echo "$PACKAGE (${BASH_REMATCH[1]}-1) unstable; urgency=low" >> $OUT_DEB
 			echo "" >> $OUT_DEB
 			END_LINE=" -- $COMMITER  `date --date=\"${BASH_REMATCH[2]}\" +\"%a, %d %b %Y\"` 00:00:00 +0000"
-		elif [[ "$line" =~ \-[[:space:]](.*) ]]; then
+			continue
+		elif [[ "$END_LINE" == "" ]]; then
+			echo "" >> $OUT_DEB
+			END_LINE=" -- $COMMITER  `date +\"%a, %d %b %Y %H:%m:%S\"` +0000"
+		fi
+
+		if [[ "$line" =~ \-[[:space:]](.*) ]]; then
 			echo "  * ${BASH_REMATCH[1]}" >> $OUT_DEB
 		elif [[ "$line" != "" ]]; then
 			echo "  $line" >> $OUT_DEB
@@ -117,6 +144,9 @@ if [[ -n "$OUT_DEB" ]]; then
 		echo "$END_LINE" >> $OUT_DEB
 		END_LINE=""
 		echo "" >> $OUT_DEB
+	fi
+	if [[ "$FOUND_VERSION" == "no" && -n "$USE_VERSION" ]]; then
+		sed -i "1i $PACKAGE ($USE_VERSION-1) unstable; urgency=low" $OUT_DEB
 	fi
 fi
 

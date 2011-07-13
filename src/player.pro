@@ -13,10 +13,11 @@ SOURCES += *.cpp ux/*.cpp
 
 FORMS += *.ui
 
-OBJECTS_DIR	= .tmp
-MOC_DIR		= .tmp
-RCC_DIR		= .tmp
-UI_DIR		= .tmp
+TMP_DIR = .tmp
+OBJECTS_DIR	= $$TMP_DIR
+MOC_DIR		= $$TMP_DIR
+RCC_DIR		= $$TMP_DIR
+UI_DIR		= $$TMP_DIR
 
 # qmake -config no-skins
 !no-skins {
@@ -29,14 +30,15 @@ UI_DIR		= .tmp
 	unix {
 		silver_skin.target = ../skins/silver.nzs
 		silver_skin.depends = skins/silver/*
-		silver_skin.commands =	mkdir ../skins && \
-								cd .tmp && \
+		silver_skin.commands =	mkdir ../skins ; cd $$TMP_DIR && \
 								cp -r ../skins/silver . && \
 								cd silver && \
 								rm design.svg && \
 								zip ../../../skins/silver.nzs *
 		QMAKE_EXTRA_TARGETS += silver_skin
-		POST_TARGETDEPS += $$silver_skin.target
+		PRE_TARGETDEPS += $$silver_skin.target
+		#dirty hack for install
+		system($$silver_skin.commands)
 	}
 } else {
 	DEFINES += _N_NO_SKINS_
@@ -84,7 +86,7 @@ include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
 include(../3rdParty/qtsingleapplication-2.6.1/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 
-# qmake -config no-skins
+# qmake -config no-plugins
 !no-plugins {
 	HEADERS -= pluginLoader.h
 	SOURCES -= pluginLoader.cpp
