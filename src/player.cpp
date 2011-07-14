@@ -192,7 +192,8 @@ NPlayer::NPlayer()
 	m_contextMenu->addSeparator();
 	m_contextMenu->addAction(exitAction);
 
-	m_preferencesDialog->initShortcuts();
+	NSettings::initShortcuts(this);
+	NSettings::loadShortcuts();
 
 	loadSettings();
 

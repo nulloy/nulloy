@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "shortcutEditorWidget.h"
+#include "action.h"
 
 NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(parent)
 {
@@ -27,16 +28,21 @@ NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(par
 	setSelectionMode(QAbstractItemView::SingleSelection);
 
 	setStyleSheet("QTableView::item:disabled { color: black; }");
+
+	m_init = FALSE;
 }
 
 NShortcutEditorWidget::~NShortcutEditorWidget() {}
 
-void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
+void NShortcutEditorWidget::init(const QList<QAction *> &actionList)
 {
+	if (m_init)
+		return;
+
 	m_actionList = actionList;
 	setRowCount(m_actionList.size());
 	for (int i = 0; i < m_actionList.size(); ++i) {
-		NAction *action = m_actionList.at(i);
+		QAction *action = m_actionList.at(i);
 		QTableWidgetItem *nameItem = new QTableWidgetItem(action->icon(), action->text());
 		nameItem->setFlags(Qt::NoItemFlags);
 		nameItem->setData(Qt::UserRole, action->objectName());
@@ -56,6 +62,8 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 
 	resizeColumnsToContents();
 	horizontalHeader()->setStretchLastSection(TRUE);
+
+	m_init = TRUE;
 }
 
 void NShortcutEditorWidget::applyShortcuts()
@@ -65,12 +73,14 @@ void NShortcutEditorWidget::applyShortcuts()
 		QString shortcut = item(i, 2)->text();
 
 		for (int j = 0; j < m_actionList.size(); j++) {
-			if (objectName == m_actionList.at(j)->objectName()) {
+			NAction *action = dynamic_cast<NAction *>(m_actionList.at(j));
+			if (objectName == action->objectName()) {
 				if (shortcut.isEmpty()) {
-					m_actionList.at(j)->setEnabled(FALSE);
+					action->setEnabled(FALSE);
+					action->setShortcut(QKeySequence());
 				} else {
-					m_actionList.at(j)->setEnabled(TRUE);
-					m_actionList.at(j)->setShortcut(QKeySequence(shortcut));
+					action->setEnabled(TRUE);
+					action->setShortcut(QKeySequence(shortcut));
 				}
 			}
 		}

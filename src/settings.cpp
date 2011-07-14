@@ -14,12 +14,17 @@
 *********************************************************************/
 
 #include "settings.h"
+
 #include "core.h"
+#include "action.h"
 #include <QSettings>
+
+#include <QDebug>
 
 namespace NSettings
 {
 	QSettings *_instance = NULL;
+	QList<QAction *> _globalActionList;
 }
 
 void NSettings::init(QObject *parent)
@@ -39,6 +44,44 @@ void NSettings::init(QObject *parent)
 	_instance->setValue("AutoCheckUpdates", _instance->value("AutoCheckUpdates", TRUE).toBool());
 	_instance->setValue("DisplayLogDialog", _instance->value("DisplayLogDialog", TRUE).toBool());
 	_instance->setValue("Volume", _instance->value("Volume", 0.8).toFloat());
+}
+
+void NSettings::initShortcuts(QObject *instance)
+{
+	QList<NAction *> allActions = instance->findChildren<NAction *>();
+	for (int i = 0; i < allActions.size(); ++i) {
+		if (allActions.at(i)->parent() == instance && allActions.at(i)->isGlobal())
+			_globalActionList << allActions.at(i);
+	}
+}
+
+void NSettings::loadShortcuts()
+{
+	for (int i = 0; i < _globalActionList.size(); ++i) {
+		QString strSeq = NSettings::value("GlobalShortcuts/" + _globalActionList.at(i)->objectName()).toString();
+		if (!strSeq.isEmpty())
+			dynamic_cast<NAction *>(_globalActionList.at(i))->setShortcut(QKeySequence(strSeq));
+	}
+}
+
+void NSettings::saveShortcuts()
+{
+	for (int i = 0; i < _globalActionList.size(); ++i) {
+		QList<QKeySequence> shortcut = _globalActionList.at(i)->shortcuts();
+		QStringList strSeqList;
+		foreach (QKeySequence seq, shortcut)
+			strSeqList << seq.toString();
+
+		if (!strSeqList.isEmpty())
+			NSettings::setValue("GlobalShortcuts/" + _globalActionList.at(i)->objectName(), strSeqList.join(", "));
+		else
+			NSettings::remove("GlobalShortcuts/" + _globalActionList.at(i)->objectName());
+	}
+}
+
+QList<QAction *> NSettings::shortcuts()
+{
+	return _globalActionList;
 }
 
 QVariant NSettings::value(const QString &key)

@@ -54,21 +54,6 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 #endif
 }
 
-void NPreferencesDialog::initShortcuts()
-{
-	foreach (QWidget *widget, QApplication::topLevelWidgets()) {
-		NPlayer *player = qobject_cast<NPlayer *>(widget);
-		if (player) {
-			QList<NAction *> allActions = player->findChildren<NAction *>();
-			for (int i = 0; i < allActions.size(); ++i) {
-				NAction *action = allActions.at(i);
-				if (action->parent() == player && action->isGlobal())
-					m_globalActionList << action;
-			}
-		}
-	}
-}
-
 void NPreferencesDialog::showEvent(QShowEvent *event)
 {
 	loadSettings();
@@ -137,13 +122,8 @@ void NPreferencesDialog::loadSettings()
 		ui.skinComboBox->setCurrentIndex(index);
 #endif
 
-	// shortcuts
-	for (int i = 0; i < m_globalActionList.size(); ++i) {
-		QString strSeq = NSettings::value("GlobalShortcuts/" + m_globalActionList.at(i)->objectName()).toString();
-		if (!strSeq.isEmpty())
-			m_globalActionList.at(i)->setShortcut(QKeySequence(strSeq));
-	}
-	ui.globalShortcutEditorWidget->init(m_globalActionList);
+	NSettings::loadShortcuts();
+	ui.globalShortcutEditorWidget->init(NSettings::shortcuts());
 }
 
 void NPreferencesDialog::saveSettings()
@@ -194,20 +174,8 @@ void NPreferencesDialog::saveSettings()
 		box.exec();
 	}
 
-	// shortcuts
 	ui.globalShortcutEditorWidget->applyShortcuts();
-	for (int i = 0; i < m_globalActionList.size(); ++i) {
-		QList<QKeySequence> shortcut = m_globalActionList.at(i)->shortcuts();
-		QStringList strSeqList;
-		foreach (QKeySequence seq, shortcut)
-			strSeqList << seq.toString();
-
-		if (!strSeqList.isEmpty())
-			NSettings::setValue("GlobalShortcuts/" + m_globalActionList.at(i)->objectName(), strSeqList.join(", "));
-		else
-			NSettings::remove("GlobalShortcuts/" + m_globalActionList.at(i)->objectName());
-	}
-
+	NSettings::saveShortcuts();
 	emit settingsChanged();
 }
 

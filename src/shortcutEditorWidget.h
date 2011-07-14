@@ -17,20 +17,21 @@
 #define N_SHORTCUT_EDITOR_WIDGET_H
 
 #include <QtGui>
-#include "action.h"
+#include <QAction>
 
 class NShortcutEditorWidget : public QTableWidget
 {
+private:
+	bool m_init;
+	QList<QAction *> m_actionList;
+	static QString keyEventToString(QKeyEvent *e);
+	void keyPressEvent(QKeyEvent *e);
+
 public:
 	NShortcutEditorWidget(QWidget *parent = 0);
 	~NShortcutEditorWidget(void);
 	void applyShortcuts();
-	void init(const QList<NAction *> &actionList);
-
-private:
-	static QString keyEventToString(QKeyEvent *e);
-	void keyPressEvent(QKeyEvent *e);
-	QList<NAction *> m_actionList;
+	void init(const QList<QAction *> &actionList);
 };
 
 #endif
