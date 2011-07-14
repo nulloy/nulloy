@@ -30,6 +30,7 @@ QColor paused_bg =		QColor("#ce8419");
 
 NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 {
+	m_waveBuilder = NULL;
 	m_bufImage.resize(7);
 
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -68,6 +69,9 @@ NWaveformSlider::~NWaveformSlider() {}
 
 void NWaveformSlider::checkForUpdate()
 {
+	if (!m_waveBuilder)
+		return;
+
 	bool needsUpdate = FALSE;
 	if (m_oldValue != value() || m_oldSize != size())
 		needsUpdate = TRUE;

@@ -32,6 +32,10 @@
 #include "playbackEngineGstreamer.h"
 #endif
 
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#include "w7TaskBar.h"
+#endif
+
 #include <QFileInfo>
 #include <QPluginLoader>
 #include <QFileDialog>
@@ -64,17 +68,6 @@ NPlayer::NPlayer()
 #ifndef _N_NO_PLUGINS_
 	m_playbackEngine = NPluginLoader::playbackPlugin();
 #else
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
-		QString pluginsDir = "plugins";
-		QStringList subDirsList;
-		QDir dir(pluginsDir);
-		if (dir.exists()) {
-			foreach (QString subDir, dir.entryList(QDir::Dirs))
-				subDirsList << pluginsDir + "/" + subDir;
-		}
-		_putenv(QString("PATH=" + pluginsDir + ";" +
-				subDirsList.join(";") + ";" + getenv("PATH")).toAscii());
-#endif
 	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(new NPlaybackEngineGStreamer());
 	dynamic_cast<NPluginInterface *>(m_playbackEngine)->init();
 #endif
@@ -120,6 +113,12 @@ NPlayer::NPlayer()
 	QScriptValue playbackEngineObject = m_scriptEngine->newQObject(m_playbackEngine, QScriptEngine::QtOwnership);
 	QScriptValue windowScriptObject = m_scriptEngine->newQObject(m_mainWindow, QScriptEngine::QtOwnership);
 	QScriptValue programmObject = constructor.construct(QScriptValueList() << windowScriptObject << playbackEngineObject);
+
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+	NW7TaskBar::init(this);
+	NW7TaskBar::setWindow(m_mainWindow);
+	connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
+#endif
 
 	// actions
 	NAction *playAction = new NAction(style()->standardIcon(QStyle::SP_MediaPlay), tr("Play / Pause"), this);
@@ -391,6 +390,24 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	NSystemTray::setToolTip(title);
 }
 
+void NPlayer::on_playbackEngine_playStateChanged(bool playState)
+{
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+	if (playState) {
+		NW7TaskBar::instance()->setState(NW7TaskBar::Normal);
+		NW7TaskBar::setOverlayIcon(QIcon(":/trolltech/styles/commonstyle/images/media-play-32.png"), "Playing");
+	} else {
+		if (m_playbackEngine->position() != 0) {
+			NW7TaskBar::instance()->setState(NW7TaskBar::Paused);
+			NW7TaskBar::setOverlayIcon(QIcon(":/trolltech/styles/commonstyle/images/media-pause-32.png"), "Paused");
+		} else {
+			NW7TaskBar::instance()->setState(NW7TaskBar::NoProgress);
+			NW7TaskBar::setOverlayIcon(QIcon(), "Stopped");
+		}
+	}
+#endif
+}
+
 void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 {
 	NSettings::setValue("GUI/AlwaysOnTop", checked);
@@ -402,6 +419,10 @@ void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 		flags ^= Qt::WindowStaysOnTopHint;
 	m_mainWindow->setWindowFlags(flags);
 	m_mainWindow->show();
+
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+	NW7TaskBar::setWindow(m_mainWindow);
+#endif
 }
 
 void NPlayer::showAboutMessageBox()

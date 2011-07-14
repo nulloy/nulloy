@@ -31,6 +31,10 @@
 #include "waveformBuilderGstreamer.h"
 #endif
 
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#include "w7TaskBar.h"
+#endif
+
 #include <QLayout>
 #include <QIcon>
 
@@ -173,7 +177,6 @@ void NMainWindow::resizeEvent(QResizeEvent *event)
 	emit resized();
 }
 
-
 void NMainWindow::showEvent(QShowEvent *event)
 {
 	loadSettings();
@@ -192,6 +195,13 @@ void NMainWindow::closeEvent(QCloseEvent *event)
 	QDialog::closeEvent(event);
 	emit closed();
 }
+
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+bool NMainWindow::winEvent(MSG *message, long *result)
+{
+	return NW7TaskBar::winEvent(message, result);
+}
+#endif
 
 void NMainWindow::minimize()
 {

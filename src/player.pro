@@ -24,7 +24,8 @@ UI_DIR		= $$TMP_DIR
 	CONFIG += uitools
 	INCLUDEPATH += widgetCollection
 	LIBS += -LwidgetCollection -lwidget_collection
-	PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
+	unix:PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
+	win32:PRE_TARGETDEPS += widgetCollection/widget_collection.lib
 	RESOURCES = resources.qrc
 
 	unix {
@@ -63,6 +64,14 @@ UI_DIR		= $$TMP_DIR
 
 	RESOURCES = resources_no-skins.qrc
 	FORMS += skins/native/form.ui
+}
+
+# win7 taskbar
+win32 {
+	LIBS += -lole32 -luser32
+} else {
+	HEADERS -= ux/w7TaskBar.h
+	SOURCES -= ux/w7TaskBar.cpp
 }
 
 win32 {

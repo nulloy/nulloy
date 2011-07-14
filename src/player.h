@@ -58,6 +58,7 @@ private slots:
 	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
 	void mainWindowClosed();
 	void on_playbackEngine_mediaChanged(const QString &path);
+	void on_playbackEngine_playStateChanged(bool playState);
 	void on_alwaysOnTopAction_toggled(bool checked);
 	void versionOnlineFetch();
 	void on_networkManager_finished(QNetworkReply *reply);
