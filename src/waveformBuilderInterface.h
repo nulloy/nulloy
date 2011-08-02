@@ -44,13 +44,11 @@ protected:
 	bool peaksFindFromCache(const QString &file);
 	void peaksAppendToCache(const QString &file);
 
-	virtual void start() { QThread::start(); }
-
 public:
 	NWaveformBuilderInterface(QObject *parent = 0);
 	virtual ~NWaveformBuilderInterface();
 
-	virtual void startFile(const QString &file) = 0;
+	virtual void start(const QString &file) = 0;
 	virtual void stop() = 0;
 	void positionAndIndex(float &pos, int &index);
 	NWaveformPeaks* peaks() { return &m_peaks; }

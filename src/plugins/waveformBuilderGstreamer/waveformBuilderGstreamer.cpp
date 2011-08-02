@@ -135,20 +135,7 @@ void NWaveformBuilderGstreamer::stop()
 	}
 }
 
-void NWaveformBuilderGstreamer::start()
-{
-	reset();
-	QThread::start();
-
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
-	if (!m_timer->isActive())
-		m_timer->start(100);
-#endif
-
-	gst_element_set_state(m_playbin, GST_STATE_PLAYING);
-}
-
-void NWaveformBuilderGstreamer::startFile(const QString &file)
+void NWaveformBuilderGstreamer::start(const QString &file)
 {
 	stop();
 
@@ -183,7 +170,15 @@ void NWaveformBuilderGstreamer::startFile(const QString &file)
 	gst_object_unref(sink);
 	gst_object_unref(pad);
 
-	start();
+	reset();
+	QThread::start();
+
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+	if (!m_timer->isActive())
+		m_timer->start(100);
+#endif
+
+	gst_element_set_state(m_playbin, GST_STATE_PLAYING);
 }
 
 qreal NWaveformBuilderGstreamer::position()

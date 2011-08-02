@@ -249,7 +249,7 @@ void NWaveformSlider::drawFile(const QString &file)
 	if (!QFile(file).exists())
 		return;
 
-	m_waveBuilder->startFile(file);
+	m_waveBuilder->start(file);
 	setEnabled(TRUE);
 }
 

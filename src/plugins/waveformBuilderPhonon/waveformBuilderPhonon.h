@@ -36,7 +36,6 @@ private:
 	QString m_currentFile;
 	QTimer *m_timer;
 	qreal position();
-	void start();
 
 public:
 	NWaveformBuilderPhonon(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
@@ -45,7 +44,7 @@ public:
 	QString identifier() { return "Nulloy/Waveform/Phonon/0.1"; }
 	QString interface() { return WAVEFORM_INTERFACE; }
 
-	void startFile(const QString &file);
+	void start(const QString &file);
 	void stop();
 
 private slots:

@@ -34,7 +34,6 @@ private:
 	QByteArray m_pcmBuffer;
 	QTimer *m_timer;
 	qreal position();
-	void start();
 
 public:
 	NWaveformBuilderVlc(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
@@ -43,7 +42,7 @@ public:
 	QString identifier() { return "Nulloy/Waveform/VLC/0.1"; }
 	QString interface() { return WAVEFORM_INTERFACE; }
 
-	void startFile(const QString &file);
+	void start(const QString &file);
 	void stop();
 	void prepareBuffer(uint8_t **pcmBuffer, unsigned int size);
 	void handleBuffer(uint8_t *pcmBuffer, unsigned int nChannels, unsigned int nSamples);

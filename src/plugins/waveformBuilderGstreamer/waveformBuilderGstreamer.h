@@ -33,7 +33,6 @@ private:
 	GstElement *m_playbin;
 	QString m_currentFile;
 	qreal position();
-	void start();
 
 #if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
 private:
@@ -49,7 +48,7 @@ public:
 	QString identifier() { return "Nulloy/Waveform/GStreamer/0.2"; }
 	QString interface() { return WAVEFORM_INTERFACE; }
 
-	void startFile(const QString &file);
+	void start(const QString &file);
 	void stop();
 	void handleBuffer(gint16 *pcmBuffer, int nChannels, int nSamples);
 };
