@@ -25,6 +25,7 @@ protected:
 
 public:
 	NPluginInterface() { m_init = FALSE; }
+	virtual ~NPluginInterface();
 	virtual QString identifier() = 0;
 	virtual QString interface() = 0;
 	virtual void init() = 0;
