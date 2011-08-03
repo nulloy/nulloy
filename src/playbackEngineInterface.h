@@ -33,7 +33,7 @@ public:
 	Q_INVOKABLE virtual qreal volume() = 0;
 	Q_INVOKABLE virtual qreal position() = 0;
 
-	static QString INTERFACE() { return PLAYBACK_INTERFACE; }
+	static QString interface() { return PLAYBACK_INTERFACE; }
 
 public slots:
 	Q_INVOKABLE virtual void setMedia(const QString &file) = 0;

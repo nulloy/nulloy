@@ -16,14 +16,18 @@
 #ifndef N_WAVEFORM_BUILDER_PHONON_H
 #define N_WAVEFORM_BUILDER_PHONON_H
 
+#include "pluginInterface.h"
+#include "waveformBuilderInterface.h"
+#include "abstractWaveformBuilder.h"
+
 #include <phonon/audiooutput.h>
 #include <phonon/audiodataoutput.h>
 #include <phonon/mediaobject.h>
 #include <QTimer>
-#include "waveformBuilderInterface.h"
-#include "pluginInterface.h"
 
-class NWaveformBuilderPhonon : public NWaveformBuilderInterface, public NPluginInterface
+class NWaveformBuilderPhonon :	public NWaveformBuilderInterface,
+								public NPluginInterface,
+								public NAbstractWaveformBuilder
 {
 	Q_OBJECT
 	Q_INTERFACES(NWaveformBuilderInterface NPluginInterface)
@@ -41,11 +45,13 @@ public:
 	NWaveformBuilderPhonon(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
 	~NWaveformBuilderPhonon();
 	void init();
-	QString identifier() { return "Nulloy/Waveform/Phonon/0.1"; }
-	QString interface() { return WAVEFORM_INTERFACE; }
+	QString identifier() { return "Nulloy/Waveform/Phonon/0.1.1"; }
+	QString interface() { return NWaveformBuilderInterface::interface(); }
 
 	void start(const QString &file);
 	void stop();
+	void positionAndIndex(float &pos, int &index) { NAbstractWaveformBuilder::positionAndIndex(pos, index); }
+	NWaveformPeaks* peaks() { return NAbstractWaveformBuilder::peaks(); }
 
 private slots:
 	void update();

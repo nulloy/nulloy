@@ -34,6 +34,7 @@ static void _on_eos(GstBus *bus, GstMessage *msg, gpointer userData)
 	obj->stop();
 }
 
+#if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
 static void _on_error(GstBus *bus, GstMessage *msg, gpointer userData)
 {
 	Q_UNUSED(bus);
@@ -48,6 +49,7 @@ static void _on_error(GstBus *bus, GstMessage *msg, gpointer userData)
 	qWarning() << "WaveformBuilder :: error ::" << err->message;
 	g_error_free(err);
 }
+#endif
 
 static void _handleBuffer(GstPad *pad, GstBuffer *buffer, gpointer userData)
 {
@@ -139,7 +141,7 @@ void NWaveformBuilderGstreamer::start(const QString &file)
 {
 	stop();
 
-	if (NWaveformBuilderInterface::peaksFindFromCache(file))
+	if (peaksFindFromCache(file))
 		return;
 	if (!QFileInfo(file).exists())
 		return;

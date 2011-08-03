@@ -17,14 +17,18 @@
 #define N_WAVEFORM_BUILDER_GSTREAMER_H
 
 #include "pluginInterface.h"
-#include <gst/gst.h>
 #include "waveformBuilderInterface.h"
+#include "abstractWaveformBuilder.h"
+
+#include <gst/gst.h>
 
 #if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
 #include <QTimer>
 #endif
 
-class NWaveformBuilderGstreamer : public NWaveformBuilderInterface, public NPluginInterface
+class NWaveformBuilderGstreamer :	public NWaveformBuilderInterface,
+									public NPluginInterface,
+									public NAbstractWaveformBuilder
 {
 	Q_OBJECT
 	Q_INTERFACES(NWaveformBuilderInterface NPluginInterface)
@@ -44,12 +48,16 @@ private slots:
 public:
 	NWaveformBuilderGstreamer(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
 	~NWaveformBuilderGstreamer();
+
 	void init();
-	QString identifier() { return "Nulloy/Waveform/GStreamer/0.2"; }
-	QString interface() { return WAVEFORM_INTERFACE; }
+	QString identifier() { return "Nulloy/Waveform/GStreamer/0.2.1"; }
+	QString interface() { return NWaveformBuilderInterface::interface(); }
 
 	void start(const QString &file);
 	void stop();
+	void positionAndIndex(float &pos, int &index) { NAbstractWaveformBuilder::positionAndIndex(pos, index); }
+	NWaveformPeaks* peaks() { return NAbstractWaveformBuilder::peaks(); }
+
 	void handleBuffer(gint16 *pcmBuffer, int nChannels, int nSamples);
 };
 

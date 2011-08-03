@@ -86,7 +86,7 @@ void NWaveformBuilderPhonon::start(const QString &file)
 {
 	stop();
 
-	if (NWaveformBuilderInterface::peaksFindFromCache(file))
+	if (peaksFindFromCache(file))
 		return;
 	if (!QFileInfo(file).exists())
 		return;

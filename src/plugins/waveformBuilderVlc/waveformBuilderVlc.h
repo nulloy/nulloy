@@ -16,12 +16,16 @@
 #ifndef N_WAVEFORM_BUILDER_VLC_H
 #define N_WAVEFORM_BUILDER_VLC_H
 
+#include "pluginInterface.h"
+#include "waveformBuilderInterface.h"
+#include "abstractWaveformBuilder.h"
+
 #include <vlc/vlc.h>
 #include <QTimer>
-#include "waveformBuilderInterface.h"
-#include "pluginInterface.h"
 
-class NWaveformBuilderVlc : public NWaveformBuilderInterface, public NPluginInterface
+class NWaveformBuilderVlc :	public NWaveformBuilderInterface,
+							public NPluginInterface,
+							public NAbstractWaveformBuilder
 {
 	Q_OBJECT
 	Q_INTERFACES(NWaveformBuilderInterface NPluginInterface)
@@ -39,11 +43,14 @@ public:
 	NWaveformBuilderVlc(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
 	~NWaveformBuilderVlc();
 	void init();
-	QString identifier() { return "Nulloy/Waveform/VLC/0.1"; }
-	QString interface() { return WAVEFORM_INTERFACE; }
+	QString identifier() { return "Nulloy/Waveform/VLC/0.1.1"; }
+	QString interface() { return NWaveformBuilderInterface::interface(); }
 
 	void start(const QString &file);
 	void stop();
+	void positionAndIndex(float &pos, int &index) { NAbstractWaveformBuilder::positionAndIndex(pos, index); }
+	NWaveformPeaks* peaks() { return NAbstractWaveformBuilder::peaks(); }
+
 	void prepareBuffer(uint8_t **pcmBuffer, unsigned int size);
 	void handleBuffer(uint8_t *pcmBuffer, unsigned int nChannels, unsigned int nSamples);
 

@@ -13,29 +13,44 @@
 **
 *********************************************************************/
 
-#ifndef N_WAVEFORM_BUILDER_INTERFACE_H
-#define N_WAVEFORM_BUILDER_INTERFACE_H
+#ifndef N_ABSTRACT_WAVEFORM_BUILDER_H
+#define N_ABSTRACT_WAVEFORM_BUILDER_H
 
 #include <QtCore>
+#include <QObject>
+
 #include "waveformPeaks.h"
+#include "cache.h"
 
-#define WAVEFORM_INTERFACE "Nulloy/WaveformBuilderInterface/0.2"
-
-class NWaveformBuilderInterface : public QThread
+class NAbstractWaveformBuilder
 {
+private:
+	int m_oldIndex;
+	float m_oldPos;
+	bool m_cacheLoaded;
+	QString m_cacheFile;
+
+	void cacheLoad();
+	void cacheSave();
+
+protected:
+	NWaveformPeaks m_peaks;
+	NCache<QByteArray, NWaveformPeaks> m_peaksCache;
+	QHash<QByteArray, QString> m_dateHash;
+
+	virtual void reset();
+	virtual qreal position() = 0;
+	bool peaksFindFromCache(const QString &file);
+	void peaksAppendToCache(const QString &file);
+
 public:
-	NWaveformBuilderInterface(QObject *parent = 0) : QThread(parent) {}
-	virtual ~NWaveformBuilderInterface() {}
+	NAbstractWaveformBuilder();
+	~NAbstractWaveformBuilder();
 
-	virtual void start(const QString &file) = 0;
-	virtual void stop() = 0;
-	virtual void positionAndIndex(float &pos, int &index) = 0;
-	virtual NWaveformPeaks* peaks() = 0;
-
-	static QString interface() { return WAVEFORM_INTERFACE; }
+	NWaveformPeaks* peaks() { return &m_peaks; }
+	void positionAndIndex(float &pos, int &index);
 };
 
-Q_DECLARE_INTERFACE(NWaveformBuilderInterface, WAVEFORM_INTERFACE)
 
 #endif
 

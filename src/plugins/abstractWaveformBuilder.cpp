@@ -13,20 +13,20 @@
 **
 *********************************************************************/
 
-#include "waveformBuilderInterface.h"
+#include "abstractWaveformBuilder.h"
 #include "core.h"
 #include "settings.h"
 #include <QCryptographicHash>
 
-NWaveformBuilderInterface::NWaveformBuilderInterface(QObject *parent) : QThread(parent)
+NAbstractWaveformBuilder::NAbstractWaveformBuilder()
 {
 	m_cacheLoaded = FALSE;
 	m_cacheFile = NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".peaks";
 }
 
-NWaveformBuilderInterface::~NWaveformBuilderInterface() {}
+NAbstractWaveformBuilder::~NAbstractWaveformBuilder() {}
 
-void NWaveformBuilderInterface::cacheLoad()
+void NAbstractWaveformBuilder::cacheLoad()
 {
 	QFile cache(m_cacheFile);
 	if (!m_cacheLoaded && cache.exists()) {
@@ -44,7 +44,7 @@ void NWaveformBuilderInterface::cacheLoad()
 	}
 }
 
-void NWaveformBuilderInterface::cacheSave()
+void NAbstractWaveformBuilder::cacheSave()
 {
 	QByteArray buffer;
 	QDataStream outBuffer(&buffer, QIODevice::WriteOnly);
@@ -58,7 +58,7 @@ void NWaveformBuilderInterface::cacheSave()
 	cache.close();
 }
 
-bool NWaveformBuilderInterface::peaksFindFromCache(const QString &file)
+bool NAbstractWaveformBuilder::peaksFindFromCache(const QString &file)
 {
 	cacheLoad();
 	if (!m_cacheLoaded)
@@ -82,7 +82,7 @@ bool NWaveformBuilderInterface::peaksFindFromCache(const QString &file)
 	}
 }
 
-void NWaveformBuilderInterface::peaksAppendToCache(const QString &file)
+void NAbstractWaveformBuilder::peaksAppendToCache(const QString &file)
 {
 	if (!m_peaks.isCompleted())
 		return;
@@ -96,14 +96,14 @@ void NWaveformBuilderInterface::peaksAppendToCache(const QString &file)
 	cacheSave();
 }
 
-void NWaveformBuilderInterface::reset()
+void NAbstractWaveformBuilder::reset()
 {
 	m_peaks.reset();
 	m_oldIndex = 0;
 	m_oldPos = 0.0;
 }
 
-void NWaveformBuilderInterface::positionAndIndex(float &pos, int &index)
+void NAbstractWaveformBuilder::positionAndIndex(float &pos, int &index)
 {
 	if (m_peaks.isCompleted()) {
 		pos = 1.0;

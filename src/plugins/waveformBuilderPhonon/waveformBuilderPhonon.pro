@@ -5,5 +5,7 @@ include(../common.pri)
 
 QT += phonon
 
+INCLUDEPATH += ..
+
 HEADERS += *.h
-SOURCES += *.cpp ../../waveformBuilderInterface.cpp ../../waveformPeaks.cpp
+SOURCES += *.cpp ../abstractWaveformBuilder.cpp ../../waveformPeaks.cpp

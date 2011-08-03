@@ -37,7 +37,7 @@ public:
 	~NPlaybackEnginePhonon();
 	void init();
 	QString identifier() { return "Nulloy/Playback/Phonon/0.1.1"; }
-	QString interface() { return PLAYBACK_INTERFACE; }
+	QString interface() { return NPlaybackEngineInterface::interface(); }
 
 	Q_INVOKABLE bool hasMedia();
 	Q_INVOKABLE QString currentMedia();
