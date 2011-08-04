@@ -442,7 +442,10 @@ void NPlayer::showFileDialog()
 						");;"
 						"All files (*)");
 
+	bool isEmpty = (m_playlistWidget->count() == 0);
 	m_playlistWidget->appendMediaList(files);
+	if (isEmpty)
+		m_playlistWidget->activateFirst();
 }
 
 void NPlayer::showContextMenu(QPoint pos)
