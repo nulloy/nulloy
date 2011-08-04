@@ -434,7 +434,13 @@ void NPlayer::showAboutMessageBox()
 void NPlayer::showFileDialog()
 {
 	QStringList files = QFileDialog::getOpenFileNames(m_mainWindow, tr("Open Files"),
-						QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
+						QDesktopServices::storageLocation(QDesktopServices::MusicLocation),
+						"Music files ("
+							"*.mp3 *.ogg *.flac *.wma *.wav "
+							"*.aac *.m4a *.spx *.mp4 "
+							"*.xm *.s3m *.it *.mod"
+						");;"
+						"All files (*)");
 
 	m_playlistWidget->appendMediaList(files);
 }
