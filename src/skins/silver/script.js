@@ -57,7 +57,7 @@ function Program(window, playbackEngine)
 
 	this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["activateMediaList(const QStringList &)"]);
 
-	this.window.windowFlags = (this.window.windowFlags | Qt.FramelessWindowHint) ^ Qt.WindowTitleHint;
+	this.window.windowFlags = (this.window.windowFlags | Qt.FramelessWindowHint | Qt.WindowCloseButtonHint) ^ (Qt.WindowTitleHint | Qt.Dialog);
 
 	this.closeButton.clicked.connect(this.window.close);
 	this.minimizeButton.clicked.connect(this.window.minimize);

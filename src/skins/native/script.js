@@ -58,7 +58,7 @@ function Program(window, playbackEngine)
 	this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlide_setValue");
 
 	this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["activateMediaList(const QStringList &)"]);
-	this.window.windowFlags = this.window.windowFlags | Qt.WindowMinimizeButtonHint;
+	this.window.windowFlags = (this.window.windowFlags | Qt.WindowMinimizeButtonHint) ^ Qt.Dialog;
 
 	//print("script loaded");
 }
