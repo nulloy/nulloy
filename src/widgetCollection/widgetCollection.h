@@ -13,7 +13,86 @@
 **
 *********************************************************************/
 
+#include "label.h"
+#include "dropArea.h"
+#include "playlistWidget.h"
+#include "slider.h"
+#include "waveformSlider.h"
+
 #include <QDesignerCustomWidgetCollectionInterface>
+#include <QDesignerCustomWidgetInterface>
+
+class NWidgetPlugin : public QDesignerCustomWidgetInterface
+{
+	Q_INTERFACES(QDesignerCustomWidgetInterface)
+
+private:
+	bool m_initialized;
+	QString m_className;
+	QString m_domXml;
+	QString m_header;
+
+protected:
+	NWidgetPlugin(const QString &className);
+
+public:
+	QString name() const { return m_className; }
+	void initialize(QDesignerFormEditorInterface *core);
+	bool isInitialized() const { return m_initialized; }
+	virtual bool isContainer() const { return FALSE; }
+	virtual QIcon icon() const { return QIcon(); }
+	virtual QString whatsThis() const { return QString(); }
+	virtual QString toolTip() const { return QString(); }
+	virtual QString group() const { return "Nulloy"; }
+	virtual QString domXml() const { return m_domXml; }
+    virtual QString includeFile() const { return m_header; }
+};
+
+class NLabelPlugin : public QObject, public NWidgetPlugin
+{
+	Q_OBJECT
+
+public:
+	NLabelPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
+	virtual QWidget *createWidget(QWidget *parent) { return new NLabel(parent); }
+};
+
+class NDropAreaPlugin : public QObject, public NWidgetPlugin
+{
+	Q_OBJECT
+
+public:
+	NDropAreaPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
+	virtual bool isContainer() const { return TRUE; }
+	virtual QWidget *createWidget(QWidget *parent) { return new NDropArea(parent); }
+};
+
+class NPlaylistWidgetPlugin : public QObject, public NWidgetPlugin
+{
+	Q_OBJECT
+
+public:
+	NPlaylistWidgetPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
+	virtual QWidget *createWidget(QWidget *parent) { return new NPlaylistWidget(parent); }
+};
+
+class NSliderPlugin : public QObject, public NWidgetPlugin
+{
+	Q_OBJECT
+
+public:
+	NSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
+	virtual QWidget *createWidget(QWidget *parent) { return new NSlider(parent); }
+};
+
+class NWaveformSliderPlugin : public QObject, public NWidgetPlugin
+{
+	Q_OBJECT
+
+public:
+	NWaveformSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
+	virtual QWidget *createWidget(QWidget *parent) { return new NWaveformSlider(parent); }
+};
 
 class NWidgetCollection: public QObject, public QDesignerCustomWidgetCollectionInterface
 {
@@ -21,12 +100,11 @@ class NWidgetCollection: public QObject, public QDesignerCustomWidgetCollectionI
 	Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
 
 public:
-	explicit NWidgetCollection(QObject *parent = 0);
-
-	virtual QList<QDesignerCustomWidgetInterface*> customWidgets() const;
+	NWidgetCollection(QObject *parent = 0);
+	virtual QList<QDesignerCustomWidgetInterface *> customWidgets() const { return m_plugins; }
 
 private:
-	QList<QDesignerCustomWidgetInterface*> m_plugins;
+	QList<QDesignerCustomWidgetInterface *> m_plugins;
 };
 
 /* vim: set ts=4 sw=4: */

@@ -1,4 +1,4 @@
-SOURCES = *.cpp
+SOURCES += *.cpp
 HEADERS += *.h
 INCLUDEPATH += ..
 
