@@ -189,7 +189,9 @@ void NPlaylistWidget::activateFirst()
 
 void NPlaylistWidget::activateCurrent()
 {
-	activateItem(m_currentItem);
+	if (m_currentItem)
+		activateItem(m_currentItem);
+	else activateFirst();
 }
 
 void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end)
