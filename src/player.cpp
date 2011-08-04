@@ -39,7 +39,6 @@
 #include <QFileInfo>
 #include <QPluginLoader>
 #include <QFileDialog>
-#include <QDesktopServices>
 #include <QMetaObject>
 #include <QNetworkRequest>
 
@@ -434,13 +433,19 @@ void NPlayer::showAboutMessageBox()
 void NPlayer::showFileDialog()
 {
 	QStringList files = QFileDialog::getOpenFileNames(m_mainWindow, tr("Open Files"),
-						QDesktopServices::storageLocation(QDesktopServices::MusicLocation),
+						NSettings::value("LastDirectory").toString(),
 						"Music files ("
 							"*.mp3 *.ogg *.flac *.wma *.wav "
 							"*.aac *.m4a *.spx *.mp4 "
 							"*.xm *.s3m *.it *.mod"
 						");;"
 						"All files (*)");
+
+	if (files.isEmpty())
+		return;
+
+	QString lastDir = QFileInfo(files.first()).path();
+	NSettings::setValue("LastDirectory", lastDir);
 
 	bool isEmpty = (m_playlistWidget->count() == 0);
 	m_playlistWidget->appendMediaList(files);
