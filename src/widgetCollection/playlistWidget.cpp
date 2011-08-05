@@ -143,14 +143,14 @@ void NPlaylistWidget::setMediaListFromPlaylist(const QString &path)
 	}
 }
 
-void NPlaylistWidget::writePlaylist(const QString &path)
+void NPlaylistWidget::writePlaylist(const QString &file)
 {
-	QFile playlist(path);
+	QFile playlist(file);
 	if (playlist.open(QFile::WriteOnly | QFile::Truncate)) {
 		QTextStream out(&playlist);
 		out << "#EXTM3U\n";
 
-		QDir dir = QFileInfo(path).absoluteDir();
+		QDir dir(QFileInfo(file).canonicalPath());
 
 		for(int i = 0; i < count(); ++i) {
 			float time = 0;
@@ -158,11 +158,9 @@ void NPlaylistWidget::writePlaylist(const QString &path)
 				time = -1;
 			if (time != 0)
 				out << "#NULLOY:" << time << "\n";
-
-			QString file = dir.relativeFilePath(item(i)->data(NPlaylistItem::PathRole).toString());
+			QString itemPath = item(i)->data(NPlaylistItem::PathRole).toString();
+			QString file = dir.relativeFilePath(QFileInfo(itemPath).canonicalFilePath());
 			out << "#EXTINF:-1, " << QFileInfo(file).fileName() << "\n";
-			if (file.startsWith("../"))
-				file = QFileInfo(file).absoluteFilePath();
 			out << file << "\n";
 		}
 		playlist.close();
