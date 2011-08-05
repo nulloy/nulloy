@@ -120,7 +120,7 @@ unix {
 	icon.files = icon.png
 	icon.path = $$prefix.path/share/nulloy
 
-	icon_post.extra = cd "$(INSTALL_ROOT)"$$prefix.path/share/icons && ln -s ../nulloy/icon.png nulloy.png
+	icon_post.extra = cd "$(INSTALL_ROOT)"$$prefix.path/share/icons && if [ ! -f nulloy.png ]; then ln -s ../nulloy/icon.png nulloy.png; fi
 	icon_post.path = $$prefix.path/share/icons/
 
 	desktop.files = ../nulloy.desktop
