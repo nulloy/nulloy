@@ -17,9 +17,11 @@
 
 #include "core.h"
 #include "action.h"
-#include <QSettings>
 
+#include <QSettings>
+#include <QDir>
 #include <QDesktopServices>
+
 #include <QDebug>
 
 namespace NSettings
@@ -46,6 +48,8 @@ void NSettings::init(QObject *parent)
 	_instance->setValue("AutoCheckUpdates", _instance->value("AutoCheckUpdates", TRUE).toBool());
 	_instance->setValue("DisplayLogDialog", _instance->value("DisplayLogDialog", TRUE).toBool());
 	_instance->setValue("LastDirectory", _instance->value("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation)).toString());
+	_instance->setValue("LoadNext", _instance->value("LoadNext", FALSE).toBool());
+	_instance->setValue("LoadNextSort", _instance->value("LoadNextSort", QDir::Name).toInt());
 	_instance->setValue("Volume", _instance->value("Volume", 0.8).toFloat());
 }
 

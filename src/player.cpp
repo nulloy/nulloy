@@ -171,6 +171,38 @@ NPlayer::NPlayer()
 	alwaysOnTopAction->setCheckable(TRUE);
 	alwaysOnTopAction->setObjectName("alwaysOnTopAction");
 
+	// playlist actions
+	NAction *loadNextAction = new NAction(tr("Load next file in directory when finished"), this);
+	loadNextAction->setCheckable(TRUE);
+	loadNextAction->setObjectName("loadNextAction");
+	connect(loadNextAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+
+	NAction *loadNextNameDownAction = new NAction(trUtf8("    ├  By Name ↓"), this);
+	loadNextNameDownAction->setCheckable(TRUE);
+	loadNextNameDownAction->setObjectName("loadNextNameDownAction");
+	connect(loadNextNameDownAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+
+	NAction *loadNextNameUpAction = new NAction(trUtf8("    ├  By Name ↑"), this);
+	loadNextNameUpAction->setCheckable(TRUE);
+	loadNextNameUpAction->setObjectName("loadNextNameUpAction");
+	connect(loadNextNameUpAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+
+	NAction *loadNextDateDownAction = new NAction(trUtf8("    ├  By Date ↓"), this);
+	loadNextDateDownAction->setCheckable(TRUE);
+	loadNextDateDownAction->setObjectName("loadNextDateDownAction");
+	connect(loadNextDateDownAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+
+	NAction *loadNextDateUpAction = new NAction(trUtf8("    └  By Date ↑"), this);
+	loadNextDateUpAction->setCheckable(TRUE);
+	loadNextDateUpAction->setObjectName("loadNextDateUpAction");
+	connect(loadNextDateUpAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+
+	QActionGroup* group = new QActionGroup(this);
+	loadNextNameDownAction->setActionGroup(group);
+	loadNextNameUpAction->setActionGroup(group);
+	loadNextDateDownAction->setActionGroup(group);
+	loadNextDateUpAction->setActionGroup(group);
+
 	// tray icon
 	QMenu *trayIconMenu = new QMenu(this);
 	trayIconMenu->addAction(playAction);
@@ -194,6 +226,14 @@ NPlayer::NPlayer()
 	windowSubMenu->addAction(whilePlayingOnTopAction);
 	windowSubMenu->addAction(alwaysOnTopAction);
 	m_contextMenu->addMenu(windowSubMenu);
+
+	QMenu *playlistSubMenu = new QMenu("Playlist");
+	playlistSubMenu->addAction(loadNextAction);
+	playlistSubMenu->addAction(loadNextNameDownAction);
+	playlistSubMenu->addAction(loadNextNameUpAction);
+	playlistSubMenu->addAction(loadNextDateDownAction);
+	playlistSubMenu->addAction(loadNextDateUpAction);
+	m_contextMenu->addMenu(playlistSubMenu);
 
 	m_contextMenu->addAction(preferencesAction);
 	m_contextMenu->addSeparator();
@@ -284,6 +324,25 @@ void NPlayer::loadSettings()
 		whilePlayingOnTopAction->setChecked(TRUE);
 		on_whilePlayingOnTopAction_toggled(TRUE);
 	}
+
+	bool loadNext = NSettings::value("LoadNext").toBool();
+	if (loadNext) {
+		NAction *loadNextAction = qFindChild<NAction *>(this, "loadNextAction");
+		loadNextAction->setChecked(TRUE);
+	}
+	QDir::SortFlag flag = (QDir::SortFlag)NSettings::value("LoadNextSort").toInt();
+	NAction *action;
+	if (flag == (QDir::Name))
+		action = qFindChild<NAction *>(this, "loadNextNameDownAction");
+	else if (flag == (QDir::Name | QDir::Reversed))
+		action = qFindChild<NAction *>(this, "loadNextNameUpAction");
+	else if (flag == (QDir::Time | QDir::Reversed))
+		action = qFindChild<NAction *>(this, "loadNextDateDownAction");
+	else if (flag == (QDir::Time))
+		action = qFindChild<NAction *>(this, "loadNextDateUpAction");
+	else
+		action = qFindChild<NAction *>(this, "loadNextNameDownAction");
+	action->setChecked(TRUE);
 
 	m_playbackEngine->setVolume(NSettings::value("Volume").toFloat());
 }
@@ -446,6 +505,23 @@ void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)
 	bool alwaysOnTop = NSettings::value("GUI/AlwaysOnTop").toBool();
 	if (!alwaysOnTop)
 		m_mainWindow->setOnTop(checked && m_playState);
+}
+
+void NPlayer::loadNextActionTriggered()
+{
+	NAction *action = reinterpret_cast<NAction *>(QObject::sender());
+	QString name = action->objectName();
+	bool checked = action->isChecked();
+	if (name == "loadNextAction")
+		NSettings::setValue("LoadNext", checked);
+	else if (name == "loadNextNameDownAction")
+		NSettings::setValue("LoadNextSort", (int)QDir::Name);
+	else if (name == "loadNextNameUpAction")
+		NSettings::setValue("LoadNextSort", (int)(QDir::Name | QDir::Reversed));
+	else if (name == "loadNextDateDownAction")
+		NSettings::setValue("LoadNextSort", (int)QDir::Time | QDir::Reversed);
+	else if (name == "loadNextDateUpAction")
+		NSettings::setValue("LoadNextSort", (int)(QDir::Time));
 }
 
 void NPlayer::showAboutMessageBox()

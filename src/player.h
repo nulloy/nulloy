@@ -64,6 +64,7 @@ private slots:
 	void on_whilePlayingOnTopAction_toggled(bool checked);
 	void versionOnlineFetch();
 	void on_networkManager_finished(QNetworkReply *reply);
+	void loadNextActionTriggered();
 
 public slots:
 	void quit();

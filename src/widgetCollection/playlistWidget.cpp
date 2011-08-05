@@ -15,6 +15,7 @@
 
 #include "playlistWidget.h"
 
+#include "settings.h"
 #include "core.h"
 #include <QFileInfo>
 #include <QtGui>
@@ -171,8 +172,19 @@ void NPlaylistWidget::writePlaylist(const QString &path)
 void NPlaylistWidget::activateNext()
 {
 	int row = currentRow();
-	if (row < count() - 1)
+	if (row < count() - 1) {
 		activateItem(item(row + 1));
+	} else if (NSettings::value("LoadNext").toBool()) {
+		QDir::SortFlag flag = (QDir::SortFlag)NSettings::value("LoadNextSort").toInt();
+		QString file = m_currentItem->data(NPlaylistItem::PathRole).toString();
+		QString path = QFileInfo(file).path();
+		QStringList entryList = QDir(path).entryList(QDir::Files | QDir::NoDotAndDotDot, flag);
+		int index = entryList.indexOf(QFileInfo(file).fileName());
+		if (index != -1 && entryList.size() > index + 1) {
+			addItem(createItemFromPath(path + "/" + entryList.at(index + 1)));
+			activateItem(item(row + 1));
+		}
+	}
 }
 
 void NPlaylistWidget::activatePrev()
