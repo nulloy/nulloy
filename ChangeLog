@@ -1,3 +1,6 @@
+*
+- Option to keep window on top during playback
+
 * 0.3, Fri Jul 15 2011
 - Windows 7 Taskbar integration
 - Changing waveform progess color on pause

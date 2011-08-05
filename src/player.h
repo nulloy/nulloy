@@ -41,6 +41,7 @@ private:
 	NLogDialog *m_logDialog;
 	QString m_localPlaylist;
 	QNetworkAccessManager *m_networkManager;
+	bool m_playState;
 
 public:
 	NPlayer();
@@ -60,6 +61,7 @@ private slots:
 	void on_playbackEngine_mediaChanged(const QString &path);
 	void on_playbackEngine_playStateChanged(bool playState);
 	void on_alwaysOnTopAction_toggled(bool checked);
+	void on_whilePlayingOnTopAction_toggled(bool checked);
 	void versionOnlineFetch();
 	void on_networkManager_finished(QNetworkReply *reply);
 

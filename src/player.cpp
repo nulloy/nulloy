@@ -58,6 +58,7 @@ NPlayer::NPlayer()
 {
 	setObjectName("NPlayer");
 	NSettings::init(this);
+	m_playState = FALSE;
 
 	m_networkManager = new QNetworkAccessManager(this);
 	m_networkManager->setObjectName("networkManager");
@@ -162,6 +163,10 @@ NPlayer::NPlayer()
 										tr("About") + " " + QCoreApplication::applicationName(), this);
 	connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutMessageBox()));
 
+	NAction *whilePlayingOnTopAction = new NAction(tr("On Top During Playback"), this);
+	whilePlayingOnTopAction->setCheckable(TRUE);
+	whilePlayingOnTopAction->setObjectName("whilePlayingOnTopAction");
+
 	NAction *alwaysOnTopAction = new NAction(tr("Always On Top"), this);
 	alwaysOnTopAction->setCheckable(TRUE);
 	alwaysOnTopAction->setObjectName("alwaysOnTopAction");
@@ -184,7 +189,12 @@ NPlayer::NPlayer()
 	m_mainWindow->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 	m_contextMenu->addAction(fileDialogAction);
-	m_contextMenu->addAction(alwaysOnTopAction);
+
+	QMenu *windowSubMenu = new QMenu("Window");
+	windowSubMenu->addAction(whilePlayingOnTopAction);
+	windowSubMenu->addAction(alwaysOnTopAction);
+	m_contextMenu->addMenu(windowSubMenu);
+
 	m_contextMenu->addAction(preferencesAction);
 	m_contextMenu->addSeparator();
 	m_contextMenu->addAction(aboutAction);
@@ -261,11 +271,18 @@ void NPlayer::loadSettings()
 	if (NSettings::value("AutoCheckUpdates").toBool())
 		versionOnlineFetch();
 
-	bool onTop = NSettings::value("GUI/AlwaysOnTop").toBool();
-	if (onTop) {
+	bool alwaysOnTop = NSettings::value("GUI/AlwaysOnTop").toBool();
+	if (alwaysOnTop) {
 		NAction *alwaysOnTopAction = qFindChild<NAction *>(this, "alwaysOnTopAction");
 		alwaysOnTopAction->setChecked(TRUE);
 		on_alwaysOnTopAction_toggled(TRUE);
+	}
+
+	bool whilePlaying = NSettings::value("GUI/WhilePlayingOnTop").toBool();
+	if (whilePlaying) {
+		NAction *whilePlayingOnTopAction = qFindChild<NAction *>(this, "whilePlayingOnTopAction");
+		whilePlayingOnTopAction->setChecked(TRUE);
+		on_whilePlayingOnTopAction_toggled(TRUE);
 	}
 
 	m_playbackEngine->setVolume(NSettings::value("Volume").toFloat());
@@ -392,6 +409,11 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 
 void NPlayer::on_playbackEngine_playStateChanged(bool playState)
 {
+	m_playState = playState;
+	bool whilePlaying = NSettings::value("GUI/WhilePlayingOnTop").toBool();
+	bool alwaysOnTop = NSettings::value("GUI/AlwaysOnTop").toBool();
+	if (!alwaysOnTop)
+		m_mainWindow->setOnTop(whilePlaying && m_playState);
 #if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
 	if (playState) {
 		NW7TaskBar::instance()->setState(NW7TaskBar::Normal);
@@ -412,17 +434,18 @@ void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 {
 	NSettings::setValue("GUI/AlwaysOnTop", checked);
 
-	Qt::WindowFlags flags = m_mainWindow->windowFlags();
-	if (checked)
-		flags |= Qt::WindowStaysOnTopHint;
-	else
-		flags ^= Qt::WindowStaysOnTopHint;
-	m_mainWindow->setWindowFlags(flags);
-	m_mainWindow->show();
+	bool whilePlaying = NSettings::value("GUI/WhilePlayingOnTop").toBool();
+	if (!whilePlaying || !m_playState)
+		m_mainWindow->setOnTop(checked);
+}
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
-	NW7TaskBar::setWindow(m_mainWindow);
-#endif
+void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)
+{
+	NSettings::setValue("GUI/WhilePlayingOnTop", checked);
+
+	bool alwaysOnTop = NSettings::value("GUI/AlwaysOnTop").toBool();
+	if (!alwaysOnTop)
+		m_mainWindow->setOnTop(checked && m_playState);
 }
 
 void NPlayer::showAboutMessageBox()

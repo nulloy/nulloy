@@ -54,6 +54,7 @@ public slots:
 	void setTitle(QString title);
 	void minimize();
 	void toggleVisibility();
+	void setOnTop(bool onTop);
 
 private slots:
 	void loadSettings();

@@ -33,6 +33,7 @@
 
 #if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
 #include "w7TaskBar.h"
+#include <windows.h>
 #endif
 
 #include <QLayout>
@@ -206,6 +207,28 @@ bool NMainWindow::winEvent(MSG *message, long *result)
 void NMainWindow::minimize()
 {
 	setWindowState(Qt::WindowMinimized);
+}
+
+void NMainWindow::setOnTop(bool onTop)
+{
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+	if (onTop)
+		SetWindowPos(this->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	else
+		SetWindowPos(this->winId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+#else
+	Qt::WindowFlags flags = windowFlags();
+	if (onTop)
+		flags |= Qt::WindowStaysOnTopHint;
+	else
+		flags &= ~Qt::WindowStaysOnTopHint;
+	setWindowFlags(flags);
+	show();
+#endif
+
+#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+	NW7TaskBar::setWindow(this);
+#endif
 }
 
 /* vim: set ts=4 sw=4: */

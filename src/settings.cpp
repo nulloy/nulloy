@@ -40,6 +40,7 @@ void NSettings::init(QObject *parent)
 	_instance->setValue("GUI/MinimizeToTray", _instance->value("GUI/MinimizeToTray", FALSE).toBool());
 	_instance->setValue("GUI/TrayIcon", _instance->value("GUI/TrayIcon", FALSE).toBool());
 	_instance->setValue("GUI/AlwaysOnTop", _instance->value("GUI/AlwaysOnTop", FALSE).toBool());
+	_instance->setValue("GUI/WhilePlayingOnTop", _instance->value("GUI/WhilePlayingOnTop", FALSE).toBool());
 	_instance->setValue("RestorePlayback", _instance->value("RestorePlayback", TRUE).toBool());
 	_instance->setValue("SingleInstanse", _instance->value("SingleInstanse", TRUE).toBool());
 	_instance->setValue("AutoCheckUpdates", _instance->value("AutoCheckUpdates", TRUE).toBool());
