@@ -75,12 +75,12 @@ void NPreferencesDialog::loadSettings()
 {
 	ui.versionLabel->setText("");
 
-	ui.minimizeToTrayCheckBox->setChecked(NSettings::value("GUI/MinimizeToTray").toBool());
-	ui.restorePlaybackCheckBox->setChecked(NSettings::value("RestorePlayback").toBool());
-	ui.multipleInstansesCheckBox->setChecked(!NSettings::value("SingleInstanse").toBool());
-	ui.trayIconCheckBox->setChecked(NSettings::value("GUI/TrayIcon").toBool());
-	ui.versionCheckBox->setChecked(NSettings::value("AutoCheckUpdates").toBool());
-	ui.displayLogDialogCheckBox->setChecked(NSettings::value("DisplayLogDialog").toBool());
+	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("GUI/MinimizeToTray").toBool());
+	ui.restorePlaybackCheckBox->setChecked(NSettings::instance()->value("RestorePlayback").toBool());
+	ui.multipleInstansesCheckBox->setChecked(!NSettings::instance()->value("SingleInstanse").toBool());
+	ui.trayIconCheckBox->setChecked(NSettings::instance()->value("GUI/TrayIcon").toBool());
+	ui.versionCheckBox->setChecked(NSettings::instance()->value("AutoCheckUpdates").toBool());
+	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
 
 	int index;
 
@@ -99,10 +99,10 @@ void NPreferencesDialog::loadSettings()
 	if (ui.waveformComboBox->count() == 1)
 		ui.waveformComboBox->setEnabled(FALSE);
 
-	index = ui.playbackComboBox->findData(NSettings::value("Playback"));
+	index = ui.playbackComboBox->findData(NSettings::instance()->value("Playback"));
 	if (index != -1)
 		ui.playbackComboBox->setCurrentIndex(index);
-	index = ui.waveformComboBox->findData(NSettings::value("Waveform"));
+	index = ui.waveformComboBox->findData(NSettings::instance()->value("Waveform"));
 	if (index != -1)
 		ui.waveformComboBox->setCurrentIndex(index);
 #endif
@@ -117,23 +117,23 @@ void NPreferencesDialog::loadSettings()
 	if (ui.skinComboBox->count() == 1)
 		ui.skinComboBox->setEnabled(FALSE);
 
-	index = ui.skinComboBox->findData(NSettings::value("GUI/Skin"));
+	index = ui.skinComboBox->findData(NSettings::instance()->value("GUI/Skin"));
 	if (index != -1)
 		ui.skinComboBox->setCurrentIndex(index);
 #endif
 
-	NSettings::loadShortcuts();
-	ui.globalShortcutEditorWidget->init(NSettings::shortcuts());
+	NSettings::instance()->loadShortcuts();
+	ui.globalShortcutEditorWidget->init(NSettings::instance()->shortcuts());
 }
 
 void NPreferencesDialog::saveSettings()
 {
-	NSettings::setValue("GUI/MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
-	NSettings::setValue("RestorePlayback", ui.restorePlaybackCheckBox->isChecked());
-	NSettings::setValue("SingleInstanse", !ui.multipleInstansesCheckBox->isChecked());
-	NSettings::setValue("GUI/TrayIcon", ui.trayIconCheckBox->isChecked());
-	NSettings::setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
-	NSettings::setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
+	NSettings::instance()->setValue("GUI/MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
+	NSettings::instance()->setValue("RestorePlayback", ui.restorePlaybackCheckBox->isChecked());
+	NSettings::instance()->setValue("SingleInstanse", !ui.multipleInstansesCheckBox->isChecked());
+	NSettings::instance()->setValue("GUI/TrayIcon", ui.trayIconCheckBox->isChecked());
+	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
+	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 
 	bool showPluginMessage = FALSE;
 	bool showSkinMessage = FALSE;
@@ -141,23 +141,23 @@ void NPreferencesDialog::saveSettings()
 #ifndef _N_NO_PLUGINS_
 	// plugins
 	QVariant playbackVariant = ui.playbackComboBox->itemData(ui.playbackComboBox->currentIndex());
-	if (NSettings::value("Playback").isValid() && playbackVariant != NSettings::value("Playback"))
+	if (NSettings::instance()->value("Playback").isValid() && playbackVariant != NSettings::instance()->value("Playback"))
 		showPluginMessage = TRUE;
 	QVariant waveformVariant = ui.waveformComboBox->itemData(ui.waveformComboBox->currentIndex());
-	if (NSettings::value("Waveform").isValid() && waveformVariant != NSettings::value("Waveform"))
+	if (NSettings::instance()->value("Waveform").isValid() && waveformVariant != NSettings::instance()->value("Waveform"))
 		showPluginMessage = TRUE;
 
-	NSettings::setValue("Playback", playbackVariant);
-	NSettings::setValue("Waveform", waveformVariant);
+	NSettings::instance()->setValue("Playback", playbackVariant);
+	NSettings::instance()->setValue("Waveform", waveformVariant);
 #endif
 
 #ifndef _N_NO_SKINS_
 	// skins
 	QVariant skinVariant = ui.skinComboBox->itemData(ui.skinComboBox->currentIndex());
-	if (NSettings::value("GUI/Skin").isValid() && skinVariant != NSettings::value("GUI/Skin"))
+	if (NSettings::instance()->value("GUI/Skin").isValid() && skinVariant != NSettings::instance()->value("GUI/Skin"))
 		showSkinMessage = TRUE;
 
-	NSettings::setValue("GUI/Skin", skinVariant);
+	NSettings::instance()->setValue("GUI/Skin", skinVariant);
 #endif
 
 	QString message;
@@ -175,7 +175,7 @@ void NPreferencesDialog::saveSettings()
 	}
 
 	ui.globalShortcutEditorWidget->applyShortcuts();
-	NSettings::saveShortcuts();
+	NSettings::instance()->saveShortcuts();
 	emit settingsChanged();
 }
 

@@ -16,6 +16,7 @@
 #ifndef N_PLAYER_H
 #define N_PLAYER_H
 
+#include "settings.h"
 #include "playbackEngineInterface.h"
 #include "waveformSlider.h"
 #include "preferencesDialog.h"
@@ -32,6 +33,7 @@ class NPlayer : public QWidget
 	Q_OBJECT
 
 private:
+	NSettings *m_settings;
 	QScriptEngine *m_scriptEngine;
 	NMainWindow *m_mainWindow;
 	NPreferencesDialog *m_preferencesDialog;

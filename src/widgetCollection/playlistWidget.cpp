@@ -172,8 +172,8 @@ void NPlaylistWidget::activateNext()
 	int row = currentRow();
 	if (row < count() - 1) {
 		activateItem(item(row + 1));
-	} else if (NSettings::value("LoadNext").toBool()) {
-		QDir::SortFlag flag = (QDir::SortFlag)NSettings::value("LoadNextSort").toInt();
+	} else if (NSettings::instance()->value("LoadNext").toBool()) {
+		QDir::SortFlag flag = (QDir::SortFlag)NSettings::instance()->value("LoadNextSort").toInt();
 		QString file = m_currentItem->data(NPlaylistItem::PathRole).toString();
 		QString path = QFileInfo(file).path();
 		QStringList entryList = QDir(path).entryList(QDir::Files | QDir::NoDotAndDotDot, flag);

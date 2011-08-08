@@ -82,9 +82,9 @@ void NLogDialog::showMessage(QMessageBox::Icon icon, const QString &title, const
 	cur.movePosition(QTextCursor::End);
 	m_textBrowser->setTextCursor(cur);
 
-	m_checkBox->setChecked(!NSettings::value("DisplayLogDialog").toBool());
+	m_checkBox->setChecked(!NSettings::instance()->value("DisplayLogDialog").toBool());
 
-	if (!NSettings::value("DisplayLogDialog").toBool())
+	if (!NSettings::instance()->value("DisplayLogDialog").toBool())
 		return;
 
 	showNormal();
@@ -95,7 +95,7 @@ void NLogDialog::closeEvent(QCloseEvent *event)
 {
 	Q_UNUSED(event);
 
-	NSettings::setValue("DisplayLogDialog", !m_checkBox->isChecked());
+	NSettings::instance()->setValue("DisplayLogDialog", !m_checkBox->isChecked());
 
 	m_textBrowser->clear();
 	m_text.clear();
