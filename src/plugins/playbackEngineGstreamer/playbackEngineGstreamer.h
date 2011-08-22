@@ -33,7 +33,7 @@ private:
 	QTimer *m_timer;
 	qreal m_oldVolume;
 	qreal m_oldPosition;
-	bool m_oldPlayState;
+	State m_oldState;
 	qreal m_savedPosition;
 	QString m_currentMedia;
 
@@ -46,6 +46,7 @@ public:
 
 	Q_INVOKABLE bool hasMedia();
 	Q_INVOKABLE QString currentMedia();
+	Q_INVOKABLE int state() { return m_oldState; }
 
 	Q_INVOKABLE qreal volume();
 	Q_INVOKABLE qreal position();
@@ -73,7 +74,7 @@ signals:
 	void mediaChanged(const QString &file);
 	void finished();
 	void failed();
-	void playStateChanged(bool);
+	void stateChanged(int state);
 };
 
 #endif

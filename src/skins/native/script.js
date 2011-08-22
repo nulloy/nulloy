@@ -43,8 +43,7 @@ function Program(window, playbackEngine)
 	this.waveformSlider.minimum = 0;
 	this.waveformSlider.maximum = 10000;
 
-	this.playbackEngine["playStateChanged(bool)"].connect(this, "updatePlayButtonIcon");
-	this.playbackEngine["playStateChanged(bool)"].connect(this.waveformSlider["setPlayState(bool)"]);
+	this.playbackEngine["stateChanged(int)"].connect(this, "on_stateChanged");
 	this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
 	this.playbackEngine["finished()"].connect(this.playlistWidget.activateNext);
 	this.playbackEngine["failed()"].connect(this, "on_failed");
@@ -63,13 +62,14 @@ function Program(window, playbackEngine)
 	//print("script loaded");
 }
 
-Program.prototype.updatePlayButtonIcon = function(playState)
+Program.prototype.on_stateChanged = function(state)
 {
-	if (playState) {
+	if (state != 2) // NPlaybackEngineInterface::Paused == 2
 		this.playButton.setStandardIcon("media-playback-pause", ":/trolltech/styles/commonstyle/images/media-pause-16.png");
-	} else {
+	else
 		this.playButton.setStandardIcon("media-playback-start", ":/trolltech/styles/commonstyle/images/media-play-16.png");
-	}
+
+	this.waveformSlider.setPausedState(state == 2);
 }
 
 Program.prototype.on_failed = function()

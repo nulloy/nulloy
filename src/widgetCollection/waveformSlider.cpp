@@ -50,9 +50,9 @@ void NWaveformSlider::setBuilder(NWaveformBuilderInterface *builder)
 	m_waveBuilder->setParent(this);
 }
 
-void NWaveformSlider::setPlayState(bool state)
+void NWaveformSlider::setPausedState(bool state)
 {
-	m_playState = state;
+	m_pausedState = state;
 	update();
 }
 
@@ -61,7 +61,7 @@ void NWaveformSlider::reset()
 	m_oldValue = -1;
 	m_oldIndex = -1;
 	m_oldBuildPos = -1;
-	m_playState = FALSE;
+	m_pausedState = FALSE;
 	setEnabled(FALSE);
 }
 
@@ -157,7 +157,7 @@ void NWaveformSlider::paintEvent(QPaintEvent *event)
 		painter.begin(&m_bufImage[3]);
 		// progress rectangle
 		painter.setPen(Qt::NoPen);
-		if (m_playState)
+		if (!m_pausedState)
 			painter.setBrush(progress_bg);
 		else
 			painter.setBrush(paused_bg);

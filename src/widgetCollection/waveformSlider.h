@@ -30,7 +30,7 @@ private:
 	QImage m_waveImage;
 	QVector<QImage> m_bufImage;
 	QTimer *m_timer;
-	bool m_playState;
+	bool m_pausedState;
 
 	QSize m_oldSize;
 	int m_oldValue;
@@ -51,7 +51,7 @@ public:
 public slots:
 	void drawFile(const QString &file);
 	void setValue(int value);
-	void setPlayState(bool);
+	void setPausedState(bool);
 
 private slots:
 	void checkForUpdate();

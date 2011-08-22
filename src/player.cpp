@@ -57,7 +57,6 @@ NPlayer::NPlayer()
 {
 	setObjectName("NPlayer");
 	m_settings = new NSettings(this);
-	m_playState = FALSE;
 
 	m_networkManager = new QNetworkAccessManager(this);
 	m_networkManager->setObjectName("networkManager");
@@ -465,15 +464,14 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	NSystemTray::setToolTip(title);
 }
 
-void NPlayer::on_playbackEngine_playStateChanged(bool playState)
+void NPlayer::on_playbackEngine_stateChanged(int state)
 {
-	m_playState = playState;
 	bool whilePlaying = m_settings->value("GUI/WhilePlayingOnTop").toBool();
 	bool alwaysOnTop = m_settings->value("GUI/AlwaysOnTop").toBool();
 	if (!alwaysOnTop)
-		m_mainWindow->setOnTop(whilePlaying && m_playState);
+		m_mainWindow->setOnTop(whilePlaying && state == NPlaybackEngineInterface::Playing);
 #if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
-	if (playState) {
+	if (state == NPlaybackEngineInterface::Playing) {
 		NW7TaskBar::instance()->setState(NW7TaskBar::Normal);
 		NW7TaskBar::setOverlayIcon(QIcon(":/trolltech/styles/commonstyle/images/media-play-32.png"), "Playing");
 	} else {
@@ -493,7 +491,7 @@ void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 	m_settings->setValue("GUI/AlwaysOnTop", checked);
 
 	bool whilePlaying = m_settings->value("GUI/WhilePlayingOnTop").toBool();
-	if (!whilePlaying || !m_playState)
+	if (!whilePlaying || m_playbackEngine->state() != NPlaybackEngineInterface::Playing)
 		m_mainWindow->setOnTop(checked);
 }
 
@@ -503,7 +501,7 @@ void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)
 
 	bool alwaysOnTop = m_settings->value("GUI/AlwaysOnTop").toBool();
 	if (!alwaysOnTop)
-		m_mainWindow->setOnTop(checked && m_playState);
+		m_mainWindow->setOnTop(checked && m_playbackEngine->state() == NPlaybackEngineInterface::Playing);
 }
 
 void NPlayer::loadNextActionTriggered()
