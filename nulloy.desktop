@@ -11,3 +11,25 @@ Terminal=false
 MimeType=audio/mp3;audio/x-mp3;application/x-flac;audio/x-flac;audio/x-wav;application/ogg;application/x-ogg;audio/x-vorbis+ogg;x-content/audio-player;audio/mpeg;audio/x-mpeg;
 Icon=nulloy
 Exec=nulloy %U
+
+X-Ayatana-Desktop-Shortcuts=Pause;Stop;Next;Previous
+
+[Pause Shortcut Group]
+Name=Play / Pause
+Exec=nulloy --pause
+TargetEnvironment=Unity
+
+[Stop Shortcut Group]
+Name=Stop
+Exec=nulloy --stop
+TargetEnvironment=Unity
+
+[Next Shortcut Group]
+Name=Next
+Exec=nulloy --next
+TargetEnvironment=Unity
+
+[Previous Shortcut Group]
+Name=Previous
+Exec=nulloy --prev
+TargetEnvironment=Unity

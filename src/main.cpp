@@ -29,12 +29,7 @@ int main(int argc, char *argv[])
 	if (QCoreApplication::arguments().size() > 1) {
 		QStringList argList = QCoreApplication::arguments();
 		argList.takeFirst();
-		QStringList pathList;
-		foreach (QString arg, argList) {
-			if (QFile(arg).exists())
-				pathList << arg;
-		}
-		msg = "files:" + pathList.join("<|>");
+		msg = argList.join("<|>");
 	}
 	if (instance.sendMessage(msg))
 		return 0;

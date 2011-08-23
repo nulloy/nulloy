@@ -273,9 +273,30 @@ NPlayer::~NPlayer()
 
 void NPlayer::message(const QString &str)
 {
-	QString prefix = "files:";
-	if (str.startsWith(prefix))
-		m_playlistWidget->activateMediaList(str.mid(prefix.size()).split("<|>"));
+	qDebug() << str;
+	QStringList argList = str.split("<|>");
+	QStringList pathList;
+	QStringList notPathArgList;
+	foreach (QString arg, argList) {
+		if (QFile(arg).exists())
+			pathList << arg;
+		else
+			notPathArgList << arg;
+	}
+
+	foreach (QString arg, notPathArgList) {
+		if (arg == "--next")
+			m_playlistWidget->activateNext();
+		else if (arg == "--prev")
+			m_playlistWidget->activatePrev();
+		else if (arg == "--stop")
+			m_playbackEngine->stop();
+		else if (arg == "--pause")
+			m_playlistWidget->activateCurrent();
+	}
+
+	if (!pathList.isEmpty())
+		m_playlistWidget->activateMediaList(pathList);
 }
 
 void NPlayer::restorePlaylist()
