@@ -16,6 +16,18 @@
 #include "playbackEnginePhonon.h"
 #include <QtGlobal>
 
+static NPlaybackEngineInterface::State fromPhononState(Phonon::State state)
+{
+	switch (state) {
+		case Phonon::PlayingState || Phonon::BufferingState:
+			return NPlaybackEngineInterface::Playing;
+		case Phonon::PausedState:
+			return NPlaybackEngineInterface::Paused;
+		default:
+			return NPlaybackEngineInterface::Stopped;
+	}
+}
+
 void NPlaybackEnginePhonon::init()
 {
 	m_savedPosition = -1;
@@ -149,7 +161,12 @@ void NPlaybackEnginePhonon::on_volumeChanged(qreal volume)
 
 void NPlaybackEnginePhonon::on_stateChanged(Phonon::State newState)
 {
-	emit playStateChanged(newState == Phonon::PlayingState);
+	emit stateChanged(fromPhononState(newState));
+}
+
+int NPlaybackEnginePhonon::state()
+{
+	return fromPhononState(m_mediaObject->state());
 }
 
 Q_EXPORT_PLUGIN2(playback_phonon, NPlaybackEnginePhonon)

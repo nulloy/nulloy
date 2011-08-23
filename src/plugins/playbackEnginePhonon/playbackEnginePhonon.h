@@ -36,11 +36,12 @@ public:
 	NPlaybackEnginePhonon(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
 	~NPlaybackEnginePhonon();
 	void init();
-	QString identifier() { return "Nulloy/Playback/Phonon/0.1.1"; }
+	QString identifier() { return "Nulloy/Playback/Phonon/0.1.2"; }
 	QString interface() { return NPlaybackEngineInterface::interface(); }
 
 	Q_INVOKABLE bool hasMedia();
 	Q_INVOKABLE QString currentMedia();
+	Q_INVOKABLE int state();
 
 	Q_INVOKABLE qreal volume();
 	Q_INVOKABLE qreal position();
@@ -66,7 +67,7 @@ signals:
 	void mediaChanged(const QString &file);
 	void finished();
 	void failed();
-	void playStateChanged(bool);
+	void stateChanged(int state);
 };
 
 #endif
