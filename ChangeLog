@@ -1,7 +1,8 @@
-*
+* 0.3.1, Wed Aug 24 2011
 - Quicklist integration for Ubuntu Unity Launcher
 - Option to keep window on top during playback
 - Loading next file from directory when playlist ends
+- Minor bug fixes and improvements
 
 * 0.3, Fri Jul 15 2011
 - Windows 7 Taskbar integration
