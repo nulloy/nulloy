@@ -25,7 +25,7 @@
 NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 {
 	connect(this, SIGNAL(itemActivated(QListWidgetItem *)), this, SLOT(on_itemActivated(QListWidgetItem *)));
-	setItemDelegate(new NPlaylistItemDelegate);
+	setItemDelegate(new NPlaylistItemDelegate(this));
 	m_currentItem = NULL;
 }
 

@@ -220,12 +220,12 @@ NPlayer::NPlayer()
 	connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 	m_contextMenu->addAction(fileDialogAction);
 
-	QMenu *windowSubMenu = new QMenu("Window");
+	QMenu *windowSubMenu = new QMenu("Window", m_mainWindow);
 	windowSubMenu->addAction(whilePlayingOnTopAction);
 	windowSubMenu->addAction(alwaysOnTopAction);
 	m_contextMenu->addMenu(windowSubMenu);
 
-	QMenu *playlistSubMenu = new QMenu("Playlist");
+	QMenu *playlistSubMenu = new QMenu("Playlist", m_mainWindow);
 	playlistSubMenu->addAction(loadNextAction);
 	playlistSubMenu->addAction(loadNextNameDownAction);
 	playlistSubMenu->addAction(loadNextNameUpAction);
@@ -268,6 +268,7 @@ NPlayer::NPlayer()
 
 NPlayer::~NPlayer()
 {
+	NPluginLoader::deinit();
 	delete m_mainWindow;
 }
 
@@ -407,7 +408,7 @@ void NPlayer::versionOnlineFetch()
 
 void NPlayer::on_networkManager_finished(QNetworkReply *reply)
 {
-    if (!reply->error()) {
+	if (!reply->error()) {
 		QString versionOnline = reply->readAll().simplified();
 
 		if (m_preferencesDialog->isVisible())

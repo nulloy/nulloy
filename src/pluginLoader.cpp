@@ -41,6 +41,18 @@ namespace NPluginLoader
 	QString _wavefowmPrefer = "GStreamer";
 
 	void _loadPlugins();
+	QList<QPluginLoader *> _loaders;
+}
+
+void NPluginLoader::deinit()
+{
+	for (int i = 0; i < _loaders.size(); ++i) {
+		if (_loaders[i]) {
+			_loaders.at(i)->unload();
+			delete _loaders[i];
+			_loaders[i] = NULL;
+		}
+	}
 }
 
 void NPluginLoader::_loadPlugins()
@@ -50,7 +62,6 @@ void NPluginLoader::_loadPlugins()
 	_init = TRUE;
 
 	QObjectList objects;
-	QList<QPluginLoader *> loaders;
 	QList<bool> usedFlags;
 
 	QObjectList objectsStatic;
@@ -67,7 +78,7 @@ void NPluginLoader::_loadPlugins()
 			QString id = plugin->identifier();
 			id.insert(id.lastIndexOf('/'), " (Built-in)");
 			_identifiers << id;
-			loaders << NULL;
+			_loaders << NULL;
 			usedFlags << TRUE;
 		}
 	}
@@ -106,7 +117,7 @@ void NPluginLoader::_loadPlugins()
 				if (plugin) {
 					objects << obj;
 					_identifiers << plugin->identifier();
-					loaders << loader;
+					_loaders << loader;
 					usedFlags << FALSE;
 				} else {
 					QMessageBox box(QMessageBox::Warning, QObject::tr("Plugin loading error"), QObject::tr("Failed to load plugin: ") +
@@ -168,10 +179,11 @@ void NPluginLoader::_loadPlugins()
 		NSettings::instance()->setValue("Waveform", _identifiers.at(index).section('/', 2));
 	}
 
-	for (int i = 0; i < loaders.size(); ++i) {
+	for (int i = 0; i < _loaders.size(); ++i) {
 		if (usedFlags.at(i) == FALSE) {
-			loaders.at(i)->unload();
-			delete loaders[i];
+			_loaders.at(i)->unload();
+			delete _loaders[i];
+			_loaders[i] = NULL;
 		}
 	}
 

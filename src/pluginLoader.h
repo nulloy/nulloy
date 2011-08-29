@@ -25,6 +25,7 @@ namespace NPluginLoader
 	NPlaybackEngineInterface* playbackPlugin();
 	NWaveformBuilderInterface* waveformPlugin();
 	QStringList pluginIdentifiers();
+	void deinit();
 }
 
 #endif
