@@ -78,6 +78,7 @@ win32 {
 	RC_FILE = icon.rc
 	DEFINES += _N_TIME_STAMP_=__TIMESTAMP__
 }
+mac:ICON = icon.icns
 unix {
 	DEFINES += _N_TIME_STAMP_=\""\\\"`date +\\\"%a %b %d %T %Y\\\"`\\\""\"
 }
@@ -113,7 +114,7 @@ embed-gstreamer|no-plugins {
 }
 
 # qmake "PREFIX=/usr"
-unix {
+unix:!mac {
 	prefix.path = $$PREFIX
 	target.path = $$prefix.path/bin
 
@@ -141,4 +142,19 @@ unix {
 	}
 }
 
+mac {
+	prefix.path = ../$${TARGET}.app
+
+	!no-skins {
+		skins.files = ../skins/*
+		skins.path = $$prefix.path/Contents/MacOS/skins
+		INSTALLS += skins
+	}
+
+	!no-plugins {
+		plugins.files = ../plugins/*
+		plugins.path = $$prefix.path/Contents/MacOS/plugins
+		INSTALLS += plugins
+	}
+}
 # vim: set ts=4 sw=4: #

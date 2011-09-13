@@ -18,3 +18,8 @@ win32 {
     contains(TEMPLATE, lib):contains(CONFIG, shared):DEFINES += QT_QTIOCOMPRESSOR_EXPORT
     else:qtiocompressor-uselib:DEFINES += QT_QTIOCOMPRESSOR_IMPORT
 }
+
+mac {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += zlib
+}

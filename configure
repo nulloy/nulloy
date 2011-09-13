@@ -40,7 +40,7 @@ while [ $# -gt 0 ]; do
 	if [ $1 == "--prefix" ]; then
 		shift; PREFIX=$1
 	elif [ $1 == "--debug" ]; then
-		 DEBUG=yes
+		DEBUG=yes
 	elif [ $1 == "--no-gstreamer" ]; then
 		BUILD_GSTREAMER=no
 	elif [ $1 == "--embed-gstreamer" ]; then
