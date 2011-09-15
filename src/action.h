@@ -29,6 +29,7 @@ public:
 	NAction(const QIcon &icon, const QString &text, QObject *parent) : QAction(icon, text, parent), m_global(FALSE) {}
 
 	void setEnabled(bool enable);
+	bool isEnabled();
 	void setGlobal(bool global);
 	bool isGlobal() { return m_global; }
 

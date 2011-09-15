@@ -77,7 +77,6 @@ void NShortcutEditorWidget::applyShortcuts()
 			if (objectName == action->objectName()) {
 				if (shortcut.isEmpty()) {
 					action->setEnabled(FALSE);
-					action->setShortcut(QKeySequence());
 				} else {
 					action->setEnabled(TRUE);
 					action->setShortcut(QKeySequence(shortcut));

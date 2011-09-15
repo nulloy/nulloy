@@ -84,7 +84,7 @@ void NSettings::saveShortcuts()
 		foreach (QKeySequence seq, shortcut)
 			strSeqList << seq.toString();
 
-		if (!strSeqList.isEmpty())
+		if (!strSeqList.isEmpty() && m_globalActionList.at(i)->isEnabled())
 			NSettings::setValue("GlobalShortcuts/" + m_globalActionList.at(i)->objectName(), strSeqList.join(", "));
 		else
 			NSettings::remove("GlobalShortcuts/" + m_globalActionList.at(i)->objectName());

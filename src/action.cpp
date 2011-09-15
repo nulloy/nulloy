@@ -24,7 +24,12 @@ void NAction::setEnabled(bool enable)
 		foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
 			shortcut->setEnabled(FALSE);
 	}
+	QAction::setEnabled(enable);
+}
 
+bool NAction::isEnabled()
+{
+	return QAction::isEnabled() && m_global;
 }
 
 void NAction::setGlobal(bool global)
