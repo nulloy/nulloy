@@ -83,7 +83,7 @@ function Program(window, playbackEngine)
 
 Program.prototype.on_stateChanged = function(state)
 {
-	if (state != 2) // NPlaybackEngineInterface::Paused == 2
+	if (state == 1) // NPlaybackEngineInterface::Playing == 1
 		this.playButton.styleSheet = "qproperty-icon: url(pause.png)";
 	else
 		this.playButton.styleSheet = "qproperty-icon: url(play.png)";

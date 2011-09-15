@@ -64,7 +64,7 @@ function Program(window, playbackEngine)
 
 Program.prototype.on_stateChanged = function(state)
 {
-	if (state != 2) // NPlaybackEngineInterface::Paused == 2
+	if (state == 1) // NPlaybackEngineInterface::Playing == 1
 		this.playButton.setStandardIcon("media-playback-pause", ":/trolltech/styles/commonstyle/images/media-pause-16.png");
 	else
 		this.playButton.setStandardIcon("media-playback-start", ":/trolltech/styles/commonstyle/images/media-play-16.png");
