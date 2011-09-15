@@ -150,8 +150,6 @@ void NPlaylistWidget::writePlaylist(const QString &file)
 		QTextStream out(&playlist);
 		out << "#EXTM3U\n";
 
-		QDir dir(QFileInfo(file).canonicalPath());
-
 		for(int i = 0; i < count(); ++i) {
 			float time = 0;
 			if (item(i)->data(NPlaylistItem::FailedRole).toBool())
@@ -159,9 +157,17 @@ void NPlaylistWidget::writePlaylist(const QString &file)
 			if (time != 0)
 				out << "#NULLOY:" << time << "\n";
 			QString itemPath = item(i)->data(NPlaylistItem::PathRole).toString();
-			QString file = dir.relativeFilePath(QFileInfo(itemPath).canonicalFilePath());
-			out << "#EXTINF:-1, " << QFileInfo(file).fileName() << "\n";
-			out << file << "\n";
+			if (QFileInfo(itemPath).exists()) {
+				/*QDir dir(QFileInfo(file).canonicalPath());
+				QString file = dir.relativeFilePath(QFileInfo(itemPath).canonicalFilePath());*/
+				QString file = QFileInfo(itemPath).canonicalFilePath();
+				out << "#EXTINF:-1, " << QFileInfo(file).fileName() << "\n";
+				out << file << "\n";
+			} else { // keep old item, but mark failed
+				out << "#NULLOY:" << -1 << "\n";
+				out << "#EXTINF:-1, " << item(i)->text() << "\n";
+				out << itemPath << "\n";
+			}
 		}
 		playlist.close();
 	}
