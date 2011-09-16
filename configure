@@ -77,6 +77,9 @@ if [[ ! -n $QMAKE && ! -f $QMAKE ]]; then
 	fi
 fi
 
+QMAKE_CACHE=`pwd`/.qmake.cache
+[ -f $QMAKE_CACHE ] && rm -f $QMAKE_CACHE
+
 which pkg-config > /dev/null
 if [ $? -eq 0 ]; then
 	if [[ $BUILD_GSTREAMER == "yes" || $EMBED_GSTREAMER == "yes" ]]; then
@@ -135,6 +138,8 @@ if [ $DEBUG == "yes" ]; then
 else
 	QMAKE_CONFIG="$QMAKE_CONFIG release"
 fi
+
+echo "N_CONFIGURED = yes" > $QMAKE_CACHE
 
 echo
 echo "Running qmake..."
