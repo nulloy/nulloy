@@ -40,6 +40,7 @@
 #include <QFileDialog>
 #include <QMetaObject>
 #include <QNetworkRequest>
+#include <QTextBrowser>
 
 #include <QDebug>
 
@@ -443,19 +444,6 @@ void NPlayer::preferencesDialogSettingsChanged()
 	NSystemTray::setEnabled(m_settings->value("GUI/TrayIcon").toBool());
 }
 
-QString NPlayer::about()
-{
-	return QString() +
-			"<b>" +  QCoreApplication::applicationName() + "</b> Music Player, " +
-				"<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
-					QCoreApplication::organizationDomain() + "</a><br>" +
-			"Version: " + QCoreApplication::applicationVersion() +
-				(QString(_N_TIME_STAMP_).isEmpty() ? "" : " (Build " + QString(_N_TIME_STAMP_) + ")") + "<br><br>" +
-			"Copyright (C) 2010-2011  Sergey Vlasov &lt;<a href='mailto:Sergey Vlasov <sergey@vlasov.me>" +
-				"?subject=" + QCoreApplication::applicationName() + " " +
-				QCoreApplication::applicationVersion() + "'>sergey@vlasov.me</a>&gt;";
-}
-
 void NPlayer::versionOnlineFetch()
 {
 	QString suffix;
@@ -611,7 +599,64 @@ void NPlayer::loadNextActionTriggered()
 
 void NPlayer::showAboutMessageBox()
 {
-	QMessageBox::about(m_mainWindow, QObject::tr("About ") + QCoreApplication::applicationName(), about());
+	QString html = QString() +
+#ifdef Q_WS_MAC
+					"<span style=\" font-size:14pt;\">" +
+#else
+					"<span style=\" font-size:9pt;\">" +
+#endif
+						"<b>" +  QCoreApplication::applicationName() + "</b> Music Player " +
+							"<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
+								QCoreApplication::organizationDomain() + "</a>" +
+					"</span><br>" +
+#ifdef Q_WS_MAC
+					"<span style=\" font-size:10pt;\">" +
+#else
+					"<span style=\" font-size:8pt;\">" +
+#endif
+						"Version: " + QCoreApplication::applicationVersion() +
+							(QString(_N_TIME_STAMP_).isEmpty() ? "" : " (Build " + QString(_N_TIME_STAMP_) + ")") + "<br><br>" +
+						"Copyright (C) 2010-2011  Sergey Vlasov &lt;<a href='mailto:Sergey Vlasov <sergey@vlasov.me>" +
+							"?subject=" + QCoreApplication::applicationName() + " " +
+							QCoreApplication::applicationVersion() + "'>sergey@vlasov.me</a>&gt;" +
+					"</span>";
+
+	QDialog *dialog = new QDialog(m_mainWindow);
+	dialog->setWindowTitle(QObject::tr("About ") + QCoreApplication::applicationName());
+	dialog->setMaximumSize(0, 0);
+	QVBoxLayout *layout = new QVBoxLayout;
+	dialog->setLayout(layout);
+
+	QLabel *iconLabel = new QLabel;
+	QPixmap pixmap(":icon.png");
+	iconLabel->setPixmap(pixmap);
+#ifdef Q_WS_MAC
+	iconLabel->setMask(pixmap.mask());
+#endif
+
+	QHBoxLayout* iconLayout = new QHBoxLayout();
+	iconLayout->addStretch();
+	iconLayout->addWidget(iconLabel);
+	iconLayout->addStretch();
+	layout->addLayout(iconLayout);
+
+	QTextBrowser *textBrowser = new QTextBrowser(this);
+	textBrowser->setStyleSheet("background: transparent");
+	textBrowser->setFrameShape(QFrame::NoFrame);
+	textBrowser->setHtml("<center>" + html + "</center>");
+
+	textBrowser->setMinimumWidth(350);
+	layout->addWidget(textBrowser);
+
+	QPushButton *closeButton = new QPushButton("Close");
+	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept())); \
+	QHBoxLayout* buttonLayout = new QHBoxLayout();
+	buttonLayout->addStretch();
+	buttonLayout->addWidget(closeButton);
+	buttonLayout->addStretch();
+	layout->addLayout(buttonLayout);
+
+	dialog->exec();
 }
 
 void NPlayer::showFileDialog()

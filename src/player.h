@@ -47,7 +47,6 @@ private:
 public:
 	NPlayer();
 	~NPlayer();
-	QString about();
 
 	Q_INVOKABLE NMainWindow* mainWindow();
 	Q_INVOKABLE NPlaybackEngineInterface* playbackEngine();
