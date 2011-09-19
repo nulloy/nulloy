@@ -38,8 +38,8 @@ make
 %files
 %defattr(-,root,root)
 %{_bindir}/%{name}
-%{_datadir}/%{name}/*
-%{_datadir}/icons/%{name}.png
+%{_datadir}/%{name}/skins/*
+%{_datadir}/icons/*
 %{_datadir}/applications/%{name}.desktop
 
 %package  gstreamer

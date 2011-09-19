@@ -77,33 +77,20 @@ void NMainWindow::init(const QString &uiFile)
 	for (int i = 0; i < widgets.size(); ++i)
 		widgets.at(i)->installEventFilter(this);
 
-	QStringList iconList;
-#ifndef Q_WS_WIN
-	iconList << "icon.";
-	QDir parentDir(QCoreApplication::applicationDirPath());
-	if (parentDir.dirName() == "bin") {
-		iconList << NCore::rcDir() + "/icon.";
-		iconList << "../share/nulloy/icon.";
-	}
+	QIcon icon;
+#ifdef Q_WS_X11
+	icon = QIcon::fromTheme("nulloy");
 #endif
-	iconList << ":icon.";
-
-	QStringList iconFormats;
-	iconFormats << "png" << "svg";
-
-	bool set = FALSE;
-	foreach (QString icon, iconList) {
-		foreach (QString format, iconFormats) {
-			QString iconFull = icon + format;
-			if (QFileInfo(iconFull).exists()) {
-				setWindowIcon(QIcon(iconFull));
-				set = TRUE;
-				break;
-			}
-		}
-		if (set)
-			break;
+#ifndef Q_WS_MAC
+	if (icon.isNull()) {
+		QStringList files = QDir(":").entryList(QStringList() << "icon-*", QDir::Files);
+		foreach (QString fileName, files)
+				icon.addFile(":" + fileName);
 	}
+#else
+	icon.addFile(":icon-16.png");
+#endif
+	setWindowIcon(icon);
 
 	QMetaObject::connectSlotsByName(this);
 }

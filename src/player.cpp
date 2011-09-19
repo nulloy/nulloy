@@ -250,7 +250,11 @@ NPlayer::NPlayer()
 	trayIconMenu->addAction(exitAction);
 	NSystemTray::init(this);
 	NSystemTray::setContextMenu(trayIconMenu);
+#ifdef Q_WS_MAC
+	NSystemTray::setIcon(QIcon(":mac-systray.png"));
+#else
 	NSystemTray::setIcon(m_mainWindow->windowIcon());
+#endif
 	//
 
 
@@ -634,7 +638,7 @@ void NPlayer::showAboutMessageBox()
 	dialog->setLayout(layout);
 
 	QLabel *iconLabel = new QLabel;
-	QPixmap pixmap(":icon.png");
+	QPixmap pixmap(":icon-96.png");
 	iconLabel->setPixmap(pixmap);
 #ifdef Q_WS_MAC
 	iconLabel->setMask(pixmap.mask());

@@ -38,7 +38,7 @@ fi
 eval set -- $args
 while [ $# -gt 0 ]; do
 	if [ $1 == "--prefix" ]; then
-		shift; PREFIX=$1
+		shift; PREFIX=`readlink -m "$1"`
 	elif [ $1 == "--debug" ]; then
 		DEBUG=yes
 	elif [ $1 == "--no-gstreamer" ]; then

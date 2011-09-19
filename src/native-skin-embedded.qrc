@@ -1,6 +1,5 @@
 <RCC>
   <qresource>
-    <file>icon.png</file>
     <file>skins/native/id.txt</file>
     <file>skins/native/script.js</file>
     <file>skins/native/form.ui</file>

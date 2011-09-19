@@ -1,0 +1,13 @@
+<RCC>
+  <qresource>
+    <file>mac-systray.png</file>
+    <file>icon-16.png</file>
+    <file>icon-22.png</file>
+    <file>icon-24.png</file>
+    <file>icon-32.png</file>
+    <file>icon-48.png</file>
+    <file>icon-64.png</file>
+    <file>icon-96.png</file>
+    <file>icon-128.png</file>
+  </qresource>
+</RCC>

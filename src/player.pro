@@ -19,6 +19,7 @@ MOC_DIR		= $$TMP_DIR
 RCC_DIR		= $$TMP_DIR
 UI_DIR		= $$TMP_DIR
 
+
 # qmake -config no-skins
 !no-skins {
 	CONFIG += uitools
@@ -26,7 +27,7 @@ UI_DIR		= $$TMP_DIR
 	LIBS += -LwidgetCollection -lwidget_collection
 	unix:PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
 	win32:PRE_TARGETDEPS += widgetCollection/widget_collection.lib
-	RESOURCES = resources.qrc
+	RESOURCES += native-skin-embedded.qrc
 
 	unix {
 		silver_skin.target = ../skins/silver.nzs
@@ -62,9 +63,10 @@ UI_DIR		= $$TMP_DIR
 	DEPENDPATH += widgetCollection/
 	INCLUDEPATH += widgetCollection/
 
-	RESOURCES = resources_no-skins.qrc
+	RESOURCES += no-skins.qrc
 	FORMS += skins/native/form.ui
 }
+
 
 # win7 taskbar
 win32 {
@@ -74,27 +76,27 @@ win32 {
 	SOURCES -= ux/w7TaskBar.cpp
 }
 
-win32 {
-	RC_FILE = icon.rc
-	DEFINES += _N_TIME_STAMP_=__TIMESTAMP__
-}
-mac:ICON = icon.icns
-unix {
-	DEFINES += _N_TIME_STAMP_=\""\\\"`date +\\\"%a %b %d %T %Y\\\"`\\\""\"
-}
 
+RESOURCES += icons/icons.qrc
+win32:RC_FILE = icons/icon.rc
+mac:ICON = icons/icon.icns
+
+
+include(version.pri)
+DEFINES += _N_VERSION_=\""\\\"$${VERSION}\\\""\"
+win32:DEFINES += _N_TIME_STAMP_=__TIMESTAMP__
+unix:DEFINES += _N_TIME_STAMP_=\""\\\"`date +\\\"%a %b %d %T %Y\\\"`\\\""\"
 build_pass:CONFIG(static, static|shared) {
 	DEFINES += _N_STATIC_BUILD_
 } else {
 	DEFINES += _N_SHARED_BUILD_
 }
 
-include(version.pri)
-DEFINES += _N_VERSION_=\""\\\"$${VERSION}\\\""\"
 
 include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
 include(../3rdParty/qtsingleapplication-2.6.1/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
+
 
 # qmake -config no-plugins
 !no-plugins {
@@ -103,6 +105,7 @@ include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 } else {
 	DEFINES += _N_NO_PLUGINS_
 }
+
 
 # qmake -config embed-gstreamer
 embed-gstreamer|no-plugins {
@@ -113,21 +116,20 @@ embed-gstreamer|no-plugins {
 	INCLUDEPATH += plugins/waveformBuilderGstreamer plugins/playbackEngineGstreamer
 }
 
+
 # qmake "PREFIX=/usr"
 unix:!mac {
 	prefix.path = $$PREFIX
 	target.path = $$prefix.path/bin
 
-	icon.files = icon.png
-	icon.path = $$prefix.path/share/nulloy
-
-	icon_post.extra = cd "$(INSTALL_ROOT)"$$prefix.path/share/icons && if [ ! -f nulloy.png ]; then ln -s ../nulloy/icon.png nulloy.png; fi
-	icon_post.path = $$prefix.path/share/icons/
+	system(icons/install-icons.sh $$TMP_DIR/icons)
+	icons.files = $$TMP_DIR/icons/*
+	icons.path = $$prefix.path
 
 	desktop.files = ../nulloy.desktop
 	desktop.path = $$prefix.path/share/applications
 
-	INSTALLS += target icon icon_post desktop
+	INSTALLS += target icons desktop
 
 	!no-skins {
 		skins.files = ../skins/*
@@ -141,6 +143,7 @@ unix:!mac {
 		INSTALLS += plugins
 	}
 }
+
 
 mac {
 	prefix.path = ../$${TARGET}.app
@@ -157,4 +160,5 @@ mac {
 		INSTALLS += plugins
 	}
 }
+
 # vim: set ts=4 sw=4: #
