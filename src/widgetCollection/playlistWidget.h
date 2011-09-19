@@ -31,6 +31,9 @@ private:
 	NPlaylistItem* createItemFromPath(const QString &path);
 	bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
 	QStringList mimeTypes() const;
+#ifdef Q_WS_MAC
+	Qt::DropActions supportedDropActions() const;
+#endif
 	QMimeData* mimeData(const QList<NPlaylistItem *> items) const;
 	void keyPressEvent(QKeyEvent *e);
 

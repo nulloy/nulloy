@@ -250,6 +250,13 @@ QStringList NPlaylistWidget::mimeTypes() const
 	return qstrList;
 }
 
+#ifdef Q_WS_MAC
+Qt::DropActions NPlaylistWidget::supportedDropActions() const
+{
+	return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
+}
+#endif
+
 QMimeData* NPlaylistWidget::mimeData(const QList<NPlaylistItem *> items) const
 {
 	QList<QUrl> urls;
