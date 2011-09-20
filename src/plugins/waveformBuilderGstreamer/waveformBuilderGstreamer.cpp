@@ -86,7 +86,7 @@ void NWaveformBuilderGstreamer::init()
 	if (m_init)
 		return;
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	_putenv("GST_PLUGIN_PATH=Plugins\\GStreamer");
 #endif
 
@@ -97,7 +97,7 @@ void NWaveformBuilderGstreamer::init()
 
 	m_playbin = NULL;
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
 #endif
@@ -118,7 +118,7 @@ NWaveformBuilderGstreamer::~NWaveformBuilderGstreamer()
 
 void NWaveformBuilderGstreamer::stop()
 {
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	m_timer->stop();
 #endif
 
@@ -151,7 +151,7 @@ void NWaveformBuilderGstreamer::start(const QString &file)
 								! audioconvert ! audio/x-raw-int, width=16, signed=true \
 								! fakesink name=w_sink", NULL);
 
-#if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
+#ifndef Q_WS_WIN
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
 	gst_bus_add_signal_watch(bus);
 #if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
@@ -175,7 +175,7 @@ void NWaveformBuilderGstreamer::start(const QString &file)
 	reset();
 	QThread::start();
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	if (!m_timer->isActive())
 		m_timer->start(100);
 #endif
@@ -202,7 +202,7 @@ qreal NWaveformBuilderGstreamer::position()
 	return (qreal)pos / len;
 }
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 void NWaveformBuilderGstreamer::update()
 {
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));

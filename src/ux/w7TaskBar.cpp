@@ -13,7 +13,7 @@
 **
 *********************************************************************/
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef WIN32
 
 #include "w7TaskBar.h"
 

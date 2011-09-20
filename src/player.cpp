@@ -31,7 +31,7 @@
 #include "playbackEngineGstreamer.h"
 #endif
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 #include "w7TaskBar.h"
 #endif
 
@@ -112,7 +112,7 @@ NPlayer::NPlayer()
 	QScriptValue windowScriptObject = m_scriptEngine->newQObject(m_mainWindow, QScriptEngine::QtOwnership);
 	QScriptValue programmObject = constructor.construct(QScriptValueList() << windowScriptObject << playbackEngineObject);
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	NW7TaskBar::init(this);
 	NW7TaskBar::setWindow(m_mainWindow);
 	connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
@@ -492,7 +492,7 @@ void NPlayer::on_playbackEngine_stateChanged(int state)
 	bool alwaysOnTop = m_settings->value("GUI/AlwaysOnTop").toBool();
 	if (!alwaysOnTop)
 		m_mainWindow->setOnTop(whilePlaying && state == NPlaybackEngineInterface::Playing);
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	if (state == NPlaybackEngineInterface::Playing) {
 		NW7TaskBar::instance()->setState(NW7TaskBar::Normal);
 		NW7TaskBar::setOverlayIcon(QIcon(":/trolltech/styles/commonstyle/images/media-play-32.png"), "Playing");

@@ -55,7 +55,7 @@ QString NCore::applicationBinaryName()
 QString NCore::rcDir()
 {
 	if (!_rcDir_init) {
-#if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
+#ifndef Q_WS_WIN
 		QDir parentDir(QCoreApplication::applicationDirPath());
 		if (parentDir.dirName() == "bin")
 			_rcDir = QDir::homePath() + "/.nulloy";

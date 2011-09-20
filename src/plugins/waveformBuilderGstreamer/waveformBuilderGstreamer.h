@@ -22,7 +22,7 @@
 
 #include <gst/gst.h>
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 #include <QTimer>
 #endif
 
@@ -38,7 +38,7 @@ private:
 	QString m_currentFile;
 	qreal position();
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 private:
 	QTimer *m_timer;
 private slots:

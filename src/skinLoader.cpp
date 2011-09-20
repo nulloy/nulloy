@@ -86,7 +86,7 @@ void NSkinLoader::_loadSkins()
 
 	QStringList skinsDirList;
 	skinsDirList << ":skins" << "skins";
-#if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
+#ifndef Q_WS_WIN
 	if (NCore::rcDir() != QCoreApplication::applicationDirPath())
 		skinsDirList << NCore::rcDir() + "/skins";
 	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin")

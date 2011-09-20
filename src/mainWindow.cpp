@@ -31,7 +31,7 @@
 #include "waveformBuilderGstreamer.h"
 #endif
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 #include "w7TaskBar.h"
 #include <windows.h>
 #endif
@@ -80,7 +80,7 @@ void NMainWindow::init(const QString &uiFile)
 		widgets.at(i)->installEventFilter(this);
 
 	QStringList iconList;
-#if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
+#ifndef Q_WS_WIN
 	iconList << "icon.";
 	QDir parentDir(QCoreApplication::applicationDirPath());
 	if (parentDir.dirName() == "bin") {
@@ -197,7 +197,7 @@ void NMainWindow::closeEvent(QCloseEvent *event)
 	emit closed();
 }
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 bool NMainWindow::winEvent(MSG *message, long *result)
 {
 	return NW7TaskBar::winEvent(message, result);
@@ -211,7 +211,7 @@ void NMainWindow::minimize()
 
 void NMainWindow::setOnTop(bool onTop)
 {
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	if (onTop)
 		SetWindowPos(this->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 	else
@@ -226,7 +226,7 @@ void NMainWindow::setOnTop(bool onTop)
 	show();
 #endif
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	NW7TaskBar::setWindow(this);
 #endif
 }

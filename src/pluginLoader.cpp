@@ -85,14 +85,14 @@ void NPluginLoader::_loadPlugins()
 
 	QStringList pluginsDirList;
 	pluginsDirList << "plugins";
-#if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
+#ifndef Q_WS_WIN
 	if (NCore::rcDir() != QCoreApplication::applicationDirPath())
 		pluginsDirList << NCore::rcDir() + "/plugins";
 	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin")
 		pluginsDirList << "../lib/nulloy/plugins";
 #endif
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 		QStringList subDirsList;
 		foreach (QString dirStr, pluginsDirList) {
 			QDir dir(dirStr);

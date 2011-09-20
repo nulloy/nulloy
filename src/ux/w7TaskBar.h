@@ -16,7 +16,7 @@
 #ifndef N_W7_TASK_BAR_H
 #define N_W7_TASK_BAR_H
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef WIN32
 
 #include <QWidget>
 

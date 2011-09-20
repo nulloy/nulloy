@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationVersion(QString(_N_VERSION_) + " Alpha");
 	QCoreApplication::setOrganizationDomain("nulloy.com");
 
-#if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
+#ifndef Q_WS_WIN
 	int res;
 	res = chdir(QCoreApplication::applicationDirPath().toAscii().data());
 #endif

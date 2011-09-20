@@ -60,7 +60,7 @@ void NPlaybackEngineGStreamer::init()
 	if (m_init)
 		return;
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	_putenv("GST_PLUGIN_PATH=Plugins\\GStreamer");
 #endif
 
@@ -71,7 +71,7 @@ void NPlaybackEngineGStreamer::init()
 
 	m_playbin = gst_element_factory_make("playbin2", NULL);
 
-#if !defined WIN32 && !defined _WINDOWS && !defined Q_WS_WIN
+#ifndef Q_WS_WIN
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
 	gst_bus_add_signal_watch(bus);
 	g_signal_connect(bus, "message::error", G_CALLBACK(_on_error), this);
@@ -104,7 +104,7 @@ NPlaybackEngineGStreamer::~NPlaybackEngineGStreamer()
 
 void NPlaybackEngineGStreamer::setMedia(const QString &file)
 {
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	qreal vol = m_oldVolume;
 #endif
 
@@ -127,7 +127,7 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 
 	emit mediaChanged(file);
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	if (vol != -1)
 		setVolume(vol);
 #endif
@@ -244,7 +244,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 		}
 	}
 
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
 	GstMessage *msg = gst_bus_pop_filtered(bus, GstMessageType(GST_MESSAGE_EOS | GST_MESSAGE_ERROR));
 	if (msg) {

@@ -41,7 +41,7 @@ private:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void resizeEvent(QResizeEvent *event);
-#if defined WIN32 || defined _WINDOWS || defined Q_WS_WIN
+#ifdef Q_WS_WIN
 	bool winEvent(MSG *message, long *result);
 #endif
 
