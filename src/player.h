@@ -49,6 +49,9 @@ public:
 	~NPlayer();
 	QString about();
 
+	Q_INVOKABLE NMainWindow* mainWindow();
+	Q_INVOKABLE NPlaybackEngineInterface* playbackEngine();
+
 private slots:
 	void loadSettings();
 	void saveSettings();

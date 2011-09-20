@@ -58,11 +58,9 @@ void NMainWindow::init(const QString &uiFile)
 	layout->setContentsMargins(0, 0, 0, 0);
 	setLayout(layout);
 	setStyleSheet(form->styleSheet());
-
-	setSizeGripEnabled(TRUE);
 #else
 	Q_UNUSED(uiFile)
-    ui.setupUi(this);
+	ui.setupUi(this);
 #endif
 
 	NWaveformSlider *waveformSlider = qFindChild<NWaveformSlider *>(this, "waveformSlider");

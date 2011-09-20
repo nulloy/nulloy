@@ -15,7 +15,7 @@
 
 #include "player.h"
 
-#include "widgetPrototype.h"
+#include "scriptPrototypes.h"
 #include "core.h"
 #include "action.h"
 #include "systemTray.h"
@@ -43,9 +43,15 @@
 
 #include <QDebug>
 
+NWidgetPrototype widgetPrototype;
+NLayoutPrototype layoutPrototype;
 Q_DECLARE_METATYPE(QWidget *)
-Q_DECLARE_METATYPE(QPushButton *)
-NWidgetPrototype wProto;
+Q_DECLARE_METATYPE(QLayout *)
+Q_DECLARE_METATYPE(NMainWindow *)
+Q_DECLARE_METATYPE(NPlaybackEngineInterface *)
+Q_DECLARE_METATYPE(QList<QWidget *>)
+Q_DECLARE_METATYPE(QMargins)
+
 
 struct QtMetaObject : private QObject
 {
@@ -53,16 +59,32 @@ public:
 	static const QMetaObject *get() { return &static_cast<QtMetaObject *>(0)->staticQtMetaObject; }
 };
 
+template <typename T>
+QScriptValue qScriptValueFromQObject(QScriptEngine *engine, T const &obj)
+{
+	return engine->newQObject(obj);
+}
+
+template <typename T>
+void qScriptValueToQObject(const QScriptValue &value, T &obj)
+{
+	obj = qobject_cast<T>(value.toQObject());
+}
+
+template <typename T>
+int qScriptRegisterQObjectMetaType(QScriptEngine *engine, const QScriptValue &prototype = QScriptValue(), T *obj = 0)
+{
+	Q_UNUSED(obj);
+	return qScriptRegisterMetaType<T>(engine, qScriptValueFromQObject, qScriptValueToQObject, prototype);
+}
+
 NPlayer::NPlayer()
 {
 	setObjectName("NPlayer");
 	m_settings = new NSettings(this);
 
-	m_networkManager = new QNetworkAccessManager(this);
-	m_networkManager->setObjectName("networkManager");
 
-	m_localPlaylist = NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".m3u";
-
+	// construct playbackEngine
 #ifndef _N_NO_PLUGINS_
 	m_playbackEngine = NPluginLoader::playbackPlugin();
 #else
@@ -71,24 +93,20 @@ NPlayer::NPlayer()
 #endif
 	m_playbackEngine->setParent(this);
 	m_playbackEngine->setObjectName("playbackEngine");
+	//
 
+
+	// construct mainWindow
 	m_mainWindow = new NMainWindow();
+	m_mainWindow->setObjectName("mainWindow");
 	connect(m_mainWindow, SIGNAL(closed()), this, SLOT(mainWindowClosed()));
 #ifndef _N_NO_SKINS_
 	m_mainWindow->init(NSkinLoader::skinUiFormFile());
 #else
 	m_mainWindow->init(QString());
 #endif
+	//
 
-	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
-	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(preferencesDialogSettingsChanged()));
-	connect(m_preferencesDialog, SIGNAL(versionOnlineRequested()), this, SLOT(versionOnlineFetch()));
-
-	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
-
-	m_logDialog = new NLogDialog(m_mainWindow);
-	connect(m_playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)),
-			m_logDialog, SLOT(showMessage(QMessageBox::Icon, const QString &, const QString &)));
 
 	// loading script
 	m_scriptEngine = new QScriptEngine(this);
@@ -105,18 +123,33 @@ NPlayer::NPlayer()
 	QScriptValue Qt = m_scriptEngine->newQMetaObject(QtMetaObject::get());
 	m_scriptEngine->globalObject().setProperty("Qt", Qt);
 
-	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QWidget *>(), m_scriptEngine->newQObject(&wProto));
+	QString ws;
+#if defined Q_WS_MAC
+	ws = "mac";
+#elif defined Q_WS_WIN
+	ws = "win";
+#endif
+	m_scriptEngine->globalObject().setProperty("Q_WS", ws);
+
+	qScriptRegisterQObjectMetaType<NMainWindow *>(m_scriptEngine);
+	qScriptRegisterQObjectMetaType<NPlaybackEngineInterface *>(m_scriptEngine);
+	qScriptRegisterMetaType(m_scriptEngine, NMarginsPrototype::toScriptValue, NMarginsPrototype::fromScriptValue);
+	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QWidget *>(), m_scriptEngine->newQObject(&widgetPrototype));
+	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QLayout *>(), m_scriptEngine->newQObject(&layoutPrototype));
+	qScriptRegisterSequenceMetaType< QList<QWidget *> >(m_scriptEngine);
 
 	QScriptValue constructor = m_scriptEngine->evaluate("Program");
-	QScriptValue playbackEngineObject = m_scriptEngine->newQObject(m_playbackEngine, QScriptEngine::QtOwnership);
-	QScriptValue windowScriptObject = m_scriptEngine->newQObject(m_mainWindow, QScriptEngine::QtOwnership);
-	QScriptValue programmObject = constructor.construct(QScriptValueList() << windowScriptObject << playbackEngineObject);
+	QScriptValue playerEngineObject = m_scriptEngine->newQObject(this, QScriptEngine::QtOwnership);
+	constructor.construct(QScriptValueList() << playerEngineObject);
+	//
 
-#ifdef Q_WS_WIN
-	NW7TaskBar::init(this);
-	NW7TaskBar::setWindow(m_mainWindow);
-	connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
-#endif
+
+	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
+	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(preferencesDialogSettingsChanged()));
+	connect(m_preferencesDialog, SIGNAL(versionOnlineRequested()), this, SLOT(versionOnlineFetch()));
+
+	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
+
 
 	// actions
 	NAction *playAction = new NAction(style()->standardIcon(QStyle::SP_MediaPlay), tr("Play / Pause"), this);
@@ -168,6 +201,8 @@ NPlayer::NPlayer()
 	NAction *alwaysOnTopAction = new NAction(tr("Always On Top"), this);
 	alwaysOnTopAction->setCheckable(TRUE);
 	alwaysOnTopAction->setObjectName("alwaysOnTopAction");
+	//
+
 
 	// playlist actions
 	NAction *loadNextAction = new NAction(tr("Load next file in directory when finished"), this);
@@ -200,6 +235,8 @@ NPlayer::NPlayer()
 	loadNextNameUpAction->setActionGroup(group);
 	loadNextDateDownAction->setActionGroup(group);
 	loadNextDateUpAction->setActionGroup(group);
+	//
+
 
 	// tray icon
 	QMenu *trayIconMenu = new QMenu(this);
@@ -213,6 +250,8 @@ NPlayer::NPlayer()
 	NSystemTray::init(this);
 	NSystemTray::setContextMenu(trayIconMenu);
 	NSystemTray::setIcon(m_mainWindow->windowIcon());
+	//
+
 
 	// context menu
 	m_contextMenu = new QMenu(m_mainWindow);
@@ -238,13 +277,30 @@ NPlayer::NPlayer()
 	m_contextMenu->addAction(aboutAction);
 	m_contextMenu->addSeparator();
 	m_contextMenu->addAction(exitAction);
+	//
+
+
+#ifdef Q_WS_WIN
+	NW7TaskBar::init(this);
+	NW7TaskBar::setWindow(m_mainWindow);
+	connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
+#endif
+
+	m_networkManager = new QNetworkAccessManager(this);
+	m_networkManager->setObjectName("networkManager");
+
+	m_localPlaylist = NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".m3u";
+
+	m_logDialog = new NLogDialog(m_mainWindow);
+	connect(m_playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)),
+			m_logDialog, SLOT(showMessage(QMessageBox::Icon, const QString &, const QString &)));
+
+	QMetaObject::connectSlotsByName(this);
 
 	m_settings->initShortcuts(this);
 	m_settings->loadShortcuts();
 
 	loadSettings();
-
-	QMetaObject::connectSlotsByName(this);
 
 	m_mainWindow->setTitle("");
 
@@ -270,6 +326,16 @@ NPlayer::~NPlayer()
 {
 	NPluginLoader::deinit();
 	delete m_mainWindow;
+}
+
+NMainWindow* NPlayer::mainWindow()
+{
+	return m_mainWindow;
+}
+
+NPlaybackEngineInterface* NPlayer::playbackEngine()
+{
+	return m_playbackEngine;
 }
 
 void NPlayer::message(const QString &str)

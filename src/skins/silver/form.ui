@@ -659,7 +659,7 @@
                 <number>9</number>
                </property>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout">
+                <layout class="QHBoxLayout" name="titleBarlLayout">
                  <property name="spacing">
                   <number>6</number>
                  </property>
@@ -735,7 +735,7 @@
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="minimizeButton">
+                  <widget class="QToolButton" name="minimizeButton">
                    <property name="minimumSize">
                     <size>
                      <width>16</width>
@@ -760,7 +760,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="closeButton">
+                  <widget class="QToolButton" name="closeButton">
                    <property name="minimumSize">
                     <size>
                      <width>16</width>
@@ -836,7 +836,7 @@
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QPushButton" name="prevButton">
+                    <widget class="QToolButton" name="prevButton">
                      <property name="minimumSize">
                       <size>
                        <width>50</width>
@@ -877,7 +877,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="playButton">
+                    <widget class="QToolButton" name="playButton">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -933,7 +933,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="stopButton">
+                    <widget class="QToolButton" name="stopButton">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -983,7 +983,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="nextButton">
+                    <widget class="QToolButton" name="nextButton">
                      <property name="minimumSize">
                       <size>
                        <width>50</width>
@@ -1004,7 +1004,7 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="playlistToggleButton">
+                  <widget class="QToolButton" name="playlistToggleButton">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
