@@ -280,6 +280,12 @@ NPlayer::NPlayer()
 	m_contextMenu->addAction(exitAction);
 	//
 
+#ifdef Q_WS_MAC
+	// removing icons from context menu
+	QList<NAction *> actions = findChildren<NAction *>();
+	for (int i = 0; i < actions.size(); ++i)
+		actions.at(i)->setIcon(QIcon());
+#endif
 
 #ifdef Q_WS_WIN
 	NW7TaskBar::init(this);
