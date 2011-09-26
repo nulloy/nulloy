@@ -64,6 +64,16 @@ void NPlaybackEngineGStreamer::init()
 	_putenv("GST_PLUGIN_PATH=Plugins\\GStreamer");
 #endif
 
+#ifdef Q_WS_MAC
+	QDir executable_path(QCoreApplication::applicationDirPath());
+	if (executable_path.dirName() == "MacOS") {
+		executable_path.cd("GStreamer/plugins");
+		if (executable_path.exists())
+			putenv(QString("GST_PLUGIN_PATH=" + executable_path.absolutePath() +
+							":" + getenv("GST_PLUGIN_PATH")).toAscii().data());
+	}
+#endif
+
 	int argc;
 	const char **argv;
 	NCore::cArgs(&argc, &argv);
@@ -71,7 +81,7 @@ void NPlaybackEngineGStreamer::init()
 
 	m_playbin = gst_element_factory_make("playbin2", NULL);
 
-#ifndef Q_WS_WIN
+#if !defined Q_WS_WIN && !defined Q_WS_MAC
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
 	gst_bus_add_signal_watch(bus);
 	g_signal_connect(bus, "message::error", G_CALLBACK(_on_error), this);
@@ -104,7 +114,7 @@ NPlaybackEngineGStreamer::~NPlaybackEngineGStreamer()
 
 void NPlaybackEngineGStreamer::setMedia(const QString &file)
 {
-#ifdef Q_WS_WIN
+#if defined Q_WS_WIN || defined Q_WS_MAC
 	qreal vol = m_oldVolume;
 #endif
 
@@ -127,7 +137,7 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 
 	emit mediaChanged(file);
 
-#ifdef Q_WS_WIN
+#if defined Q_WS_WIN || defined Q_WS_MAC
 	if (vol != -1)
 		setVolume(vol);
 #endif
@@ -244,7 +254,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 		}
 	}
 
-#ifdef Q_WS_WIN
+#if defined Q_WS_WIN || defined Q_WS_MAC
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
 	GstMessage *msg = gst_bus_pop_filtered(bus, GstMessageType(GST_MESSAGE_EOS | GST_MESSAGE_ERROR));
 	if (msg) {
