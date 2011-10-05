@@ -6,22 +6,22 @@ TRY_HELP="Try \`$BASENAME --help' for more information"
 echo_help()
 {
 	echo "Usage:  $BASENAME [options]"
-	echo '   -i, --input [FILE]              input changelog file'
-	echo '   -d, --deb [FILE]                output changelog file in deb format'
-	echo '   -r, --rpm [FILE]                output changelog file in rpm format'
-	echo '   -c, --commiter [NAME <EMAIL>]   comitter name and email'
-	echo '   -p, --package [NAME]            package name'
-	echo '   -u, --use-version [VERSION]     latest version if not found in changelog'
+	echo '   -i, --input FILE                input changelog file'
+	echo '   -d, --deb FILE                  output changelog file in deb format'
+	echo '   -r, --rpm FILE                  output changelog file in rpm format'
+	echo '   -c, --commiter "NAME <EMAIL>"   comitter name and email'
+	echo '   -p, --package NAME              package name'
+	echo '   -f, --force-version VERSION     latest version if not found in changelog'
 	echo '   -h, --help                      print this message'
 	echo
 	echo 'Example:'
 	echo "    $BASENAME -i ChangeLog -c \"John Doe <john@doe.com>\" -p coolapp"
-	echo "              -r rpm.changes -d debian.changelog -u 0.1"
-	echo "Version 0.3"
+	echo "              -r rpm.changes -d debian.changelog -f 0.1"
+	echo "Version 0.3.2"
 	echo 'Copyright (C) 2011 Sergey Vlasov <sergey@vlasov.me>'
 }
 
-args=`getopt -n$BASENAME -o i:d:r:c:p:u:h --longoptions="input: deb: rpm: commiter: package: use-version: help" -- "$@"`
+args=`getopt -n$BASENAME -o i:d:r:c:p:f:h --longoptions="input: deb: rpm: commiter: package: force-version: help" -- "$@"`
 if test $? != 0; then
 	echo $TRY_HELP
 	exit 1
@@ -39,7 +39,7 @@ while [[ $# -gt 0 ]]; do
 		shift; COMMITER=$1
 	elif [[ $1 == "-p" || $1 == "--package" ]]; then
 		shift; PACKAGE=$1
-	elif [[ $1 == "-u" || $1 == "--use-version" ]]; then
+	elif [[ $1 == "-f" || $1 == "--force-version" ]]; then
 		shift; USE_VERSION=$1
 	elif [[ $1 == "-h" || $1 == "--help" ]]; then
 		echo_help; exit 0

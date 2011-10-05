@@ -9,6 +9,7 @@ DEBUG=no
 HAVE_GSTREAMER=no
 HAVE_VLC=no
 
+FORCE_VERSION=no
 BUILD_GSTREAMER=yes
 EMBED_GSTREAMER=no
 BUILD_VLC=no
@@ -19,17 +20,19 @@ SUPPORT_PLUGINS=yes
 echo_help()
 {
 	echo "Usage:  $BASENAME [options]"
-	echo '    --no-gstreamer    do not build GStreamer plugins'
-	echo '    --embed-gstreamer embed GStreamer plugins statically'
-	echo '    --vlc             build VLC plugins'
-	echo '    --phonon          build Phonon plugins'
-	echo '    --no-skins        disable skins support'
-	echo '    --no-plugins      disable plugins support'
-	echo '    --debug           build in debug mode'
+	echo '    --no-gstreamer              do not build GStreamer plugins'
+	echo '    --embed-gstreamer           embed GStreamer plugins statically'
+	echo '    --vlc                       build VLC plugins'
+	echo '    --phonon                    build Phonon plugins'
+	echo '    --no-skins                  disable skins support'
+	echo '    --no-plugins                disable plugins support'
+	echo '    --force-version[=]VERSION   overrides version.pri'
+	echo '    --prefix[=]PREFIX           installation prefix'
+	echo '    --debug                     build in debug mode'
 	echo
 }
 
-args=`getopt -n$BASENAME -o h --longoptions="no-gstreamer embed-gstreamer vlc phonon no-skins no-plugins debug prefix: help" -- "$@"`
+args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer embed-gstreamer vlc phonon no-skins no-plugins debug prefix: help" -- "$@"`
 if test $? != 0; then
 	echo $TRY_HELP
 	exit 1
@@ -41,6 +44,8 @@ while [ $# -gt 0 ]; do
 		shift; PREFIX=`readlink -m "$1"`
 	elif [ $1 == "--debug" ]; then
 		DEBUG=yes
+	elif [ $1 == "--force-version" ]; then
+		shift; FORCE_VERSION=$1
 	elif [ $1 == "--no-gstreamer" ]; then
 		BUILD_GSTREAMER=no
 	elif [ $1 == "--embed-gstreamer" ]; then
@@ -139,7 +144,16 @@ else
 	QMAKE_CONFIG="$QMAKE_CONFIG release"
 fi
 
-echo "N_CONFIGURED = yes" > $QMAKE_CACHE
+echo
+
+if [ $FORCE_VERSION != "no" ]; then
+	echo "Forced version: $FORCE_VERSION"
+	echo "N_CONFIG_FORCE_VERSION = $FORCE_VERSION" > $QMAKE_CACHE
+fi
+
+echo "Install prefix: $PREFIX"
+
+echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
 
 echo
 echo "Running qmake..."
@@ -150,7 +164,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "Install prefix: $PREFIX"
 echo "Nulloy has been configured. Now run \`make'."
 echo
 

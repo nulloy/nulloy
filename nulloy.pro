@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-unix:isEmpty(N_CONFIGURED) {
+unix:isEmpty(N_CONFIG_SUCCESS) {
     error(Please run configure.)
 }
 
