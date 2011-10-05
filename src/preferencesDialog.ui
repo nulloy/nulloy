@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>284</height>
+    <width>416</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,69 +26,91 @@
       <attribute name="title">
        <string>General</string>
       </attribute>
-      <layout class="QFormLayout" name="formLayout">
-       <property name="fieldGrowthPolicy">
-        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-       </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="skinLabel">
-         <property name="text">
-          <string>Skin:</string>
-         </property>
-        </widget>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="skinLabel">
+           <property name="text">
+            <string>Skin:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="skinComboBox">
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="skinComboBox"/>
-       </item>
-       <item row="1" column="0">
+       <item>
         <widget class="QCheckBox" name="trayIconCheckBox">
          <property name="text">
           <string>Show system tray icon</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item>
         <widget class="QCheckBox" name="minimizeToTrayCheckBox">
          <property name="text">
           <string>Minimize to tray when closed</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item>
         <widget class="QCheckBox" name="restorePlaybackCheckBox">
          <property name="text">
           <string>Restore playback after restart</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QCheckBox" name="versionCheckBox">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>27</height>
-          </size>
-         </property>
+       <item>
+        <widget class="QCheckBox" name="displayLogDialogCheckBox">
          <property name="text">
-          <string>Automatically check for updates</string>
+          <string>Display log dialog in case of errors</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="versionCheckBox">
+           <property name="text">
+            <string>Automatically check for updates</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="versionCheckButton">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>27</height>
-            </size>
            </property>
            <property name="text">
             <string>Check now</string>
@@ -97,10 +119,16 @@
          </item>
          <item>
           <widget class="QLabel" name="versionLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
-             <width>70</width>
-             <height>27</height>
+             <width>90</width>
+             <height>0</height>
             </size>
            </property>
            <property name="text">
@@ -108,9 +136,22 @@
            </property>
           </widget>
          </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
-       <item row="6" column="0">
+       <item>
         <widget class="QCheckBox" name="multipleInstansesCheckBox">
          <property name="enabled">
           <bool>false</bool>
@@ -120,12 +161,18 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QCheckBox" name="displayLogDialogCheckBox">
-         <property name="text">
-          <string>Display log dialog in case of errors</string>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-        </widget>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -154,6 +201,15 @@
        <string>Plugins</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_2">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+       </property>
+       <property name="labelAlignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+       <property name="formAlignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="playbackLabel">
          <property name="text">
@@ -162,7 +218,14 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="playbackComboBox"/>
+        <widget class="QComboBox" name="playbackComboBox">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="waveforLabel">
@@ -172,7 +235,14 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="waveformComboBox"/>
+        <widget class="QComboBox" name="waveformComboBox">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
