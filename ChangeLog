@@ -1,6 +1,6 @@
-* 0.3.1.1, Wed Aug 24 2011
-- Phonon fix for *nix build
-- Updated debian dependences
+* 0.3.2, Tue Oct 18 2011
+- Minor bug fixes and improvements
+- Mac OS X release
 
 * 0.3.1, Wed Aug 24 2011
 - Quicklist integration for Ubuntu Unity Launcher
