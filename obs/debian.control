@@ -8,7 +8,7 @@ Build-Depends: debhelper (>= 5), libqt4-dev, qt4-qmake, libgstreamer0.10-dev, li
 Package: nulloy
 Architecture: any
 Depends: libqtgui4, libqt4-script, libqt4-network
-Suggests: nulloy-gstreamer
+Suggests: nulloy-gstreamer, trash-cli
 Description: Music player with a waveform progress bar
 
 Package: nulloy-gstreamer

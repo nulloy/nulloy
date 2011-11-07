@@ -25,7 +25,9 @@ class NPlaylistWidget : public QListWidget
 
 private:
 	NPlaylistItem *m_currentItem;
+	QMenu *m_contextMenu;
 
+	void contextMenuEvent(QContextMenuEvent *event);
 	void setCurrentItem(NPlaylistItem *item);
 	void activateItem(NPlaylistItem *item);
 	NPlaylistItem* createItemFromPath(const QString &path);
@@ -35,7 +37,6 @@ private:
 	Qt::DropActions supportedDropActions() const;
 #endif
 	QMimeData* mimeData(const QList<NPlaylistItem *> items) const;
-	void keyPressEvent(QKeyEvent *e);
 
 public:
 	NPlaylistWidget(QWidget *parent = 0);
@@ -63,6 +64,8 @@ public slots:
 private slots:
 	void on_itemActivated(QListWidgetItem *item);
 	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+	void moveToTrash();
+	void removeFromPlaylist();
 
 signals:
 	void currentActivated();

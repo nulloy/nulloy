@@ -17,6 +17,7 @@
 
 #include "settings.h"
 #include "core.h"
+#include "trash.h"
 #include <QFileInfo>
 #include <QtGui>
 
@@ -27,6 +28,69 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	connect(this, SIGNAL(itemActivated(QListWidgetItem *)), this, SLOT(on_itemActivated(QListWidgetItem *)));
 	setItemDelegate(new NPlaylistItemDelegate(this));
 	m_currentItem = NULL;
+
+	QShortcut *removeShortcut = new QShortcut(QKeySequence(Qt::Key_Delete), this);
+	connect(removeShortcut, SIGNAL(activated()), this, SLOT(removeFromPlaylist()));
+	QAction *removeAction = new QAction(QIcon::fromTheme("edit-clear",
+												style()->standardIcon(QStyle::SP_DialogResetButton)),
+												tr("Remove From Playlist"), this);
+	removeAction->setShortcut(removeShortcut->key());
+	connect(removeAction, SIGNAL(triggered()), this, SLOT(removeFromPlaylist()));
+
+	QShortcut *trashShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Delete), this);
+	connect(trashShortcut, SIGNAL(activated()), this, SLOT(moveToTrash()));
+	QAction *trashAction = new QAction(QIcon::fromTheme("trashcan_empty",
+										style()->standardIcon(QStyle::SP_TrashIcon)),
+										tr("Move To Trash"), this);
+	trashAction->setShortcut(trashShortcut->key());
+	connect(trashAction, SIGNAL(triggered()), this, SLOT(moveToTrash()));
+
+	m_contextMenu = new QMenu(this);
+	m_contextMenu->addAction(removeAction);
+	m_contextMenu->addAction(trashAction);
+}
+
+void NPlaylistWidget::contextMenuEvent(QContextMenuEvent *event)
+{
+	if (selectedItems().size() != 0)
+		m_contextMenu->exec(mapToGlobal(event->pos()));
+	else
+		QListWidget::contextMenuEvent(event);
+}
+
+void NPlaylistWidget::moveToTrash()
+{
+	foreach (QListWidgetItem *item, selectedItems()) {
+		QString path = QFileInfo(item->data(NPlaylistItem::PathRole).toString()).canonicalFilePath();
+		QString error;
+		if (NTrash(path, &error) != 0) {
+			QMessageBox box(QMessageBox::Warning, "File Delete Error", "", QMessageBox::Yes | QMessageBox::Cancel, this);
+			box.setDefaultButton(QMessageBox::Cancel);
+			box.setText("Failed to move to Trash \"" + path + "\"" + (error.isEmpty() ? "" : "\n" + error));
+			box.setInformativeText("Do you want to delete permanently?");
+			if (box.exec() == QMessageBox::Yes) {
+				if (!QFile::remove(path)) {
+					QMessageBox::critical(this, "File Delete Error", "Failed to delete \"" + path + "\"");
+					return;
+				}
+			} else {
+				return;
+			}
+		}
+
+		QListWidgetItem *takenItem = takeItem(row(item));
+		delete takenItem;
+	}
+	update();
+}
+
+void NPlaylistWidget::removeFromPlaylist()
+{
+	foreach (QListWidgetItem *item, selectedItems()) {
+		QListWidgetItem *takenItem = takeItem(row(item));
+		delete takenItem;
+	}
+	update();
 }
 
 NPlaylistWidget::~NPlaylistWidget() {}
@@ -268,18 +332,6 @@ QMimeData* NPlaylistWidget::mimeData(const QList<NPlaylistItem *> items) const
 	data->setUrls(urls);
 
 	return data;
-}
-
-void NPlaylistWidget::keyPressEvent(QKeyEvent *e)
-{
-	int keyInt = e->key();
-	if (keyInt == Qt::Key_Delete && e->modifiers() == Qt::NoModifier) {
-		foreach (QListWidgetItem *item, selectedItems()) {
-			QListWidgetItem *takenItem = takeItem(row(item));
-			delete takenItem;
-		}
-		update();
-	}
 }
 
 NPlaylistItem* NPlaylistWidget::item(int row)

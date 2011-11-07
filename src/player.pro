@@ -19,6 +19,19 @@ MOC_DIR		= $$TMP_DIR
 RCC_DIR		= $$TMP_DIR
 UI_DIR		= $$TMP_DIR
 
+# trash
+HEADERS += trash/trash.h
+win32 {
+	SOURCES += trash/trash_win.cpp
+	LIBS += -ladvapi32 -lshell32
+}
+mac {
+	OBJECTIVE_SOURCES += trash/trash_mac.mm
+	LIBS += -framework Foundation -framework Cocoa
+}
+unix:!mac {
+	SOURCES += trash/trash_x11.cpp
+}
 
 # qmake -config no-skins
 !no-skins {
@@ -75,7 +88,6 @@ win32 {
 	HEADERS -= ux/w7TaskBar.h
 	SOURCES -= ux/w7TaskBar.cpp
 }
-
 
 RESOURCES += icons/icons.qrc
 win32:RC_FILE = icons/icon.rc
