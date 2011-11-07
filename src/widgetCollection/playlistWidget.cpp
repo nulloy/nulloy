@@ -128,7 +128,10 @@ int NPlaylistWidget::currentRow()
 
 void NPlaylistWidget::setCurrentRow(int row)
 {
-	if (row > -1)
+	if (row < 0)
+		return;
+
+	if (row < count())
 		setCurrentItem(item(row));
 }
 
