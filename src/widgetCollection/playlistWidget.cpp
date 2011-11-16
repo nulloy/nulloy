@@ -18,7 +18,7 @@
 #include "settings.h"
 #include "core.h"
 #include "trash.h"
-#include <QFileInfo>
+
 #include <QtGui>
 
 #include <QDebug>
@@ -97,6 +97,7 @@ NPlaylistWidget::~NPlaylistWidget() {}
 
 void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 {
+	item->setText(QFileInfo(item->data(NPlaylistItem::PathRole).toString()).fileName());
 	item->setData(NPlaylistItem::FailedRole, FALSE);
 
 	QFont f = item->font();
@@ -157,7 +158,7 @@ void NPlaylistWidget::on_itemActivated(QListWidgetItem *item)
 QStringList NPlaylistWidget::mediaList()
 {
 	QStringList list;
-	for(int i = 0; i < count(); ++i)
+	for (int i = 0; i < count(); ++i)
 		list << item(i)->data(NPlaylistItem::PathRole).toString();
 
 	return list;
@@ -177,67 +178,35 @@ void NPlaylistWidget::setMediaList(const QStringList &pathList)
 		addItem(createItemFromPath(path));
 }
 
-void NPlaylistWidget::setMediaListFromPlaylist(const QString &path)
+void NPlaylistWidget::setMediaListFromPlaylist(const QString &file)
 {
 	clear();
 	m_currentItem = NULL;
-	bool failed = FALSE;
 
-	QString prefix = "#NULLOY:";
-
-	QString line;
-	QFile playlist(path);
-	if (playlist.exists() && playlist.open(QFile::ReadOnly)) {
-		QTextStream in(&playlist);
-		while(!in.atEnd()) {
-			line = in.readLine();
-			if (line.startsWith("#")) {
-				if (line.startsWith(prefix)) {
-					line.remove(0, prefix.size());
-					float time = line.section(',', 0).toFloat();
-					if (time == -1)
-						failed = TRUE;
-				}
-			} else {
-				NPlaylistItem *item = createItemFromPath(line);
-				item->setData(NPlaylistItem::FailedRole, failed);
-				addItem(item);
-
-				failed = FALSE;
-			}
-		}
-		playlist.close();
+	QList<NM3uItem> m3uItems = NM3uPlaylist::read(file);
+	for (int i = 0; i < m3uItems.count(); ++i) {
+		addItem(createItemFromM3uItem(m3uItems.at(i)));
 	}
 }
 
 void NPlaylistWidget::writePlaylist(const QString &file)
 {
-	QFile playlist(file);
-	if (playlist.open(QFile::WriteOnly | QFile::Truncate)) {
-		QTextStream out(&playlist);
-		out << "#EXTM3U\n";
+	QList<NM3uItem> m3uItems;
+	for (int i = 0; i < count(); ++i) {
+		NM3uItem m3uItem = {"", "", 0, 0};
 
-		for(int i = 0; i < count(); ++i) {
-			float time = 0;
-			if (item(i)->data(NPlaylistItem::FailedRole).toBool())
-				time = -1;
-			if (time != 0)
-				out << "#NULLOY:" << time << "\n";
-			QString itemPath = item(i)->data(NPlaylistItem::PathRole).toString();
-			if (QFileInfo(itemPath).exists()) {
-				/*QDir dir(QFileInfo(file).canonicalPath());
-				QString file = dir.relativeFilePath(QFileInfo(itemPath).canonicalFilePath());*/
-				QString file = QFileInfo(itemPath).canonicalFilePath();
-				out << "#EXTINF:-1, " << QFileInfo(file).fileName() << "\n";
-				out << file << "\n";
-			} else { // keep old item, but mark failed
-				out << "#NULLOY:" << -1 << "\n";
-				out << "#EXTINF:-1, " << item(i)->text() << "\n";
-				out << itemPath << "\n";
-			}
-		}
-		playlist.close();
+		m3uItem.path =  item(i)->data(NPlaylistItem::PathRole).toString();
+		m3uItem.title = item(i)->text();
+		m3uItem.duration = -1;
+
+		if (!item(i)->data(NPlaylistItem::FailedRole).toBool())
+			m3uItem.position = 0;
+		else
+			m3uItem.position = -1;
+
+		m3uItems << m3uItem;
 	}
+	NM3uPlaylist::write(file, m3uItems);
 }
 
 void NPlaylistWidget::activateNext()
@@ -288,11 +257,21 @@ void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &parent, int start,
 	}
 }
 
-NPlaylistItem* NPlaylistWidget::createItemFromPath(const QString &path)
+NPlaylistItem* NPlaylistWidget::createItemFromPath(const QString &file)
 {
 	NPlaylistItem *item = new NPlaylistItem();
-	item->setData(NPlaylistItem::PathRole, path);
-	item->setText(QFileInfo(path).fileName());
+	item->setData(NPlaylistItem::PathRole, file);
+	item->setText(QFileInfo(file).fileName());
+	return item;
+}
+
+NPlaylistItem* NPlaylistWidget::createItemFromM3uItem(NM3uItem m3uItem)
+{
+	NPlaylistItem *item = new NPlaylistItem();
+	item->setData(NPlaylistItem::PathRole, m3uItem.path);
+	item->setText(m3uItem.title);
+	if (m3uItem.position == -1)
+		item->setData(NPlaylistItem::FailedRole, TRUE);
 	return item;
 }
 

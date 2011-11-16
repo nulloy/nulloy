@@ -17,6 +17,7 @@
 #define N_PLAYLIST_WIDGET_H
 
 #include "playlistItem.h"
+#include "m3uPlaylist.h"
 #include <QListWidget>
 
 class NPlaylistWidget : public QListWidget
@@ -30,7 +31,8 @@ private:
 	void contextMenuEvent(QContextMenuEvent *event);
 	void setCurrentItem(NPlaylistItem *item);
 	void activateItem(NPlaylistItem *item);
-	NPlaylistItem* createItemFromPath(const QString &path);
+	NPlaylistItem* createItemFromPath(const QString &file);
+	NPlaylistItem* createItemFromM3uItem(NM3uItem item);
 	bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
 	QStringList mimeTypes() const;
 #ifdef Q_WS_MAC
@@ -58,7 +60,7 @@ public slots:
 	void appendMediaList(const QStringList &pathList);
 	void setMediaList(const QStringList &pathList);
 	void activateMediaList(const QStringList &pathList) { setMediaList(pathList); activateFirst(); }
-	void setMediaListFromPlaylist(const QString &path);
+	void setMediaListFromPlaylist(const QString &file);
 	void writePlaylist(const QString &file);
 
 private slots:
@@ -69,7 +71,7 @@ private slots:
 
 signals:
 	void currentActivated();
-	void mediaSet(const QString &path);
+	void mediaSet(const QString &file);
 	void closed();
 };
 
