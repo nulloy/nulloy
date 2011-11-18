@@ -97,6 +97,24 @@ NPlaylistWidget::~NPlaylistWidget() {}
 
 void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 {
+	QString fileName = QFileInfo(item->data(NPlaylistItem::PathRole).toString()).fileName();
+	if (fileName.endsWith(".m3u") || fileName.endsWith(".m3u8")) {
+		int index = row(item);
+		int index_bkp = index;
+		QList<NM3uItem> m3uItems = NM3uPlaylist::read(item->data(NPlaylistItem::PathRole).toString());
+
+		QListWidgetItem *takenItem = takeItem(row(item));
+		delete takenItem;
+
+		foreach (NM3uItem m3uItem, m3uItems) {
+			NPlaylistItem *newItem = createItemFromM3uItem(m3uItem);
+			insertItem(index, newItem);
+			++index;
+		}
+
+		setCurrentItem(NPlaylistWidget::item(index_bkp));
+		return;
+	}
 	item->setText(QFileInfo(item->data(NPlaylistItem::PathRole).toString()).fileName());
 	item->setData(NPlaylistItem::FailedRole, FALSE);
 
