@@ -72,7 +72,8 @@ private slots:
 public slots:
 	void quit();
 	void showAboutMessageBox();
-	void showFileDialog();
+	void showOpenFileDialog();
+	void showSavePlaylistDialog();
 	void showContextMenu(QPoint pos);
 	void message(const QString &str);
 };
