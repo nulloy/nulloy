@@ -123,7 +123,7 @@ void NPreferencesDialog::loadSettings()
 #endif
 
 	NSettings::instance()->loadShortcuts();
-	ui.globalShortcutEditorWidget->init(NSettings::instance()->shortcuts());
+	ui.shortcutEditorWidget->init(NSettings::instance()->shortcuts());
 }
 
 void NPreferencesDialog::saveSettings()
@@ -174,7 +174,7 @@ void NPreferencesDialog::saveSettings()
 		box.exec();
 	}
 
-	ui.globalShortcutEditorWidget->applyShortcuts();
+	ui.shortcutEditorWidget->applyShortcuts();
 	NSettings::instance()->saveShortcuts();
 	emit settingsChanged();
 }

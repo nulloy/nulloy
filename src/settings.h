@@ -16,8 +16,9 @@
 #ifndef N_SETTINGS_H
 #define N_SETTINGS_H
 
+#include "action.h"
+
 #include <QSettings>
-#include <QAction>
 #include <QVariant>
 
 class NSettings : public QSettings
@@ -26,7 +27,7 @@ class NSettings : public QSettings
 
 private:
 	static NSettings *m_instance;
-	QList<QAction *> m_globalActionList;
+	QList<NAction *> m_actionList;
 
 public:
 	NSettings(QObject *parent = 0);
@@ -36,7 +37,7 @@ public:
 	void initShortcuts(QObject *instance);
 	void saveShortcuts();
 	void loadShortcuts();
-	QList<QAction *> shortcuts();
+	QList<NAction *> shortcuts();
 
 	void setValue(const QString &key, const QVariant &value);
 	void remove(const QString &key);

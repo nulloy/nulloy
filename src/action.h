@@ -21,24 +21,33 @@
 
 class NAction : public QAction
 {
+	Q_OBJECT
 	Q_PROPERTY(bool global READ isGlobal WRITE setGlobal)
+	Q_PROPERTY(bool customizable READ isCustomizable WRITE setCustomizable)
 
 public:
-	NAction(QObject *parent) : QAction(parent), m_global(FALSE) {}
-	NAction(const QString &text, QObject *parent) : QAction(text, parent), m_global(FALSE) {}
-	NAction(const QIcon &icon, const QString &text, QObject *parent) : QAction(icon, text, parent), m_global(FALSE) {}
+	NAction(QObject *parent) : QAction(parent) { init(); }
+	NAction(const QString &text, QObject *parent) : QAction(text, parent) { init(); }
+	NAction(const QIcon &icon, const QString &text, QObject *parent) : QAction(icon, text, parent) { init(); }
 
 	void setEnabled(bool enable);
 	bool isEnabled();
-	void setGlobal(bool global);
+
+	void setGlobal(bool enable);
 	bool isGlobal() { return m_global; }
 
-	void setShortcut(const QKeySequence &shortcut);
-	void setShortcuts(const QList<QKeySequence> &shortcuts);
-	void setShortcuts(QKeySequence::StandardKey key);
+	void setCustomizable(bool enable) { m_customizable = enable; }
+	bool isCustomizable() { return m_customizable; }
+
+	QList<QKeySequence> globalShortcuts();
+	void setGlobalShortcut(const QKeySequence &shortcut);
+	void setGlobalShortcuts(QKeySequence::StandardKey key);
+	void setGlobalShortcuts(const QList<QKeySequence> &shortcuts);
 
 private:
+	void init();
 	bool m_global;
+	bool m_customizable;
 	QList<QxtGlobalShortcut *> m_globalShortcuts;
 };
 

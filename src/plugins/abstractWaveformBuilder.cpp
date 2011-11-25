@@ -15,7 +15,6 @@
 
 #include "abstractWaveformBuilder.h"
 #include "core.h"
-#include "settings.h"
 #include <QCryptographicHash>
 
 NAbstractWaveformBuilder::NAbstractWaveformBuilder()

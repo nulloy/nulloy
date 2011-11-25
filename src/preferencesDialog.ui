@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>416</width>
+    <width>472</width>
     <height>292</height>
    </rect>
   </property>
@@ -178,7 +178,7 @@
      </widget>
      <widget class="QWidget" name="shortcutsTab">
       <attribute name="title">
-       <string>Global Shortcuts</string>
+       <string>Shortcuts</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
@@ -188,7 +188,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="NShortcutEditorWidget" name="globalShortcutEditorWidget">
+        <widget class="NShortcutEditorWidget" name="shortcutEditorWidget">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>

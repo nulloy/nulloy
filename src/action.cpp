@@ -15,47 +15,59 @@
 
 #include "action.h"
 
+void NAction::init()
+{
+	m_global = FALSE;
+	m_customizable = FALSE;
+}
+
 void NAction::setEnabled(bool enable)
 {
-	if (enable) {
-		foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
-			shortcut->setEnabled(m_global);
-	} else {
-		foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
-			shortcut->setEnabled(FALSE);
-	}
+	foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
+		shortcut->setEnabled((enable == TRUE) ? m_global : FALSE);
 	QAction::setEnabled(enable);
 }
 
 bool NAction::isEnabled()
 {
-	return QAction::isEnabled() && m_global;
+	return (QAction::isEnabled() && m_global);
 }
 
-void NAction::setGlobal(bool global)
+void NAction::setGlobal(bool enable)
 {
-	m_global = global;
-
+	m_global = enable;
 	foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
 		shortcut->setEnabled(m_global);
 }
 
-void NAction::setShortcut(const QKeySequence &shortcut)
+QList<QKeySequence> NAction::globalShortcuts()
 {
+	QList<QKeySequence> list;
 	foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
-		delete shortcut;
-	m_globalShortcuts.clear();
-
-	QxtGlobalShortcut *s = new QxtGlobalShortcut(this);
-	connect(s, SIGNAL(activated()), this, SLOT(trigger()));
-	s->setShortcut(shortcut);
-	m_globalShortcuts << s;
-
-	QAction::setShortcut(shortcut);
+		list << shortcut->shortcut();
+	return list;
 }
 
-void NAction::setShortcuts(const QList<QKeySequence> &shortcuts)
+void NAction::setGlobalShortcut(const QKeySequence &shortcut)
 {
+	setGlobalShortcuts(QList<QKeySequence>() << shortcut);
+}
+
+void NAction::setGlobalShortcuts(QKeySequence::StandardKey key)
+{
+	setGlobalShortcuts(QList<QKeySequence>() << QKeySequence(key));
+}
+
+void NAction::setGlobalShortcuts(const QList<QKeySequence> &shortcuts)
+{
+	setGlobal(FALSE);
+	foreach (QKeySequence seq, shortcuts) {
+		if (!seq.isEmpty()) {
+			setGlobal(TRUE);
+			break;
+		}
+	}
+
 	foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
 		delete shortcut;
 	m_globalShortcuts.clear();
@@ -66,13 +78,6 @@ void NAction::setShortcuts(const QList<QKeySequence> &shortcuts)
 		s->setShortcut(seq);
 		m_globalShortcuts << s;
 	}
-
-	QAction::setShortcuts(shortcuts);
-}
-
-void NAction::setShortcuts(QKeySequence::StandardKey key)
-{
-	setShortcut(key);
 }
 
 /* vim: set ts=4 sw=4: */

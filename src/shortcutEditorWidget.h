@@ -16,6 +16,7 @@
 #ifndef N_SHORTCUT_EDITOR_WIDGET_H
 #define N_SHORTCUT_EDITOR_WIDGET_H
 
+#include "action.h"
 #include <QtGui>
 #include <QAction>
 
@@ -23,15 +24,21 @@ class NShortcutEditorWidget : public QTableWidget
 {
 private:
 	bool m_init;
-	QList<QAction *> m_actionList;
+	QList<NAction *> m_actionList;
 	static QString keyEventToString(QKeyEvent *e);
 	void keyPressEvent(QKeyEvent *e);
+	enum Columns {
+		Name = 0,
+		Description = 1,
+		Shortcut = 2,
+		GlobalShortcut = 3,
+	};
 
 public:
 	NShortcutEditorWidget(QWidget *parent = 0);
 	~NShortcutEditorWidget(void);
 	void applyShortcuts();
-	void init(const QList<QAction *> &actionList);
+	void init(const QList<NAction *> &actionList);
 };
 
 #endif

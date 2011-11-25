@@ -158,24 +158,28 @@ NPlayer::NPlayer()
 	playAction->setObjectName("playAction");
 	playAction->setStatusTip(tr("Toggle playback"));
 	playAction->setGlobal(TRUE);
+	playAction->setCustomizable(TRUE);
 	connect(playAction, SIGNAL(triggered()), m_playbackEngine, SLOT(play()));
 
 	NAction *stopAction = new NAction(style()->standardIcon(QStyle::SP_MediaStop), tr("Stop"), this);
 	stopAction->setObjectName("stopAction");
 	stopAction->setStatusTip(tr("Stop playback"));
 	stopAction->setGlobal(TRUE);
+	stopAction->setCustomizable(TRUE);
 	connect(stopAction, SIGNAL(triggered()), m_playbackEngine, SLOT(stop()));
 
 	NAction *prevAction = new NAction(style()->standardIcon(QStyle::SP_MediaSkipBackward), tr("Previous"), this);
 	prevAction->setObjectName("prevAction");
 	prevAction->setStatusTip(tr("Play previous track in playlist"));
 	prevAction->setGlobal(TRUE);
+	prevAction->setCustomizable(TRUE);
 	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activatePrev()));
 
 	NAction *nextAction = new NAction(style()->standardIcon(QStyle::SP_MediaSkipForward), tr("Next"), this);
 	nextAction->setObjectName("nextAction");
 	nextAction->setStatusTip(tr("Play next track in playlist"));
 	nextAction->setGlobal(TRUE);
+	nextAction->setCustomizable(TRUE);
 	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activateNext()));
 
 	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
@@ -315,6 +319,8 @@ NPlayer::NPlayer()
 
 	m_settings->initShortcuts(this);
 	m_settings->loadShortcuts();
+	foreach (NAction *action, m_settings->shortcuts())
+		m_mainWindow->addAction(action);
 
 	loadSettings();
 

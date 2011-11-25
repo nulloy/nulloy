@@ -16,7 +16,6 @@
 #include "settings.h"
 
 #include "core.h"
-#include "action.h"
 
 #include <QDir>
 #include <QDesktopServices>
@@ -60,40 +59,60 @@ NSettings* NSettings::instance()
 
 void NSettings::initShortcuts(QObject *instance)
 {
-	QList<NAction *> allActions = instance->findChildren<NAction *>();
-	for (int i = 0; i < allActions.size(); ++i) {
-		if (allActions.at(i)->parent() == instance && allActions.at(i)->isGlobal())
-			m_globalActionList << allActions.at(i);
+	foreach (NAction *action, instance->findChildren<NAction *>()) {
+		if (action->isCustomizable())
+			m_actionList << action;
 	}
 }
 
 void NSettings::loadShortcuts()
 {
-	for (int i = 0; i < m_globalActionList.size(); ++i) {
-		QString strSeq = NSettings::value("GlobalShortcuts/" + m_globalActionList.at(i)->objectName()).toString();
-		if (!strSeq.isEmpty())
-			dynamic_cast<NAction *>(m_globalActionList.at(i))->setShortcut(QKeySequence(strSeq));
+	struct _local
+	{
+		static QList<QKeySequence> strToSeq(const QStringList &strList)
+		{
+			QList<QKeySequence> shortcuts;
+			foreach (QString str, strList)
+				shortcuts << QKeySequence(str);
+			return shortcuts;
+		}
+	};
+
+	foreach (NAction *action, m_actionList) {
+		action->setShortcuts(_local::strToSeq(value("Shortcuts/" + action->objectName()).toStringList()));
+		action->setGlobalShortcuts(_local::strToSeq(value("GlobalShortcuts/" + action->objectName()).toStringList()));
 	}
 }
 
 void NSettings::saveShortcuts()
 {
-	for (int i = 0; i < m_globalActionList.size(); ++i) {
-		QList<QKeySequence> shortcut = m_globalActionList.at(i)->shortcuts();
-		QStringList strSeqList;
-		foreach (QKeySequence seq, shortcut)
-			strSeqList << seq.toString();
+	struct _local
+	{
+		static void save(NSettings *settings, QList<QKeySequence> keys, QString name)
+		{
+			QStringList keyStrings;
+			foreach (QKeySequence seq, keys) {
+				if (!seq.isEmpty())
+					keyStrings << seq.toString();
+			}
+			if (!keyStrings.isEmpty())
+				settings->setValue(name, keyStrings);
+			else
+				settings->remove(name);
+		}
+	};
 
-		if (!strSeqList.isEmpty() && m_globalActionList.at(i)->isEnabled())
-			NSettings::setValue("GlobalShortcuts/" + m_globalActionList.at(i)->objectName(), strSeqList.join(", "));
-		else
-			NSettings::remove("GlobalShortcuts/" + m_globalActionList.at(i)->objectName());
+	foreach (NAction *action, m_actionList) {
+		if (action->objectName().isEmpty() || !action->isCustomizable())
+			continue;
+		_local::save(this, action->shortcuts(), "Shortcuts/" + action->objectName());
+		_local::save(this, action->globalShortcuts(), "GlobalShortcuts/" + action->objectName());
 	}
 }
 
-QList<QAction *> NSettings::shortcuts()
+QList<NAction *> NSettings::shortcuts()
 {
-	return m_globalActionList;
+	return m_actionList;
 }
 
 void NSettings::setValue(const QString &key, const QVariant &value)
