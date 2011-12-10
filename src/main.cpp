@@ -21,6 +21,10 @@
 Q_IMPORT_PLUGIN(widget_collection)
 #endif
 
+#ifdef Q_WS_WIN
+#include <direct.h> //_chdir()
+#endif
+
 int main(int argc, char *argv[])
 {
 	QtSingleApplication instance(argc, argv);
@@ -40,7 +44,9 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationVersion(QString(_N_VERSION_) + " Alpha");
 	QCoreApplication::setOrganizationDomain("nulloy.com");
 
-#ifndef Q_WS_WIN
+#ifdef Q_WS_WIN
+	_chdir(QCoreApplication::applicationDirPath().toAscii().data());
+#else
 	int res;
 	res = chdir(QCoreApplication::applicationDirPath().toAscii().data());
 #endif
