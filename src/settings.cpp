@@ -32,6 +32,13 @@ NSettings::NSettings(QObject *parent)
 	Q_ASSERT_X(!m_instance, "NSettings", "NSettings instance already exists.");
 	m_instance = this;
 
+	if (!QFileInfo(this->fileName()).exists()) {
+		setValue("Shortcuts/playAction", QStringList() << "X" << "C" << "Space");
+		setValue("Shortcuts/stopAction", "V");
+		setValue("Shortcuts/prevAction", "Z");
+		setValue("Shortcuts/nextAction", "B");
+	}
+
 	setValue("GUI/MinimizeToTray", value("GUI/MinimizeToTray", FALSE).toBool());
 	setValue("GUI/TrayIcon", value("GUI/TrayIcon", FALSE).toBool());
 	setValue("GUI/AlwaysOnTop", value("GUI/AlwaysOnTop", FALSE).toBool());
