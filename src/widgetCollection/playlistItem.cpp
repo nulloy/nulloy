@@ -21,6 +21,7 @@
 NPlaylistItem::NPlaylistItem(QListWidget *parent) : QListWidgetItem(parent)
 {
 	m_failed = FALSE;
+	m_duration = -1;
 }
 
 QVariant NPlaylistItem::data(int role) const
@@ -30,6 +31,8 @@ QVariant NPlaylistItem::data(int role) const
 			return m_failed;
 		case (PathRole):
 			return m_path;
+		case (DurationRole):
+			return m_duration;
 		default:
 			return QListWidgetItem::data(role);
 	}
@@ -43,6 +46,9 @@ void NPlaylistItem::setData(int role, const QVariant &value)
 			break;
 		case (PathRole):
 			m_path = value.toString();
+			break;
+		case (DurationRole):
+			m_duration = value.toInt();
 			break;
 		default:
 			QListWidgetItem::setData(role, value);

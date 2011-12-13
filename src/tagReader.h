@@ -13,42 +13,27 @@
 **
 *********************************************************************/
 
-#ifndef N_PLAYLIST_ITEM_H
-#define N_PLAYLIST_ITEM_H
+#ifndef N_TAG_READER_H
+#define N_TAG_READER_H
 
-#include <QListWidgetItem>
+#include <QString>
 
-class NPlaylistItem : public QListWidgetItem
+namespace TagLib {
+class FileRef;
+}
+
+class NTagReader
 {
 private:
-	bool m_failed;
 	QString m_path;
-	int m_duration;
+	TagLib::FileRef *m_tagRef;
 
 public:
-	enum PlaylistRole {
-		FailedRole = Qt::UserRole + 1,
-		PathRole,
-		DurationRole
-	};
-
-	NPlaylistItem(QListWidget *parent = 0);
-
-	QVariant data(int role) const;
-	void setData(int role, const QVariant &value);
+	NTagReader(const QString &file);
+	~NTagReader();
+	QString toString(const QString &format);
+	bool isValid();
 };
-
-#include <QItemDelegate>
-
-class NPlaylistItemDelegate : public QItemDelegate
-{
-	Q_OBJECT
-
-public:
-	NPlaylistItemDelegate(QWidget *parent = 0) : QItemDelegate(parent) {}
-	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-};
-
 
 #endif
 

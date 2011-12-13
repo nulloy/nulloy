@@ -20,6 +20,7 @@
 #include "action.h"
 #include "systemTray.h"
 #include "m3uPlaylist.h"
+#include "tagReader.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -324,7 +325,7 @@ NPlayer::NPlayer()
 
 	loadSettings();
 
-	m_mainWindow->setTitle("");
+	m_mainWindow->setTitle(QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion());
 
 	QStringList pathList;
 	if (QCoreApplication::arguments().size() > 1) {
@@ -553,10 +554,17 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 		return;
 
 	QString title;
-	if (QFile(path).exists())
-		title = QFileInfo(path).fileName();
-	else
-		title = "";
+	QString app_title_version = QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion();
+	if (QFile(path).exists()) {
+		NTagReader tagReader(path);
+		QString format = NSettings::instance()->value("GUI/WindowTitleFormat").toString();
+		if (!format.isEmpty() && tagReader.isValid())
+			title = tagReader.toString(format);
+		else
+			title = app_title_version;
+	} else {
+		title = app_title_version;
+	}
 	m_mainWindow->setTitle(title);
 	NSystemTray::setToolTip(title);
 }
@@ -670,7 +678,7 @@ void NPlayer::showAboutMessageBox()
 	layout->addWidget(textBrowser);
 
 	QPushButton *closeButton = new QPushButton("Close");
-	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept())); \
+	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept()));
 	QHBoxLayout* buttonLayout = new QHBoxLayout();
 	buttonLayout->addStretch();
 	buttonLayout->addWidget(closeButton);

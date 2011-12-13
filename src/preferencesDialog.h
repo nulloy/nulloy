@@ -38,6 +38,7 @@ private slots:
 	void loadSettings();
 	void saveSettings();
 	void on_versionCheckButton_clicked();
+	void on_titleFormatHelpButton_clicked();
 
 signals:
 	void settingsChanged();

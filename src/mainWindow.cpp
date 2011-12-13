@@ -121,11 +121,6 @@ void NMainWindow::saveSettings()
 
 void NMainWindow::setTitle(QString title)
 {
-	if (!title.isEmpty()) {
-		title.prepend("\"");
-		title.append("\" - ");
-	}
-	title.append(QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion());
 	setWindowTitle(title);
 	emit newTitle(title);
 }

@@ -109,6 +109,15 @@ include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
 include(../3rdParty/qtsingleapplication-2.6.1/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 
+# tagReader
+unix {
+	CONFIG += link_pkgconfig
+	PKGCONFIG += taglib
+}
+win32 {
+	INCLUDEPATH += $(TAGLIB_DIR) $(TAGLIB_DIR)/include
+	LIBS += -L$(TAGLIB_DIR)/taglib/ -ltag
+}
 
 # qmake -config no-plugins
 !no-plugins {

@@ -18,6 +18,7 @@
 #include "settings.h"
 #include "core.h"
 #include "trash.h"
+#include "tagReader.h"
 
 #include <QtGui>
 
@@ -97,11 +98,12 @@ NPlaylistWidget::~NPlaylistWidget() {}
 
 void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 {
-	QString fileName = QFileInfo(item->data(NPlaylistItem::PathRole).toString()).fileName();
+	QString file = item->data(NPlaylistItem::PathRole).toString();
+	QString fileName = QFileInfo(file).fileName();
 	if (fileName.endsWith(".m3u") || fileName.endsWith(".m3u8")) {
 		int index = row(item);
 		int index_bkp = index;
-		QList<NM3uItem> m3uItems = NM3uPlaylist::read(item->data(NPlaylistItem::PathRole).toString());
+		QList<NM3uItem> m3uItems = NM3uPlaylist::read(file);
 
 		QListWidgetItem *takenItem = takeItem(row(item));
 		delete takenItem;
@@ -115,7 +117,14 @@ void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 		setCurrentItem(NPlaylistWidget::item(index_bkp));
 		return;
 	}
-	item->setText(QFileInfo(item->data(NPlaylistItem::PathRole).toString()).fileName());
+
+	NTagReader tagReader(file);
+	if (tagReader.isValid()) {
+		item->setText(tagReader.toString(NSettings::instance()->value("GUI/PlaylistTitleFormat").toString()));
+		item->setData(NPlaylistItem::DurationRole, tagReader.toString("%D").toInt());
+	} else {
+		item->setText(fileName);
+	}
 	item->setData(NPlaylistItem::FailedRole, FALSE);
 
 	QFont f = item->font();
@@ -129,7 +138,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 	scrollToItem(item);
 	m_currentItem = item;
 
-	emit mediaSet(item->data(NPlaylistItem::PathRole).toString());
+	emit mediaSet(file);
 }
 
 void NPlaylistWidget::setCurrentFailed()
@@ -143,6 +152,14 @@ int NPlaylistWidget::currentRow()
 		return row(m_currentItem);
 	else
 		return -1;
+}
+
+QString NPlaylistWidget::currentTitle()
+{
+	if (m_currentItem)
+		return m_currentItem->text();
+	else
+		return "";
 }
 
 void NPlaylistWidget::setCurrentRow(int row)
@@ -215,7 +232,7 @@ void NPlaylistWidget::writePlaylist(const QString &file)
 
 		m3uItem.path =  item(i)->data(NPlaylistItem::PathRole).toString();
 		m3uItem.title = item(i)->text();
-		m3uItem.duration = -1;
+		m3uItem.duration = item(i)->data(NPlaylistItem::DurationRole).toInt();
 
 		if (!item(i)->data(NPlaylistItem::FailedRole).toBool())
 			m3uItem.position = 0;

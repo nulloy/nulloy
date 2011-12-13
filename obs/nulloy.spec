@@ -10,7 +10,7 @@ BuildRequires: qt-devel gstreamer-devel phonon-devel gcc-c++
 %else
 BuildRequires: libqt-devel gstreamer-devel libphonon-devel
 %endif
-BuildRequires: zip libX11-devel
+BuildRequires: zip libX11-devel taglib-devel
 BuildRoot:     %{_topdir}/%{name}-%{version}-root
 Patch1: nulloy-fedora.patch
 

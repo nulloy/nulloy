@@ -18,6 +18,7 @@
 #include "core.h"
 
 #include <QDir>
+#include <QCoreApplication>
 #include <QDesktopServices>
 
 #include <QDebug>
@@ -37,6 +38,9 @@ NSettings::NSettings(QObject *parent)
 		setValue("Shortcuts/stopAction", "V");
 		setValue("Shortcuts/prevAction", "Z");
 		setValue("Shortcuts/nextAction", "B");
+
+		setValue("GUI/PlaylistTitleFormat", "%a - %t (%d)");
+		setValue("GUI/WindowTitleFormat", "\"%a - %t\" - " + QCoreApplication::applicationName() + " %v");
 	}
 
 	setValue("GUI/MinimizeToTray", value("GUI/MinimizeToTray", FALSE).toBool());
@@ -124,6 +128,15 @@ QList<NAction *> NSettings::shortcuts()
 
 void NSettings::setValue(const QString &key, const QVariant &value)
 {
+	if ((value.type() == QVariant::String && value.toString().isEmpty()) ||
+		(value.type() == QVariant::StringList && value.toStringList().isEmpty()) ||
+		(value.type() == QVariant::List && value.toList().isEmpty()))
+	{
+		QSettings::remove(key);
+		emit valueChanged(key, QString());
+		return;
+	}
+
 	QSettings::setValue(key, value);
 	emit valueChanged(key, value);
 }

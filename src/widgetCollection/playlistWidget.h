@@ -48,6 +48,7 @@ public:
 
 	QStringList mediaList();
 	int currentRow();
+	QString currentTitle();
 
 public slots:
 	void activateFirst();
