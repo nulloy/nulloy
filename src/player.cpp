@@ -653,8 +653,18 @@ void NPlayer::showAboutMessageBox()
 	QDialog *dialog = new QDialog(m_mainWindow);
 	dialog->setWindowTitle(QObject::tr("About ") + QCoreApplication::applicationName());
 	dialog->setMaximumSize(0, 0);
+
 	QVBoxLayout *layout = new QVBoxLayout;
 	dialog->setLayout(layout);
+
+	QTabWidget *tabWidget = new QTabWidget(m_mainWindow);
+	layout->addWidget(tabWidget);
+
+	// about tab
+	QWidget *tab1 = new QWidget(m_mainWindow);
+    tabWidget->addTab(tab1, tr("About"));
+	QVBoxLayout *tab1Layout = new QVBoxLayout;
+	tab1->setLayout(tab1Layout);
 
 	QLabel *iconLabel = new QLabel;
 	QPixmap pixmap(":icon-96.png");
@@ -667,15 +677,37 @@ void NPlayer::showAboutMessageBox()
 	iconLayout->addStretch();
 	iconLayout->addWidget(iconLabel);
 	iconLayout->addStretch();
-	layout->addLayout(iconLayout);
+	tab1Layout->addLayout(iconLayout);
 
-	QTextBrowser *textBrowser = new QTextBrowser(this);
-	textBrowser->setStyleSheet("background: transparent");
-	textBrowser->setFrameShape(QFrame::NoFrame);
-	textBrowser->setHtml("<center>" + html + "</center>");
+	QTextBrowser *tab1TextBrowser = new QTextBrowser(this);
+	tab1TextBrowser->setStyleSheet("background: transparent");
+	tab1TextBrowser->setFrameShape(QFrame::NoFrame);
+	tab1TextBrowser->setHtml("<center>" + html + "</center>");
+	tab1TextBrowser->setMinimumWidth(350);
+	tab1Layout->addWidget(tab1TextBrowser);
+	//
 
-	textBrowser->setMinimumWidth(350);
-	layout->addWidget(textBrowser);
+	// changelog tab
+	QWidget *tab2 = new QWidget(m_mainWindow);
+    tabWidget->addTab(tab2, tr("Changelog"));
+	QVBoxLayout *tab2Layout = new QVBoxLayout;
+	tab2Layout->setContentsMargins(0, 0, 0, 0);
+	tab2->setLayout(tab2Layout);
+
+	QFile file( ":/ChangeLog");
+	file.open(QIODevice::ReadOnly | QIODevice::Text);
+	QTextStream stream(&file);
+	QString line;
+	QString str = stream.readAll();
+	file.close();
+
+	str.replace("\n", "<br>\n");
+	str.replace(QRegExp("(\\*[^<]*)(<br>)"), "<b>\\1</b>\\2");
+
+	QTextBrowser *tab2TextBrowser = new QTextBrowser(this);
+	tab2TextBrowser->setHtml(str);
+	tab2Layout->addWidget(tab2TextBrowser);
+	//
 
 	QPushButton *closeButton = new QPushButton("Close");
 	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept()));
@@ -685,7 +717,7 @@ void NPlayer::showAboutMessageBox()
 	buttonLayout->addStretch();
 	layout->addLayout(buttonLayout);
 
-	dialog->exec();
+	dialog->show();
 }
 
 void NPlayer::showOpenFileDialog()
