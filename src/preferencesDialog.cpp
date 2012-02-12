@@ -103,7 +103,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 						"<tr><td><b>%d</b></td><td>Duration formated as h:mm:ss</td></tr>"
 						"<tr><td><b>%D</b></td><td>Duration in secods</td></tr>"
 						"<tr><td><b>%B</b></td><td>Bitrate in Kb/s</td></tr>"
-						"<tr><td><b>%s</b></td><td>Sample rate</td></tr>"
+						"<tr><td><b>%s</b></td><td>Sample rate in kHz</td></tr>"
 						"<tr><td><b>%c</b></td><td>Number of channels</td></tr>"
 						"<tr><td><b>%f</b></td><td>File name without extension</td></tr>"
 						"<tr><td><b>%F</b></td><td>File name</td></tr>"

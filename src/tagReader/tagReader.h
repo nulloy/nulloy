@@ -18,21 +18,19 @@
 
 #include <QString>
 
-namespace TagLib {
-class FileRef;
-}
+class NTagReaderPrivate;
 
 class NTagReader
 {
-private:
-	QString m_path;
-	TagLib::FileRef *m_tagRef;
-
 public:
 	NTagReader(const QString &file);
 	~NTagReader();
 	QString toString(const QString &format);
 	bool isValid();
+
+private:
+	NTagReaderPrivate *const d_ptr;
+	Q_DECLARE_PRIVATE(NTagReader);
 };
 
 #endif

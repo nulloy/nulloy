@@ -21,42 +21,49 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 
-NTagReader::NTagReader(const QString &file)
+class NTagReaderPrivate
 {
-	m_path = file;
-	m_tagRef = new TagLib::FileRef(file.toUtf8().data());
+public:
+	NTagReaderPrivate() {}
+	~NTagReaderPrivate() {}
+
+	QString m_path;
+	TagLib::FileRef *m_tagRef;
+};
+
+NTagReader::NTagReader(const QString &file) : d_ptr(new NTagReaderPrivate())
+{
+	Q_D(NTagReader);
+	d->m_path = file;
+	d->m_tagRef = new TagLib::FileRef(file.toUtf8().data());
 }
 
 NTagReader::~NTagReader()
 {
-	delete m_tagRef;
+	Q_D(NTagReader);
+	delete d->m_tagRef;
 }
 
 bool NTagReader::isValid()
 {
-	return m_tagRef->file() && m_tagRef->file()->isValid();
+	Q_D(NTagReader);
+	return d->m_tagRef->file() && d->m_tagRef->file()->isValid();
 }
 
 QString NTagReader::toString(const QString &format)
 {
+	Q_D(NTagReader);
+
 	if (format.isEmpty())
 		return "";
 
-	if (!m_tagRef->file()->isValid())
+	if (!d->m_tagRef->file()->isValid())
 		return "NTagReader::InvalidFile";
 
-	TagLib::Tag *tag = m_tagRef->tag();
-	TagLib::AudioProperties *prop = m_tagRef->audioProperties();
+	TagLib::Tag *tag = d->m_tagRef->tag();
+	TagLib::AudioProperties *prop = d->m_tagRef->audioProperties();
 
-	int seconds = prop->length() % 60;
-	int minutes = (prop->length() - seconds) / 60;
-	int hours = minutes / 60;
-	minutes = minutes % 60;
-	QString duration;
-	if (hours > 0)
-		duration.sprintf("%d:%02d:%02d", hours, minutes, seconds);
-	else
-		duration.sprintf("%d:%02d", minutes, seconds);
+	int seconds_total = prop->length();
 
 	QString res;
 	for (int i = 0; i < format.size(); ++i) {
@@ -71,7 +78,7 @@ QString NTagReader::toString(const QString &format)
 			} else if (ch == 't') {
 				QString str = TStringToQString(tag->title());
 				if (str.isEmpty())
-					str = QFileInfo(m_path).baseName();
+					str = QFileInfo(d->m_path).baseName();
 				res += str;
 			} else if (ch == 'A') {
 				QString str = TStringToQString(tag->album());
@@ -99,18 +106,29 @@ QString NTagReader::toString(const QString &format)
 					str = "<Unknown track number>";
 				res += str;
 			} else if (ch == 'd') {
-				if (duration == "0:00")
+				QString duration;
+				if (seconds_total > 0) {
+					int seconds = seconds_total % 60;
+					int minutes = (seconds_total - seconds) / 60;
+					int hours = minutes / 60;
+					minutes = minutes % 60;
+					if (hours > 0)
+						duration.sprintf("%d:%02d:%02d", hours, minutes, seconds);
+					else
+						duration.sprintf("%d:%02d", minutes, seconds);
+				} else {
 					duration = "<Unknown duration>";
+				}
 				res += duration;
 			} else if (ch == 'D') {
-				int seconds_total = prop->length();
+				QString duration;
 				if (seconds_total == 0)
 					duration = "<Unknown duration>";
 				else
 					duration = QString::number(seconds_total);
 				res += duration;
 			} else if (ch == 'B') {
-				QString str = QString::number(prop->bitrate());
+				QString str = QString::number(prop->bitrate() / 1000);
 				if (str == "0")
 					str = "<Unknown bitrate>";
 				res += str;
@@ -125,11 +143,11 @@ QString NTagReader::toString(const QString &format)
 					str = "<Unknown channels number>";
 				res += str;
 			} else if (ch == 'f') {
-				res += QFileInfo(m_path).baseName();
+				res += QFileInfo(d->m_path).baseName();
 			} else if (ch == 'F') {
-				res += QFileInfo(m_path).fileName();
+				res += QFileInfo(d->m_path).fileName();
 			} else if (ch == 'p') {
-				res += QFileInfo(m_path).absoluteFilePath();
+				res += QFileInfo(d->m_path).absoluteFilePath();
 			} else if (ch == 'v') {
 				res += QCoreApplication::applicationVersion();
 			} else {
