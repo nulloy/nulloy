@@ -76,8 +76,13 @@ void NPlaybackEngineGStreamer::init()
 
 	int argc;
 	const char **argv;
+	GError *err;
 	NCore::cArgs(&argc, &argv);
 	gst_init(&argc, (char ***)&argv);
+	if (!gst_init_check(&argc, (char ***)&argv, &err)) {
+		emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err->message);
+		emit failed();
+	}
 
 	m_playbin = gst_element_factory_make("playbin2", NULL);
 
@@ -109,7 +114,6 @@ NPlaybackEngineGStreamer::~NPlaybackEngineGStreamer()
 
 	stop();
 	gst_object_unref(m_playbin);
-	gst_deinit();
 }
 
 void NPlaybackEngineGStreamer::setMedia(const QString &file)

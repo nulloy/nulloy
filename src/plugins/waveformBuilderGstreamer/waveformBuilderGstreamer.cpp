@@ -102,8 +102,11 @@ void NWaveformBuilderGstreamer::init()
 
 	int argc;
 	const char **argv;
+	GError *err;
 	NCore::cArgs(&argc, &argv);
 	gst_init(&argc, (char ***)&argv);
+	if (!gst_init_check(&argc, (char ***)&argv, &err))
+		qCritical() << "WaveformBuilder :: error ::" << err->message;
 
 	m_playbin = NULL;
 
@@ -123,7 +126,6 @@ NWaveformBuilderGstreamer::~NWaveformBuilderGstreamer()
 		return;
 
 	stop();
-	gst_deinit();
 }
 
 void NWaveformBuilderGstreamer::stop()
