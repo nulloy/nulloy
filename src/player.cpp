@@ -264,6 +264,9 @@ NPlayer::NPlayer()
 #else
 	NSystemTray::setIcon(m_mainWindow->windowIcon());
 #endif
+	m_trayIconDoubleClickTimer = new QTimer(this);
+	m_trayIconDoubleClickTimer->setSingleShot(TRUE);
+	connect(m_trayIconDoubleClickTimer, SIGNAL(timeout()), this, SLOT(trayIconDoubleClick_timeout()));
 	//
 
 
@@ -511,34 +514,43 @@ void NPlayer::mainWindowClosed()
 	}
 }
 
+void NPlayer::trayIconDoubleClick_timeout()
+{
+	if (!m_trayIconDoubleClickCheck)
+		trackIcon_clicked(1);
+}
+
 void NPlayer::on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
 {
-	bool visible = m_mainWindow->isVisible();
-	bool minimized = (bool)(m_mainWindow->windowState() & Qt::WindowMinimized);
-	if (reason == QSystemTrayIcon::Trigger) {
-		if (!minimized && visible) {
+	if (reason == QSystemTrayIcon::Trigger) { // single click
+		m_trayIconDoubleClickCheck = FALSE;
+		m_trayIconDoubleClickTimer->start(QApplication::doubleClickInterval());
+	} else if (reason == QSystemTrayIcon::DoubleClick) {
+		m_trayIconDoubleClickCheck = TRUE;
+		trackIcon_clicked(2);
+	}
+}
+
+void NPlayer::trackIcon_clicked(int clicks)
+{
+	if (clicks == 1) {
+		m_mainWindow->showNormal();
+		m_mainWindow->activateWindow();
+		m_mainWindow->raise();
+	} else if (clicks == 2) {
+		if (!m_mainWindow->isVisible() || !m_mainWindow->isActiveWindow()) {
 			m_mainWindow->showNormal();
 			m_mainWindow->activateWindow();
-		}
-	} else if (reason == QSystemTrayIcon::DoubleClick) {
-		if (m_settings->value("GUI/MinimizeToTray").toBool()) {
-			if (minimized && visible) {
-				m_mainWindow->showNormal();
-				m_mainWindow->activateWindow();
-			} else {
-				m_mainWindow->setVisible(!visible);
-			}
-			if (!m_settings->value("GUI/TrayIcon").toBool())
-				NSystemTray::setEnabled(!visible);
+			m_mainWindow->raise();
+		} else if (m_settings->value("GUI/MinimizeToTray").toBool()) {
+			m_mainWindow->setVisible(FALSE);
+			NSystemTray::setEnabled(TRUE);
 		} else {
-			if (!minimized) {
-				m_mainWindow->showMinimized();
-			} else {
-				m_mainWindow->showNormal();
-				m_mainWindow->activateWindow();
-			}
+			m_mainWindow->showMinimized();
 		}
 	}
+	if (!m_settings->value("GUI/TrayIcon").toBool())
+		NSystemTray::setEnabled(!m_mainWindow->isVisible());
 }
 
 void NPlayer::quit()

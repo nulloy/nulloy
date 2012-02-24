@@ -111,14 +111,14 @@
        <item>
         <widget class="QCheckBox" name="trayIconCheckBox">
          <property name="text">
-          <string>Show system tray icon</string>
+          <string>Always show icon in system tray</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QCheckBox" name="minimizeToTrayCheckBox">
          <property name="text">
-          <string>Minimize to tray when closed</string>
+          <string>Hide to system tray when closed</string>
          </property>
         </widget>
        </item>

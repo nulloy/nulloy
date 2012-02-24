@@ -43,6 +43,8 @@ private:
 	NLogDialog *m_logDialog;
 	QString m_localPlaylist;
 	QNetworkAccessManager *m_networkManager;
+	QTimer *m_trayIconDoubleClickTimer;
+	bool m_trayIconDoubleClickCheck;
 
 public:
 	NPlayer();
@@ -68,6 +70,8 @@ private slots:
 	void versionOnlineFetch();
 	void on_networkManager_finished(QNetworkReply *reply);
 	void loadNextActionTriggered();
+	void trayIconDoubleClick_timeout();
+	void trackIcon_clicked(int clicks);
 
 public slots:
 	void quit();
