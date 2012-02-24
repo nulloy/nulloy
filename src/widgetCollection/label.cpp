@@ -68,7 +68,8 @@ void NLabel::paintEvent(QPaintEvent *event)
 	Q_UNUSED(event);
 
 	QPainter painter;
-	painter.setFont(font());
+	if (painter.isActive())
+		painter.setFont(font());
 	if (mEnabled && mShadowOffset != QPoint(0, 0)) {
 		painter.begin(this);
 		painter.setPen(QPen(mShadowColor));
