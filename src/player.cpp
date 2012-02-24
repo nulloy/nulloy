@@ -366,7 +366,12 @@ NPlaybackEngineInterface* NPlayer::playbackEngine()
 
 void NPlayer::message(const QString &str)
 {
-	qDebug() << str;
+	if (str.isEmpty()) {
+		m_mainWindow->showNormal();
+		m_mainWindow->activateWindow();
+		m_mainWindow->raise();
+		return;
+	}
 	QStringList argList = str.split("<|>");
 	QStringList pathList;
 	QStringList notPathArgList;
