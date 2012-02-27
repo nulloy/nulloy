@@ -71,7 +71,7 @@ bool NAbstractWaveformBuilder::peaksFindFromCache(const QString &file)
 	if (modifDate.isEmpty())
 		return FALSE;
 
-	if (modifDate ==  QFileInfo(path).lastModified().toString(Qt::ISODate)) {
+	if (modifDate ==  QFileInfo(file).lastModified().toString(Qt::ISODate)) {
 		NWaveformPeaks *peaks = m_peaksCache.object(pathHash);
 		if (peaks) {
 			m_peaks = *peaks;
@@ -97,7 +97,7 @@ void NAbstractWaveformBuilder::peaksAppendToCache(const QString &file)
 
 	QByteArray pathHash = QCryptographicHash::hash(path.toUtf8(), QCryptographicHash::Sha1);
 	m_peaksCache.insert(pathHash, &m_peaks);
-	m_dateHash.insert(pathHash, QFileInfo(path).lastModified().toString(Qt::ISODate));
+	m_dateHash.insert(pathHash, QFileInfo(file).lastModified().toString(Qt::ISODate));
 
 	cacheSave();
 }
