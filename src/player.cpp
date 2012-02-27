@@ -330,19 +330,6 @@ NPlayer::NPlayer()
 
 	m_mainWindow->setTitle(QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion());
 
-	QStringList pathList;
-	if (QCoreApplication::arguments().size() > 1) {
-		for (int i = 1; i < QCoreApplication::arguments().size(); ++i) {
-			QString file = QCoreApplication::arguments().at(i);
-			if (QFile(file).exists())
-				pathList << file;
-		}
-	}
-	if (!pathList.isEmpty())
-		m_playlistWidget->activateMediaList(pathList);
-	else
-		restorePlaylist();
-
 	m_mainWindow->show();
 	QResizeEvent e(m_mainWindow->size(), m_mainWindow->size());
 	QCoreApplication::sendEvent(m_mainWindow, &e);
@@ -399,6 +386,9 @@ void NPlayer::message(const QString &str)
 
 void NPlayer::restorePlaylist()
 {
+	if (m_playlistWidget->count() > 0)
+		return;
+
 	m_playlistWidget->setMediaListFromPlaylist(m_localPlaylist);
 
 	QStringList playlistRowValues = m_settings->value("PlaylistRow").toStringList();

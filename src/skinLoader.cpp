@@ -88,12 +88,16 @@ void NSkinLoader::_loadSkins()
 	_init = TRUE;
 
 	QStringList skinsDirList;
-	skinsDirList << ":skins" << "skins";
 #ifndef Q_WS_WIN
 	if (NCore::rcDir() != QCoreApplication::applicationDirPath())
 		skinsDirList << NCore::rcDir() + "/skins";
-	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin")
-		skinsDirList << "../share/nulloy/skins";
+	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {
+		QDir dir(QCoreApplication::applicationDirPath());
+		dir.cd("../share/nulloy/skins");
+		skinsDirList << dir.absolutePath();
+	} else {
+		skinsDirList << ":skins" << QCoreApplication::applicationDirPath() + "/skins";
+	}
 #endif
 
 	QFileInfoList containersInfoList;

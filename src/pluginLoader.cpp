@@ -84,12 +84,16 @@ void NPluginLoader::_loadPlugins()
 	}
 
 	QStringList pluginsDirList;
-	pluginsDirList << "plugins";
 #ifndef Q_WS_WIN
 	if (NCore::rcDir() != QCoreApplication::applicationDirPath())
 		pluginsDirList << NCore::rcDir() + "/plugins";
-	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin")
-		pluginsDirList << "../lib/nulloy/plugins";
+	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {
+		QDir dir(QCoreApplication::applicationDirPath());
+		dir.cd("../lib/nulloy/plugins");
+		pluginsDirList << dir.absolutePath();
+	} else {
+		pluginsDirList << QCoreApplication::applicationDirPath() + "/plugins";
+	}
 #endif
 
 #ifdef Q_WS_WIN

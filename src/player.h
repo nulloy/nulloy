@@ -57,7 +57,6 @@ private slots:
 	void loadSettings();
 	void saveSettings();
 
-	void restorePlaylist();
 	void savePlaylist();
 
 	void preferencesDialogSettingsChanged();
@@ -80,6 +79,7 @@ public slots:
 	void showSavePlaylistDialog();
 	void showContextMenu(QPoint pos);
 	void message(const QString &str);
+	void restorePlaylist();
 };
 
 #endif

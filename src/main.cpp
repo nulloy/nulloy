@@ -21,10 +21,6 @@
 Q_IMPORT_PLUGIN(widget_collection)
 #endif
 
-#ifdef Q_WS_WIN
-#include <direct.h> //_chdir()
-#endif
-
 int main(int argc, char *argv[])
 {
 	QtSingleApplication instance(argc, argv);
@@ -44,13 +40,6 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationVersion(QString(_N_VERSION_) + " Alpha");
 	QCoreApplication::setOrganizationDomain("nulloy.com");
 
-#ifdef Q_WS_WIN
-	_chdir(QCoreApplication::applicationDirPath().toAscii().data());
-#else
-	int res;
-	res = chdir(QCoreApplication::applicationDirPath().toAscii().data());
-#endif
-
 #ifndef _N_NO_SKINS_
 	NSkinFileSystem::init();
 #endif
@@ -58,6 +47,9 @@ int main(int argc, char *argv[])
 	NPlayer p;
 	QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
 					&p, SLOT(message(const QString &)));
+	if (!msg.isEmpty())
+		p.message(msg);
+	p.restorePlaylist();
 
 	return instance.exec();
 }
