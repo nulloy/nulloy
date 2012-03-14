@@ -32,6 +32,21 @@ NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(par
 	m_init = FALSE;
 }
 
+QSize NShortcutEditorWidget::minimumSizeHint() const
+{
+	QSize size(QTableWidget::sizeHint());
+	int height = horizontalHeader()->height();
+	for (int i = 0; i < rowCount(); ++i)
+		height += rowHeight(i);
+	size.setHeight(height);
+	return size;
+}
+
+QSize NShortcutEditorWidget::sizeHint() const
+{
+	return minimumSizeHint();
+}
+
 NShortcutEditorWidget::~NShortcutEditorWidget() {}
 
 void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
