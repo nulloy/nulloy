@@ -16,16 +16,16 @@
 #ifndef N_PLAYBACK_ENGINE_VLC_H
 #define N_PLAYBACK_ENGINE_VLC_H
 
-#include "pluginInterface.h"
+#include "pluginElementInterface.h"
 #include "playbackEngineInterface.h"
 #include <QTimer>
 #include <vlc/vlc.h>
 #include <vlc_aout.h>
 
-class NPlaybackEngineVlc : public NPlaybackEngineInterface, public NPluginInterface
+class NPlaybackEngineVlc : public NPlaybackEngineInterface, public NPluginElementInterface
 {
 	Q_OBJECT
-	Q_INTERFACES(NPlaybackEngineInterface NPluginInterface)
+	Q_INTERFACES(NPlaybackEngineInterface NPluginElementInterface)
 
 private:
 	libvlc_instance_t *m_vlcInstance;

@@ -17,7 +17,7 @@
 
 #include "core.h"
 #include "settings.h"
-#include "pluginInterface.h"
+#include "pluginElementInterface.h"
 #include "waveformBuilderInterface.h"
 #include "playbackEngineInterface.h"
 
@@ -71,10 +71,10 @@ void NPluginLoader::_loadPlugins()
 	objectsStatic << QPluginLoader::staticInstances();
 
 	foreach (QObject *obj, objectsStatic) {
-		NPluginInterface *plugin = qobject_cast<NPluginInterface *>(obj);
+		NPluginElementInterface *plugin = qobject_cast<NPluginElementInterface *>(obj);
 		if (plugin) {
 			objects << obj;
-			qobject_cast<NPluginInterface *>(obj)->init();
+			qobject_cast<NPluginElementInterface *>(obj)->init();
 			QString id = plugin->identifier();
 			id.insert(id.lastIndexOf('/'), " (Built-in)");
 			_identifiers << id;
@@ -117,7 +117,7 @@ void NPluginLoader::_loadPlugins()
 					continue;
 				QPluginLoader *loader = new QPluginLoader(dir.absoluteFilePath(fileName));
 				QObject *obj = loader->instance();
-				NPluginInterface *plugin = qobject_cast<NPluginInterface *>(obj);
+				NPluginElementInterface *plugin = qobject_cast<NPluginElementInterface *>(obj);
 				if (plugin) {
 					objects << obj;
 					_identifiers << plugin->identifier();
@@ -142,7 +142,7 @@ void NPluginLoader::_loadPlugins()
 	if (index == -1)
 		index = _identifiers.indexOf(QRegExp("Nulloy/Playback.*"));
 	if (index != -1) {
-		QString interface = qobject_cast<NPluginInterface *>(objects.at(index))->interface();
+		QString interface = qobject_cast<NPluginElementInterface *>(objects.at(index))->interface();
 		if (interface != NPlaybackEngineInterface::interface()) {
 			QMessageBox::warning(NULL, QObject::tr("Plugin Interface Mismatch"),
 				_identifiers.at(index).section('/', 2, 2) + " " +
@@ -154,7 +154,7 @@ void NPluginLoader::_loadPlugins()
 		}
 
 		_playback = qobject_cast<NPlaybackEngineInterface *>(objects.at(index));
-		qobject_cast<NPluginInterface *>(objects.at(index))->init();
+		qobject_cast<NPluginElementInterface *>(objects.at(index))->init();
 		usedFlags[index] = TRUE;
 		NSettings::instance()->setValue("Playback", _identifiers.at(index).section('/', 2));
 	}
@@ -166,7 +166,7 @@ void NPluginLoader::_loadPlugins()
 	if (index == -1)
 		index = _identifiers.indexOf(QRegExp("Nulloy/Waveform.*"));
 	if (index != -1) {
-		QString interface = qobject_cast<NPluginInterface *>(objects.at(index))->interface();
+		QString interface = qobject_cast<NPluginElementInterface *>(objects.at(index))->interface();
 		if (interface != NWaveformBuilderInterface::interface()) {
 			QMessageBox::warning(NULL, QObject::tr("Plugin Interface Mismatch"),
 				_identifiers.at(index).section('/', 2, 2) + " " +
@@ -178,7 +178,7 @@ void NPluginLoader::_loadPlugins()
 		}
 
 		_waveform = qobject_cast<NWaveformBuilderInterface *>(objects.at(index));
-		qobject_cast<NPluginInterface *>(objects.at(index))->init();
+		qobject_cast<NPluginElementInterface *>(objects.at(index))->init();
 		usedFlags[index] = TRUE;
 		NSettings::instance()->setValue("Waveform", _identifiers.at(index).section('/', 2));
 	}

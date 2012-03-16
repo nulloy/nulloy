@@ -16,16 +16,16 @@
 #ifndef N_PLAYBACK_ENGINE_GSTREAMER_H
 #define N_PLAYBACK_ENGINE_GSTREAMER_H
 
-#include "pluginInterface.h"
+#include "pluginElementInterface.h"
 #include "playbackEngineInterface.h"
 #include <QObject>
 #include <QTimer>
 #include <gst/gst.h>
 
-class NPlaybackEngineGStreamer : public NPlaybackEngineInterface, public NPluginInterface
+class NPlaybackEngineGStreamer : public NPlaybackEngineInterface, public NPluginElementInterface
 {
 	Q_OBJECT
-	Q_INTERFACES(NPlaybackEngineInterface NPluginInterface)
+	Q_INTERFACES(NPlaybackEngineInterface NPluginElementInterface)
 
 private:
 	GstElement *m_playbin;

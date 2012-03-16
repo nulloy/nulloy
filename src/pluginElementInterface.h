@@ -13,24 +13,24 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_INTERFACE_H
-#define N_PLUGIN_INTERFACE_H
+#ifndef N_PLUGIN_ELEMENT_INTERFACE_H
+#define N_PLUGIN_ELEMENT_INTERFACE_H
 
 #include <QtCore>
 
-class NPluginInterface
+class NPluginElementInterface
 {
 protected:
 	bool m_init;
 
 public:
-	NPluginInterface() { m_init = FALSE; }
-	virtual ~NPluginInterface() {}
+	NPluginElementInterface() { m_init = FALSE; }
+	virtual ~NPluginElementInterface() {}
 	virtual QString identifier() = 0;
 	virtual QString interface() = 0;
 	virtual void init() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/PluginInterface/0.1")
+Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/PluginElementInterface/0.1")
 
 #endif
