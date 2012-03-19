@@ -13,34 +13,23 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_ELEMENT_INTERFACE_H
-#define N_PLUGIN_ELEMENT_INTERFACE_H
+#ifndef N_PLUGIN_GSTREAMER_H
+#define N_PLUGIN_GSTREAMER_H
 
-#include <QtCore>
+#include "pluginInterface.h"
 
-enum PluginType {
-	Other = 0x0,
-	PlaybackEngine = 0x1,
-	WaveformBuilder = 0x2,
-	TagReader = 0x3
-};
-Q_DECLARE_FLAGS(PluginFlags, PluginType)
-Q_DECLARE_OPERATORS_FOR_FLAGS(PluginFlags)
-
-class NPluginElementInterface
+class NPluginGstreamer : public QObject, public NPluginInterface
 {
-protected:
-	bool m_init;
+	Q_OBJECT
+	Q_INTERFACES(NPluginInterface)
+
+private:
+	QObjectList m_elements;
 
 public:
-	NPluginElementInterface() { m_init = FALSE; }
-	virtual ~NPluginElementInterface() {}
-	virtual QString identifier() = 0;
-	virtual QString interface() = 0;
-	virtual PluginType type() { return Other; }
-	virtual void init() = 0;
+	NPluginGstreamer(QObject *parent = NULL);
+	~NPluginGstreamer() {}
+	QObjectList elements();
 };
-
-Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/PluginElementInterface/0.1")
 
 #endif

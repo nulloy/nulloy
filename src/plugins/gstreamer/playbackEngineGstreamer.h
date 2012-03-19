@@ -43,6 +43,7 @@ public:
 	void init();
 	QString identifier() { return "Nulloy/Playback/GStreamer/0.3.2"; }
 	QString interface() { return NPlaybackEngineInterface::interface(); }
+	PluginType type() { return PlaybackEngine; }
 
 	Q_INVOKABLE bool hasMedia();
 	Q_INVOKABLE QString currentMedia();

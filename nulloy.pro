@@ -13,9 +13,8 @@ unix:isEmpty(N_CONFIG_SUCCESS) {
 
 # qmake -config gstreamer
 gstreamer {
-	gstreamer_playback.subdir = src/plugins/playbackEngineGstreamer
-	gstreamer_waveform.subdir = src/plugins/waveformBuilderGstreamer
-	SUBDIRS += gstreamer_playback gstreamer_waveform
+	gstreamer.file = src/plugins/gstreamer/pluginGstreamer.pro
+	SUBDIRS += gstreamer
 }
 
 # qmake -config phonon

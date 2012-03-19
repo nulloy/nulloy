@@ -238,8 +238,4 @@ void NWaveformBuilderGstreamer::update()
 }
 #endif
 
-#if !defined _N_GSTREAMER_PLUGINS_BUILTIN_ && !defined _N_NO_PLUGINS_
-Q_EXPORT_PLUGIN2(waveform_gstreamer, NWaveformBuilderGstreamer)
-#endif
-
 /* vim: set ts=4 sw=4: */

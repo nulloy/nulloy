@@ -13,34 +13,19 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_ELEMENT_INTERFACE_H
-#define N_PLUGIN_ELEMENT_INTERFACE_H
+#ifndef N_PLUGIN_INTERFACE_H
+#define N_PLUGIN_INTERFACE_H
 
 #include <QtCore>
 
-enum PluginType {
-	Other = 0x0,
-	PlaybackEngine = 0x1,
-	WaveformBuilder = 0x2,
-	TagReader = 0x3
-};
-Q_DECLARE_FLAGS(PluginFlags, PluginType)
-Q_DECLARE_OPERATORS_FOR_FLAGS(PluginFlags)
-
-class NPluginElementInterface
+class NPluginInterface
 {
-protected:
-	bool m_init;
-
 public:
-	NPluginElementInterface() { m_init = FALSE; }
-	virtual ~NPluginElementInterface() {}
-	virtual QString identifier() = 0;
-	virtual QString interface() = 0;
-	virtual PluginType type() { return Other; }
-	virtual void init() = 0;
+	NPluginInterface() {}
+	virtual ~NPluginInterface() {}
+	virtual QObjectList elements() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/PluginElementInterface/0.1")
+Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/NPluginInterface/0.1")
 
 #endif
