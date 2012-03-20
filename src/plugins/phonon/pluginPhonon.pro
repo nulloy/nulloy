@@ -1,7 +1,7 @@
 unix:TARGET = plugin_phonon
 win32:TARGET = PluginPhonon
 
-include(../common.pri)
+include(../plugin.pri)
 
 QT += phonon
 

@@ -1,7 +1,7 @@
 unix:TARGET = plugin_gstreamer
 win32:TARGET = PluginGStreamer
 
-include(../common.pri)
+include(../plugin.pri)
 include(../gstreamer.pri)
 
 INCLUDEPATH += ..
