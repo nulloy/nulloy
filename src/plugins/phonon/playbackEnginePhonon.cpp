@@ -19,7 +19,8 @@
 static NPlaybackEngineInterface::State fromPhononState(Phonon::State state)
 {
 	switch (state) {
-		case Phonon::PlayingState || Phonon::BufferingState:
+		case Phonon::PlayingState:
+		case Phonon::BufferingState:
 			return NPlaybackEngineInterface::Playing;
 		case Phonon::PausedState:
 			return NPlaybackEngineInterface::Paused;
@@ -168,7 +169,5 @@ int NPlaybackEnginePhonon::state()
 {
 	return fromPhononState(m_mediaObject->state());
 }
-
-Q_EXPORT_PLUGIN2(playback_phonon, NPlaybackEnginePhonon)
 
 /* vim: set ts=4 sw=4: */

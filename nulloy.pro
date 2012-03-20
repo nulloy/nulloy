@@ -19,9 +19,8 @@ gstreamer {
 
 # qmake -config phonon
 phonon {
-	phonon_playback.subdir = src/plugins/playbackEnginePhonon
-	phonon_waveform.subdir = src/plugins/waveformBuilderPhonon
-	SUBDIRS += phonon_playback phonon_waveform
+	phonon.file = src/plugins/phonon/pluginPhonon.pro
+	SUBDIRS += phonon
 }
 
 # qmake -config vlc

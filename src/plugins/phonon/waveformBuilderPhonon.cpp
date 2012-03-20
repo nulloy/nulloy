@@ -120,6 +120,4 @@ qreal NWaveformBuilderPhonon::position()
 	return (qreal)m_mediaObject->currentTime() / m_mediaObject->totalTime();
 }
 
-Q_EXPORT_PLUGIN2(waveform_phonon, NWaveformBuilderPhonon)
-
 /* vim: set ts=4 sw=4: */

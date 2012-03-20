@@ -1,5 +1,5 @@
-unix:TARGET = waveform_phonon
-win32:TARGET = WaveformPhonon
+unix:TARGET = plugin_phonon
+win32:TARGET = PluginPhonon
 
 include(../common.pri)
 
@@ -9,3 +9,4 @@ INCLUDEPATH += ..
 
 HEADERS += *.h
 SOURCES += *.cpp ../abstractWaveformBuilder.cpp ../../waveformPeaks.cpp
+

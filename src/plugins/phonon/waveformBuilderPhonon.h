@@ -47,6 +47,7 @@ public:
 	void init();
 	QString identifier() { return "Nulloy/Waveform/Phonon/0.1.1"; }
 	QString interface() { return NWaveformBuilderInterface::interface(); }
+	PluginType type() { return WaveformBuilder; }
 
 	void start(const QString &file);
 	void stop();
