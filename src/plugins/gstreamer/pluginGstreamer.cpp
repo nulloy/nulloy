@@ -19,8 +19,14 @@
 
 NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
 {
-	m_elements << new NPlaybackEngineGStreamer(this)
-				<< new NWaveformBuilderGstreamer(this);
+	m_elements << new NPlaybackEngineGStreamer()
+				<< new NWaveformBuilderGstreamer();
+}
+
+NPluginGstreamer::~NPluginGstreamer()
+{
+	foreach (QObject *obj, m_elements)
+		delete obj;
 }
 
 QObjectList NPluginGstreamer::elements()

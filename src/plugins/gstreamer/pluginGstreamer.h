@@ -28,7 +28,7 @@ private:
 
 public:
 	NPluginGstreamer(QObject *parent = NULL);
-	~NPluginGstreamer() {}
+	~NPluginGstreamer();
 	QObjectList elements();
 };
 
