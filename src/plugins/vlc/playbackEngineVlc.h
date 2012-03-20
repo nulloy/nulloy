@@ -35,7 +35,7 @@ private:
 	QTimer *m_timer;
 	qreal m_oldVolume;
 	qreal m_oldPosition;
-	bool m_oldPlayState;
+	State m_oldState;
 	QString m_currentMedia;
 
 public:
@@ -44,9 +44,11 @@ public:
 	void init();
 	QString identifier() { return "Nulloy/Playback/VLC/0.1.1"; }
 	QString interface() { return NPlaybackEngineInterface::interface(); }
+	PluginType type() { return PlaybackEngine; }
 
 	Q_INVOKABLE bool hasMedia();
 	Q_INVOKABLE QString currentMedia();
+	Q_INVOKABLE int state() { return m_oldState; }
 
 	Q_INVOKABLE qreal volume();
 	Q_INVOKABLE qreal position();
@@ -72,7 +74,7 @@ signals:
 	void mediaChanged(const QString &file);
 	void finished();
 	void failed();
-	void playStateChanged(bool);
+	void stateChanged(int state);
 };
 
 #endif

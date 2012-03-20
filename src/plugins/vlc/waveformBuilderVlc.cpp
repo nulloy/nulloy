@@ -179,6 +179,4 @@ qreal NWaveformBuilderVlc::position()
 	return libvlc_media_player_get_position(m_mediaPlayer);
 }
 
-Q_EXPORT_PLUGIN2(waveform_vlc, NWaveformBuilderVlc)
-
 /* vim: set ts=4 sw=4: */

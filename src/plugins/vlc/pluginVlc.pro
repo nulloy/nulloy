@@ -1,5 +1,5 @@
-unix:TARGET = waveform_vlc
-win32:TARGET = WaveformVLC
+unix:TARGET = plugin_vlc
+win32:TARGET = PluginVLC
 
 include(../common.pri)
 
@@ -10,3 +10,4 @@ INCLUDEPATH += ..
 
 HEADERS += *.h
 SOURCES += *.cpp ../abstractWaveformBuilder.cpp ../../waveformPeaks.cpp
+

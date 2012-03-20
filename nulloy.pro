@@ -26,9 +26,8 @@ phonon {
 
 # qmake -config vlc
 vlc {
-	vlc_playback.subdir = src/plugins/playbackEngineVlc
-	vlc_waveform.subdir = src/plugins/waveformBuilderVlc
-	SUBDIRS += vlc_playback vlc_waveform
+	vlc.file = src/plugins/vlc/pluginVlc.pro
+	SUBDIRS += vlc
 }
 
 # qmake -config plugins-all

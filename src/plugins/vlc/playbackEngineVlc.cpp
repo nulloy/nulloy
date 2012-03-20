@@ -26,6 +26,20 @@ static void _eventHandler(const libvlc_event_t *event, void *userData)
 	}
 }
 
+static NPlaybackEngineInterface::State fromVlcState(libvlc_state_t state)
+{
+	switch (state) {
+		case libvlc_Paused:
+			return NPlaybackEngineInterface::Paused;
+		case libvlc_Playing:
+		case libvlc_Opening:
+		case libvlc_Buffering:
+			return NPlaybackEngineInterface::Playing;
+		default:
+			return NPlaybackEngineInterface::Stopped;
+	}
+}
+
 void NPlaybackEngineVlc::init()
 {
 	int argc;
@@ -47,7 +61,7 @@ void NPlaybackEngineVlc::init()
 
 	m_oldVolume = -1;
 	m_oldPosition = -1;
-	m_oldPlayState = FALSE;
+	m_oldState = Stopped;
 
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(checkStatus()));
@@ -172,10 +186,11 @@ void NPlaybackEngineVlc::checkStatus()
 		emit volumeChanged(vol);
 	}
 
-	bool playState = libvlc_media_player_is_playing(m_mediaPlayer);
-	if (m_oldPlayState != playState) {
-		emit playStateChanged(playState);
-		m_oldPlayState = playState;
+	libvlc_state_t vlcState = libvlc_media_player_get_state(m_mediaPlayer);
+	State state = fromVlcState(vlcState);
+	if (m_oldState != state) {
+		emit stateChanged(state);
+		m_oldState = state;
 	}
 }
 
@@ -183,8 +198,5 @@ void NPlaybackEngineVlc::_emitFinished()
 {
 	emit finished();
 }
-
-Q_EXPORT_PLUGIN2(playback_vlc, NPlaybackEngineVlc)
-
 
 /* vim: set ts=4 sw=4: */
