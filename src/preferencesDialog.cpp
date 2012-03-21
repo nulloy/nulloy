@@ -159,12 +159,16 @@ void NPreferencesDialog::loadSettings()
 			ui.playbackComboBox->addItem(id.replace('/', ' '), id);
 		if (str.split('/').at(1) == "Waveform")
 			ui.waveformComboBox->addItem(id.replace('/', ' '), id);
+		if (str.split('/').at(1) == "TagReader")
+			ui.tagReaderComboBox->addItem(id.replace('/', ' '), id);
 	}
 
 	if (ui.playbackComboBox->count() == 1)
 		ui.playbackComboBox->setEnabled(FALSE);
 	if (ui.waveformComboBox->count() == 1)
 		ui.waveformComboBox->setEnabled(FALSE);
+	if (ui.tagReaderComboBox->count() == 1)
+		ui.tagReaderComboBox->setEnabled(FALSE);
 
 	index = ui.playbackComboBox->findData(NSettings::instance()->value("Playback"));
 	if (index != -1)
@@ -172,6 +176,9 @@ void NPreferencesDialog::loadSettings()
 	index = ui.waveformComboBox->findData(NSettings::instance()->value("Waveform"));
 	if (index != -1)
 		ui.waveformComboBox->setCurrentIndex(index);
+	index = ui.tagReaderComboBox->findData(NSettings::instance()->value("TagReader"));
+	if (index != -1)
+		ui.tagReaderComboBox->setCurrentIndex(index);
 #endif
 
 #ifndef _N_NO_SKINS_
@@ -215,9 +222,13 @@ void NPreferencesDialog::saveSettings()
 	QVariant waveformVariant = ui.waveformComboBox->itemData(ui.waveformComboBox->currentIndex());
 	if (NSettings::instance()->value("Waveform").isValid() && waveformVariant != NSettings::instance()->value("Waveform"))
 		showPluginMessage = TRUE;
+	QVariant tagReaderVariant = ui.tagReaderComboBox->itemData(ui.tagReaderComboBox->currentIndex());
+	if (NSettings::instance()->value("TagReader").isValid() && tagReaderVariant != NSettings::instance()->value("TagReader"))
+		showPluginMessage = TRUE;
 
 	NSettings::instance()->setValue("Playback", playbackVariant);
 	NSettings::instance()->setValue("Waveform", waveformVariant);
+	NSettings::instance()->setValue("TagReader", tagReaderVariant);
 #endif
 
 #ifndef _N_NO_SKINS_

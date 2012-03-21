@@ -13,55 +13,42 @@
 **
 *********************************************************************/
 
-#include "tagReader.h"
-
-#include <taglib/tag.h>
-#include <taglib/fileref.h>
+#include "tagReaderTaglib.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>
 
-class NTagReaderPrivate
+void NTagReaderTaglib::init()
 {
-public:
-	NTagReaderPrivate() {}
-	~NTagReaderPrivate() {}
-
-	QString m_path;
-	TagLib::FileRef *m_tagRef;
-};
-
-NTagReader::NTagReader(const QString &file) : d_ptr(new NTagReaderPrivate())
-{
-	Q_D(NTagReader);
-	d->m_path = file;
-	d->m_tagRef = new TagLib::FileRef(file.toUtf8().data());
+	m_init = TRUE;
+	m_tagRef = NULL;
 }
 
-NTagReader::~NTagReader()
+void NTagReaderTaglib::setSource(const QString &file)
 {
-	Q_D(NTagReader);
-	delete d->m_tagRef;
+	m_path = file;
+	m_tagRef = new TagLib::FileRef(file.toUtf8().data());
 }
 
-bool NTagReader::isValid()
+NTagReaderTaglib::~NTagReaderTaglib()
 {
-	Q_D(NTagReader);
-	return d->m_tagRef->file() && d->m_tagRef->file()->isValid();
+	if (!m_init)
+		return;
+
+	if (m_tagRef)
+		delete m_tagRef;
 }
 
-QString NTagReader::toString(const QString &format)
+QString NTagReaderTaglib::toString(const QString &format)
 {
-	Q_D(NTagReader);
-
 	if (format.isEmpty())
 		return "";
 
-	if (!d->m_tagRef->file()->isValid())
-		return "NTagReader::InvalidFile";
+	if (!m_tagRef->file()->isValid())
+		return "NTagReaderTaglib::InvalidFile";
 
-	TagLib::Tag *tag = d->m_tagRef->tag();
-	TagLib::AudioProperties *prop = d->m_tagRef->audioProperties();
+	TagLib::Tag *tag = m_tagRef->tag();
+	TagLib::AudioProperties *prop = m_tagRef->audioProperties();
 
 	int seconds_total = prop->length();
 
@@ -78,7 +65,7 @@ QString NTagReader::toString(const QString &format)
 			} else if (ch == 't') {
 				QString str = TStringToQString(tag->title());
 				if (str.isEmpty())
-					str = QFileInfo(d->m_path).baseName();
+					str = QFileInfo(m_path).baseName();
 				res += str;
 			} else if (ch == 'A') {
 				QString str = TStringToQString(tag->album());
@@ -143,11 +130,11 @@ QString NTagReader::toString(const QString &format)
 					str = "<Unknown channels number>";
 				res += str;
 			} else if (ch == 'f') {
-				res += QFileInfo(d->m_path).baseName();
+				res += QFileInfo(m_path).baseName();
 			} else if (ch == 'F') {
-				res += QFileInfo(d->m_path).fileName();
+				res += QFileInfo(m_path).fileName();
 			} else if (ch == 'p') {
-				res += QFileInfo(d->m_path).absoluteFilePath();
+				res += QFileInfo(m_path).absoluteFilePath();
 			} else if (ch == 'v') {
 				res += QCoreApplication::applicationVersion();
 			} else {
@@ -159,6 +146,11 @@ QString NTagReader::toString(const QString &format)
 	}
 
 	return res;
+}
+
+bool NTagReaderTaglib::isValid()
+{
+	return m_tagRef->file() && m_tagRef->file()->isValid();
 }
 
 /* vim: set ts=4 sw=4: */

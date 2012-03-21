@@ -18,7 +18,6 @@
 #include "settings.h"
 #include "core.h"
 #include "trash.h"
-#include "tagReader.h"
 
 #include <QtGui>
 
@@ -49,6 +48,11 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	m_contextMenu = new QMenu(this);
 	m_contextMenu->addAction(removeAction);
 	m_contextMenu->addAction(trashAction);
+}
+
+void NPlaylistWidget::setTagReader(NTagReaderInterface *tagReader)
+{
+	m_tagReader = tagReader;
 }
 
 void NPlaylistWidget::contextMenuEvent(QContextMenuEvent *event)
@@ -118,10 +122,10 @@ void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 		return;
 	}
 
-	NTagReader tagReader(file);
-	if (tagReader.isValid()) {
-		item->setText(tagReader.toString(NSettings::instance()->value("GUI/PlaylistTitleFormat").toString()));
-		item->setData(NPlaylistItem::DurationRole, tagReader.toString("%D").toInt());
+	m_tagReader->setSource(file);
+	if (m_tagReader->isValid()) {
+		item->setText(m_tagReader->toString(NSettings::instance()->value("GUI/PlaylistTitleFormat").toString()));
+		item->setData(NPlaylistItem::DurationRole, m_tagReader->toString("%D").toInt());
 	} else {
 		item->setText(fileName);
 	}

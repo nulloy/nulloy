@@ -13,24 +13,37 @@
 **
 *********************************************************************/
 
-#ifndef N_TAG_READER_H
-#define N_TAG_READER_H
+#ifndef N_TAG_READER_GSTREAMER_H
+#define N_TAG_READER_GSTREAMER_H
 
-#include <QString>
+#include "pluginElementInterface.h"
+#include "tagReaderInterface.h"
+#include <gst/gst.h>
 
-class NTagReaderPrivate;
-
-class NTagReader
+class NTagReaderGstreamer : public NTagReaderInterface, public NPluginElementInterface
 {
-public:
-	NTagReader(const QString &file);
-	~NTagReader();
-	QString toString(const QString &format);
-	bool isValid();
+	Q_OBJECT
+	Q_INTERFACES(NTagReaderInterface NPluginElementInterface)
 
 private:
-	NTagReaderPrivate *const d_ptr;
-	Q_DECLARE_PRIVATE(NTagReader);
+	QString m_path;
+	GstElement *m_playbin;
+	GstTagList *m_taglist;
+	gint64 m_nanosecs;
+	bool m_isValid;
+
+public:
+	NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}
+	~NTagReaderGstreamer();
+
+	void init();
+	QString identifier() { return "Nulloy/TagReader/GStreamer/0.1"; }
+	QString interface() { return NTagReaderInterface::interface(); }
+	PluginType type() { return TagReader; }
+
+	void setSource(const QString &file);
+	QString toString(const QString &format);
+	bool isValid();
 };
 
 #endif

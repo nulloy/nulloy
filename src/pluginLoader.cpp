@@ -17,10 +17,9 @@
 
 #include "core.h"
 #include "settings.h"
+
 #include "pluginInterface.h"
 #include "pluginElementInterface.h"
-#include "waveformBuilderInterface.h"
-#include "playbackEngineInterface.h"
 
 #include <QObject>
 #include <QMessageBox>
@@ -37,9 +36,11 @@ namespace NPluginLoader
 	QStringList _identifiers;
 	NPlaybackEngineInterface *_playback = NULL;
 	NWaveformBuilderInterface *_waveform = NULL;
+	NTagReaderInterface *_tagReader = NULL;
 
 	QString _playbackPrefer = "GStreamer";
 	QString _wavefowmPrefer = "GStreamer";
+	QString _tagreaderPrefer = "GStreamer";
 
 	void _loadPlugins();
 	QList<QPluginLoader *> _loaders;
@@ -186,6 +187,30 @@ void NPluginLoader::_loadPlugins()
 		NSettings::instance()->setValue("Waveform", _identifiers.at(index).section('/', 2));
 	}
 
+	QString tagreaderStr = NSettings::instance()->value("TagReader").toString();
+	index = _identifiers.indexOf("Nulloy/TagReader/" + tagreaderStr);
+	if (index == -1)
+		index = _identifiers.indexOf(QRegExp("Nulloy/TagReader/" + _tagreaderPrefer + ".*"));
+	if (index == -1)
+		index = _identifiers.indexOf(QRegExp("Nulloy/TagReader.*"));
+	if (index != -1) {
+		QString interface = qobject_cast<NPluginElementInterface *>(objects.at(index))->interface();
+		if (interface != NTagReaderInterface::interface()) {
+			QMessageBox::warning(NULL, QObject::tr("Plugin Interface Mismatch"),
+				_identifiers.at(index).section('/', 2, 2) + " " +
+				_identifiers.at(index).section('/', 1, 1) + " plugin has a different version of " +
+				_identifiers.at(index).section('/', 1, 1) + " interface.\n" +
+				"Internal version: " + NTagReaderInterface::interface().section('/', 2, 2) + "\n" +
+				"Plugin version: " + _identifiers.at(index).section('/', 3, 3),
+				QMessageBox::Close);
+		}
+
+		_tagReader = qobject_cast<NTagReaderInterface *>(objects.at(index));
+		qobject_cast<NPluginElementInterface *>(objects.at(index))->init();
+		usedFlags[index] = TRUE;
+		NSettings::instance()->setValue("TagReader", _identifiers.at(index).section('/', 2));
+	}
+
 	for (int i = 0; i < _loaders.size(); ++i) {
 		if (usedFlags.at(i) == FALSE) {
 			_loaders.at(i)->unload();
@@ -200,6 +225,8 @@ void NPluginLoader::_loadPlugins()
 			message << QObject::tr("No Waveform plugin found.");
 		if (!_playback)
 			message << QObject::tr("No Playback plugin found.");
+		if (!_tagReader)
+			message << QObject::tr("No TagReader plugin found.");
 		QMessageBox::critical(NULL, QObject::tr("Plugin loading error"), message.join("\n"), QMessageBox::Close);
 		exit(1);
 	}
@@ -215,6 +242,12 @@ NWaveformBuilderInterface* NPluginLoader::waveformPlugin()
 {
 	_loadPlugins();
 	return _waveform;
+}
+
+NTagReaderInterface* NPluginLoader::tagReaderPlugin()
+{
+	_loadPlugins();
+	return _tagReader;
 }
 
 QStringList NPluginLoader::pluginIdentifiers()

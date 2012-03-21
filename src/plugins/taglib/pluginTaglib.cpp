@@ -13,25 +13,23 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_LOADER_H
-#define N_PLUGIN_LOADER_H
+#include "pluginTaglib.h"
+#include "tagReaderTaglib.h"
 
-#include "waveformBuilderInterface.h"
-#include "playbackEngineInterface.h"
-#include "tagReaderInterface.h"
-
-#include <QStringList>
-
-namespace NPluginLoader
+NPluginTaglib::NPluginTaglib(QObject *parent) : QObject(parent)
 {
-	NPlaybackEngineInterface* playbackPlugin();
-	NWaveformBuilderInterface* waveformPlugin();
-	NTagReaderInterface* tagReaderPlugin();
-
-	QStringList pluginIdentifiers();
-	void deinit();
+	m_elements << new NTagReaderTaglib();
 }
 
-#endif
+NPluginTaglib::~NPluginTaglib()
+{
+	foreach (QObject *obj, m_elements)
+		delete obj;
+}
 
-/* vim: set ts=4 sw=4: */
+QObjectList NPluginTaglib::elements()
+{
+	return m_elements;
+}
+
+Q_EXPORT_PLUGIN2(plugin_taglib, NPluginTaglib)

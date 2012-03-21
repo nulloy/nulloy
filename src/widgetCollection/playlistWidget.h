@@ -18,6 +18,8 @@
 
 #include "playlistItem.h"
 #include "m3uPlaylist.h"
+#include "tagReaderInterface.h"
+
 #include <QListWidget>
 
 class NPlaylistWidget : public QListWidget
@@ -27,6 +29,7 @@ class NPlaylistWidget : public QListWidget
 private:
 	NPlaylistItem *m_currentItem;
 	QMenu *m_contextMenu;
+	NTagReaderInterface *m_tagReader;
 
 	void contextMenuEvent(QContextMenuEvent *event);
 	void setCurrentItem(NPlaylistItem *item);
@@ -49,6 +52,7 @@ public:
 	QStringList mediaList();
 	int currentRow();
 	QString currentTitle();
+	void setTagReader(NTagReaderInterface *tagReader);
 
 public slots:
 	void activateFirst();

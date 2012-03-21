@@ -13,35 +13,21 @@
 **
 *********************************************************************/
 
-#include "tagReader.h"
+#include "tagReaderGstreamer.h"
 
 #include "core.h"
-#include <gst/gst.h>
 
 #include <QCoreApplication>
 #include <QFileInfo>
 
-#include <QDebug>
-
-class NTagReaderPrivate
+void NTagReaderGstreamer::init()
 {
-public:
-	NTagReaderPrivate() {}
-	~NTagReaderPrivate() {}
+	if (m_init)
+		return;
 
-	QString m_path;
-	GstElement *m_playbin;
-	GstTagList *m_taglist;
-	gint64 m_nanosecs;
-	bool m_isValid;
-};
-
-NTagReader::NTagReader(const QString &file) : d_ptr(new NTagReaderPrivate())
-{
-	Q_D(NTagReader);
-
-	d->m_path = file;
-	d->m_isValid = FALSE;
+	m_isValid = FALSE;
+	m_taglist = NULL;
+	m_playbin = NULL;
 
 #ifdef Q_WS_WIN
 	_putenv("GST_PLUGIN_PATH=Plugins\\GStreamer");
@@ -62,22 +48,32 @@ NTagReader::NTagReader(const QString &file) : d_ptr(new NTagReaderPrivate())
 	GError *init_err;
 	NCore::cArgs(&argc, &argv);
 	if (!gst_init_check(&argc, (char ***)&argv, &init_err)) {
-		g_error("NTagReader::error: %s", init_err->message);
+		g_error("NTagReaderGstreamer :: error: %s", init_err->message);
 		return;
 	}
 
-	d->m_playbin = gst_element_factory_make("playbin", NULL);
+	m_init = TRUE;
+}
+
+void NTagReaderGstreamer::setSource(const QString &file)
+{
+	if (m_taglist) {
+		gst_tag_list_free(m_taglist);
+		m_taglist = NULL;
+	}
+
+	m_path = file;
+
+	m_playbin = gst_element_factory_make("playbin", NULL);
 
 	gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL, NULL);
 
-	g_object_set(d->m_playbin, "uri", uri, NULL);
-	gst_element_set_state(d->m_playbin, GST_STATE_PAUSED);
-
-	d->m_taglist = NULL;
+	g_object_set(m_playbin, "uri", uri, NULL);
+	gst_element_set_state(m_playbin, GST_STATE_PAUSED);
 
 	GstMessage *msg;
 	while (TRUE) {
-		msg = gst_bus_timed_pop_filtered(GST_ELEMENT_BUS(d->m_playbin), GST_CLOCK_TIME_NONE,
+		msg = gst_bus_timed_pop_filtered(GST_ELEMENT_BUS(m_playbin), GST_CLOCK_TIME_NONE,
 										(GstMessageType)(GST_MESSAGE_ASYNC_DONE | GST_MESSAGE_TAG | GST_MESSAGE_ERROR));
 
 		if (GST_MESSAGE_TYPE(msg) != GST_MESSAGE_TAG)
@@ -87,7 +83,7 @@ NTagReader::NTagReader(const QString &file) : d_ptr(new NTagReaderPrivate())
 		gst_message_parse_tag(msg, &tags);
 
 		if (gst_is_tag_list(tags)) {
-			d->m_taglist = gst_tag_list_merge(d->m_taglist, tags, GST_TAG_MERGE_KEEP);
+			m_taglist = gst_tag_list_merge(m_taglist, tags, GST_TAG_MERGE_KEEP);
 			gst_tag_list_free(tags);
 		}
 		gst_message_unref(msg);
@@ -99,40 +95,41 @@ NTagReader::NTagReader(const QString &file) : d_ptr(new NTagReaderPrivate())
 
 		gst_message_parse_error(msg, &err, &debug);
 		g_free(debug);
-		qWarning() << "NTagReader :: parse error ::" << err->message;
+		qWarning() << "NTagReaderGstreamer :: parse error ::" << err->message;
 	}
 
-	if (gst_is_tag_list(d->m_taglist))
-		d->m_isValid = TRUE;
+	if (gst_is_tag_list(m_taglist))
+		m_isValid = TRUE;
 
-	if (d->m_isValid) {
+	if (m_isValid) {
 		GstFormat format = GST_FORMAT_TIME;
-		d->m_nanosecs = 0;
-		gst_element_query_duration(d->m_playbin, &format, &d->m_nanosecs);
+		m_nanosecs = 0;
+		gst_element_query_duration(m_playbin, &format, &m_nanosecs);
 	}
 
 	gst_message_unref(msg);
-	gst_element_set_state(d->m_playbin, GST_STATE_NULL);
-	gst_object_unref(d->m_playbin);
+	gst_element_set_state(m_playbin, GST_STATE_NULL);
+	gst_object_unref(m_playbin);
 }
 
-NTagReader::~NTagReader()
+NTagReaderGstreamer::~NTagReaderGstreamer()
 {
-	Q_D(NTagReader);
-	gst_tag_list_free(d->m_taglist);
+	if (!m_init)
+		return;
+
+	if (m_taglist)
+		gst_tag_list_free(m_taglist);
 }
 
-QString NTagReader::toString(const QString &format)
+QString NTagReaderGstreamer::toString(const QString &format)
 {
-	Q_D(NTagReader);
-
 	if (format.isEmpty())
 		return "";
 
-	if (!d->m_isValid)
-		return "NTagReader::InvalidFile";
+	if (!m_isValid)
+		return "NTagReaderGstreamer::InvalidFile";
 
-	int seconds_total = GST_TIME_AS_SECONDS(d->m_nanosecs);
+	int seconds_total = GST_TIME_AS_SECONDS(m_nanosecs);
 
 	QString res;
 	for (int i = 0; i < format.size(); ++i) {
@@ -141,35 +138,35 @@ QString NTagReader::toString(const QString &format)
 			QChar ch = format.at(i);
 			if (ch == 'a') {
 				gchar *gstr;
-				bool exists = gst_tag_list_get_string(d->m_taglist, "artist", &gstr);
+				bool exists = gst_tag_list_get_string(m_taglist, "artist", &gstr);
 				QString str(gstr);
 				if (str.isEmpty() || !exists)
 					str = "<Unknown artist>";
 				res += str;
 			} else if (ch == 't') {
 				gchar *gstr;
-				bool exists = gst_tag_list_get_string(d->m_taglist, "title", &gstr);
+				bool exists = gst_tag_list_get_string(m_taglist, "title", &gstr);
 				QString str(gstr);
 				if (str.isEmpty() || !exists)
-					str = QFileInfo(d->m_path).baseName();
+					str = QFileInfo(m_path).baseName();
 				res += str;
 			} else if (ch == 'A') {
 				gchar *gstr;
-				bool exists = gst_tag_list_get_string(d->m_taglist, "album", &gstr);
+				bool exists = gst_tag_list_get_string(m_taglist, "album", &gstr);
 				QString str(gstr);
 				if (str.isEmpty() || !exists)
 					str = "<Unknown album>";
 				res += str;
 			} else if (ch == 'c') {
 				gchar *gstr;
-				bool exists = gst_tag_list_get_string(d->m_taglist, "comment", &gstr);
+				bool exists = gst_tag_list_get_string(m_taglist, "comment", &gstr);
 				QString str(gstr);
 				if (str.isEmpty() || !exists)
 					str = "<Empty comment>";
 				res += str;
 			} else if (ch == 'g') {
 				gchar *gstr;
-				bool exists = gst_tag_list_get_string(d->m_taglist, "genre", &gstr);
+				bool exists = gst_tag_list_get_string(m_taglist, "genre", &gstr);
 				QString str(gstr);
 				if (str.isEmpty() || !exists)
 					str = "<Unknown genre>";
@@ -177,7 +174,7 @@ QString NTagReader::toString(const QString &format)
 			} else if (ch == 'y') {
 				GDate *date = NULL;
 				QString str = "0";
-				bool exists = gst_tag_list_get_date(d->m_taglist, "date", &date);
+				bool exists = gst_tag_list_get_date(m_taglist, "date", &date);
 				if (exists) {
 					GDateYear year = g_date_get_year(date);
 					if (year != G_DATE_BAD_YEAR)
@@ -188,7 +185,7 @@ QString NTagReader::toString(const QString &format)
 				res += str;
 			} else if (ch == 'n') {
 				unsigned int track = 0;
-				bool exists = gst_tag_list_get_uint(d->m_taglist, "track-number", &track);
+				bool exists = gst_tag_list_get_uint(m_taglist, "track-number", &track);
 				if (!track || !exists)
 					res += "<Unknown track number>";
 				else
@@ -217,7 +214,7 @@ QString NTagReader::toString(const QString &format)
 				res += duration;
 			} else if (ch == 'B') {
 				unsigned int bitrate = 0;
-				bool exists = gst_tag_list_get_uint(d->m_taglist, "bitrate", &bitrate);
+				bool exists = gst_tag_list_get_uint(m_taglist, "bitrate", &bitrate);
 				if (!bitrate || !exists)
 					res += "<Unknown bitrate>";
 				else
@@ -227,11 +224,11 @@ QString NTagReader::toString(const QString &format)
 			} else if (ch == 'C') {
 				res += "<Usupported tag: channels number>";
 			} else if (ch == 'f') {
-				res += QFileInfo(d->m_path).baseName();
+				res += QFileInfo(m_path).baseName();
 			} else if (ch == 'F') {
-				res += QFileInfo(d->m_path).fileName();
+				res += QFileInfo(m_path).fileName();
 			} else if (ch == 'p') {
-				res += QFileInfo(d->m_path).absoluteFilePath();
+				res += QFileInfo(m_path).absoluteFilePath();
 			} else if (ch == 'v') {
 				res += QCoreApplication::applicationVersion();
 			} else {
@@ -245,10 +242,9 @@ QString NTagReader::toString(const QString &format)
 	return res;
 }
 
-bool NTagReader::isValid()
+bool NTagReaderGstreamer::isValid()
 {
-	Q_D(NTagReader);
-	return d->m_isValid;
+	return m_isValid;
 }
 
 

@@ -8,3 +8,6 @@ SUBDIRS += phonon
 
 vlc.file = vlc/pluginVlc.pro
 SUBDIRS += vlc
+
+taglib.file = taglib/pluginTaglib.pro
+SUBDIRS += taglib

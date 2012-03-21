@@ -16,11 +16,13 @@
 #include "pluginGstreamer.h"
 #include "playbackEngineGstreamer.h"
 #include "waveformBuilderGstreamer.h"
+#include "tagReaderGstreamer.h"
 
 NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
 {
 	m_elements << new NPlaybackEngineGStreamer()
-				<< new NWaveformBuilderGstreamer();
+				<< new NWaveformBuilderGstreamer()
+				<< new NTagReaderGstreamer();
 }
 
 NPluginGstreamer::~NPluginGstreamer()
@@ -37,3 +39,5 @@ QObjectList NPluginGstreamer::elements()
 #if !defined _N_GSTREAMER_PLUGINS_BUILTIN_ && !defined _N_NO_PLUGINS_
 Q_EXPORT_PLUGIN2(plugin_gstreamer, NPluginGstreamer)
 #endif
+
+/* vim: set ts=4 sw=4: */
