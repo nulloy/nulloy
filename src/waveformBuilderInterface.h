@@ -19,7 +19,7 @@
 #include <QtCore>
 #include "waveformPeaks.h"
 
-#define WAVEFORM_INTERFACE "Nulloy/WaveformBuilderInterface/0.2"
+#define WAVEFORM_INTERFACE "Nulloy/NWaveformBuilderInterface/0.2"
 
 class NWaveformBuilderInterface : public QThread
 {

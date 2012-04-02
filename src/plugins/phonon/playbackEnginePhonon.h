@@ -36,7 +36,7 @@ public:
 	NPlaybackEnginePhonon(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
 	~NPlaybackEnginePhonon();
 	void init();
-	QString identifier() { return "Nulloy/Playback/Phonon/0.1.2"; }
+	QString name() { return "Playback"; }
 	QString interface() { return NPlaybackEngineInterface::interface(); }
 	PluginType type() { return PlaybackEngine; }
 

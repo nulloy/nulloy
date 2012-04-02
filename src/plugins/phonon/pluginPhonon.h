@@ -30,6 +30,8 @@ public:
 	NPluginPhonon(QObject *parent = NULL);
 	~NPluginPhonon();
 	QObjectList elements();
+	QString name() { return "Phonon"; }
+	QString version() { return "0.1"; }
 };
 
 #endif

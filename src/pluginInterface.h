@@ -24,6 +24,8 @@ public:
 	NPluginInterface() {}
 	virtual ~NPluginInterface() {}
 	virtual QObjectList elements() = 0;
+	virtual QString name() = 0;
+	virtual QString version() = 0;
 };
 
 Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/NPluginInterface/0.1")

@@ -35,12 +35,12 @@ protected:
 public:
 	NPluginElementInterface() { m_init = FALSE; }
 	virtual ~NPluginElementInterface() {}
-	virtual QString identifier() = 0;
+	virtual QString name() = 0;
 	virtual QString interface() = 0;
 	virtual PluginType type() { return Other; }
 	virtual void init() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/PluginElementInterface/0.1")
+Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/NPluginElementInterface/0.1")
 
 #endif

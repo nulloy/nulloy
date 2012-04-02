@@ -30,6 +30,8 @@ public:
 	NPluginVlc(QObject *parent = NULL);
 	~NPluginVlc();
 	QObjectList elements();
+	QString name() { return "VLC"; }
+	QString version() { return "0.1"; }
 };
 
 #endif

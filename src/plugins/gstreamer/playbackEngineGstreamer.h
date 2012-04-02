@@ -41,7 +41,7 @@ public:
 	NPlaybackEngineGStreamer(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
 	~NPlaybackEngineGStreamer();
 	void init();
-	QString identifier() { return "Nulloy/Playback/GStreamer/0.3.2"; }
+	QString name() { return "Playback"; }
 	QString interface() { return NPlaybackEngineInterface::interface(); }
 	PluginType type() { return PlaybackEngine; }
 

@@ -37,7 +37,7 @@ public:
 	~NTagReaderGstreamer();
 
 	void init();
-	QString identifier() { return "Nulloy/TagReader/GStreamer/0.1"; }
+	QString name() { return "TagReader"; }
 	QString interface() { return NTagReaderInterface::interface(); }
 	PluginType type() { return TagReader; }
 

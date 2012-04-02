@@ -30,6 +30,8 @@ public:
 	NPluginGstreamer(QObject *parent = NULL);
 	~NPluginGstreamer();
 	QObjectList elements();
+	QString name() { return "GStreamer"; }
+	QString version() { return "0.1"; }
 };
 
 #endif

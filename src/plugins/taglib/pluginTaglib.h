@@ -30,6 +30,8 @@ public:
 	NPluginTaglib(QObject *parent = NULL);
 	~NPluginTaglib();
 	QObjectList elements();
+	QString name() { return "TagLib"; }
+	QString version() { return "0.1"; }
 };
 
 #endif

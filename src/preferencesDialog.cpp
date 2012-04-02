@@ -17,6 +17,7 @@
 
 #include "settings.h"
 #include "player.h"
+#include "pluginElementInterface.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -154,12 +155,12 @@ void NPreferencesDialog::loadSettings()
 #ifndef _N_NO_PLUGINS_
 	// plugins
 	foreach (QString str, NPluginLoader::pluginIdentifiers()) {
-		QString id = str.section('/', 2);
-		if (str.split('/').at(1) == "Playback")
+		QString id = str.section('/', 1, 2);
+		if (str.split('/').at(0) == QString::number(PlaybackEngine))
 			ui.playbackComboBox->addItem(id.replace('/', ' '), id);
-		if (str.split('/').at(1) == "Waveform")
+		if (str.split('/').at(0) == QString::number(WaveformBuilder))
 			ui.waveformComboBox->addItem(id.replace('/', ' '), id);
-		if (str.split('/').at(1) == "TagReader")
+		if (str.split('/').at(0) == QString::number(TagReader))
 			ui.tagReaderComboBox->addItem(id.replace('/', ' '), id);
 	}
 

@@ -50,7 +50,7 @@ public:
 	~NWaveformBuilderGstreamer();
 
 	void init();
-	QString identifier() { return "Nulloy/Waveform/GStreamer/0.3.2"; }
+	QString name() { return "Waveform"; }
 	QString interface() { return NWaveformBuilderInterface::interface(); }
 	PluginType type() { return WaveformBuilder; }
 

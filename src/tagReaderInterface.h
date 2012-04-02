@@ -19,7 +19,7 @@
 #include <QString>
 #include <QObject>
 
-#define TAGREADER_INTERFACE "Nulloy/TagReaderInterface/0.1"
+#define TAGREADER_INTERFACE "Nulloy/NTagReaderInterface/0.1"
 
 class NTagReaderInterface : public QObject
 {
