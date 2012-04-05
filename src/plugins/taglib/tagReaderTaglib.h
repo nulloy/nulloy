@@ -37,7 +37,6 @@ public:
 	~NTagReaderTaglib();
 
 	void init();
-	QString name() { return "TagReader"; }
 	QString interface() { return NTagReaderInterface::interface(); }
 	PluginType type() { return TagReader; }
 

@@ -35,7 +35,13 @@ protected:
 public:
 	NPluginElementInterface() { m_init = FALSE; }
 	virtual ~NPluginElementInterface() {}
-	virtual QString name() = 0;
+	virtual QString name()
+	{	QObject *obj = dynamic_cast<QObject *>(this);
+		if (obj)
+			return obj->metaObject()->className();
+		else
+			return "";
+	}
 	virtual QString interface() = 0;
 	virtual PluginType type() { return Other; }
 	virtual void init() = 0;

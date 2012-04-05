@@ -50,7 +50,6 @@ public:
 	~NWaveformBuilderGstreamer();
 
 	void init();
-	QString name() { return "Waveform"; }
 	QString interface() { return NWaveformBuilderInterface::interface(); }
 	PluginType type() { return WaveformBuilder; }
 

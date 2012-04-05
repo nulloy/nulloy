@@ -85,9 +85,9 @@ QObject* NPluginLoader::_findPlugin(PluginType type, QObjectList &objects, QMap<
 	if (index != -1) {
 		NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(objects.at(index));
 
-		QString full_id = _identifiers.at(index);
-		QString plug_name = full_id.section('/', 1, 1);
-		QString plug_ver = full_id.section('/', 2, 2);
+		QString identifier = _identifiers.at(index);
+		QString plug_name = identifier.section('/', 1, 1);
+		QString plug_ver = identifier.section('/', 2, 2);
 		QString el_interface_ver = el->interface().section('/', 2, 2);
 
 		QString base_interface_name = base_interface.section('/', 1, 1);
@@ -102,7 +102,7 @@ QObject* NPluginLoader::_findPlugin(PluginType type, QObjectList &objects, QMap<
 		}
 
 		el->init();
-		usedFlags[full_id] = TRUE;
+		usedFlags[identifier] = TRUE;
 
 		NSettings::instance()->setValue(type_str, plug_name + "/" + plug_ver);
 
@@ -182,10 +182,12 @@ void NPluginLoader::_loadPlugins()
 					objects << elements;
 					foreach (QObject *obj, elements) {
 						NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(obj);
-						QString full_id = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() + "/" + el->name();
-						_identifiers << full_id;
-						_loaders[full_id] = loader;
-						usedFlags[full_id] = FALSE;
+						QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
+										((el->type() == Other) ? "" : "/" + el->name());
+						qDebug() << identifier;
+						_identifiers << identifier;
+						_loaders[identifier] = loader;
+						usedFlags[identifier] = FALSE;
 					}
 				} else {
 					QMessageBox box(QMessageBox::Warning, QObject::tr("Plugin loading error"), QObject::tr("Failed to load plugin: ") +
