@@ -17,7 +17,6 @@
 
 #include "settings.h"
 #include "player.h"
-#include "pluginElementInterface.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -29,6 +28,7 @@
 
 #include <QMessageBox>
 #include <QPushButton>
+#include <QSpacerItem>
 
 #include <QDebug>
 
@@ -52,6 +52,28 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 
 #ifdef _N_NO_PLUGINS_
 	ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
+#else
+	int index;
+	QStringList identifiers = NPluginLoader::pluginIdentifiers();
+	QVBoxLayout *scrollLayout = new QVBoxLayout;
+	ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
+
+	QGroupBox *playbackBox = generatePluginsGroup(PlaybackEngine, identifiers, NSettings::instance()->value("Playback").toString());
+	if (playbackBox)
+		scrollLayout->addWidget(playbackBox);
+
+	QGroupBox *wavefowmBox = generatePluginsGroup(WaveformBuilder, identifiers, NSettings::instance()->value("Waveform").toString());
+	if (wavefowmBox)
+		scrollLayout->addWidget(wavefowmBox);
+
+	QGroupBox *tagReaderBox = generatePluginsGroup(TagReader, identifiers, NSettings::instance()->value("TagReader").toString());
+	if (tagReaderBox)
+		scrollLayout->addWidget(tagReaderBox);
+
+	if (playbackBox || wavefowmBox || tagReaderBox)
+		scrollLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
+	else
+		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 #endif
 
 #if QT_VERSION >= 0x040700
@@ -137,6 +159,55 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	dialog->show();
 }
 
+QGroupBox* NPreferencesDialog::generatePluginsGroup(PluginType type, const QStringList &identifiers, const QString &def)
+{
+	QString type_str;
+	if (type == PlaybackEngine)
+		type_str = "Playback";
+	else if (type == WaveformBuilder)
+		type_str = "Waveform";
+	else if (type == TagReader)
+		type_str = "TagReader";
+
+	QStringList groupedIds = identifiers.filter(QRegExp("^" + QString::number(type) + "/.*"));
+	if (groupedIds.count() > 1) {
+		QGroupBox *groupBox = new QGroupBox(type_str);
+		QGridLayout *groupLayout = new QGridLayout;
+		groupLayout->setContentsMargins(0, 5, 5, 0);
+		groupLayout->setSpacing(0);
+		groupBox->setLayout(groupLayout);
+
+		for (int i = 0; i < groupedIds.count(); ++i) {
+			QRadioButton *radioButton = new QRadioButton(groupedIds.at(i).section('/', 1, 2).replace('/', ' '));
+			if (groupedIds.at(i).contains(def))
+				radioButton->setChecked(TRUE);
+			m_pluginButtonsMap[groupedIds.at(i)] = radioButton;
+			groupLayout->addWidget(radioButton, i, 0);
+		}
+		return groupBox;
+	}
+
+	return NULL;
+}
+
+QString NPreferencesDialog::selectedPluginsGroup(PluginType type)
+{
+	QString str;
+
+	QStringList identifiers = m_pluginButtonsMap.keys();
+	QStringList groupedIds = identifiers.filter(QRegExp("^" + QString::number(type) + "/.*"));
+
+	for (int i = 0; i < groupedIds.count(); ++i) {
+		QRadioButton *radioButton = m_pluginButtonsMap[groupedIds.at(i)];
+		if (radioButton->isChecked()) {
+			str = radioButton->text();
+			break;
+		}
+	}
+
+	return str.replace(' ', '/');
+}
+
 void NPreferencesDialog::loadSettings()
 {
 	ui.versionLabel->setText("");
@@ -152,38 +223,7 @@ void NPreferencesDialog::loadSettings()
 
 	int index;
 
-#ifndef _N_NO_PLUGINS_
-	// plugins
-	foreach (QString str, NPluginLoader::pluginIdentifiers()) {
-		QString id = str.section('/', 1, 2);
-		if (str.split('/').at(0) == QString::number(PlaybackEngine))
-			ui.playbackComboBox->addItem(id.replace('/', ' '), id);
-		if (str.split('/').at(0) == QString::number(WaveformBuilder))
-			ui.waveformComboBox->addItem(id.replace('/', ' '), id);
-		if (str.split('/').at(0) == QString::number(TagReader))
-			ui.tagReaderComboBox->addItem(id.replace('/', ' '), id);
-	}
-
-	if (ui.playbackComboBox->count() == 1)
-		ui.playbackComboBox->setEnabled(FALSE);
-	if (ui.waveformComboBox->count() == 1)
-		ui.waveformComboBox->setEnabled(FALSE);
-	if (ui.tagReaderComboBox->count() == 1)
-		ui.tagReaderComboBox->setEnabled(FALSE);
-
-	index = ui.playbackComboBox->findData(NSettings::instance()->value("Playback"));
-	if (index != -1)
-		ui.playbackComboBox->setCurrentIndex(index);
-	index = ui.waveformComboBox->findData(NSettings::instance()->value("Waveform"));
-	if (index != -1)
-		ui.waveformComboBox->setCurrentIndex(index);
-	index = ui.tagReaderComboBox->findData(NSettings::instance()->value("TagReader"));
-	if (index != -1)
-		ui.tagReaderComboBox->setCurrentIndex(index);
-#endif
-
 #ifndef _N_NO_SKINS_
-	// skins
 	foreach (QString str, NSkinLoader::skinIdentifiers()) {
 		QString id = str.section('/', 2);
 		ui.skinComboBox->addItem(id.replace('/', ' '), id);
@@ -217,13 +257,13 @@ void NPreferencesDialog::saveSettings()
 
 #ifndef _N_NO_PLUGINS_
 	// plugins
-	QVariant playbackVariant = ui.playbackComboBox->itemData(ui.playbackComboBox->currentIndex());
+	QVariant playbackVariant(selectedPluginsGroup(PlaybackEngine));
 	if (NSettings::instance()->value("Playback").isValid() && playbackVariant != NSettings::instance()->value("Playback"))
 		showPluginMessage = TRUE;
-	QVariant waveformVariant = ui.waveformComboBox->itemData(ui.waveformComboBox->currentIndex());
+	QVariant waveformVariant(selectedPluginsGroup(WaveformBuilder));
 	if (NSettings::instance()->value("Waveform").isValid() && waveformVariant != NSettings::instance()->value("Waveform"))
 		showPluginMessage = TRUE;
-	QVariant tagReaderVariant = ui.tagReaderComboBox->itemData(ui.tagReaderComboBox->currentIndex());
+	QVariant tagReaderVariant(selectedPluginsGroup(TagReader));
 	if (NSettings::instance()->value("TagReader").isValid() && tagReaderVariant != NSettings::instance()->value("TagReader"))
 		showPluginMessage = TRUE;
 

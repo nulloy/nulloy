@@ -184,7 +184,6 @@ void NPluginLoader::_loadPlugins()
 						NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(obj);
 						QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
 										((el->type() == Other) ? "" : "/" + el->name());
-						qDebug() << identifier;
 						_identifiers << identifier;
 						_loaders[identifier] = loader;
 						usedFlags[identifier] = FALSE;
