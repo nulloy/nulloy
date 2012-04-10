@@ -59,6 +59,24 @@
            </property>
           </spacer>
          </item>
+         <item>
+          <widget class="QLabel" name="skinRestartLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: red;
+background: white;
+padding: 2px 5px 2px 5px;</string>
+           </property>
+           <property name="text">
+            <string>Switching skins requires restart</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
@@ -294,7 +312,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="restartLabel">
+        <widget class="QLabel" name="pluginsRestartLabel">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -307,7 +325,7 @@ background: white;
 padding: 2px 5px 2px 5px;</string>
          </property>
          <property name="text">
-          <string>Restart required</string>
+          <string>Switching plugins requires restart</string>
          </property>
         </widget>
        </item>

@@ -74,7 +74,8 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	else
 		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 
-	ui.restartLabel->setVisible(FALSE);
+	ui.skinRestartLabel->setVisible(FALSE);
+	ui.pluginsRestartLabel->setVisible(FALSE);
 #endif
 
 #if QT_VERSION >= 0x040700
@@ -194,7 +195,13 @@ QGroupBox* NPreferencesDialog::generatePluginsGroup(PluginType type, const QStri
 
 void NPreferencesDialog::pluginsChanged()
 {
-	ui.restartLabel->setVisible(TRUE);
+	ui.pluginsRestartLabel->setVisible(TRUE);
+}
+
+void NPreferencesDialog::on_skinComboBox_activated(int index)
+{
+	Q_UNUSED(index);
+	ui.skinRestartLabel->setVisible(TRUE);
 }
 
 QString NPreferencesDialog::selectedPluginsGroup(PluginType type)
@@ -259,7 +266,6 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 
-	bool showSkinMessage = FALSE;
 
 #ifndef _N_NO_PLUGINS_
 	// plugins
@@ -275,20 +281,11 @@ void NPreferencesDialog::saveSettings()
 #ifndef _N_NO_SKINS_
 	// skins
 	QVariant skinVariant = ui.skinComboBox->itemData(ui.skinComboBox->currentIndex());
-	if (NSettings::instance()->value("GUI/Skin").isValid() && skinVariant != NSettings::instance()->value("GUI/Skin"))
-		showSkinMessage = TRUE;
-
 	NSettings::instance()->setValue("GUI/Skin", skinVariant);
+
+	ui.skinRestartLabel->setVisible(NSettings::instance()->value("GUI/Skin").isValid() && skinVariant != NSettings::instance()->value("GUI/Skin"));
 #endif
 
-	QString message;
-	if (showSkinMessage)
-		message = tr("Switching skins requires restart.");
-
-	if (!message.isEmpty()) {
-		QMessageBox box(QMessageBox::Information, windowTitle(), message, QMessageBox::Close, this);
-		box.exec();
-	}
 
 	ui.shortcutEditorWidget->applyShortcuts();
 	NSettings::instance()->saveShortcuts();
