@@ -267,6 +267,9 @@
        <string>Plugins</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <property name="margin">
         <number>0</number>
        </property>
@@ -284,10 +287,28 @@
             <x>0</x>
             <y>0</y>
             <width>549</width>
-            <height>323</height>
+            <height>303</height>
            </rect>
           </property>
          </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="restartLabel">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: red;
+background: white;
+padding: 2px 5px 2px 5px;</string>
+         </property>
+         <property name="text">
+          <string>Restart required</string>
+         </property>
         </widget>
        </item>
       </layout>

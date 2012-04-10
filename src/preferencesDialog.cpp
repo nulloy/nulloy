@@ -53,7 +53,6 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 #ifdef _N_NO_PLUGINS_
 	ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 #else
-	int index;
 	QStringList identifiers = NPluginLoader::pluginIdentifiers();
 	QVBoxLayout *scrollLayout = new QVBoxLayout;
 	ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
@@ -74,6 +73,8 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 		scrollLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	else
 		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
+
+	ui.restartLabel->setVisible(FALSE);
 #endif
 
 #if QT_VERSION >= 0x040700
@@ -179,6 +180,7 @@ QGroupBox* NPreferencesDialog::generatePluginsGroup(PluginType type, const QStri
 
 		for (int i = 0; i < groupedIds.count(); ++i) {
 			QRadioButton *radioButton = new QRadioButton(groupedIds.at(i).section('/', 1, 2).replace('/', ' '));
+			connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(pluginsChanged()));
 			if (groupedIds.at(i).contains(def))
 				radioButton->setChecked(TRUE);
 			m_pluginButtonsMap[groupedIds.at(i)] = radioButton;
@@ -188,6 +190,11 @@ QGroupBox* NPreferencesDialog::generatePluginsGroup(PluginType type, const QStri
 	}
 
 	return NULL;
+}
+
+void NPreferencesDialog::pluginsChanged()
+{
+	ui.restartLabel->setVisible(TRUE);
 }
 
 QString NPreferencesDialog::selectedPluginsGroup(PluginType type)
@@ -252,20 +259,13 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 
-	bool showPluginMessage = FALSE;
 	bool showSkinMessage = FALSE;
 
 #ifndef _N_NO_PLUGINS_
 	// plugins
 	QVariant playbackVariant(selectedPluginsGroup(PlaybackEngine));
-	if (NSettings::instance()->value("Playback").isValid() && playbackVariant != NSettings::instance()->value("Playback"))
-		showPluginMessage = TRUE;
 	QVariant waveformVariant(selectedPluginsGroup(WaveformBuilder));
-	if (NSettings::instance()->value("Waveform").isValid() && waveformVariant != NSettings::instance()->value("Waveform"))
-		showPluginMessage = TRUE;
 	QVariant tagReaderVariant(selectedPluginsGroup(TagReader));
-	if (NSettings::instance()->value("TagReader").isValid() && tagReaderVariant != NSettings::instance()->value("TagReader"))
-		showPluginMessage = TRUE;
 
 	NSettings::instance()->setValue("Playback", playbackVariant);
 	NSettings::instance()->setValue("Waveform", waveformVariant);
@@ -282,14 +282,9 @@ void NPreferencesDialog::saveSettings()
 #endif
 
 	QString message;
-	if (showPluginMessage && showSkinMessage) {
-		message = tr("Switching plugins and skins requires restart.");
-	} else {
-		if (showPluginMessage)
-			message = tr("Switching plugins requires restart.");
-		if (showSkinMessage)
-			message = tr("Switching skins requires restart.");
-	}
+	if (showSkinMessage)
+		message = tr("Switching skins requires restart.");
+
 	if (!message.isEmpty()) {
 		QMessageBox box(QMessageBox::Information, windowTitle(), message, QMessageBox::Close, this);
 		box.exec();

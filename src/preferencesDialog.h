@@ -43,6 +43,7 @@ private slots:
 	void saveSettings();
 	void on_versionCheckButton_clicked();
 	void on_titleFormatHelpButton_clicked();
+	void pluginsChanged();
 
 signals:
 	void settingsChanged();
