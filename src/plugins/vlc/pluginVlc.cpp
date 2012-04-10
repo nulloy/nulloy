@@ -13,25 +13,25 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_LOADER_H
-#define N_PLUGIN_LOADER_H
+#include "pluginVlc.h"
+#include "playbackEngineVlc.h"
+#include "waveformBuilderVlc.h"
 
-#include "waveformBuilderInterface.h"
-#include "playbackEngineInterface.h"
-#include "tagReaderInterface.h"
-
-#include <QStringList>
-
-namespace NPluginLoader
+NPluginVlc::NPluginVlc(QObject *parent) : QObject(parent)
 {
-	NPlaybackEngineInterface* playbackPlugin();
-	NWaveformBuilderInterface* waveformPlugin();
-	NTagReaderInterface* tagReaderPlugin();
-
-	QStringList pluginIdentifiers();
-	void deinit();
+	m_elements << new NPlaybackEngineVlc()
+				<< new NWaveformBuilderVlc();
 }
 
-#endif
+NPluginVlc::~NPluginVlc()
+{
+	foreach (QObject *obj, m_elements)
+		delete obj;
+}
 
-/* vim: set ts=4 sw=4: */
+QObjectList NPluginVlc::elements()
+{
+	return m_elements;
+}
+
+Q_EXPORT_PLUGIN2(plugin_vlc, NPluginVlc)

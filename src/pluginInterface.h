@@ -20,17 +20,14 @@
 
 class NPluginInterface
 {
-protected:
-	bool m_init;
-
 public:
-	NPluginInterface() { m_init = FALSE; }
+	NPluginInterface() {}
 	virtual ~NPluginInterface() {}
-	virtual QString identifier() = 0;
-	virtual QString interface() = 0;
-	virtual void init() = 0;
+	virtual QObjectList elements() = 0;
+	virtual QString name() = 0;
+	virtual QString version() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/PluginInterface/0.1")
+Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/NPluginInterface/0.1")
 
 #endif

@@ -13,25 +13,25 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_LOADER_H
-#define N_PLUGIN_LOADER_H
+#ifndef N_PLUGIN_GSTREAMER_H
+#define N_PLUGIN_GSTREAMER_H
 
-#include "waveformBuilderInterface.h"
-#include "playbackEngineInterface.h"
-#include "tagReaderInterface.h"
+#include "pluginInterface.h"
 
-#include <QStringList>
-
-namespace NPluginLoader
+class NPluginGstreamer : public QObject, public NPluginInterface
 {
-	NPlaybackEngineInterface* playbackPlugin();
-	NWaveformBuilderInterface* waveformPlugin();
-	NTagReaderInterface* tagReaderPlugin();
+	Q_OBJECT
+	Q_INTERFACES(NPluginInterface)
 
-	QStringList pluginIdentifiers();
-	void deinit();
-}
+private:
+	QObjectList m_elements;
+
+public:
+	NPluginGstreamer(QObject *parent = NULL);
+	~NPluginGstreamer();
+	QObjectList elements();
+	QString name() { return "GStreamer"; }
+	QString version() { return "0.1"; }
+};
 
 #endif
-
-/* vim: set ts=4 sw=4: */

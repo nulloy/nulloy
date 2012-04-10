@@ -68,7 +68,7 @@ void NMainWindow::init(const QString &uiFile)
 	waveformSlider->setBuilder(NPluginLoader::waveformPlugin());
 #else
 	NWaveformBuilderInterface *builder = dynamic_cast<NWaveformBuilderInterface *>(new NWaveformBuilderGstreamer());
-	dynamic_cast<NPluginInterface *>(builder)->init();
+	dynamic_cast<NPluginElementInterface *>(builder)->init();
 	waveformSlider->setBuilder(builder);
 #endif
 

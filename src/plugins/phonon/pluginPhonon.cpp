@@ -13,25 +13,28 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_LOADER_H
-#define N_PLUGIN_LOADER_H
+#include "pluginPhonon.h"
+#include "playbackEnginePhonon.h"
+#include "waveformBuilderPhonon.h"
 
-#include "waveformBuilderInterface.h"
-#include "playbackEngineInterface.h"
-#include "tagReaderInterface.h"
-
-#include <QStringList>
-
-namespace NPluginLoader
+NPluginPhonon::NPluginPhonon(QObject *parent) : QObject(parent)
 {
-	NPlaybackEngineInterface* playbackPlugin();
-	NWaveformBuilderInterface* waveformPlugin();
-	NTagReaderInterface* tagReaderPlugin();
-
-	QStringList pluginIdentifiers();
-	void deinit();
+	m_elements << new NPlaybackEnginePhonon()
+				<< new NWaveformBuilderPhonon();
 }
 
-#endif
+NPluginPhonon::~NPluginPhonon()
+{
+	foreach (QObject *obj, m_elements)
+		delete obj;
+}
+
+QObjectList NPluginPhonon::elements()
+{
+	return m_elements;
+}
+
+Q_EXPORT_PLUGIN2(plugin_phonon, NPluginPhonon)
 
 /* vim: set ts=4 sw=4: */
+

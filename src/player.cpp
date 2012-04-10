@@ -20,7 +20,7 @@
 #include "action.h"
 #include "systemTray.h"
 #include "m3uPlaylist.h"
-#include "tagReader.h"
+#include "tagReaderInterface.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -92,7 +92,7 @@ NPlayer::NPlayer()
 	m_playbackEngine = NPluginLoader::playbackPlugin();
 #else
 	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(new NPlaybackEngineGStreamer());
-	dynamic_cast<NPluginInterface *>(m_playbackEngine)->init();
+	dynamic_cast<NPluginElementInterface *>(m_playbackEngine)->init();
 #endif
 	m_playbackEngine->setParent(this);
 	m_playbackEngine->setObjectName("playbackEngine");
@@ -152,6 +152,7 @@ NPlayer::NPlayer()
 	connect(m_preferencesDialog, SIGNAL(versionOnlineRequested()), this, SLOT(versionOnlineFetch()));
 
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
+	m_playlistWidget->setTagReader(NPluginLoader::tagReaderPlugin());
 
 
 	// actions
@@ -563,10 +564,11 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	QString title;
 	QString app_title_version = QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion();
 	if (QFile(path).exists()) {
-		NTagReader tagReader(path);
+		NTagReaderInterface *tagReader = NPluginLoader::tagReaderPlugin();
+		tagReader->setSource(path);
 		QString format = NSettings::instance()->value("GUI/WindowTitleFormat").toString();
-		if (!format.isEmpty() && tagReader.isValid())
-			title = tagReader.toString(format);
+		if (!format.isEmpty() && tagReader->isValid())
+			title = tagReader->toString(format);
 		else
 			title = app_title_version;
 	} else {

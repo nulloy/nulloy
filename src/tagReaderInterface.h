@@ -13,24 +13,28 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_LOADER_H
-#define N_PLUGIN_LOADER_H
+#ifndef N_TAG_READER_INTERFACE_H
+#define N_TAG_READER_INTERFACE_H
 
-#include "waveformBuilderInterface.h"
-#include "playbackEngineInterface.h"
-#include "tagReaderInterface.h"
+#include <QString>
+#include <QObject>
 
-#include <QStringList>
+#define TAGREADER_INTERFACE "Nulloy/NTagReaderInterface/0.1"
 
-namespace NPluginLoader
+class NTagReaderInterface : public QObject
 {
-	NPlaybackEngineInterface* playbackPlugin();
-	NWaveformBuilderInterface* waveformPlugin();
-	NTagReaderInterface* tagReaderPlugin();
+public:
+	NTagReaderInterface(QObject *parent = 0) : QObject(parent) {}
+	virtual ~NTagReaderInterface() {}
 
-	QStringList pluginIdentifiers();
-	void deinit();
-}
+	static QString interface() { return TAGREADER_INTERFACE; }
+
+	virtual void setSource(const QString &file) = 0;
+	virtual QString toString(const QString &format) = 0;
+	virtual bool isValid() = 0;
+};
+
+Q_DECLARE_INTERFACE(NTagReaderInterface, TAGREADER_INTERFACE)
 
 #endif
 

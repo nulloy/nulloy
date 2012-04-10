@@ -28,6 +28,7 @@
 
 #include <QMessageBox>
 #include <QPushButton>
+#include <QSpacerItem>
 
 #include <QDebug>
 
@@ -51,6 +52,30 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 
 #ifdef _N_NO_PLUGINS_
 	ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
+#else
+	QStringList identifiers = NPluginLoader::pluginIdentifiers();
+	QVBoxLayout *scrollLayout = new QVBoxLayout;
+	ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
+
+	QGroupBox *playbackBox = generatePluginsGroup(PlaybackEngine, identifiers, NSettings::instance()->value("Playback").toString());
+	if (playbackBox)
+		scrollLayout->addWidget(playbackBox);
+
+	QGroupBox *wavefowmBox = generatePluginsGroup(WaveformBuilder, identifiers, NSettings::instance()->value("Waveform").toString());
+	if (wavefowmBox)
+		scrollLayout->addWidget(wavefowmBox);
+
+	QGroupBox *tagReaderBox = generatePluginsGroup(TagReader, identifiers, NSettings::instance()->value("TagReader").toString());
+	if (tagReaderBox)
+		scrollLayout->addWidget(tagReaderBox);
+
+	if (playbackBox || wavefowmBox || tagReaderBox)
+		scrollLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
+	else
+		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
+
+	ui.skinRestartLabel->setVisible(FALSE);
+	ui.pluginsRestartLabel->setVisible(FALSE);
 #endif
 
 #if QT_VERSION >= 0x040700
@@ -136,6 +161,67 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	dialog->show();
 }
 
+QGroupBox* NPreferencesDialog::generatePluginsGroup(PluginType type, const QStringList &identifiers, const QString &def)
+{
+	QString type_str;
+	if (type == PlaybackEngine)
+		type_str = "Playback";
+	else if (type == WaveformBuilder)
+		type_str = "Waveform";
+	else if (type == TagReader)
+		type_str = "TagReader";
+
+	QStringList groupedIds = identifiers.filter(QRegExp("^" + QString::number(type) + "/.*"));
+	if (groupedIds.count() > 1) {
+		QGroupBox *groupBox = new QGroupBox(type_str);
+		QGridLayout *groupLayout = new QGridLayout;
+		groupLayout->setContentsMargins(0, 5, 5, 0);
+		groupLayout->setSpacing(0);
+		groupBox->setLayout(groupLayout);
+
+		for (int i = 0; i < groupedIds.count(); ++i) {
+			QRadioButton *radioButton = new QRadioButton(groupedIds.at(i).section('/', 1, 2).replace('/', ' '));
+			connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(pluginsChanged()));
+			if (groupedIds.at(i).contains(def))
+				radioButton->setChecked(TRUE);
+			m_pluginButtonsMap[groupedIds.at(i)] = radioButton;
+			groupLayout->addWidget(radioButton, i, 0);
+		}
+		return groupBox;
+	}
+
+	return NULL;
+}
+
+void NPreferencesDialog::pluginsChanged()
+{
+	ui.pluginsRestartLabel->setVisible(TRUE);
+}
+
+void NPreferencesDialog::on_skinComboBox_activated(int index)
+{
+	Q_UNUSED(index);
+	ui.skinRestartLabel->setVisible(TRUE);
+}
+
+QString NPreferencesDialog::selectedPluginsGroup(PluginType type)
+{
+	QString str;
+
+	QStringList identifiers = m_pluginButtonsMap.keys();
+	QStringList groupedIds = identifiers.filter(QRegExp("^" + QString::number(type) + "/.*"));
+
+	for (int i = 0; i < groupedIds.count(); ++i) {
+		QRadioButton *radioButton = m_pluginButtonsMap[groupedIds.at(i)];
+		if (radioButton->isChecked()) {
+			str = radioButton->text();
+			break;
+		}
+	}
+
+	return str.replace(' ', '/');
+}
+
 void NPreferencesDialog::loadSettings()
 {
 	ui.versionLabel->setText("");
@@ -151,31 +237,7 @@ void NPreferencesDialog::loadSettings()
 
 	int index;
 
-#ifndef _N_NO_PLUGINS_
-	// plugins
-	foreach (QString str, NPluginLoader::pluginIdentifiers()) {
-		QString id = str.section('/', 2);
-		if (str.split('/').at(1) == "Playback")
-			ui.playbackComboBox->addItem(id.replace('/', ' '), id);
-		if (str.split('/').at(1) == "Waveform")
-			ui.waveformComboBox->addItem(id.replace('/', ' '), id);
-	}
-
-	if (ui.playbackComboBox->count() == 1)
-		ui.playbackComboBox->setEnabled(FALSE);
-	if (ui.waveformComboBox->count() == 1)
-		ui.waveformComboBox->setEnabled(FALSE);
-
-	index = ui.playbackComboBox->findData(NSettings::instance()->value("Playback"));
-	if (index != -1)
-		ui.playbackComboBox->setCurrentIndex(index);
-	index = ui.waveformComboBox->findData(NSettings::instance()->value("Waveform"));
-	if (index != -1)
-		ui.waveformComboBox->setCurrentIndex(index);
-#endif
-
 #ifndef _N_NO_SKINS_
-	// skins
 	foreach (QString str, NSkinLoader::skinIdentifiers()) {
 		QString id = str.section('/', 2);
 		ui.skinComboBox->addItem(id.replace('/', ' '), id);
@@ -204,44 +266,26 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 
-	bool showPluginMessage = FALSE;
-	bool showSkinMessage = FALSE;
 
 #ifndef _N_NO_PLUGINS_
 	// plugins
-	QVariant playbackVariant = ui.playbackComboBox->itemData(ui.playbackComboBox->currentIndex());
-	if (NSettings::instance()->value("Playback").isValid() && playbackVariant != NSettings::instance()->value("Playback"))
-		showPluginMessage = TRUE;
-	QVariant waveformVariant = ui.waveformComboBox->itemData(ui.waveformComboBox->currentIndex());
-	if (NSettings::instance()->value("Waveform").isValid() && waveformVariant != NSettings::instance()->value("Waveform"))
-		showPluginMessage = TRUE;
+	QVariant playbackVariant(selectedPluginsGroup(PlaybackEngine));
+	QVariant waveformVariant(selectedPluginsGroup(WaveformBuilder));
+	QVariant tagReaderVariant(selectedPluginsGroup(TagReader));
 
 	NSettings::instance()->setValue("Playback", playbackVariant);
 	NSettings::instance()->setValue("Waveform", waveformVariant);
+	NSettings::instance()->setValue("TagReader", tagReaderVariant);
 #endif
 
 #ifndef _N_NO_SKINS_
 	// skins
 	QVariant skinVariant = ui.skinComboBox->itemData(ui.skinComboBox->currentIndex());
-	if (NSettings::instance()->value("GUI/Skin").isValid() && skinVariant != NSettings::instance()->value("GUI/Skin"))
-		showSkinMessage = TRUE;
-
 	NSettings::instance()->setValue("GUI/Skin", skinVariant);
+
+	ui.skinRestartLabel->setVisible(NSettings::instance()->value("GUI/Skin").isValid() && skinVariant != NSettings::instance()->value("GUI/Skin"));
 #endif
 
-	QString message;
-	if (showPluginMessage && showSkinMessage) {
-		message = tr("Switching plugins and skins requires restart.");
-	} else {
-		if (showPluginMessage)
-			message = tr("Switching plugins requires restart.");
-		if (showSkinMessage)
-			message = tr("Switching skins requires restart.");
-	}
-	if (!message.isEmpty()) {
-		QMessageBox box(QMessageBox::Information, windowTitle(), message, QMessageBox::Close, this);
-		box.exec();
-	}
 
 	ui.shortcutEditorWidget->applyShortcuts();
 	NSettings::instance()->saveShortcuts();

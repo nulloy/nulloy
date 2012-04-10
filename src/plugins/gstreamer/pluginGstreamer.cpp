@@ -13,25 +13,31 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_LOADER_H
-#define N_PLUGIN_LOADER_H
+#include "pluginGstreamer.h"
+#include "playbackEngineGstreamer.h"
+#include "waveformBuilderGstreamer.h"
+#include "tagReaderGstreamer.h"
 
-#include "waveformBuilderInterface.h"
-#include "playbackEngineInterface.h"
-#include "tagReaderInterface.h"
-
-#include <QStringList>
-
-namespace NPluginLoader
+NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
 {
-	NPlaybackEngineInterface* playbackPlugin();
-	NWaveformBuilderInterface* waveformPlugin();
-	NTagReaderInterface* tagReaderPlugin();
-
-	QStringList pluginIdentifiers();
-	void deinit();
+	m_elements << new NPlaybackEngineGStreamer()
+				<< new NWaveformBuilderGstreamer()
+				<< new NTagReaderGstreamer();
 }
 
+NPluginGstreamer::~NPluginGstreamer()
+{
+	foreach (QObject *obj, m_elements)
+		delete obj;
+}
+
+QObjectList NPluginGstreamer::elements()
+{
+	return m_elements;
+}
+
+#if !defined _N_GSTREAMER_PLUGINS_BUILTIN_ && !defined _N_NO_PLUGINS_
+Q_EXPORT_PLUGIN2(plugin_gstreamer, NPluginGstreamer)
 #endif
 
 /* vim: set ts=4 sw=4: */

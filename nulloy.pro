@@ -13,23 +13,20 @@ unix:isEmpty(N_CONFIG_SUCCESS) {
 
 # qmake -config gstreamer
 gstreamer {
-	gstreamer_playback.subdir = src/plugins/playbackEngineGstreamer
-	gstreamer_waveform.subdir = src/plugins/waveformBuilderGstreamer
-	SUBDIRS += gstreamer_playback gstreamer_waveform
+	gstreamer.file = src/plugins/gstreamer/pluginGstreamer.pro
+	SUBDIRS += gstreamer
 }
 
 # qmake -config phonon
 phonon {
-	phonon_playback.subdir = src/plugins/playbackEnginePhonon
-	phonon_waveform.subdir = src/plugins/waveformBuilderPhonon
-	SUBDIRS += phonon_playback phonon_waveform
+	phonon.file = src/plugins/phonon/pluginPhonon.pro
+	SUBDIRS += phonon
 }
 
 # qmake -config vlc
 vlc {
-	vlc_playback.subdir = src/plugins/playbackEngineVlc
-	vlc_waveform.subdir = src/plugins/waveformBuilderVlc
-	SUBDIRS += vlc_playback vlc_waveform
+	vlc.file = src/plugins/vlc/pluginVlc.pro
+	SUBDIRS += vlc
 }
 
 # qmake -config plugins-all

@@ -1,7 +1,13 @@
 TEMPLATE = subdirs
-SUBDIRS +=	playbackEngineGstreamer \
-			playbackEnginePhonon \
-			playbackEngineVlc \
-			waveformBuilderGstreamer \
-			waveformBuilderPhonon \
-			waveformBuilderVlc
+
+gstreamer.file = gstreamer/pluginGstreamer.pro
+SUBDIRS += gstreamer
+
+phonon.file = phonon/pluginPhonon.pro
+SUBDIRS += phonon
+
+vlc.file = vlc/pluginVlc.pro
+SUBDIRS += vlc
+
+taglib.file = taglib/pluginTaglib.pro
+SUBDIRS += taglib

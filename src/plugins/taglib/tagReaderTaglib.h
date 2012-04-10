@@ -13,24 +13,37 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_LOADER_H
-#define N_PLUGIN_LOADER_H
+#ifndef N_TAG_READER_TAGLIB_H
+#define N_TAG_READER_TAGLIB_H
 
-#include "waveformBuilderInterface.h"
-#include "playbackEngineInterface.h"
+#include "pluginElementInterface.h"
 #include "tagReaderInterface.h"
 
-#include <QStringList>
+#include <QString>
+#include <taglib/tag.h>
+#include <taglib/fileref.h>
 
-namespace NPluginLoader
+class NTagReaderTaglib : public NTagReaderInterface, public NPluginElementInterface
 {
-	NPlaybackEngineInterface* playbackPlugin();
-	NWaveformBuilderInterface* waveformPlugin();
-	NTagReaderInterface* tagReaderPlugin();
+	Q_OBJECT
+	Q_INTERFACES(NTagReaderInterface NPluginElementInterface)
 
-	QStringList pluginIdentifiers();
-	void deinit();
-}
+private:
+	QString m_path;
+	TagLib::FileRef *m_tagRef;
+
+public:
+	NTagReaderTaglib(QObject *parent = 0) : NTagReaderInterface(parent) {}
+	~NTagReaderTaglib();
+
+	void init();
+	QString interface() { return NTagReaderInterface::interface(); }
+	PluginType type() { return TagReader; }
+
+	void setSource(const QString &file);
+	QString toString(const QString &format);
+	bool isValid();
+};
 
 #endif
 
