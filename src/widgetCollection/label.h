@@ -29,16 +29,23 @@ class NLabel : public QLabel
 	Q_PROPERTY(QPoint shadowOffset READ shadowOffset WRITE setShadowOffset)
 	Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor)
 	Q_PROPERTY(bool shadowEnabled READ shadowEnabled WRITE setShadowEnabled)
+	Q_PROPERTY(QString text READ text WRITE setText)
 
 private:
-	QPoint mShadowOffset;
-	QColor mShadowColor;
-	bool mEnabled;
+	QPoint m_shadowOffset;
+	QColor m_shadowColor;
+	bool m_enabled;
+	Qt::TextElideMode m_elideMode;
+	QString m_elidedText;
 
 	void paintEvent(QPaintEvent *event);
+	void resizeEvent(QResizeEvent *event);
 
 public:
 	NLabel(QWidget* parent = 0);
+
+	Q_INVOKABLE void setText(const QString &text);
+	void setElideMode(Qt::TextElideMode mode);
 
 	bool shadowEnabled() const;
 	void setShadowEnabled(bool enabled);
