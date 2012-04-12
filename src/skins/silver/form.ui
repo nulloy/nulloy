@@ -685,7 +685,7 @@
                     <enum>Qt::Horizontal</enum>
                    </property>
                    <property name="sizeType">
-                    <enum>QSizePolicy::Minimum</enum>
+                    <enum>QSizePolicy::Expanding</enum>
                    </property>
                    <property name="sizeHint" stdset="0">
                     <size>
@@ -698,10 +698,16 @@
                  <item>
                   <widget class="NLabel" name="titleLabel">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>1</width>
+                     <height>0</height>
+                    </size>
                    </property>
                    <property name="font">
                     <font>
@@ -714,7 +720,7 @@
                     <string notr="true">Nulloy</string>
                    </property>
                    <property name="alignment">
-                    <set>Qt::AlignCenter</set>
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                    </property>
                   </widget>
                  </item>
@@ -724,7 +730,7 @@
                     <enum>Qt::Horizontal</enum>
                    </property>
                    <property name="sizeType">
-                    <enum>QSizePolicy::Minimum</enum>
+                    <enum>QSizePolicy::Expanding</enum>
                    </property>
                    <property name="sizeHint" stdset="0">
                     <size>
@@ -1119,6 +1125,18 @@
          </item>
          <item>
           <widget class="NPlaylistWidget" name="playlistWidget">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>80</height>
+            </size>
+           </property>
            <property name="palette">
             <palette>
              <active>
@@ -1134,9 +1152,9 @@
               <colorrole role="Button">
                <brush brushstyle="SolidPattern">
                 <color alpha="255">
-                 <red>217</red>
-                 <green>217</green>
-                 <blue>217</blue>
+                 <red>255</red>
+                 <green>255</green>
+                 <blue>255</blue>
                 </color>
                </brush>
               </colorrole>
@@ -1215,9 +1233,9 @@
               <colorrole role="Window">
                <brush brushstyle="SolidPattern">
                 <color alpha="255">
-                 <red>217</red>
-                 <green>217</green>
-                 <blue>217</blue>
+                 <red>255</red>
+                 <green>255</green>
+                 <blue>255</blue>
                 </color>
                </brush>
               </colorrole>
@@ -1271,9 +1289,9 @@
               <colorrole role="Button">
                <brush brushstyle="SolidPattern">
                 <color alpha="255">
-                 <red>217</red>
-                 <green>217</green>
-                 <blue>217</blue>
+                 <red>255</red>
+                 <green>255</green>
+                 <blue>255</blue>
                 </color>
                </brush>
               </colorrole>
@@ -1352,9 +1370,9 @@
               <colorrole role="Window">
                <brush brushstyle="SolidPattern">
                 <color alpha="255">
-                 <red>217</red>
-                 <green>217</green>
-                 <blue>217</blue>
+                 <red>255</red>
+                 <green>255</green>
+                 <blue>255</blue>
                 </color>
                </brush>
               </colorrole>
@@ -1408,9 +1426,9 @@
               <colorrole role="Button">
                <brush brushstyle="SolidPattern">
                 <color alpha="255">
-                 <red>217</red>
-                 <green>217</green>
-                 <blue>217</blue>
+                 <red>255</red>
+                 <green>255</green>
+                 <blue>255</blue>
                 </color>
                </brush>
               </colorrole>
@@ -1480,18 +1498,18 @@
               <colorrole role="Base">
                <brush brushstyle="SolidPattern">
                 <color alpha="255">
-                 <red>217</red>
-                 <green>217</green>
-                 <blue>217</blue>
+                 <red>255</red>
+                 <green>255</green>
+                 <blue>255</blue>
                 </color>
                </brush>
               </colorrole>
               <colorrole role="Window">
                <brush brushstyle="SolidPattern">
                 <color alpha="255">
-                 <red>217</red>
-                 <green>217</green>
-                 <blue>217</blue>
+                 <red>255</red>
+                 <green>255</green>
+                 <blue>255</blue>
                 </color>
                </brush>
               </colorrole>
@@ -1533,18 +1551,6 @@
               </colorrole>
              </disabled>
             </palette>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>80</height>
-            </size>
            </property>
            <property name="focusPolicy">
             <enum>Qt::ClickFocus</enum>
