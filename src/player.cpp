@@ -52,6 +52,7 @@ Q_DECLARE_METATYPE(QWidget *)
 Q_DECLARE_METATYPE(QLayout *)
 Q_DECLARE_METATYPE(NMainWindow *)
 Q_DECLARE_METATYPE(NPlaybackEngineInterface *)
+Q_DECLARE_METATYPE(NSettings *)
 Q_DECLARE_METATYPE(QList<QWidget *>)
 Q_DECLARE_METATYPE(QMargins)
 
@@ -111,7 +112,7 @@ NPlayer::NPlayer()
 	//
 
 
-	// loading script
+	// loading skin script
 	m_scriptEngine = new QScriptEngine(this);
 #ifndef _N_NO_SKINS_
 	QString scriptFileName(NSkinLoader::skinScriptFile());
@@ -136,6 +137,7 @@ NPlayer::NPlayer()
 
 	qScriptRegisterQObjectMetaType<NMainWindow *>(m_scriptEngine);
 	qScriptRegisterQObjectMetaType<NPlaybackEngineInterface *>(m_scriptEngine);
+	qScriptRegisterQObjectMetaType<NSettings *>(m_scriptEngine);
 	qScriptRegisterMetaType(m_scriptEngine, NMarginsPrototype::toScriptValue, NMarginsPrototype::fromScriptValue);
 	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QWidget *>(), m_scriptEngine->newQObject(&widgetPrototype));
 	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QLayout *>(), m_scriptEngine->newQObject(&layoutPrototype));
@@ -143,7 +145,7 @@ NPlayer::NPlayer()
 
 	QScriptValue constructor = m_scriptEngine->evaluate("Program");
 	QScriptValue playerEngineObject = m_scriptEngine->newQObject(this, QScriptEngine::QtOwnership);
-	constructor.construct(QScriptValueList() << playerEngineObject);
+	QScriptValue skinProgram = constructor.construct(QScriptValueList() << playerEngineObject);
 	//
 
 
@@ -334,6 +336,8 @@ NPlayer::NPlayer()
 	m_mainWindow->show();
 	QResizeEvent e(m_mainWindow->size(), m_mainWindow->size());
 	QCoreApplication::sendEvent(m_mainWindow, &e);
+
+	skinProgram.property("afterShow").call(skinProgram);
 }
 
 NPlayer::~NPlayer()
@@ -350,6 +354,11 @@ NMainWindow* NPlayer::mainWindow()
 NPlaybackEngineInterface* NPlayer::playbackEngine()
 {
 	return m_playbackEngine;
+}
+
+NSettings* NPlayer::settings()
+{
+	return NSettings::instance();
 }
 
 void NPlayer::message(const QString &str)

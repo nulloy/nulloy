@@ -53,6 +53,7 @@
 
 #playlistToggleButton {
 	border-image: url(playlist_toggle.png);
+	qproperty-icon: url(playlist_icon.png);
 	border-top: 8;
 	border-left: 10;
 	border-right: 10;
@@ -627,12 +628,6 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <property name="margin">
              <number>0</number>
@@ -791,6 +786,9 @@
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
                  </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
                  <property name="sizeHint" stdset="0">
                   <size>
                    <width>20</width>
@@ -826,6 +824,9 @@
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
                  </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
                  <property name="sizeHint" stdset="0">
                   <size>
                    <width>20</width>
@@ -846,13 +847,13 @@
                      <property name="minimumSize">
                       <size>
                        <width>50</width>
-                       <height>15</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="maximumSize">
                       <size>
                        <width>50</width>
-                       <height>15</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="focusPolicy">
@@ -893,13 +894,13 @@
                      <property name="minimumSize">
                       <size>
                        <width>50</width>
-                       <height>15</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="maximumSize">
                       <size>
                        <width>50</width>
-                       <height>15</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="focusPolicy">
@@ -949,13 +950,13 @@
                      <property name="minimumSize">
                       <size>
                        <width>50</width>
-                       <height>15</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="maximumSize">
                       <size>
                        <width>50</width>
-                       <height>15</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="focusPolicy">
@@ -993,13 +994,13 @@
                      <property name="minimumSize">
                       <size>
                        <width>50</width>
-                       <height>15</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="maximumSize">
                       <size>
                        <width>50</width>
-                       <height>15</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="focusPolicy">
@@ -1019,21 +1020,26 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>80</width>
+                     <width>60</width>
                      <height>11</height>
                     </size>
                    </property>
                    <property name="maximumSize">
                     <size>
-                     <width>80</width>
+                     <width>60</width>
                      <height>11</height>
                     </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>8</pointsize>
+                    </font>
                    </property>
                    <property name="focusPolicy">
                     <enum>Qt::NoFocus</enum>
                    </property>
                    <property name="text">
-                    <string>Playlist</string>
+                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -1125,18 +1131,6 @@
          </item>
          <item>
           <widget class="NPlaylistWidget" name="playlistWidget">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>80</height>
-            </size>
-           </property>
            <property name="palette">
             <palette>
              <active>

@@ -14,20 +14,20 @@
    height="600"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.1 r9760"
+   inkscape:version="0.48.2 r9819"
    sodipodi:docname="design.svg">
   <defs
      id="defs4">
     <linearGradient
        id="linearGradient3987">
       <stop
-         style="stop-color:#9b9b9b;stop-opacity:1;"
+         style="stop-color:#a0a0a0;stop-opacity:1;"
          offset="0"
          id="stop3989" />
       <stop
          id="stop3991"
          offset="1"
-         style="stop-color:#d7d7d7;stop-opacity:1;" />
+         style="stop-color:#a8a8a8;stop-opacity:1;" />
     </linearGradient>
     <linearGradient
        id="linearGradient3979">
@@ -551,7 +551,8 @@
        x1="355"
        y1="792.36218"
        x2="355"
-       y2="782.36218" />
+       y2="782.36218"
+       gradientTransform="translate(-7.5000003,13.125)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3928"
@@ -1794,6 +1795,80 @@
          offset="1"
          style="stop-color:#e2e2e2;stop-opacity:1;" />
     </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3987"
+       id="linearGradient4140"
+       gradientUnits="userSpaceOnUse"
+       x1="355"
+       y1="792.36218"
+       x2="355"
+       y2="782.36218"
+       gradientTransform="translate(-0.50000002,12.375)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3976"
+       id="linearGradient4143"
+       gradientUnits="userSpaceOnUse"
+       x1="355"
+       y1="792.36218"
+       x2="355"
+       y2="782.36218"
+       gradientTransform="translate(1.5000001,13.875001)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3790"
+       id="linearGradient4266"
+       gradientUnits="userSpaceOnUse"
+       x1="370"
+       y1="702.36218"
+       x2="370"
+       y2="712.36218" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3790"
+       id="linearGradient4268"
+       gradientUnits="userSpaceOnUse"
+       x1="370"
+       y1="702.36218"
+       x2="370"
+       y2="712.36218" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3790"
+       id="linearGradient4270"
+       gradientUnits="userSpaceOnUse"
+       x1="370"
+       y1="702.36218"
+       x2="370"
+       y2="712.36218" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3790"
+       id="linearGradient4272"
+       gradientUnits="userSpaceOnUse"
+       x1="370"
+       y1="702.36218"
+       x2="370"
+       y2="712.36218" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3976"
+       id="linearGradient4274"
+       gradientUnits="userSpaceOnUse"
+       x1="355"
+       y1="792.36218"
+       x2="355"
+       y2="782.36218" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3987"
+       id="linearGradient4276"
+       gradientUnits="userSpaceOnUse"
+       x1="355"
+       y1="792.36218"
+       x2="355"
+       y2="782.36218" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -1802,23 +1877,24 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9999997"
-     inkscape:cx="190.73706"
-     inkscape:cy="444.31203"
+     inkscape:zoom="5.656854"
+     inkscape:cx="410.84579"
+     inkscape:cy="368.36037"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     showgrid="true"
-     inkscape:snap-global="false"
+     showgrid="false"
+     inkscape:snap-global="true"
      inkscape:snap-grids="true"
      inkscape:window-width="1436"
      inkscape:window-height="813"
-     inkscape:window-x="1716"
-     inkscape:window-y="70"
+     inkscape:window-x="2028"
+     inkscape:window-y="65"
      inkscape:window-maximized="0"
      showguides="false"
      inkscape:guide-bbox="true"
      inkscape:snap-to-guides="false"
-     inkscape:snap-page="false">
+     inkscape:snap-page="false"
+     inkscape:snap-nodes="true">
     <inkscape:grid
        type="xygrid"
        id="grid3002"
@@ -1835,7 +1911,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2562,67 +2638,23 @@
       </g>
     </g>
     <g
-       inkscape:export-filename="playlist_toggle.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"
-       id="g4113">
+       id="g3413">
+      <path
+         sodipodi:nodetypes="sssccss"
+         inkscape:connector-curvature="0"
+         id="rect3923"
+         d="m 357,701.36218 51,0 c 1.662,0 3,1.338 3,3 l 0,8 -57,0 0,-8 c 0,-1.662 1.338,-3 3,-3 z"
+         style="fill:#4a4a4a;fill-opacity:1;fill-rule:nonzero;stroke:none" />
       <g
-         transform="translate(0,-80)"
-         style="fill:#4a4a4a;fill-opacity:1"
-         id="g3997">
-        <rect
-           inkscape:export-ydpi="100"
-           inkscape:export-xdpi="100"
-           inkscape:export-filename="button_normal.png"
-           style="fill:#4a4a4a;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           id="rect3923"
-           width="57"
-           height="5.9999976"
-           x="329"
-           y="781.36218"
-           rx="2.9999974"
-           ry="2.375" />
-        <rect
-           ry="0"
-           rx="0"
-           y="784.36218"
-           x="329"
-           height="7.9999976"
-           width="57"
-           id="rect3952"
-           style="fill:#4a4a4a;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           inkscape:export-filename="button_normal.png"
-           inkscape:export-xdpi="100"
-           inkscape:export-ydpi="100" />
-      </g>
-      <g
-         transform="translate(0,-80)"
+         transform="translate(25,-80)"
          style="fill:url(#linearGradient4111);fill-opacity:1"
          id="g3965">
-        <rect
-           inkscape:export-ydpi="100"
-           inkscape:export-xdpi="100"
-           inkscape:export-filename="button_normal.png"
-           ry="1.9999974"
-           rx="1.9999974"
-           y="782.36218"
-           x="330"
-           height="9.9999971"
-           width="55"
+        <path
+           style="fill:url(#linearGradient4276);fill-rule:nonzero;stroke:none"
+           d="m 332,782.36218 51,0 c 1.108,0 2,0.892 2,2 l 0,8 -55,0 0,-8 c 0,-1.108 0.892,-2 2,-2 z"
            id="rect3925"
-           style="fill:url(#linearGradient4111);fill-opacity:1;fill-rule:nonzero;stroke:none" />
-        <rect
-           style="fill:url(#linearGradient4111);fill-opacity:1;fill-rule:nonzero;stroke:none"
-           id="rect3954"
-           width="55"
-           height="7.9999976"
-           x="330"
-           y="784.36218"
-           rx="0"
-           ry="0"
-           inkscape:export-filename="button_normal.png"
-           inkscape:export-xdpi="100"
-           inkscape:export-ydpi="100" />
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="sscccss" />
       </g>
     </g>
     <rect
@@ -2636,131 +2668,43 @@
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <g
-       id="g4186"
-       inkscape:export-filename="playlist_toggle_hover.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
-      <g
-         id="g4123"
-         style="fill:#4a4a4a;fill-opacity:1"
-         transform="translate(60,-80)">
-        <rect
-           ry="2.375"
-           rx="2.9999974"
-           y="781.36218"
-           x="329"
-           height="5.9999976"
-           width="57"
-           id="rect4125"
-           style="fill:#4a4a4a;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           inkscape:export-filename="button_normal.png"
-           inkscape:export-xdpi="100"
-           inkscape:export-ydpi="100" />
-        <rect
-           inkscape:export-ydpi="100"
-           inkscape:export-xdpi="100"
-           inkscape:export-filename="button_normal.png"
-           style="fill:#4a4a4a;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           id="rect4127"
-           width="57"
-           height="7.9999976"
-           x="329"
-           y="784.36218"
-           rx="0"
-           ry="0" />
-      </g>
+       id="g3408">
+      <path
+         style="fill:#4a4a4a;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         d="m 417,701.36218 51,0 c 1.662,0 3,1.338 3,3 l 0,8 -57,0 0,-8 c 0,-1.662 1.338,-3 3,-3 z"
+         id="path3399"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="sssccss" />
       <g
          id="g4129"
          style="fill:url(#linearGradient4168);fill-opacity:1"
-         transform="translate(60,-80)">
-        <rect
-           style="fill:url(#linearGradient4168);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         transform="translate(85,-80)">
+        <path
+           style="fill:url(#linearGradient4274);fill-rule:nonzero;stroke:none"
+           d="m 332,782.36218 51,0 c 1.108,0 2,0.892 2,2 l 0,8 -55,0 0,-8 c 0,-1.108 0.892,-2 2,-2 z"
            id="rect4131"
-           width="55"
-           height="9.9999971"
-           x="330"
-           y="782.36218"
-           rx="1.9999974"
-           ry="1.9999974"
-           inkscape:export-filename="button_normal.png"
-           inkscape:export-xdpi="100"
-           inkscape:export-ydpi="100" />
-        <rect
-           inkscape:export-ydpi="100"
-           inkscape:export-xdpi="100"
-           inkscape:export-filename="button_normal.png"
-           ry="0"
-           rx="0"
-           y="784.36218"
-           x="330"
-           height="7.9999976"
-           width="55"
-           id="rect4133"
-           style="fill:url(#linearGradient4168);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ssccccs" />
       </g>
     </g>
     <g
-       id="g4178"
-       inkscape:export-filename="playlist_toggle_pressed.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       id="g3403">
+      <path
+         sodipodi:nodetypes="sssccss"
+         inkscape:connector-curvature="0"
+         id="path3401"
+         d="m 477,701.36218 51,0 c 1.662,0 3,1.338 3,3 l 0,8 -57,0 0,-8 c 0,-1.662 1.338,-3 3,-3 z"
+         style="fill:#4a4a4a;fill-opacity:1;fill-rule:nonzero;stroke:none" />
       <g
-         transform="translate(120,-80)"
-         style="fill:#4a4a4a;fill-opacity:1"
-         id="g4143">
-        <rect
-           inkscape:export-ydpi="100"
-           inkscape:export-xdpi="100"
-           inkscape:export-filename="button_normal.png"
-           style="fill:#4a4a4a;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           id="rect4146"
-           width="57"
-           height="5.9999976"
-           x="329"
-           y="781.36218"
-           rx="2.9999974"
-           ry="2.375" />
-        <rect
-           ry="0"
-           rx="0"
-           y="784.36218"
-           x="329"
-           height="7.9999976"
-           width="57"
-           id="rect4148"
-           style="fill:#4a4a4a;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           inkscape:export-filename="button_normal.png"
-           inkscape:export-xdpi="100"
-           inkscape:export-ydpi="100" />
-      </g>
-      <g
-         transform="translate(120,-80)"
+         transform="translate(145,-80)"
          style="fill:url(#linearGradient4198);fill-opacity:1"
          id="g4150">
-        <rect
-           inkscape:export-ydpi="100"
-           inkscape:export-xdpi="100"
-           inkscape:export-filename="button_normal.png"
-           ry="1.9999974"
-           rx="1.9999974"
-           y="782.36218"
-           x="330"
-           height="9.9999971"
-           width="55"
+        <path
+           style="fill:url(#linearGradient4194);fill-rule:nonzero;stroke:none"
+           d="m 332,782.36218 51,0 c 1.108,0 2,0.892 2,2 l 0,8 -55,0 0,-8 c 0,-1.108 0.892,-2 2,-2 z"
            id="rect4152"
-           style="fill:url(#linearGradient4194);fill-opacity:1;fill-rule:nonzero;stroke:none" />
-        <rect
-           style="fill:url(#linearGradient4196);fill-opacity:1;fill-rule:nonzero;stroke:none"
-           id="rect4154"
-           width="55"
-           height="7.9999976"
-           x="330"
-           y="784.36218"
-           rx="0"
-           ry="0"
-           inkscape:export-filename="button_normal.png"
-           inkscape:export-xdpi="100"
-           inkscape:export-ydpi="100" />
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="sssccss" />
       </g>
     </g>
     <g
@@ -2793,7 +2737,8 @@
        id="g4059"
        inkscape:export-filename="pause.png"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       inkscape:export-ydpi="90"
+       transform="translate(-14,-2.6171874e-6)">
       <rect
          transform="scale(-1,1)"
          ry="0"
@@ -3021,6 +2966,88 @@
            d="m 3.6219661,1046.9293 c -1.3064295,3.8133 -0.8772511,3.7074 -3.3726721,4.5398 0.9475169,-2.8968 0.64021428,-3.8492 3.3726721,-4.5398 z"
            style="fill:url(#linearGradient4661);fill-opacity:1;stroke:none" />
       </g>
+    </g>
+    <g
+       id="g4256"
+       transform="translate(12,-2.6171874e-6)"
+       inkscape:export-filename="playlist_icon.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         ry="2.0000026"
+         rx="0"
+         y="708.36218"
+         x="368"
+         height="2.0000026"
+         width="8"
+         id="rect3382"
+         style="fill:url(#linearGradient4266);fill-opacity:1" />
+      <rect
+         style="fill:#d8d8d8;fill-opacity:1"
+         id="rect3384"
+         width="8"
+         height="1"
+         x="368"
+         y="710.36218"
+         rx="0"
+         ry="1" />
+      <rect
+         style="fill:url(#linearGradient4268);fill-opacity:1"
+         id="rect3386"
+         width="2"
+         height="2.0000026"
+         x="365"
+         y="708.36218"
+         rx="0"
+         ry="2.0000026" />
+      <rect
+         ry="1"
+         rx="0"
+         y="710.36218"
+         x="365"
+         height="1"
+         width="2"
+         id="rect3388"
+         style="fill:#d8d8d8;fill-opacity:1" />
+      <rect
+         style="fill:url(#linearGradient4270);fill-opacity:1"
+         id="rect3416"
+         width="8"
+         height="2.0000026"
+         x="368"
+         y="704.36218"
+         rx="0"
+         ry="2.0000026" />
+      <rect
+         ry="1"
+         rx="0"
+         y="706.36218"
+         x="368"
+         height="1"
+         width="8"
+         id="rect3418"
+         style="fill:#d8d8d8;fill-opacity:1"
+         inkscape:export-filename="playlist_icon.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90" />
+      <rect
+         ry="2.0000026"
+         rx="0"
+         y="704.36218"
+         x="365"
+         height="2.0000026"
+         width="2"
+         id="rect3420"
+         style="fill:url(#linearGradient4272);fill-opacity:1" />
+      <rect
+         style="fill:#d8d8d8;fill-opacity:1"
+         id="rect3422"
+         width="2"
+         height="1"
+         x="365"
+         y="706.36218"
+         rx="0"
+         ry="1" />
     </g>
   </g>
 </svg>

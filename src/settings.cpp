@@ -126,6 +126,11 @@ QList<NAction *> NSettings::shortcuts()
 	return m_actionList;
 }
 
+QVariant NSettings::value(const QString &key, const QVariant &defaultValue)
+{
+	return QSettings::value(key, defaultValue);
+}
+
 void NSettings::setValue(const QString &key, const QVariant &value)
 {
 	if ((value.type() == QVariant::String && value.toString().isEmpty()) ||

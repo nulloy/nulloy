@@ -15,6 +15,7 @@
 function Program(player)
 {
 	try {
+		this.player = player;
 		this.mainWindow = player.mainWindow();
 		this.playbackEngine = player.playbackEngine();
 		this.playlistWidget = this.mainWindow.findChild("playlistWidget");
@@ -69,11 +70,9 @@ function Program(player)
 		this.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
 		this.mainWindow.resized.connect(this, "on_resized");
 
-	/*	this.playlistToggleButton.clicked.connect(this, "on_playlistToggleButtonClicked");
+		this.playlistToggleButton.clicked.connect(this, "on_playlistToggleButtonClicked");
 		this.playlistToggleButton.setParent(this.playlistWidget);
 		this.playlistToggleButton.setParent(this.dropArea);
-		this.playlistToggleButton.show();*/
-		this.playlistToggleButton.hide();
 
 		this.shadowWidget.setParent(this.dropArea);
 		this.shadowWidget.setParent(this.playlistWidget);
@@ -108,6 +107,16 @@ function Program(player)
 	}
 }
 
+Program.prototype.afterShow = function()
+{
+	if (this.player.settings().value("SilverSkin/PlaylistVisible", true) == 'false') {
+		this.player.settings().setValue("SilverSkin/PlaylistVisible", false);
+		this.playlistWidget.hide();
+		this.mainWindow.minimumHeight = this.mainWindow.maximumHeight = 120;
+		this.mainWindow.resize(this.mainWindow.width, this.mainWindow.minimumHeigh);
+	}
+}
+
 Program.prototype.on_stateChanged = function(state)
 {
 	if (state == 1) // NPlaybackEngineInterface::Playing == 1
@@ -127,7 +136,7 @@ Program.prototype.on_failed = function()
 Program.prototype.on_resized = function()
 {
 	this.playlistToggleButton.move(this.playlistToggleButton.parentWidget().width -
-									this.playlistToggleButton.width - 30,
+									this.playlistToggleButton.width - 40,
 									this.playlistToggleButton.parentWidget().height -
 									this.playlistToggleButton.height);
 
@@ -136,12 +145,18 @@ Program.prototype.on_resized = function()
 
 Program.prototype.on_playlistToggleButtonClicked = function()
 {
+	this.player.settings().setValue("SilverSkin/PlaylistVisible", !this.playlistWidget.visible);
 	if (this.playlistWidget.visible) {
+		this.player.settings().setValue("SilverSkin/OldHeight", this.mainWindow.height);
 		this.playlistWidget.hide();
-		this.mainWindow.maximumHeight = 0;
+		this.mainWindow.minimumHeight = this.mainWindow.maximumHeight = 120;
+		this.mainWindow.resize(this.mainWindow.width, this.mainWindow.minimumHeigh);
 	} else {
+		var oldHeight = this.player.settings().value("SilverSkin/OldHeight", 250);
 		this.playlistWidget.show();
 		this.mainWindow.maximumHeight = 0xFFFFFF;
+		this.mainWindow.minimumHeight = 200;
+		this.mainWindow.resize(this.mainWindow.width, oldHeight);
 	}
 }
 

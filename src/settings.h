@@ -39,7 +39,8 @@ public:
 	void loadShortcuts();
 	QList<NAction *> shortcuts();
 
-	void setValue(const QString &key, const QVariant &value);
+	Q_INVOKABLE QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
+	Q_INVOKABLE void setValue(const QString &key, const QVariant &value);
 	void remove(const QString &key);
 
 signals:
