@@ -1,7 +1,6 @@
 #! /bin/bash
 
 BASENAME=`basename $0`
-TRY_HELP="Try \`$BASENAME --help' for more information"
 
 PREFIX=/usr
 DEBUG=no
@@ -18,49 +17,83 @@ BUILD_PHONON=no
 SUPPORT_SKINS=yes
 SUPPORT_PLUGINS=yes
 
+HAS_GNU_GETOPT=no
+
 echo_help()
 {
-	echo "Usage:  $BASENAME [options]"
-	echo '    --no-gstreamer              do not build GStreamer plugins'
-	echo '    --embed-gstreamer           embed GStreamer plugins statically'
-	echo '    --vlc                       build VLC plugins'
-	echo '    --phonon                    build Phonon plugins'
-	echo '    --taglib                    build with taglib'
-	echo '    --no-skins                  disable skins support'
-	echo '    --no-plugins                disable plugins support'
-	echo '    --force-version[=]VERSION   overrides version.pri'
-	echo '    --prefix[=]PREFIX           installation prefix'
-	echo '    --debug                     build in debug mode'
-	echo
+	if [ $HAS_GNU_GETOPT == "yes" ]; then
+		echo "Usage:  $BASENAME [options]"
+		echo '    --no-gstreamer              do not build GStreamer plugins'
+		echo '    --embed-gstreamer           embed GStreamer plugins statically'
+		echo '    --vlc                       build VLC plugins'
+		echo '    --phonon                    build Phonon plugins'
+		echo '    --taglib                    build with taglib'
+		echo '    --no-skins                  disable skins support'
+		echo '    --no-plugins                disable plugins support'
+		echo '    --force-version VERSION     overrides version.pri'
+		echo '    --prefix PREFIX             installation prefix'
+		echo '    --debug                     build in debug mode'
+	else
+		echo "Usage:  $BASENAME [options]"
+		echo '    -G                          do not build GStreamer plugins'
+		echo '    -s                          embed GStreamer plugins statically'
+		echo '    -l                          build VLC plugins'
+		echo '    -n                          build Phonon plugins'
+		echo '    -t                          build with taglib'
+		echo '    -S                          disable skins support'
+		echo '    -U                          disable plugins support'
+		echo '    -f VERSION                  overrides version.pri'
+		echo '    -p PREFIX                   installation prefix'
+		echo '    -d                          build in debug mode'
+	fi
 }
 
-args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer embed-gstreamer vlc phonon taglib no-skins no-plugins debug prefix: help" -- "$@"`
+echo_try()
+{
+	echo
+	if [ $HAS_GNU_GETOPT == "yes" ]; then
+		echo "Try \`$BASENAME --help' for more information"
+	else
+		echo "Try \`$BASENAME -h' for more information"
+	fi
+}
+
+getopt -T > /dev/null
+if [ $? -eq 4 ]; then
+	HAS_GNU_GETOPT=yes
+fi
+
+if [ $HAS_GNU_GETOPT == "yes" ]; then
+	args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer embed-gstreamer vlc phonon taglib no-skins no-plugins debug prefix: help" -- "$@"`
+else
+	args=`getopt GslntSUf:p:dh "$@"`
+fi
+
 if test $? != 0; then
-	echo $TRY_HELP
-	exit 1
+	echo_try; exit 1
 fi
 
 eval set -- $args
 while [ $# -gt 0 ]; do
-	if [ $1 == "--prefix" ]; then
+	if [[ $1 == "p" || $1 == "--prefix" ]]; then
 		shift; PREFIX=`readlink -m "$1"`
-	elif [ $1 == "--debug" ]; then
+	elif [[ $1 == "d" || $1 == "--debug" ]]; then
 		DEBUG=yes
-	elif [ $1 == "--force-version" ]; then
+	elif [[ $1 == "f" || $1 == "--force-version" ]]; then
 		shift; FORCE_VERSION=$1
-	elif [ $1 == "--no-gstreamer" ]; then
+	elif [[ $1 == "G" || $1 == "--no-gstreamer" ]]; then
 		BUILD_GSTREAMER=no
-	elif [ $1 == "--embed-gstreamer" ]; then
+	elif [[ $1 == "s" || $1 == "--embed-gstreamer" ]]; then
 		EMBED_GSTREAMER=yes
-	elif [ $1 == "--vlc" ]; then
+	elif [[ $1 == "l" || $1 == "--vlc" ]]; then
 		BUILD_VLC=yes
-	elif [ $1 == "--phonon" ]; then
+	elif [[ $1 == "n" || $1 == "--phonon" ]]; then
 		BUILD_PHONON=yes
-	elif [ $1 == "--taglib" ]; then
+	elif [[ $1 == "t" || $1 == "--taglib" ]]; then
 		BUILD_TAGLIB=yes
-	elif [ $1 == "--no-skins" ]; then
+	elif [[ $1 == "S" || $1 == "--no-skins" ]]; then
 		SUPPORT_SKINS=no
-	elif [ $1 == "--no-plugins" ]; then
+	elif [[ $1 == "U" || $1 == "--no-plugins" ]]; then
 		SUPPORT_PLUGINS=no
 	elif [[ $1 == "-h"  || $1 == "--help" ]]; then
 		echo_help; exit 0
@@ -68,7 +101,7 @@ while [ $# -gt 0 ]; do
 		shift
 		if [ $# -ne 0 ]; then
 			echo "$BASENAME: invalid arguments"
-			echo $TRY_HELP; exit 1
+			echo_try; exit 1
 		fi
 		break
 	fi
