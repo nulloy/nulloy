@@ -78,7 +78,10 @@ function Program(player)
 		this.shadowWidget.setParent(this.playlistWidget);
 		this.shadowWidget.show();
 
+		this.maximumHeight = 120;
 		if (Q_WS == "mac") {
+			this.maximumHeight = 118;
+
 			this.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
 
 			var playlistWidget = this.mainWindow.findChild("playlistWidget");
@@ -112,7 +115,7 @@ Program.prototype.afterShow = function()
 	if (this.player.settings().value("SilverSkin/PlaylistVisible", true) == 'false') {
 		this.player.settings().setValue("SilverSkin/PlaylistVisible", false);
 		this.playlistWidget.hide();
-		this.mainWindow.minimumHeight = this.mainWindow.maximumHeight = 120;
+		this.mainWindow.minimumHeight = this.mainWindow.maximumHeight = this.maximumHeight;
 		this.mainWindow.resize(this.mainWindow.width, this.mainWindow.minimumHeigh);
 	}
 }
@@ -149,7 +152,7 @@ Program.prototype.on_playlistToggleButtonClicked = function()
 	if (this.playlistWidget.visible) {
 		this.player.settings().setValue("SilverSkin/OldHeight", this.mainWindow.height);
 		this.playlistWidget.hide();
-		this.mainWindow.minimumHeight = this.mainWindow.maximumHeight = 120;
+		this.mainWindow.minimumHeight = this.mainWindow.maximumHeight = this.maximumHeight;
 		this.mainWindow.resize(this.mainWindow.width, this.mainWindow.minimumHeigh);
 	} else {
 		var oldHeight = this.player.settings().value("SilverSkin/OldHeight", 250);
