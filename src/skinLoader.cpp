@@ -33,12 +33,8 @@ namespace NSkinLoader
 	QMap<int, QString> _identifiers;
 	QString _uiFormFile;
 	QString _scriptFile;
-#ifdef Q_WS_MAC
-	QString _skinPrefer = "Native";
-#else
 	QString _skinPrefer = "Silver";
-#endif
-	QString _skinSuffix= "nzs";
+	QString _skinSuffix = "nzs";
 
 	bool _nextFile(QFile &zipFile, QString &fileName, QByteArray &data);
 	void _loadSkins();
