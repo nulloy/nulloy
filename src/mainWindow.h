@@ -41,7 +41,10 @@ private:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void resizeEvent(QResizeEvent *event);
+
 #ifdef Q_WS_WIN
+	bool m_framelessShadow;
+	void updateFramelessShadow();
 	bool winEvent(MSG *message, long *result);
 #endif
 
@@ -49,6 +52,9 @@ public:
 	NMainWindow(QWidget *parent = 0);
 	~NMainWindow();
 	void init(const QString &uiFile);
+#ifdef Q_WS_WIN
+	Q_INVOKABLE void setFramelessShadow(bool enabled);
+#endif
 
 public slots:
 	void setTitle(QString title);

@@ -110,6 +110,9 @@ function Program(player)
 			this.sizeGrip.hide();
 			this.mainWindow.setSizeGripEnabled(true);
 		}
+
+		if (Q_WS == "win")
+			this.mainWindow.setFramelessShadow(true);
 	} catch (err) {
 		print("QtScript: " + err);
 	}

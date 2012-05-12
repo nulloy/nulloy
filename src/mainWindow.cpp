@@ -41,7 +41,13 @@
 
 #include <QDebug>
 
-NMainWindow::NMainWindow(QWidget *parent) : QDialog(parent) {}
+NMainWindow::NMainWindow(QWidget *parent) : QDialog(parent)
+{
+#ifdef Q_WS_WIN
+	m_framelessShadow = FALSE;
+#endif
+}
+
 NMainWindow::~NMainWindow() {}
 
 void NMainWindow::init(const QString &uiFile)
@@ -178,9 +184,46 @@ void NMainWindow::closeEvent(QCloseEvent *event)
 }
 
 #ifdef Q_WS_WIN
+bool _DwmIsCompositionEnabled()
+{
+	HMODULE library = LoadLibrary(L"dwmapi.dll");
+	bool result = false;
+	if (library) {
+		BOOL enabled = FALSE;
+		HRESULT (WINAPI *pFn)(BOOL *enabled) = (HRESULT (WINAPI *)(BOOL *enabled))(GetProcAddress(library, "DwmIsCompositionEnabled"));
+		result = SUCCEEDED(pFn(&enabled)) && enabled;
+		FreeLibrary(library);
+	}
+	return result;
+}
+
+void NMainWindow::setFramelessShadow(bool enabled)
+{
+	if (enabled != m_framelessShadow) {
+		m_framelessShadow = enabled;
+		updateFramelessShadow();
+	}
+}
+
+void NMainWindow::updateFramelessShadow()
+{
+	if (_DwmIsCompositionEnabled() && m_framelessShadow)
+		SetClassLongPtr(winId(), GCL_STYLE, GetClassLongPtr(winId(), GCL_STYLE) | CS_DROPSHADOW);
+	else
+		SetClassLongPtr(winId(), GCL_STYLE, GetClassLongPtr(winId(), GCL_STYLE) & ~CS_DROPSHADOW);
+
+	hide();
+	show();
+}
+
 bool NMainWindow::winEvent(MSG *message, long *result)
 {
-	return NW7TaskBar::winEvent(message, result);
+	if (message->message == WM_DWMCOMPOSITIONCHANGED) {
+		updateFramelessShadow();
+		return true;
+	} else {
+		return NW7TaskBar::winEvent(message, result);
+	}
 }
 #endif
 
