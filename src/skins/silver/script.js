@@ -26,6 +26,7 @@ function Program(player)
 		this.nextButton = this.mainWindow.findChild("nextButton");
 		this.volumeSlider = this.mainWindow.findChild("volumeSlider");
 		this.waveformSlider = this.mainWindow.findChild("waveformSlider");
+		this.sizeGrip = this.mainWindow.findChild("sizeGrip");
 		this.playlistToggleButton = this.mainWindow.findChild("playlistToggleButton");
 		this.shadowWidget = this.mainWindow.findChild("shadowWidget");
 		this.closeButton = this.mainWindow.findChild("closeButton");
@@ -103,8 +104,12 @@ function Program(player)
 			titleBarlLayout.insertWidget(0, this.closeButton);
 			titleBarlLayout.insertWidget(1, this.minimizeButton);
 			titleBarlLayout.insertWidget(5, this.mainWindow.findChild("iconLabel"));
+
+			this.sizeGrip.setParent(borderWidget);
+		} else {
+			this.sizeGrip.hide();
+			this.mainWindow.setSizeGripEnabled(true);
 		}
-		this.mainWindow.setSizeGripEnabled(true);
 	} catch (err) {
 		print("QtScript: " + err);
 	}
@@ -142,6 +147,13 @@ Program.prototype.on_resized = function()
 									this.playlistToggleButton.width - 40,
 									this.playlistToggleButton.parentWidget().height -
 									this.playlistToggleButton.height);
+
+	if (Q_WS == "mac") {
+		this.sizeGrip.move(this.sizeGrip.parentWidget().width -
+							this.sizeGrip.width - 5,
+							this.sizeGrip.parentWidget().height -
+							this.sizeGrip.height - 4);
+	}
 
 	this.shadowWidget.resize(this.playlistWidget.width, this.shadowWidget.height);
 }

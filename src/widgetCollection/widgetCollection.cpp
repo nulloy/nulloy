@@ -52,6 +52,7 @@ NWidgetCollection::NWidgetCollection(QObject *parent) : QObject(parent)
 {
 	m_plugins.push_back(new NDropAreaPlugin(this));
 	m_plugins.push_back(new NWaveformSliderPlugin(this));
+	m_plugins.push_back(new QSizeGripPlugin(this));
 	m_plugins.push_back(new NSliderPlugin(this));
 	m_plugins.push_back(new NPlaylistWidgetPlugin(this));
 	m_plugins.push_back(new NLabelPlugin(this));

@@ -69,7 +69,7 @@
 	border-image: url(playlist_toggle_pressed.png);
 }
 
-#mainWindow &gt; QSizeGrip {
+#mainWindow &gt; QSizeGrip, #sizeGrip {
 	background-image: url(size_grip.png);
 	background-repeat: none;
 }
@@ -1044,6 +1044,31 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QSizeGrip" name="sizeGrip" native="true">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>10</width>
+                     <height>11</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>10</width>
+                     <height>11</height>
+                    </size>
+                   </property>
+                   <property name="cursor">
+                    <cursorShape>SizeFDiagCursor</cursorShape>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <spacer name="horizontalSpacer">
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
@@ -1627,6 +1652,12 @@ QScrollBar::add-line, QScrollBar::sub-line, QScrollBar::add-page, QScrollBar::su
    <class>NLabel</class>
    <extends>QLabel</extends>
    <header>label.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QSizeGrip</class>
+   <extends>QWidget</extends>
+   <header>qsizegrip.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
