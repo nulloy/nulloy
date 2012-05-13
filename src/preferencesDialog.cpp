@@ -17,6 +17,7 @@
 
 #include "settings.h"
 #include "player.h"
+#include "skinFileSystem.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -76,6 +77,17 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 
 	ui.skinRestartLabel->setVisible(FALSE);
 	ui.pluginsRestartLabel->setVisible(FALSE);
+
+	QPixmap pixmap = QIcon::fromTheme("dialog-warning", style()->standardIcon(QStyle::SP_MessageBoxWarning)).pixmap(16);
+	QByteArray byteArray;
+	QBuffer buffer(&byteArray);
+	pixmap.save(&buffer, "PNG");
+	NSkinFileSystem::addFile("warning.png", byteArray);
+	QString url = "<img src=\"skin:warning.png\"/>";
+
+	ui.skinRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.skinRestartLabel->text());
+	ui.pluginsRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.pluginsRestartLabel->text());
+
 #endif
 
 #if QT_VERSION >= 0x040700
