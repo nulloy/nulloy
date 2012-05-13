@@ -135,6 +135,8 @@ NPlayer::NPlayer()
 #endif
 	m_scriptEngine->globalObject().setProperty("Q_WS", ws);
 
+	m_scriptEngine->globalObject().setProperty("QT_VERSION", QT_VERSION);
+
 	qScriptRegisterQObjectMetaType<NMainWindow *>(m_scriptEngine);
 	qScriptRegisterQObjectMetaType<NPlaybackEngineInterface *>(m_scriptEngine);
 	qScriptRegisterQObjectMetaType<NSettings *>(m_scriptEngine);

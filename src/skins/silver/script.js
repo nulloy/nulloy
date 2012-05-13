@@ -79,6 +79,16 @@ function Program(player)
 		this.shadowWidget.setParent(this.playlistWidget);
 		this.shadowWidget.show();
 
+		if (QT_VERSION < 0x040700) {
+			var newStyle = "#volumeSlider::handle:horizontal {" +
+								"border-image: url(slider_handle_small__qt4.6.png);" +
+								"border-width: 4;" +
+								"width: 14;" +
+								"margin: -3 -3 -2 -3;" +
+							"}";
+			this.mainWindow.styleSheet = this.mainWindow.styleSheet.replace(/#volumeSlider::handle:horizontal[\s\S]*?}/g, newStyle);
+		}
+
 		this.maximumHeight = 120;
 		if (Q_WS == "mac") {
 			this.maximumHeight = 118;
