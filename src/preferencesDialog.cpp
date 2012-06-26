@@ -298,10 +298,12 @@ void NPreferencesDialog::saveSettings()
 	ui.skinRestartLabel->setVisible(NSettings::instance()->value("GUI/Skin").isValid() && skinVariant != NSettings::instance()->value("GUI/Skin"));
 #endif
 
-
 	ui.shortcutEditorWidget->applyShortcuts();
 	NSettings::instance()->saveShortcuts();
 	emit settingsChanged();
+
+	if (ui.trayIconCheckBox->isChecked() && !QSystemTrayIcon::isSystemTrayAvailable())
+		QMessageBox::warning(this, "Systray Error", QObject::tr("System Tray (Notification Area) is not available on your system."));
 }
 
 /* vim: set ts=4 sw=4: */
