@@ -255,7 +255,7 @@ padding: 5px;</string>
      </widget>
      <widget class="QWidget" name="shortcutsTab">
       <attribute name="title">
-       <string>Shortcuts</string>
+       <string>Keyboard</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
