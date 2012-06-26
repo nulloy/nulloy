@@ -86,7 +86,7 @@ void NPlaylistWidget::moveToTrash()
 		QListWidgetItem *takenItem = takeItem(row(item));
 		delete takenItem;
 	}
-	update();
+	viewport()->update();
 }
 
 void NPlaylistWidget::removeFromPlaylist()
@@ -95,7 +95,7 @@ void NPlaylistWidget::removeFromPlaylist()
 		QListWidgetItem *takenItem = takeItem(row(item));
 		delete takenItem;
 	}
-	update();
+	viewport()->update();
 }
 
 NPlaylistWidget::~NPlaylistWidget() {}
