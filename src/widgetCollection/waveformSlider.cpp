@@ -18,18 +18,18 @@
 #include <QPainter>
 #include <QFile>
 #include <QDebug>
-
-QColor main_bg =		QColor("#3f4f61");
-QColor main_border =	QColor("#000000");
-
-QColor wave_bg =		QColor("#4e9a06");
-QColor wave_border =	QColor("#8ae234");
-
-QColor progress_bg =	QColor("#0080ff");
-QColor paused_bg =		QColor("#ce8419");
+#include <QStylePainter>
+#include <QStyleOptionFocusRect>
 
 NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 {
+	m_radius = 0;
+	m_background = QBrush(Qt::darkBlue);
+	m_waveBackground = QBrush(Qt::darkGreen);
+	m_waveBorderColor = QColor(Qt::green);
+	m_progressBackground = QBrush(Qt::darkCyan);
+	m_pausedBackground = QBrush(Qt::darkGray);
+
 	m_waveBuilder = NULL;
 	m_bufImage.resize(7);
 
@@ -95,10 +95,10 @@ void NWaveformSlider::checkForUpdate()
 		m_waveImage.fill(0);
 
 		painter.setRenderHint(QPainter::Antialiasing);
-		painter.setBrush(wave_bg);
+		painter.setBrush(m_waveBackground);
 		QPen wavePen;
 		wavePen.setWidth(0);
-		wavePen.setColor(wave_border);
+		wavePen.setColor(m_waveBorderColor);
 		painter.setPen(wavePen);
 
 		painter.translate(1, 1);
@@ -147,8 +147,8 @@ void NWaveformSlider::paintEvent(QPaintEvent *event)
 	painter.setRenderHint(QPainter::Antialiasing);
 	// main bg
 	painter.setPen(Qt::NoPen);
-	painter.setBrush(main_bg);
-	painter.drawRoundedRect(rect(), 5, 5);
+	painter.setBrush(m_background);
+	painter.drawRoundedRect(rect(), m_radius, m_radius);
 	painter.end();
 
 	int x = qRound((qreal)m_oldValue / maximum() * width());
@@ -158,9 +158,9 @@ void NWaveformSlider::paintEvent(QPaintEvent *event)
 		// progress rectangle
 		painter.setPen(Qt::NoPen);
 		if (!m_pausedState)
-			painter.setBrush(progress_bg);
+			painter.setBrush(m_progressBackground);
 		else
-			painter.setBrush(paused_bg);
+			painter.setBrush(m_pausedBackground);
 		painter.drawRect(rect().adjusted(0, 0, x - width(), 0));
 		painter.end();
 
@@ -197,6 +197,7 @@ void NWaveformSlider::paintEvent(QPaintEvent *event)
 
 		// progress line
 		/*painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+		QColor main_border = QColor("#000000");
 		main_border.setAlpha(200);
 		painter.setPen(main_border);
 		painter.drawLine(x, 0, x, height());*/
@@ -251,6 +252,68 @@ void NWaveformSlider::drawFile(const QString &file)
 
 	m_waveBuilder->start(file);
 	setEnabled(TRUE);
+}
+
+// STYLESHEET PROPERTIES
+
+int NWaveformSlider::getRadius()
+{
+	return m_radius;
+}
+
+void NWaveformSlider::setRadius(int radius)
+{
+	m_radius = radius;
+}
+
+QBrush NWaveformSlider::getBackground()
+{
+	return m_background;
+}
+
+void NWaveformSlider::setBackground(QBrush brush)
+{
+	m_background = brush;
+}
+
+QBrush NWaveformSlider::getWaveBackground()
+{
+	return m_waveBackground;
+}
+
+void NWaveformSlider::setWaveBackground(QBrush brush)
+{
+	m_waveBackground = brush;
+}
+
+QColor NWaveformSlider::getWaveBorderColor()
+{
+	return m_waveBorderColor;
+}
+
+void NWaveformSlider::setWaveBorderColor(QColor color)
+{
+	m_waveBorderColor = color;
+}
+
+QBrush NWaveformSlider::getProgressBackground()
+{
+	return m_progressBackground;
+}
+
+void NWaveformSlider::setProgressBackground(QBrush brush)
+{
+	m_progressBackground = brush;
+}
+
+QBrush NWaveformSlider::getPausedBackground()
+{
+	return m_pausedBackground;
+}
+
+void NWaveformSlider::setPausedBackground(QBrush brush)
+{
+	m_pausedBackground = brush;
 }
 
 /* vim: set ts=4 sw=4: */

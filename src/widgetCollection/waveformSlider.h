@@ -24,6 +24,13 @@
 class NWaveformSlider : public QAbstractSlider
 {
 	Q_OBJECT
+	Q_PROPERTY(int radius READ getRadius WRITE setRadius DESIGNABLE true)
+	Q_PROPERTY(QBrush background READ getBackground WRITE setBackground DESIGNABLE true)
+	Q_PROPERTY(QBrush waveBackground READ getWaveBackground WRITE setWaveBackground DESIGNABLE true)
+	Q_PROPERTY(QColor waveBorderColor READ getWaveBorderColor WRITE setWaveBorderColor DESIGNABLE true)
+	Q_PROPERTY(QBrush progressBackground READ getProgressBackground WRITE setProgressBackground DESIGNABLE true)
+	Q_PROPERTY(QBrush pausedBackground READ getPausedBackground WRITE setPausedBackground DESIGNABLE true)
+
 
 private:
 	NWaveformBuilderInterface *m_waveBuilder;
@@ -55,6 +62,34 @@ public slots:
 
 private slots:
 	void checkForUpdate();
+
+// STYLESHEET PROPERTIES
+private:
+	int m_radius;
+	QBrush m_background;
+	QBrush m_waveBackground;
+	QColor m_waveBorderColor;
+	QBrush m_progressBackground;
+	QBrush m_pausedBackground;
+
+public:
+	int getRadius();
+	void setRadius(int radius);
+
+	QBrush getBackground();
+	void setBackground(QBrush brush);
+
+	QBrush getWaveBackground();
+	void setWaveBackground(QBrush brush);
+
+	QColor getWaveBorderColor();
+	void setWaveBorderColor(QColor color);
+
+	QBrush getProgressBackground();
+	void setProgressBackground(QBrush brush);
+
+	QBrush getPausedBackground();
+	void setPausedBackground(QBrush brush);
 };
 
 #endif

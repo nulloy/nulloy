@@ -811,6 +811,14 @@
                    <height>50</height>
                   </size>
                  </property>
+                 <property name="styleSheet">
+                  <string notr="true">qproperty-radius: 5;
+qproperty-background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #28323D, stop:1 #3f4f61);
+qproperty-waveBackground: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #55A807, stop:1 #366B04);
+qproperty-waveBorderColor: #8ae234;
+qproperty-progressBackground: #0080ff;
+qproperty-pausedBackground: #ce8419;</string>
+                 </property>
                 </widget>
                </item>
                <item>
