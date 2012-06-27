@@ -78,10 +78,6 @@
 	border-image: url(icon.png);
 }
 
-#waveformSlider {
-	background: black;
-}
-
 #buttonSplitter_1, #buttonSplitter_2, #buttonSplitter_3 {
 	border-image: url(button_splitter.png);
 	border-top: 1;
@@ -705,6 +701,14 @@
                      <bold>true</bold>
                     </font>
                    </property>
+                   <property name="styleSheet">
+                     <string notr="true">#titleLabel {
+qproperty-shadowEnabled: true;
+qproperty-shadowOffsetY: 1;
+qproperty-shadowColor: white;
+}
+                  </string>
+                   </property>
                    <property name="text">
                     <string notr="true">Nulloy</string>
                    </property>
@@ -812,12 +816,16 @@
                   </size>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">qproperty-radius: 5;
-qproperty-background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #28323D, stop:1 #3f4f61);
-qproperty-waveBackground: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #55A807, stop:1 #366B04);
-qproperty-waveBorderColor: #8ae234;
-qproperty-progressBackground: #0080ff;
-qproperty-pausedBackground: #ce8419;</string>
+                  <string notr="true">#waveformSlider {
+	background: black;
+	qproperty-radius: 5;
+	qproperty-background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #28323D, stop:1 #3f4f61);
+	qproperty-waveBackground: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #55A807, stop:1 #366B04);
+	qproperty-waveBorderColor: #8ae234;
+	qproperty-progressBackground: #0080ff;
+	qproperty-pausedBackground: #ce8419;
+}
+                  </string>
                  </property>
                 </widget>
                </item>

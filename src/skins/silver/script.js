@@ -64,10 +64,6 @@ function Program(player)
 		this.closeButton.clicked.connect(this.mainWindow.close);
 		this.minimizeButton.clicked.connect(this.mainWindow.minimize);
 
-		this.titleLabel.shadowEnabled = true;
-		this.titleLabel.setShadowColor("#FFFFFF");
-		this.titleLabel.setShadowOffset(0, 1);
-
 		this.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
 		this.mainWindow.resized.connect(this, "on_resized");
 
