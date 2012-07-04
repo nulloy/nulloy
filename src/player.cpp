@@ -132,6 +132,8 @@ NPlayer::NPlayer()
 	ws = "mac";
 #elif defined Q_WS_WIN
 	ws = "win";
+#elif defined Q_WS_X11
+	ws = "x11";
 #endif
 	m_scriptEngine->globalObject().setProperty("Q_WS", ws);
 
