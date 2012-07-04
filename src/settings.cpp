@@ -33,15 +33,13 @@ NSettings::NSettings(QObject *parent)
 	Q_ASSERT_X(!m_instance, "NSettings", "NSettings instance already exists.");
 	m_instance = this;
 
-	if (!QFileInfo(this->fileName()).exists()) {
-		setValue("Shortcuts/playAction", QStringList() << "X" << "C" << "Space");
-		setValue("Shortcuts/stopAction", "V");
-		setValue("Shortcuts/prevAction", "Z");
-		setValue("Shortcuts/nextAction", "B");
+	setValue("Shortcuts/playAction", value("Shortcuts/playAction", QStringList() << "X" << "C" << "Space").toStringList());
+	setValue("Shortcuts/stopAction", value("Shortcuts/stopAction", "V").toString());
+	setValue("Shortcuts/prevAction", value("Shortcuts/prevAction", "Z").toString());
+	setValue("Shortcuts/nextAction", value("Shortcuts/nextAction", "B").toString());
 
-		setValue("GUI/PlaylistTitleFormat", "%a - %t (%d)");
-		setValue("GUI/WindowTitleFormat", "\"%a - %t\" - " + QCoreApplication::applicationName() + " %v");
-	}
+	setValue("GUI/PlaylistTitleFormat", value("GUI/PlaylistTitleFormat", "%a - %t (%d)").toString());
+	setValue("GUI/WindowTitleFormat", value("GUI/WindowTitleFormat", "\"%a - %t\" - " + QCoreApplication::applicationName() + " %v").toString());
 
 	setValue("GUI/MinimizeToTray", value("GUI/MinimizeToTray", FALSE).toBool());
 	setValue("GUI/TrayIcon", value("GUI/TrayIcon", FALSE).toBool());
@@ -106,10 +104,7 @@ void NSettings::saveShortcuts()
 				if (!seq.isEmpty())
 					keyStrings << seq.toString();
 			}
-			if (!keyStrings.isEmpty())
-				settings->setValue(name, keyStrings);
-			else
-				settings->remove(name);
+			settings->setValue(name, keyStrings);
 		}
 	};
 
@@ -128,20 +123,12 @@ QList<NAction *> NSettings::shortcuts()
 
 QVariant NSettings::value(const QString &key, const QVariant &defaultValue)
 {
-	return QSettings::value(key, defaultValue);
+	QVariant value = QSettings::value(key, defaultValue);
+	return value;
 }
 
 void NSettings::setValue(const QString &key, const QVariant &value)
 {
-	if ((value.type() == QVariant::String && value.toString().isEmpty()) ||
-		(value.type() == QVariant::StringList && value.toStringList().isEmpty()) ||
-		(value.type() == QVariant::List && value.toList().isEmpty()))
-	{
-		QSettings::remove(key);
-		emit valueChanged(key, QString());
-		return;
-	}
-
 	QSettings::setValue(key, value);
 	emit valueChanged(key, value);
 }
