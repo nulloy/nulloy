@@ -106,11 +106,6 @@ function Program(player)
 			var titleLabel = this.mainWindow.findChild("titleLabel");
 			titleLabel.setFontSize(12);
 
-			var titleBarlLayout = this.mainWindow.findChild("titleBarlLayout");
-			titleBarlLayout.insertWidget(0, this.closeButton);
-			titleBarlLayout.insertWidget(1, this.minimizeButton);
-			titleBarlLayout.insertWidget(5, this.mainWindow.findChild("iconLabel"));
-
 			this.sizeGrip.setParent(borderWidget);
 		} else {
 			this.sizeGrip.hide();
@@ -119,6 +114,13 @@ function Program(player)
 
 		if (Q_WS == "win")
 			this.mainWindow.setFramelessShadow(true);
+
+		if (WS_BUTTOS_SIDE == "left") {
+			var titleBarlLayout = this.mainWindow.findChild("titleBarlLayout");
+			titleBarlLayout.insertWidget(0, this.closeButton);
+			titleBarlLayout.insertWidget(1, this.minimizeButton);
+			titleBarlLayout.insertWidget(5, this.mainWindow.findChild("iconLabel"));
+		}
 	} catch (err) {
 		print("QtScript: " + err);
 	}

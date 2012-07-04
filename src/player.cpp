@@ -137,6 +137,19 @@ NPlayer::NPlayer()
 #endif
 	m_scriptEngine->globalObject().setProperty("Q_WS", ws);
 
+	QString buttons_side = "right";
+	if (ws == "mac") {
+		buttons_side = "left";
+	} else if (ws == "x11") {
+		QProcess gconftool;
+		gconftool.start("gconftool-2 --get \"/apps/metacity/general/button_layout\"");
+		gconftool.waitForStarted();
+		gconftool.waitForFinished();
+		if (gconftool.readAll().endsWith(":\n"))
+			buttons_side = "left";
+	}
+	m_scriptEngine->globalObject().setProperty("WS_BUTTOS_SIDE", buttons_side);
+
 	m_scriptEngine->globalObject().setProperty("QT_VERSION", QT_VERSION);
 
 	qScriptRegisterQObjectMetaType<NMainWindow *>(m_scriptEngine);
