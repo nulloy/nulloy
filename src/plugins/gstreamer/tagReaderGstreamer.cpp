@@ -18,6 +18,7 @@
 #include "core.h"
 
 #include <QCoreApplication>
+#include <gst/pbutils/pbutils.h>
 #include <QFileInfo>
 
 void NTagReaderGstreamer::init()
@@ -27,7 +28,6 @@ void NTagReaderGstreamer::init()
 
 	m_isValid = FALSE;
 	m_taglist = NULL;
-	m_playbin = NULL;
 
 #ifdef Q_WS_WIN
 	_putenv("GST_PLUGIN_PATH=Plugins\\GStreamer");
@@ -57,68 +57,34 @@ void NTagReaderGstreamer::init()
 
 void NTagReaderGstreamer::setSource(const QString &file)
 {
-	if (m_taglist) {
-		gst_tag_list_free(m_taglist);
-		m_taglist = NULL;
-	}
+	m_isValid = TRUE;
 
 	m_path = file;
-
-	m_playbin = gst_element_factory_make("playbin", NULL);
-
 	gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL, NULL);
 
-	g_object_set(m_playbin, "uri", uri, NULL);
-	gst_element_set_state(m_playbin, GST_STATE_PAUSED);
-
-	GstMessage *msg;
-	while (TRUE) {
-		msg = gst_bus_timed_pop_filtered(GST_ELEMENT_BUS(m_playbin), GST_CLOCK_TIME_NONE,
-										(GstMessageType)(GST_MESSAGE_ASYNC_DONE | GST_MESSAGE_TAG | GST_MESSAGE_ERROR));
-
-		if (GST_MESSAGE_TYPE(msg) != GST_MESSAGE_TAG)
-			break;
-
-		GstTagList *tags = NULL;
-		gst_message_parse_tag(msg, &tags);
-
-		if (gst_is_tag_list(tags)) {
-			m_taglist = gst_tag_list_merge(m_taglist, tags, GST_TAG_MERGE_KEEP);
-			gst_tag_list_free(tags);
-		}
-		gst_message_unref(msg);
-	};
-
-	if (GST_MESSAGE_TYPE(msg) == GST_MESSAGE_ERROR) {
-		gchar *debug;
-		GError *err;
-
-		gst_message_parse_error(msg, &err, &debug);
-		g_free(debug);
-		qWarning() << "NTagReaderGstreamer :: parse error ::" << err->message;
+	GError *err = NULL;
+	GstDiscoverer *discoverer = gst_discoverer_new(GST_SECOND * 60, &err);
+	if (discoverer == NULL) {
+		qWarning() << "NTagReaderGstreamer :: GstDiscoverer error ::" << err->message;
+		g_error_free(err);
+		return;
 	}
 
+	GstDiscovererInfo *info = gst_discoverer_discover_uri(discoverer, uri, &err);
+	GList *audioInfo = gst_discoverer_info_get_audio_streams(info);
+	m_sampleRate = gst_discoverer_audio_info_get_sample_rate((GstDiscovererAudioInfo *)audioInfo->data) / (float)1000;
+
+	m_taglist = gst_discoverer_info_get_tags(info);
 	if (gst_is_tag_list(m_taglist))
 		m_isValid = TRUE;
 
-	if (m_isValid) {
-		GstFormat format = GST_FORMAT_TIME;
-		m_nanosecs = 0;
-		gst_element_query_duration(m_playbin, &format, &m_nanosecs);
-	}
-
-	gst_message_unref(msg);
-	gst_element_set_state(m_playbin, GST_STATE_NULL);
-	gst_object_unref(m_playbin);
+	m_nanosecs = gst_discoverer_info_get_duration(info);
 }
 
 NTagReaderGstreamer::~NTagReaderGstreamer()
 {
 	if (!m_init)
 		return;
-
-	if (m_taglist)
-		gst_tag_list_free(m_taglist);
 }
 
 QString NTagReaderGstreamer::toString(const QString &format)
@@ -220,7 +186,7 @@ QString NTagReaderGstreamer::toString(const QString &format)
 				else
 					res += QString::number(bitrate / 1000);
 			} else if (ch == 's') {
-				res += "<Usupported tag: samplerate>";
+				res += QString::number(m_sampleRate);
 			} else if (ch == 'C') {
 				res += "<Usupported tag: channels number>";
 			} else if (ch == 'f') {

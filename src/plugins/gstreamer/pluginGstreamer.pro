@@ -5,7 +5,7 @@ include(../plugin.pri)
 
 unix {
 	CONFIG += link_pkgconfig
-	PKGCONFIG += gstreamer-0.10
+	PKGCONFIG += gstreamer-0.10 gstreamer-pbutils-0.10
 }
 win32 {
 	INCLUDEPATH +=	$(OSSBUILD_GSTREAMER_SDK_DIR)/include \
