@@ -47,17 +47,30 @@ else
 	VERSION=`src/version-git.sh`
 fi
 
+if [ -z "$NULLOY_BUILD_TMP_DIR" ]; then
+	NULLOY_BUILD_TMP_DIR=.
+fi
+
 # prepare directories
-DIST_DIR=nulloy-$VERSION
+_PWD=`pwd`
+DIST_NAME=nulloy-$VERSION
+DIST_DIR=$NULLOY_BUILD_TMP_DIR/$DIST_NAME
 rm -rf $DIST_DIR
 mkdir $DIST_DIR
+git diff > $DIST_DIR/diff.patch
 GIT_WORK_TREE=$DIST_DIR git checkout -f
-cd $DIST_DIR &&
+cd $DIST_DIR
+patch -i diff.patch -p1
+rm diff.patch
 
 # replace version
-sed -i 's/\(.*N_VERSION = \)$$system.*/\1'$VERSION'/g' src/version.pri
-find obs -type f -exec sed -i 's/_N_VERS_/'$VERSION'/g' {} +
-rm -f .gitignore src/version-git.sh
+if [ -f "src/version-git.sh" ]; then
+	sed -i 's/\(.*N_VERSION = \)$$system.*/\1'$VERSION'/g' src/version.pri
+	find obs -type f -exec sed -i 's/_N_VERS_/'$VERSION'/g' {} +
+fi
+
+# remove extras
+rm -f .gitignore
 
 # generate debian changelog
 src/changelog.sh -i ChangeLog -c "Sergey Vlasov <sergey@vlasov.me>" -p nulloy -r obs/nulloy.changes -d obs/debian.changelog -f $VERSION
@@ -71,6 +84,6 @@ if [ $BUILD_PHONON == "no" ]; then
 	sed -i '/Package: nulloy-phonon/,/^$/d' obs/debian.control
 fi
 
-cd -
-tar zcpf $DIST_DIR.tar.gz $DIST_DIR
-rm -rf $DIST_DIR
+cd ..
+tar zcpf $_PWD/$DIST_NAME.tar.gz $DIST_NAME
+cd $_PWD

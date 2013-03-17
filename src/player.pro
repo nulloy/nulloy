@@ -13,7 +13,6 @@ SOURCES += *.cpp ux/*.cpp
 
 FORMS += *.ui
 
-TMP_DIR = .tmp
 OBJECTS_DIR	= $$TMP_DIR
 MOC_DIR		= $$TMP_DIR
 RCC_DIR		= $$TMP_DIR
@@ -43,13 +42,14 @@ unix:!mac {
 	RESOURCES += native-skin-embedded.qrc
 
 	unix {
+		SRC_DIR=$$PWD
 		silver_skin.target = ../skins/silver.nzs
 		silver_skin.depends = skins/silver/*
-		silver_skin.commands =	mkdir ../skins ; cd $$TMP_DIR && \
-								cp -r ../skins/silver . && \
+		silver_skin.commands =	[ -d $$SRC_DIR/../skins ] || mkdir $$SRC_DIR/../skins && \
+								cd $$TMP_DIR && cp -r $$SRC_DIR/skins/silver . && \
 								cd silver && \
 								rm design.svg && \
-								zip ../../../skins/silver.nzs *
+								zip $$SRC_DIR/../skins/silver.nzs *
 		QMAKE_EXTRA_TARGETS += silver_skin
 		PRE_TARGETDEPS += $$silver_skin.target
 		#dirty hack for install
@@ -108,9 +108,6 @@ build_pass:CONFIG(static, static|shared) {
 include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
 include(../3rdParty/qtsingleapplication-2.6.1/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
-
-include(tagReader/tagReader.pri)
-
 
 # qmake -config no-plugins
 !no-plugins {

@@ -4,12 +4,13 @@
 . make-dist.sh
 
 # prepare directories
-DEB_DIR=$DIST_DIR-debianized
-rm -rf $DEB_DIR nulloy_$VERSION*
-tar -xzf $DIST_DIR.tar.gz
-ln -s $DIST_DIR.tar.gz $DIST_DIR.orig.tar.gz
-mv $DIST_DIR $DEB_DIR
-cd $DEB_DIR
+DEB_NAME=$DIST_NAME-debianized
+cd $NULLOY_BUILD_TMP_DIR
+rm -rf *-debianized *.dcs *.deb *.changes *.tar.gz
+tar -xzf $_PWD/$DIST_NAME.tar.gz
+ln -s $_PWD/$DIST_NAME.tar.gz $DIST_NAME.orig.tar.gz
+mv $DIST_NAME $DEB_NAME
+cd $DEB_NAME
 mv obs debian
 
 # remove obs-specific stuff
@@ -35,7 +36,9 @@ if ! grep -qw $VERSION debian/changelog; then
 fi
 
 # build a deb
-dpkg-buildpackage -sa -rfakeroot
+NULLOY_BUILD_TMP_DIR= dpkg-buildpackage -sa -rfakeroot
 
-cd -
-rm -rf $DEB_DIR
+cd ..
+rm $DIST_NAME.orig.tar.gz
+mv *.dsc *.deb *.changes *.tar.gz $_PWD/
+cd $_PWD

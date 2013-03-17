@@ -182,21 +182,29 @@ else
 	QMAKE_CONFIG="$QMAKE_CONFIG release"
 fi
 
-echo
-
 if [ $FORCE_VERSION != "no" ]; then
 	echo "Forced version: $FORCE_VERSION"
 	echo "N_CONFIG_FORCE_VERSION = $FORCE_VERSION" > $QMAKE_CACHE
 fi
 
-echo "Install prefix: $PREFIX"
-
 echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
+
+[ -z "$NULLOY_BUILD_TMP_DIR" ] && NULLOY_BUILD_TMP_DIR=`pwd`/.tmp
+[ ! -d "$NULLOY_BUILD_TMP_DIR" ] && mkdir $NULLOY_BUILD_TMP_DIR
+echo "TMP_DIR = $NULLOY_BUILD_TMP_DIR" >> $QMAKE_CACHE
+
+
+if [[ `uname | grep -i darwin` ]]; then
+    QMAKE_EXTRA_OPTIONS="-spec macx-g++"
+else
+	echo
+	echo "Install prefix: $PREFIX"
+fi
 
 echo
 echo "Running qmake..."
 
-$QMAKE "CONFIG+=$QMAKE_CONFIG" PREFIX="$PREFIX"
+$QMAKE "CONFIG+=$QMAKE_CONFIG" PREFIX="$PREFIX" $QMAKE_EXTRA_OPTIONS
 if [ $? -ne 0 ]; then
     echo "$BASENAME: qmake failed"
     exit 1

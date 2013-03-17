@@ -6,7 +6,8 @@ SOURCES += ../../core.cpp
 
 unix:DESTDIR = ../../../plugins
 win32:DESTDIR = ../../../Plugins
-OBJECTS_DIR = ../.tmp
-MOC_DIR = ../.tmp
+
+OBJECTS_DIR = $$TMP_DIR
+MOC_DIR = $$TMP_DIR
 
 INCLUDEPATH += ../..
