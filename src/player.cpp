@@ -49,14 +49,19 @@
 
 NWidgetPrototype widgetPrototype;
 NLayoutPrototype layoutPrototype;
+NSplitterPrototype splitterPrototype;
+
 Q_DECLARE_METATYPE(QWidget *)
 Q_DECLARE_METATYPE(QLayout *)
+Q_DECLARE_METATYPE(QDialog *)
+Q_DECLARE_METATYPE(QPushButton *)
+Q_DECLARE_METATYPE(QSplitter *)
+Q_DECLARE_METATYPE(QMargins)
+
 Q_DECLARE_METATYPE(NMainWindow *)
 Q_DECLARE_METATYPE(NPlaybackEngineInterface *)
 Q_DECLARE_METATYPE(NSettings *)
 Q_DECLARE_METATYPE(QList<QWidget *>)
-Q_DECLARE_METATYPE(QMargins)
-
 
 struct QtMetaObject : private QObject
 {
@@ -159,6 +164,7 @@ NPlayer::NPlayer()
 	qScriptRegisterMetaType(m_scriptEngine, NMarginsPrototype::toScriptValue, NMarginsPrototype::fromScriptValue);
 	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QWidget *>(), m_scriptEngine->newQObject(&widgetPrototype));
 	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QLayout *>(), m_scriptEngine->newQObject(&layoutPrototype));
+	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QSplitter *>(), m_scriptEngine->newQObject(&splitterPrototype));
 	qScriptRegisterSequenceMetaType< QList<QWidget *> >(m_scriptEngine);
 
 	QScriptValue constructor = m_scriptEngine->evaluate("Program");

@@ -17,6 +17,7 @@
 
 #include <QPushButton>
 #include <QDialog>
+#include <QSplitter>
 #include <QScriptValue>
 #include <QScriptEngine>
 
@@ -26,8 +27,8 @@ Q_DECLARE_METATYPE(QWidget *)
 Q_DECLARE_METATYPE(QLayout *)
 Q_DECLARE_METATYPE(QDialog *)
 Q_DECLARE_METATYPE(QPushButton *)
+Q_DECLARE_METATYPE(QSplitter *)
 Q_DECLARE_METATYPE(QMargins)
-
 
 NWidgetPrototype::NWidgetPrototype(QObject *parent) : QObject(parent) {}
 
@@ -157,6 +158,24 @@ void NLayoutPrototype::insertWidget(int index, QWidget *widget)
 	QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
 	if (layout)
 		dynamic_cast<QBoxLayout *>(layout)->insertWidget(index, widget);
+}
+
+NSplitterPrototype::NSplitterPrototype(QObject *parent) : QObject(parent) {}
+
+QList<int> NSplitterPrototype::sizes()
+{
+	QSplitter *splitter = qscriptvalue_cast<QSplitter *>(thisObject());
+	if (splitter)
+		return splitter->sizes();
+	else
+		return QList<int>();
+}
+
+void NSplitterPrototype::setSizes(const QList<int> &list)
+{
+	QSplitter *splitter = qscriptvalue_cast<QSplitter *>(thisObject());
+	if (splitter)
+		splitter->setSizes(list);
 }
 
 QScriptValue NMarginsPrototype::toScriptValue(QScriptEngine *engine, const QMargins &m)

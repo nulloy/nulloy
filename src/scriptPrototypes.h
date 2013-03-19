@@ -59,6 +59,16 @@ public:
 	Q_INVOKABLE void insertWidget(int index, QWidget *widget);
 };
 
+class NSplitterPrototype : public QObject, public QScriptable
+{
+	Q_OBJECT
+
+	public:
+		NSplitterPrototype(QObject *parent = 0);
+		Q_INVOKABLE QList<int> sizes();
+		Q_INVOKABLE void setSizes(const QList<int> &list);
+};
+
 namespace NMarginsPrototype
 {
 	QScriptValue toScriptValue(QScriptEngine *engine, const QMargins &m);

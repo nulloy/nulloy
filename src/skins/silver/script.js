@@ -58,7 +58,6 @@ function Program(player)
 		this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlide_setValue");
 
 		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["activateMediaList(const QStringList &)"]);
-
 		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.FramelessWindowHint | Qt.WindowCloseButtonHint) ^ (Qt.WindowTitleHint | Qt.Dialog);
 
 		this.closeButton.clicked.connect(this.mainWindow.close);
@@ -67,6 +66,7 @@ function Program(player)
 		this.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
 		this.mainWindow.resized.connect(this, "on_resized");
 
+		this.playlistToggleButton.hide();
 		this.playlistToggleButton.clicked.connect(this, "on_playlistToggleButtonClicked");
 		this.playlistToggleButton.setParent(this.playlistWidget);
 		this.playlistToggleButton.setParent(this.dropArea);
@@ -74,6 +74,9 @@ function Program(player)
 		this.shadowWidget.setParent(this.dropArea);
 		this.shadowWidget.setParent(this.playlistWidget);
 		this.shadowWidget.show();
+
+		this.splitter = this.mainWindow.findChild("splitter");
+		this.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
 
 		if (QT_VERSION < 0x040700) {
 			var newStyle = "#volumeSlider::handle:horizontal {" +
@@ -134,6 +137,8 @@ Program.prototype.afterShow = function()
 		this.mainWindow.minimumHeight = this.mainWindow.maximumHeight = this.maximumHeight;
 		this.mainWindow.resize(this.mainWindow.width, this.mainWindow.minimumHeigh);
 	}
+
+	this.splitter.setSizes(this.player.settings().value("SilverSkin/Splitter"));
 }
 
 Program.prototype.on_stateChanged = function(state)
@@ -194,6 +199,11 @@ Program.prototype.on_volumeSlider_sliderMoved = function(value)
 Program.prototype.volumeSlider_setValue = function(value)
 {
 	this.volumeSlider.value = Math.round(value * this.volumeSlider.maximum);
+}
+
+Program.prototype.on_splitterMoved = function(pos, index)
+{
+	this.player.settings().setValue("SilverSkin/Splitter", this.splitter.sizes());
 }
 
 Program.prototype.on_waveformSlider_sliderMoved = function(value)
