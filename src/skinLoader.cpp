@@ -94,7 +94,6 @@ void NSkinLoader::_loadSkins()
 		skinsDirList << dir.absolutePath();
 	}
 #endif
-
 	QFileInfoList containersInfoList;
 	foreach (QString dirStr, skinsDirList) {
 		QDir dir(dirStr);

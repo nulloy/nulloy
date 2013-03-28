@@ -16,13 +16,17 @@
 #include "pluginGstreamer.h"
 #include "playbackEngineGstreamer.h"
 #include "waveformBuilderGstreamer.h"
+#ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
 #include "tagReaderGstreamer.h"
+#endif
 
 NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
 {
 	m_elements << new NPlaybackEngineGStreamer()
-				<< new NWaveformBuilderGstreamer()
-				<< new NTagReaderGstreamer();
+#ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
+				<< new NTagReaderGstreamer()
+#endif
+				<< new NWaveformBuilderGstreamer();
 }
 
 NPluginGstreamer::~NPluginGstreamer()

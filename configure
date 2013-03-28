@@ -10,6 +10,7 @@ HAVE_VLC=no
 
 FORCE_VERSION=no
 BUILD_GSTREAMER=yes
+BUILD_GSTREAMER_TAGREADER=yes
 EMBED_GSTREAMER=no
 BUILD_TAGLIB=no
 BUILD_VLC=no
@@ -24,10 +25,11 @@ echo_help()
 	if [ $HAS_GNU_GETOPT == "yes" ]; then
 		echo "Usage:  $BASENAME [options]"
 		echo '    --no-gstreamer              do not build GStreamer plugins'
+		echo '    --no-gstreamer-tagreader    do not build GStreamer TagReader plugin'
 		echo '    --embed-gstreamer           embed GStreamer plugins statically'
 		echo '    --vlc                       build VLC plugins'
 		echo '    --phonon                    build Phonon plugins'
-		echo '    --taglib                    build with taglib'
+		echo '    --taglib                    build with TagLib'
 		echo '    --no-skins                  disable skins support'
 		echo '    --no-plugins                disable plugins support'
 		echo '    --force-version VERSION     overrides version.pri'
@@ -36,10 +38,11 @@ echo_help()
 	else
 		echo "Usage:  $BASENAME [options]"
 		echo '    -G                          do not build GStreamer plugins'
+		echo '    -T                          do not build GStreamer TagReader plugin'
 		echo '    -s                          embed GStreamer plugins statically'
 		echo '    -l                          build VLC plugins'
 		echo '    -n                          build Phonon plugins'
-		echo '    -t                          build with taglib'
+		echo '    -t                          build with TagLib'
 		echo '    -S                          disable skins support'
 		echo '    -U                          disable plugins support'
 		echo '    -f VERSION                  overrides version.pri'
@@ -64,9 +67,9 @@ if [ $? -eq 4 ]; then
 fi
 
 if [ $HAS_GNU_GETOPT == "yes" ]; then
-	args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer embed-gstreamer vlc phonon taglib no-skins no-plugins debug prefix: help" -- "$@"`
+	args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer no-gstreamer-tagreader embed-gstreamer vlc phonon taglib no-skins no-plugins debug prefix: help" -- "$@"`
 else
-	args=`getopt GslntSUf:p:dh "$@"`
+	args=`getopt GTslntSUf:p:dh "$@"`
 fi
 
 if test $? != 0; then
@@ -83,6 +86,8 @@ while [ $# -gt 0 ]; do
 		shift; FORCE_VERSION=$1
 	elif [[ $1 == "G" || $1 == "--no-gstreamer" ]]; then
 		BUILD_GSTREAMER=no
+	elif [[ $1 == "T" || $1 == "--no-gstreamer-tagreader" ]]; then
+		BUILD_GSTREAMER_TAGREADER=no
 	elif [[ $1 == "s" || $1 == "--embed-gstreamer" ]]; then
 		EMBED_GSTREAMER=yes
 	elif [[ $1 == "l" || $1 == "--vlc" ]]; then
@@ -170,6 +175,7 @@ if [ $SUPPORT_PLUGINS == "no" ]; then
 fi
 
 [ $BUILD_GSTREAMER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG gstreamer"
+[ $BUILD_GSTREAMER_TAGREADER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG gstreamer-tagreader"
 [ $EMBED_GSTREAMER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG embed-gstreamer"
 [ $BUILD_VLC == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG vlc"
 [ $BUILD_PHONON == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG phonon"

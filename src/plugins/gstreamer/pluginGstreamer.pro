@@ -5,8 +5,9 @@ include(../plugin.pri)
 
 unix {
 	CONFIG += link_pkgconfig
-	PKGCONFIG += gstreamer-0.10 gstreamer-pbutils-0.10
+	PKGCONFIG += gstreamer-0.10
 }
+
 win32 {
 	INCLUDEPATH +=	$(OSSBUILD_GSTREAMER_SDK_DIR)/include \
 					$(OSSBUILD_GSTREAMER_SDK_DIR)/include/gstreamer-0.10 \
@@ -23,8 +24,16 @@ win32 {
 
 INCLUDEPATH += ..
 
-HEADERS += *.h
-SOURCES += *.cpp ../abstractWaveformBuilder.cpp ../../waveformPeaks.cpp
+HEADERS += $$files(*.h)
+SOURCES += $$files(*.cpp) ../abstractWaveformBuilder.cpp ../../waveformPeaks.cpp
+
+gstreamer-tagreader {
+	unix:PKGCONFIG += gstreamer-pbutils-0.10
+	DEFINES += _N_GSTREAMER_TAGREADER_PLUGIN_
+} else {
+	HEADERS -= tagReaderGstreamer.h
+	SOURCES -= tagReaderGstreamer.cpp
+}
 
 # vim: set ts=4 sw=4: #
 

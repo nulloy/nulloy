@@ -29,6 +29,12 @@ vlc {
 	SUBDIRS += vlc
 }
 
+# qmake -config taglib
+taglib {
+	taglib.file = src/plugins/taglib/pluginTaglib.pro
+	SUBDIRS += taglib
+}
+
 # qmake -config plugins-all
 plugins-all {
 	plugins.subdir = src/plugins

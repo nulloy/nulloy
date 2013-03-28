@@ -32,35 +32,28 @@
 
 namespace NPluginLoader
 {
-	bool _init = FALSE;
-	QStringList _identifiers;
-	NPlaybackEngineInterface *_playback = NULL;
-	NWaveformBuilderInterface *_waveform = NULL;
-	NTagReaderInterface *_tagReader = NULL;
+	static bool _init = FALSE;
+	static QStringList _identifiers;
+	static NPlaybackEngineInterface *_playback = NULL;
+	static NWaveformBuilderInterface *_waveform = NULL;
+	static NTagReaderInterface *_tagReader = NULL;
 
 	void _loadPlugins();
 	QObject* _findPlugin(PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags);
-	QMap<QString, QPluginLoader *> _loaders;
+	static QMap<QString, QPluginLoader *> _loaders;
 }
 
 void NPluginLoader::deinit()
 {
 	foreach (QString key, _loaders.keys()) {
-		if (_loaders[key]) {
-			QStringList other_keys = _loaders.keys(_loaders[key]);
+		if (_loaders[key])
 			_loaders[key]->unload();
-			delete _loaders[key];
-			_loaders[key] = NULL;
-
-			foreach (QString other_key, other_keys)
-				_loaders[other_key] = NULL;
-		}
+		_loaders.remove(key);
 	}
-	foreach (QString null_key, _loaders.keys(NULL))
-		_loaders.remove(null_key);
 }
 
-QObject* NPluginLoader::_findPlugin(PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags) {
+QObject* NPluginLoader::_findPlugin(PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags)
+{
 	QString base_interface;
 	QString type_str;
 	if (type == PlaybackEngine) {
@@ -166,30 +159,30 @@ void NPluginLoader::_loadPlugins()
 		_putenv(QString("PATH=" + pluginsDirList.join(";") + ";" +
 				subDirsList.join(";") + ";" + getenv("PATH")).toAscii());
 #endif
-
 	foreach (QString dirStr, pluginsDirList) {
 		QDir dir(dirStr);
 		if (dir.exists()) {
 			foreach (QString fileName, dir.entryList(QDir::Files)) {
-				if (!QLibrary::isLibrary(fileName))
+				QString fileFullPath = dir.absoluteFilePath(fileName);
+				if (!QLibrary::isLibrary(fileFullPath))
 					continue;
-				QPluginLoader *loader = new QPluginLoader(dir.absoluteFilePath(fileName));
-				QObject *obj = loader->instance();
-				NPluginInterface *plugin = qobject_cast<NPluginInterface *>(obj);
+				QPluginLoader *loader = new QPluginLoader(fileFullPath);
+				QObject *instance = loader->instance();
+				NPluginInterface *plugin = qobject_cast<NPluginInterface *>(instance);
 				if (plugin) {
 					QObjectList elements = plugin->elements();
 					objects << elements;
 					foreach (QObject *obj, elements) {
 						NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(obj);
 						QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
-										((el->type() == Other) ? "" : "/" + el->name());
+						                     ((el->type() == Other) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
 						_identifiers << identifier;
 						_loaders[identifier] = loader;
 						usedFlags[identifier] = FALSE;
 					}
 				} else {
 					QMessageBox box(QMessageBox::Warning, QObject::tr("Plugin loading error"), QObject::tr("Failed to load plugin: ") +
-									dir.absoluteFilePath(fileName) + "\n\n" + loader->errorString(), QMessageBox::Close);
+									fileFullPath + "\n\n" + loader->errorString(), QMessageBox::Close);
 					box.exec();
 					delete loader;
 				}
@@ -201,25 +194,11 @@ void NPluginLoader::_loadPlugins()
 	_waveform = qobject_cast<NWaveformBuilderInterface *>(_findPlugin(WaveformBuilder, objects, usedFlags));
 	_tagReader = qobject_cast<NTagReaderInterface *>(_findPlugin(TagReader, objects, usedFlags));
 
-	QStringList used_keys;
-	foreach (QString key, usedFlags.keys(TRUE))
-		used_keys << key <<_loaders.keys(_loaders[key]);
-	used_keys.removeDuplicates();
-
-	foreach (QString key, _loaders.keys()) {
-		if (!used_keys.contains(key) && _loaders[key]) {
-			QStringList unused_keys = _loaders.keys(_loaders[key]);
-			_loaders[key]->unload();
-			delete _loaders[key];
-			_loaders[key] = NULL;
-
-			foreach (QString unused_key, unused_keys)
-				_loaders[unused_key] = NULL;
-		}
+	// remove not used plugins
+	foreach (QString key, usedFlags.keys(FALSE)) {
+		_loaders[key]->unload();
+		_loaders.remove(key);
 	}
-
-	foreach (QString null_key, _loaders.keys(NULL))
-		_loaders.remove(null_key);
 
 	if (!_waveform || !_playback || !_tagReader) {
 		QStringList message;

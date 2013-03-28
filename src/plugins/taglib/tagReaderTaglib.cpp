@@ -20,6 +20,9 @@
 
 void NTagReaderTaglib::init()
 {
+	if (m_init)
+		return;
+	
 	m_init = TRUE;
 	m_tagRef = NULL;
 }
@@ -150,7 +153,7 @@ QString NTagReaderTaglib::toString(const QString &format)
 
 bool NTagReaderTaglib::isValid()
 {
-	return m_tagRef->file() && m_tagRef->file()->isValid();
+	return (m_tagRef && m_tagRef->file() && m_tagRef->file()->isValid());
 }
 
 /* vim: set ts=4 sw=4: */

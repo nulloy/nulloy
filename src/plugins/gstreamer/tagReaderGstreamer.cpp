@@ -95,6 +95,7 @@ NTagReaderGstreamer::~NTagReaderGstreamer()
 {
 	if (!m_init)
 		return;
+
 	if (m_taglist)
 		gst_tag_list_free(m_taglist);
 }

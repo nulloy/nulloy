@@ -20,6 +20,7 @@ UI_DIR		= $$TMP_DIR
 
 # trash
 HEADERS += trash/trash.h
+INCLUDEPATH += trash/
 win32 {
 	SOURCES += trash/trash_win.cpp
 	LIBS += -ladvapi32 -lshell32

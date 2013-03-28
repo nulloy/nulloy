@@ -23,14 +23,14 @@
 
 namespace NCore
 {
-	QList<QByteArray> _argList;
-	QVector<const char *> _argVector;
-	bool _cArgs_init = FALSE;
+	static QList<QByteArray> _argList;
+	static QVector<const char *> _argVector;
+	static bool _cArgs_init = FALSE;
 
-	bool _rcDir_init = FALSE;
-	QString _rcDir;
+	static bool _rcDir_init = FALSE;
+	static QString _rcDir = "./";
 
-	QStringList _processPath(const QString &path);
+	static QStringList _processPath(const QString &path);
 }
 
 void NCore::cArgs(int *argc, const char ***argv)
