@@ -1,14 +1,21 @@
 #! /bin/bash
 
+# exit in case of errors
+set -e
+
+_PWD=`pwd`
+cd `dirname $0`
+ROOT=`pwd`
+
 # prepare tarball
-. make-dist.sh
+. $ROOT/make-dist.sh
 
 # prepare directories
 DEB_NAME=$DIST_NAME-debianized
 cd $NULLOY_BUILD_TMP_DIR
 rm -rf *-debianized *.dcs *.deb *.changes *.tar.gz
-tar -xzf $_PWD/$DIST_NAME.tar.gz
-ln -s $_PWD/$DIST_NAME.tar.gz $DIST_NAME.orig.tar.gz
+tar -xzf $ROOT/$DIST_NAME.tar.gz
+ln -s $ROOT/$DIST_NAME.tar.gz $DIST_NAME.orig.tar.gz
 mv $DIST_NAME $DEB_NAME
 cd $DEB_NAME
 mv obs debian
@@ -38,7 +45,6 @@ fi
 # build a deb
 NULLOY_BUILD_TMP_DIR= dpkg-buildpackage -sa -rfakeroot
 
-cd ..
-rm $DIST_NAME.orig.tar.gz
-mv *.dsc *.deb *.changes *.tar.gz $_PWD/
+cd $NULLOY_BUILD_TMP_DIR
+mv *.dsc *.deb *.changes $ROOT/
 cd $_PWD

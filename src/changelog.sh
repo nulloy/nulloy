@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# exit in case of errors
+set -e
+
 BASENAME=`basename $0`
 TRY_HELP="Try \`$BASENAME --help' for more information"
 

@@ -1,5 +1,12 @@
 #! /bin/bash
 
+# exit in case of errors
+set -e
+
+_PWD=`pwd`
+cd `dirname $0`
+ROOT=`pwd`
+
 BASENAME=`basename $0`
 TRY_HELP="Try \`$BASENAME --help' for more information"
 
@@ -48,15 +55,15 @@ else
 fi
 
 if [ -z "$NULLOY_BUILD_TMP_DIR" ]; then
-	NULLOY_BUILD_TMP_DIR=.
+	NULLOY_BUILD_TMP_DIR=$ROOT/.tmp
 fi
 
+
 # prepare directories
-_PWD=`pwd`
 DIST_NAME=nulloy-$VERSION
 DIST_DIR=$NULLOY_BUILD_TMP_DIR/$DIST_NAME
 rm -rf $DIST_DIR
-mkdir $DIST_DIR
+mkdir -p $DIST_DIR
 git diff > $DIST_DIR/diff.patch
 GIT_WORK_TREE=$DIST_DIR git checkout -f
 cd $DIST_DIR
@@ -84,6 +91,8 @@ if [ $BUILD_PHONON == "no" ]; then
 	sed -i '/Package: nulloy-phonon/,/^$/d' obs/debian.control
 fi
 
-cd ..
-tar zcpf $_PWD/$DIST_NAME.tar.gz $DIST_NAME
+cd $NULLOY_BUILD_TMP_DIR
+tar zcpf $ROOT/$DIST_NAME.tar.gz $DIST_NAME
+rm -rf $DIST_DIR
+
 cd $_PWD

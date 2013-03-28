@@ -1,4 +1,5 @@
 #! /bin/bash
+
 IS_GIT=`git rev-parse --is-inside-work-tree`
 if [[ "$IS_GIT" == "true" ]]; then
 	BRANCH=`git branch | sed -n 's/* \(.*\)/\1/p'`
