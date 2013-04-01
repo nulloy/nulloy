@@ -47,8 +47,8 @@ NSettings::NSettings(QObject *parent)
 	initValue("Shortcuts/prevAction", "Z");
 	initValue("Shortcuts/nextAction", "B");
 
-	initValue("PlaylistTrackInfo", "%a - %t (%d)");
-	initValue("WindowTitleTrackInfo","\"%a - %t\" - " + QCoreApplication::applicationName() + " %v");
+	initValue("PlaylistTrackInfo", "%F (%d)");
+	initValue("WindowTitleTrackInfo","\"{%a - %t|%F}\" - " + QCoreApplication::applicationName() + " %v");
 
 	initValue("MinimizeToTray", FALSE);
 	initValue("TrayIcon", FALSE);
@@ -63,12 +63,9 @@ NSettings::NSettings(QObject *parent)
 	initValue("LoadNextSort", QDir::Name);
 	initValue("Volume", 0.8);
 
-	initValue("TrackInfo/TopLeft", "%s kHz");
-	initValue("TrackInfo/BottomLeft", "%B kBps");
-	initValue("TrackInfo/MiddleCenter", "%a - %t");
-
-	initValue("TrackInfo/BottomRight", "%d");
-	initValue("TrackInfo/BottomCenter", "%T");
+	initValue("TrackInfo/TopLeft", "{%B kbps/%s kHz|}");
+	initValue("TrackInfo/MiddleCenter", "{%a - %t|%F}");
+	initValue("TrackInfo/BottomRight", "%T/%d");
 }
 
 NSettings::~NSettings()

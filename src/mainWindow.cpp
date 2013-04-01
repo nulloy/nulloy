@@ -116,7 +116,7 @@ void NMainWindow::loadSettings()
 	if (!sizeList.isEmpty())
 		resize(sizeList.at(0).toInt(), sizeList.at(1).toInt());
 	else
-		resize(430, 250);
+		resize(430, 350);
 }
 
 void NMainWindow::saveSettings()
