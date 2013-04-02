@@ -207,7 +207,10 @@ void NMainWindow::setFramelessShadow(bool enabled)
 
 void NMainWindow::updateFramelessShadow()
 {
-	if (_DwmIsCompositionEnabled() && m_framelessShadow)
+	DWORD version = GetVersion();
+	DWORD major = (DWORD) (LOBYTE(LOWORD(version))); // major = 6 for vista/7/2008
+
+	if (_DwmIsCompositionEnabled() && m_framelessShadow && major == 6)
 		SetClassLongPtr(winId(), GCL_STYLE, GetClassLongPtr(winId(), GCL_STYLE) | CS_DROPSHADOW);
 	else
 		SetClassLongPtr(winId(), GCL_STYLE, GetClassLongPtr(winId(), GCL_STYLE) & ~CS_DROPSHADOW);
