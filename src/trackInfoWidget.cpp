@@ -117,8 +117,13 @@ void NTrackInfoWidget::updateInfo()
 			label->hide();
 	} else {
 		foreach (QLabel *label, m_map.keys()) {
-			label->setText(m_tagReader->toString(m_map[label]));
-			label->show();
+			QString info = m_tagReader->toString(m_map[label]);
+			if (!info.isEmpty()) {
+				label->setText(info);
+				label->show();
+			} else {
+				label->hide();
+			}
 		}
 	}
 }

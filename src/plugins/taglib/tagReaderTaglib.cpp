@@ -22,7 +22,7 @@ void NTagReaderTaglib::init()
 {
 	if (m_init)
 		return;
-	
+
 	m_init = TRUE;
 	m_tagRef = NULL;
 }
@@ -44,8 +44,16 @@ NTagReaderTaglib::~NTagReaderTaglib()
 
 QString NTagReaderTaglib::toString(const QString &format)
 {
+	bool res;
+	return parse(format, &res);
+}
+
+QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopOnFail)
+{
 	if (format.isEmpty())
 		return "";
+
+	*success = TRUE;
 
 	if (!m_tagRef->file()->isValid())
 		return "NTagReaderTaglib::InvalidFile";
@@ -62,38 +70,42 @@ QString NTagReaderTaglib::toString(const QString &format)
 			QChar ch = format.at(i);
 			if (ch == 'a') {
 				QString str = TStringToQString(tag->artist());
-				if (str.isEmpty())
+				if (!(*success = !str.isEmpty()))
 					str = "<Unknown artist>";
 				res += str;
 			} else if (ch == 't') {
 				QString str = TStringToQString(tag->title());
-				if (str.isEmpty())
-					str = QFileInfo(m_path).baseName();
+				if (!(*success = !str.isEmpty()))
+					str = "<Unknown title>";
 				res += str;
 			} else if (ch == 'A') {
 				QString str = TStringToQString(tag->album());
-				if (str.isEmpty())
+				if (!(*success = !str.isEmpty()))
 					str = "<Unknown album>";
 				res += str;
 			} else if (ch == 'c') {
 				QString str = TStringToQString(tag->comment());
-				if (str.isEmpty())
+				if (!(*success = !str.isEmpty()))
 					str = "<Empty comment>";
 				res += str;
 			} else if (ch == 'g') {
 				QString str = TStringToQString(tag->genre());
-				if (str.isEmpty())
+				if (!(*success = !str.isEmpty()))
 					str = "<Unknown genre>";
 				res += str;
 			} else if (ch == 'y') {
 				QString str = QString::number(tag->year());
-				if (str == "0")
+				if (str == "0") {
 					str = "<Unknown year>";
+					*success = FALSE;
+				}
 				res += str;
 			} else if (ch == 'n') {
 				QString str = QString::number(tag->track());
-				if (str == "0")
+				if (str == "0") {
 					str = "<Unknown track number>";
+					*success = FALSE;
+				}
 				res += str;
 			} else if (ch == 'd') {
 				QString duration;
@@ -108,29 +120,38 @@ QString NTagReaderTaglib::toString(const QString &format)
 						duration.sprintf("%d:%02d", minutes, seconds);
 				} else {
 					duration = "<Unknown duration>";
+					*success = FALSE;
 				}
 				res += duration;
 			} else if (ch == 'D') {
 				QString duration;
-				if (seconds_total == 0)
+				if (seconds_total == 0) {
 					duration = "<Unknown duration>";
-				else
+					*success = FALSE;
+				} else {
 					duration = QString::number(seconds_total);
+				}
 				res += duration;
 			} else if (ch == 'B') {
 				QString str = QString::number(prop->bitrate() / 1000);
-				if (str == "0")
+				if (str == "0") {
 					str = "<Unknown bitrate>";
+					*success = FALSE;
+				}
 				res += str;
 			} else if (ch == 's') {
 				QString str = QString::number(prop->sampleRate());
-				if (str == "0")
+				if (str == "0") {
 					str = "<Unknown sample rate>";
+					*success = FALSE;
+				}
 				res += str;
 			} else if (ch == 'C') {
 				QString str = QString::number(prop->channels());
-				if (str == "0")
+				if (str == "0") {
 					str = "<Unknown channels number>";
+					*success = FALSE;
+				}
 				res += str;
 			} else if (ch == 'f') {
 				res += QFileInfo(m_path).baseName();
@@ -143,9 +164,43 @@ QString NTagReaderTaglib::toString(const QString &format)
 			} else {
 				res += ch;
 			}
+		} else if (format.at(i) == '{') {
+			++i;
+			int matchedAt = format.indexOf('}', i);
+			if (matchedAt == -1) {
+				res += "<condition error: unmatched '{'>";
+				return res;
+			}
+
+			QString condition = format.mid(i, matchedAt - 1);
+
+			if (condition.indexOf('{') != -1) {
+				res += "<condition error: extra '{'>";
+				return res;
+			}
+
+			QStringList values = condition.split('|');
+			if (values.count() < 2) {
+				res += "<condition error: missing '|'>";
+				return res;
+			} else if (values.count() > 2) {
+				res += "<condition error: extra '|'>";
+				return res;
+			}
+
+			bool cond_res;
+			QString cond_true = parse(values.at(0), &cond_res, TRUE);
+			if (cond_res) {
+				res += cond_true;
+			} else {
+				res += parse(values.at(1), &cond_res);
+			}
+			i = matchedAt;
 		} else {
 			res += format.at(i);
 		}
+		if (!*success && stopOnFail)
+			return "";
 	}
 
 	return res;

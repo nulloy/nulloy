@@ -31,6 +31,7 @@ private:
 	gint64 m_nanosecs;
 	float m_sampleRate;
 	bool m_isValid;
+	QString parse(const QString &format, bool *success, bool stopOnFail = FALSE);
 
 public:
 	NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}

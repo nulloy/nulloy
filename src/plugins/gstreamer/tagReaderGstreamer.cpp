@@ -102,8 +102,16 @@ NTagReaderGstreamer::~NTagReaderGstreamer()
 
 QString NTagReaderGstreamer::toString(const QString &format)
 {
+	bool res;
+	return parse(format, &res);
+}
+
+QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool stopOnFail)
+{
 	if (format.isEmpty())
 		return "";
+
+	*success = TRUE;
 
 	if (!m_isValid)
 		return "NTagReaderGstreamer::InvalidFile";
@@ -117,27 +125,27 @@ QString NTagReaderGstreamer::toString(const QString &format)
 			++i;
 			QChar ch = format.at(i);
 			if (ch == 'a') {
-				if (!gst_tag_list_get_string(m_taglist, "artist", &gstr))
+				if (!(*success = gst_tag_list_get_string(m_taglist, "artist", &gstr)))
 					res += "<Unknown artist>";
 				else
 					res += gstr;
 			} else if (ch == 't') {
-				if (!gst_tag_list_get_string(m_taglist, "title", &gstr))
-					res += QFileInfo(m_path).baseName();
+				if (!(*success = gst_tag_list_get_string(m_taglist, "title", &gstr)))
+					res += "<Unknown title>";
 				else
 					res += gstr;
 			} else if (ch == 'A') {
-				if (!gst_tag_list_get_string(m_taglist, "album", &gstr))
+				if (!(*success = gst_tag_list_get_string(m_taglist, "album", &gstr)))
 					res += "<Unknown album>";
 				else
 					res += gstr;
 			} else if (ch == 'c') {
-				if (!gst_tag_list_get_string(m_taglist, "comment", &gstr))
+				if (!(*success = gst_tag_list_get_string(m_taglist, "comment", &gstr)))
 					res += "<Empty comment>";
 				else
 					res += gstr;
 			} else if (ch == 'g') {
-				if (!gst_tag_list_get_string(m_taglist, "genre", &gstr))
+				if (!(*success = gst_tag_list_get_string(m_taglist, "genre", &gstr)))
 					res += "<Unknown genre>";
 				else
 					res += gstr;
@@ -149,15 +157,19 @@ QString NTagReaderGstreamer::toString(const QString &format)
 					if (year != G_DATE_BAD_YEAR)
 						str = QString::number(year);
 				}
-				if (str == "0")
+				if (str == "0") {
 					str = "<Unknown year>";
+					*success = FALSE;
+				}
 				res += str;
 			} else if (ch == 'n') {
 				unsigned int track = 0;
-				if (!gst_tag_list_get_uint(m_taglist, "track-number", &track))
-					res += "<Unknown track number>";
+				QString str;
+				if ((*success = gst_tag_list_get_uint(m_taglist, "track-number", &track)))
+					str = QString::number(track);
 				else
-					res += QString::number(track);
+					str = "<Unknown track number>";
+				res += str;
 			} else if (ch == 'd') {
 				QString duration;
 				if (seconds_total > 0) {
@@ -170,26 +182,32 @@ QString NTagReaderGstreamer::toString(const QString &format)
 					else
 						duration.sprintf("%d:%02d", minutes, seconds);
 				} else {
+					*success = FALSE;
 					duration = "<Unknown duration>";
 				}
 				res += duration;
 			} else if (ch == 'D') {
 				QString duration;
-				if (seconds_total == 0)
+				if (seconds_total == 0) {
 					duration = "<Unknown duration>";
-				else
+					*success = FALSE;
+				} else {
 					duration = QString::number(seconds_total);
+				}
 				res += duration;
 			} else if (ch == 'B') {
 				unsigned int bitrate = 0;
-				if (!gst_tag_list_get_uint(m_taglist, "bitrate", &bitrate))
-					res += "<Unknown bitrate>";
+				QString str;
+				if ((*success = gst_tag_list_get_uint(m_taglist, "bitrate", &bitrate)))
+					str = QString::number(bitrate / 1000);
 				else
-					res += QString::number(bitrate / 1000);
+					str = "<Unknown bitrate>";
+				res += str;
 			} else if (ch == 's') {
 				res += QString::number(m_sampleRate);
 			} else if (ch == 'C') {
 				res += "<Usupported tag: channels number>";
+				*success = FALSE;
 			} else if (ch == 'f') {
 				res += QFileInfo(m_path).baseName();
 			} else if (ch == 'F') {
@@ -201,9 +219,43 @@ QString NTagReaderGstreamer::toString(const QString &format)
 			} else {
 				res += ch;
 			}
+		} else if (format.at(i) == '{') {
+			++i;
+			int matchedAt = format.indexOf('}', i);
+			if (matchedAt == -1) {
+				res += "<condition error: unmatched '{'>";
+				return res;
+			}
+
+			QString condition = format.mid(i, matchedAt - 1);
+
+			if (condition.indexOf('{') != -1) {
+				res += "<condition error: extra '{'>";
+				return res;
+			}
+
+			QStringList values = condition.split('|');
+			if (values.count() < 2) {
+				res += "<condition error: missing '|'>";
+				return res;
+			} else if (values.count() > 2) {
+				res += "<condition error: extra '|'>";
+				return res;
+			}
+
+			bool cond_res;
+			QString cond_true = parse(values.at(0), &cond_res, TRUE);
+			if (cond_res) {
+				res += cond_true;
+			} else {
+				res += parse(values.at(1), &cond_res);
+			}
+			i = matchedAt;
 		} else {
 			res += format.at(i);
 		}
+		if (!*success && stopOnFail)
+			return "";
 	}
 
 	return res;
