@@ -20,6 +20,7 @@
 #include "m3uPlaylist.h"
 #include "tagReaderInterface.h"
 
+#include <QPointer>
 #include <QListWidget>
 
 class NPlaylistWidget : public QListWidget
@@ -39,12 +40,23 @@ private:
 	void activateItem(NPlaylistItem *item);
 	NPlaylistItem* createItemFromPath(const QString &file);
 	NPlaylistItem* createItemFromM3uItem(NM3uItem item);
-	bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
+
+// DRAG & DROP >>
+	QPointer<QDrag> m_drag;
+	QList<QUrl> m_mimeDataUrls;
 	QStringList mimeTypes() const;
+	QMimeData* mimeData(const QList<NPlaylistItem *> items) const;
+	bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
 #ifdef Q_WS_MAC
 	Qt::DropActions supportedDropActions() const;
 #endif
-	QMimeData* mimeData(const QList<NPlaylistItem *> items) const;
+protected:
+	void dropEvent(QDropEvent *event);
+	void dragEnterEvent(QDragEnterEvent *event);
+	void dragMoveEvent(QDragMoveEvent *event);
+	void dragLeaveEvent(QDragLeaveEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
+// << DRAG & DROP
 
 public:
 	NPlaylistWidget(QWidget *parent = 0);
@@ -82,7 +94,7 @@ signals:
 	void mediaSet(const QString &file);
 	void closed();
 
-// STYLESHEET PROPERTIES
+// STYLESHEET PROPERTIES >>
 private:
 	QColor m_failedTextColor;
 	QColor m_currentTextColor;
@@ -93,6 +105,7 @@ public:
 
 	QColor getCurrentTextColor();
 	void setCurrentTextColor(QColor color);
+// << STYLESHEET PROPERTIES
 };
 
 #endif
