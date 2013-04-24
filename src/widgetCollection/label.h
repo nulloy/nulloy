@@ -43,6 +43,8 @@ private:
 	void paintEvent(QPaintEvent *event);
 	void resizeEvent(QResizeEvent *event);
 
+	void updateElidedText();
+
 public:
 	NLabel(QWidget* parent = 0);
 

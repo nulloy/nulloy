@@ -28,7 +28,7 @@ NLabel::NLabel(QWidget* parent) : QLabel(parent)
 void NLabel::setText(const QString &text)
 {
 	QLabel::setText(text);
-	m_elidedText = fontMetrics().elidedText(text, m_elideMode, width(), Qt::TextShowMnemonic);
+	updateElidedText();
 }
 
 void NLabel::setElideMode(Qt::TextElideMode mode)
@@ -77,7 +77,16 @@ void NLabel::setShadowColor(QColor color)
 
 void NLabel::resizeEvent(QResizeEvent *event)
 {
-	m_elidedText = fontMetrics().elidedText(text(), m_elideMode, event->size().width(), Qt::TextShowMnemonic);
+	Q_UNUSED(event);
+	updateElidedText();
+}
+
+void NLabel::updateElidedText()
+{
+	m_elidedText = fontMetrics().elidedText(text(), m_elideMode, width(), Qt::TextShowMnemonic);
+	int error = fontMetrics().width(m_elidedText) - width();
+	if (error > 0)
+		m_elidedText = fontMetrics().elidedText(text(), m_elideMode, width() - error - fontMetrics().width("#"), Qt::TextShowMnemonic);
 }
 
 void NLabel::paintEvent(QPaintEvent *event)
