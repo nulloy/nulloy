@@ -33,7 +33,6 @@ function Program(player)
 		this.prevButton.clicked.connect(this.playlistWidget.activatePrev);
 		this.nextButton.clicked.connect(this.playlistWidget.activateNext);
 
-		this.mainWindow.styleSheet = "";
 		this.playButton.setStandardIcon("media-playback-start", ":/trolltech/styles/commonstyle/images/media-play-16.png");
 		this.stopButton.setStandardIcon("media-playback-stop", ":/trolltech/styles/commonstyle/images/media-stop-16.png");
 		this.prevButton.setStandardIcon("media-skip-backward", ":/trolltech/styles/commonstyle/images/media-skip-backward-16.png");

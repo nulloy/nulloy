@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>mainWindow</class>
+ <widget class="QDialog" name="mainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>424</width>
+    <width>511</width>
     <height>370</height>
    </rect>
   </property>
@@ -14,18 +14,27 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#prevButton {
-	qproperty-icon: url(:/trolltech/styles/commonstyle/images/media-skip-backward-16.png);
+   <string notr="true">#playlistWidget {
+	qproperty-failedTextColor: palette(dark);
 }
-#playButton {
-	qproperty-icon: url(:/trolltech/styles/commonstyle/images/media-play-16.png);
+
+#playlistWidget QScrollBar {
+	margin-bottom: 18;
 }
-#stopButton {
-	qproperty-icon: url(:/trolltech/styles/commonstyle/images/media-stop-16.png);
+
+#waveformSlider {
+	qproperty-radius: 3;
+	qproperty-background: #3f4f61;
+	qproperty-waveBackground: #4e9a06;
+	qproperty-waveBorderColor: #8ae234;
+	qproperty-progressBackground: #0080ff;
+	qproperty-pausedBackground: #ce8419;
 }
-#nextButton {
-	qproperty-icon: url(:/trolltech/styles/commonstyle/images/media-skip-forward-16.png);
-}</string>
+
+#TrackInfoWidget QLabel {
+	border-radius: 3;
+}
+</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
@@ -36,9 +45,6 @@
    </property>
    <item>
     <widget class="QWidget" name="centralWidget" native="true">
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <property name="spacing">
        <number>0</number>
@@ -82,7 +88,7 @@
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>50</height>
+              <height>60</height>
              </size>
             </property>
             <property name="maximumSize">
@@ -90,17 +96,6 @@
               <width>16777215</width>
               <height>16777215</height>
              </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">#waveformSlider {
-qproperty-radius: 3;
-qproperty-background: #3f4f61;
-qproperty-waveBackground: #4e9a06;
-qproperty-waveBorderColor: #8ae234;
-qproperty-progressBackground: #0080ff;
-qproperty-pausedBackground: #ce8419;
-}
-            </string>
             </property>
            </widget>
           </item>
@@ -145,6 +140,14 @@ qproperty-pausedBackground: #ce8419;
                <property name="focusPolicy">
                 <enum>Qt::NoFocus</enum>
                </property>
+               <property name="toolTip">
+                <string>Previous</string>
+               </property>
+               <property name="icon">
+                <iconset theme="media-skip-backward">
+                 <normaloff/>
+                </iconset>
+               </property>
               </widget>
              </item>
              <item>
@@ -172,6 +175,11 @@ qproperty-pausedBackground: #ce8419;
                </property>
                <property name="toolTip">
                 <string>Play / Pause</string>
+               </property>
+               <property name="icon">
+                <iconset theme="media-playback-start">
+                 <normaloff/>
+                </iconset>
                </property>
               </widget>
              </item>
@@ -201,6 +209,11 @@ qproperty-pausedBackground: #ce8419;
                <property name="toolTip">
                 <string>Stop</string>
                </property>
+               <property name="icon">
+                <iconset theme="media-playback-stop">
+                 <normaloff/>
+                </iconset>
+               </property>
               </widget>
              </item>
              <item>
@@ -219,6 +232,14 @@ qproperty-pausedBackground: #ce8419;
                </property>
                <property name="focusPolicy">
                 <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="toolTip">
+                <string>Next</string>
+               </property>
+               <property name="icon">
+                <iconset theme="media-skip-forward">
+                 <normaloff/>
+                </iconset>
                </property>
               </widget>
              </item>
@@ -330,11 +351,6 @@ qproperty-pausedBackground: #ce8419;
             </property>
             <property name="acceptDrops">
              <bool>true</bool>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QScrollBar {
-	margin-bottom: 18;
-}</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
