@@ -47,6 +47,8 @@ public:
 	NTrackInfoWidget(QWidget *parent = 0);
 	~NTrackInfoWidget();
 	void setTagReader(NTagReaderInterface *tagReader);
+	QString styleSheet() const;
+	void setStyleSheet(const QString &stylesheet);
 
 public slots:
 	void updateInfo();

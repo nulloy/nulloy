@@ -55,6 +55,18 @@ unix:!mac {
 		PRE_TARGETDEPS += $$silver_skin.target
 		#dirty hack for install
 		system($$silver_skin.commands)
+
+		metro_skin.target = ../skins/metro.nzs
+		metro_skin.depends = skins/metro/*
+		metro_skin.commands =	[ -d $$SRC_DIR/../skins ] || mkdir $$SRC_DIR/../skins && \
+		cd $$TMP_DIR && cp -r $$SRC_DIR/skins/metro . && \
+		cd metro && \
+		rm design.svg && \
+		zip $$SRC_DIR/../skins/metro.nzs *
+		QMAKE_EXTRA_TARGETS += metro_skin
+		PRE_TARGETDEPS += $$metro_skin.target
+		#dirty hack for install
+		system($$metro_skin.commands)
 	}
 } else {
 	DEFINES += _N_NO_SKINS_

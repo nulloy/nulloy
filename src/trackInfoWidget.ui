@@ -22,6 +22,12 @@
 	max-height: 14px;
 	font-size: 11px;
 	font-weight: bold;
+}
+
+#middleCenter {
+	border-radius: 8;
+	padding-bottom: 2;
+	font-size: 13px;
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -179,11 +185,6 @@
          <height>0</height>
         </size>
        </property>
-       <property name="styleSheet">
-        <string notr="true">border-radius: 8;
-padding-bottom: 2;
-font-size: 13px;</string>
-       </property>
        <property name="text">
         <string/>
        </property>
@@ -252,9 +253,6 @@ font-size: 13px;</string>
          <height>0</height>
         </size>
        </property>
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
        <property name="text">
         <string/>
        </property>
@@ -318,9 +316,6 @@ font-size: 13px;</string>
          <width>1</width>
          <height>0</height>
         </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"/>
        </property>
        <property name="text">
         <string/>

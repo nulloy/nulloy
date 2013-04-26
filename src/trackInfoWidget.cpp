@@ -51,6 +51,16 @@ NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
 	readSettings();
 }
 
+QString NTrackInfoWidget::styleSheet() const
+{
+	return m_container->styleSheet();
+}
+
+void NTrackInfoWidget::setStyleSheet(const QString &stylesheet)
+{
+	m_container->setStyleSheet(stylesheet);
+}
+
 bool NTrackInfoWidget::eventFilter(QObject *object, QEvent *event)
 {
 	if (event->type() == QEvent::DragEnter || event->type() == QEvent::Leave)

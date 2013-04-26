@@ -182,6 +182,7 @@ NPlayer::NPlayer()
 
 	m_waveformSlider = qFindChild<QWidget *>(m_mainWindow, "waveformSlider");
 	m_trackInfoWidget = new NTrackInfoWidget();
+	m_trackInfoWidget->setStyleSheet(m_trackInfoWidget->styleSheet() + m_mainWindow->styleSheet());
 	m_trackInfoWidget->setTagReader(NPluginLoader::tagReaderPlugin());
 	QVBoxLayout *trackInfoLayout = new QVBoxLayout;
 	trackInfoLayout->setContentsMargins(0, 0, 0, 0);
