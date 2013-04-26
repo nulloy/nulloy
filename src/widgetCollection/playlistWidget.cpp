@@ -122,6 +122,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 		return;
 	}
 
+	// trying to read tags
 	m_tagReader->setSource(file);
 	if (m_tagReader->isValid()) {
 		item->setText(m_tagReader->toString(NSettings::instance()->value("PlaylistTrackInfo").toString()));
@@ -129,10 +130,13 @@ void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 	} else {
 		item->setText(fileName);
 	}
+
+	// reset failed role
 	item->setData(NPlaylistItem::FailedRole, FALSE);
 
+	// setting currently playing font to bold, colors set in delegate
 	QFont f = item->font();
-	if (m_currentItem) {
+	if (m_currentItem) { // reset old item to defaults
 		f.setBold(FALSE);
 		m_currentItem->setFont(f);
 	}
@@ -140,7 +144,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 	item->setFont(f);
 
 	scrollToItem(item);
-	m_currentItem = item;
+	m_currentItem = item;update();
 
 	emit mediaSet(file);
 }
@@ -156,6 +160,14 @@ int NPlaylistWidget::currentRow()
 		return row(m_currentItem);
 	else
 		return -1;
+}
+
+QModelIndex NPlaylistWidget::currentIndex() const
+{
+	if (m_currentItem)
+		return indexFromItem(m_currentItem);
+	else
+		return QModelIndex();
 }
 
 QString NPlaylistWidget::currentTitle()
@@ -358,6 +370,29 @@ QMimeData* NPlaylistWidget::mimeData(const QList<NPlaylistItem *> items) const
 NPlaylistItem* NPlaylistWidget::item(int row)
 {
 	return dynamic_cast<NPlaylistItem *>(QListWidget::item(row));
+}
+
+
+// STYLESHEET PROPERTIES
+
+void NPlaylistWidget::setCurrentTextColor(QColor color)
+{
+	m_currentTextColor = color;
+}
+
+QColor NPlaylistWidget::getCurrentTextColor()
+{
+	return m_currentTextColor;
+}
+
+void NPlaylistWidget::setFailedTextColor(QColor color)
+{
+	m_failedTextColor = color;
+}
+
+QColor NPlaylistWidget::getFailedTextColor()
+{
+	return m_failedTextColor;
 }
 
 /* vim: set ts=4 sw=4: */

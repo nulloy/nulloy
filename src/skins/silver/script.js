@@ -78,20 +78,7 @@ function Program(player)
 		this.splitter = this.mainWindow.findChild("splitter");
 		this.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
 
-		if (QT_VERSION < 0x040700) {
-			var newStyle = "#volumeSlider::handle:horizontal {" +
-								"border-image: url(slider_handle_small__qt4.6.png);" +
-								"border-width: 4;" +
-								"width: 14;" +
-								"margin: -3 -3 -2 -3;" +
-							"}";
-			this.mainWindow.styleSheet = this.mainWindow.styleSheet.replace(/#volumeSlider::handle:horizontal[\s\S]*?}/g, newStyle);
-		}
-
-		this.maximumHeight = 120;
 		if (Q_WS == "mac") {
-			this.maximumHeight = 118;
-
 			this.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
 
 			var playlistWidget = this.mainWindow.findChild("playlistWidget");
@@ -102,9 +89,6 @@ function Program(player)
 			borderWidget.styleSheet = "#borderWidget { background: #6e6e6e; }"
 
 			var dropAreaMargins = this.dropArea.layout().contentsMargins();
-			dropAreaMargins.bottom = 5;
-			this.dropArea.layout().setContentsMargins(dropAreaMargins);
-			this.dropArea.layout().setSpacingAt(3, 6);
 
 			var titleLabel = this.mainWindow.findChild("titleLabel");
 			titleLabel.setFontSize(12);
@@ -120,8 +104,8 @@ function Program(player)
 
 		if (WS_BUTTOS_SIDE == "left") {
 			var titleBarlLayout = this.mainWindow.findChild("titleBarlLayout");
-			titleBarlLayout.insertWidget(0, this.closeButton);
-			titleBarlLayout.insertWidget(1, this.minimizeButton);
+			titleBarlLayout.insertWidget(0, this.mainWindow.findChild("closeWrapperOuter"));
+			titleBarlLayout.insertWidget(1, this.mainWindow.findChild("minimizeWrapperOuter"));
 			titleBarlLayout.insertWidget(5, this.mainWindow.findChild("iconLabel"));
 		}
 	} catch (err) {

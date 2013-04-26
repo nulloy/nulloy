@@ -25,6 +25,8 @@
 class NPlaylistWidget : public QListWidget
 {
 	Q_OBJECT
+	Q_PROPERTY(QColor failedTextColor READ getFailedTextColor WRITE setFailedTextColor DESIGNABLE true)
+	Q_PROPERTY(QColor currentTextColor READ getCurrentTextColor WRITE setCurrentTextColor DESIGNABLE true)
 
 private:
 	NPlaylistItem *m_currentItem;
@@ -32,6 +34,7 @@ private:
 	NTagReaderInterface *m_tagReader;
 
 	void contextMenuEvent(QContextMenuEvent *event);
+	void setCurrentRow(int row);
 	void setCurrentItem(NPlaylistItem *item);
 	void activateItem(NPlaylistItem *item);
 	NPlaylistItem* createItemFromPath(const QString &file);
@@ -51,6 +54,7 @@ public:
 
 	QStringList mediaList();
 	int currentRow();
+	QModelIndex currentIndex() const;
 	QString currentTitle();
 	void setTagReader(NTagReaderInterface *tagReader);
 
@@ -60,7 +64,6 @@ public slots:
 	void activatePrev();
 	void activateCurrent();
 	void setCurrentFailed();
-	void setCurrentRow(int row);
 	void activateRow(int row);
 	void appendMediaList(const QStringList &pathList);
 	void setMediaList(const QStringList &pathList);
@@ -78,6 +81,18 @@ signals:
 	void currentActivated();
 	void mediaSet(const QString &file);
 	void closed();
+
+// STYLESHEET PROPERTIES
+private:
+	QColor m_failedTextColor;
+	QColor m_currentTextColor;
+
+public:
+	QColor getFailedTextColor();
+	void setFailedTextColor(QColor color);
+
+	QColor getCurrentTextColor();
+	void setCurrentTextColor(QColor color);
 };
 
 #endif

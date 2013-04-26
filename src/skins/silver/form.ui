@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>588</width>
-    <height>464</height>
+    <width>538</width>
+    <height>444</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,16 +18,13 @@
 	color : #141414;
 }
 #borderWidget {
-	background-color: qlineargradient(x1: 0, y1: 0,
-															x2: 0, y2: 1,
-															stop: 0 #767676,
-															stop: 1 #515151);
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #767676, stop: 1 #515151);
 }
 
 #backgroundWidget {
-	border-image: url(main_grad.png);
-	border-top: 22;
-	border-bottom: 50;
+	background: #c8c8c8;
+	border-top: 22px solid qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #f0f0f0, stop:1 #c8c8c8);
+	border-bottom: 50px solid qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #c8c8c8, stop:1 #a0a0a0);
 }
 
 #splitter {
@@ -46,139 +43,168 @@
 }
 
 #shadowWidget {
-	border-image: url(playlist_shadow.png);
+	background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 0, 110), stop:0.5 rgba(0, 0, 0, 35), stop:0.7 rgba(0, 0, 0, 15), stop:1 rgba(0, 0, 0, 0));
 }
 
 #playlistWidget {
+	color: black;
+	qproperty-failedTextColor: #949494;
 	background: white;
 	padding: 5;
 }
-
 #playlistWidget::item {
 	background: white;
 }
-
 #playlistWidget::item:alternate {
-	background: palette(alternate-base);
+	background: #E9E9E9;
+}
+#playlistWidget::item:selected {
+	background: #BBBBBB;
 }
 
-#playlistWidget::item:selected {
-	background: #BBBBBB /*palette(highlight)*/;
+#playlistWidget QScrollBar {
+	background: transparent;
+	width: 13;
+	margin-bottom: 15;
+}
+#playlistWidget QScrollBar::handle {
+	border-radius: 4px;
+	border: 1px solid white;
+	background: qlineargradient(spread:pad, x1:0.1, y1:0, x2:0.9, y2:0, stop:0 #AAAAAA, stop:1 #919191);
+	margin-left: 5;
+	border: 5;
+}
+#playlistWidget QScrollBar::handle:hover {
+	background: qlineargradient(spread:pad, x1:0.1, y1:0, x2:0.9, y2:0, stop:0 #919191, stop:1 #828282);
+}
+#playlistWidget QScrollBar::add-line,
+QScrollBar::sub-line,
+QScrollBar::add-page,
+QScrollBar::sub-page {
+	background: none;
 }
 
 #playlistToggleButton {
-	border-image: url(playlist_toggle.png);
+	border-radius: 2px;
+	border: 1px solid #4A4A4A;
+	border-bottom: none;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #A8A8A8, stop:1 #A0A0A0);
 	qproperty-icon: url(playlist_icon.png);
-	border-top: 8;
-	border-left: 10;
-	border-right: 10;
-	padding: -8;
-	padding-top: -14;
 }
-
 #playlistToggleButton:hover {
-	border-image: url(playlist_toggle_hover.png);
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #FFFFFD, stop:1 #FBFFDE);
 }
-
 #playlistToggleButton:pressed {
-	border-image: url(playlist_toggle_pressed.png);
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #686868, stop:1 #9C9C9C);
 }
 
 #mainWindow &gt; QSizeGrip, #sizeGrip {
 	background-image: url(size_grip.png);
 	background-repeat: none;
+	width: 14px;
+	height: 14px;
 }
 
 #iconLabel {
 	border-image: url(icon.png);
 }
 
-#buttonSplitter_1, #buttonSplitter_2, #buttonSplitter_3 {
-	border-image: url(button_splitter.png);
-	border-top: 1;
+#segmentWrapper {
+	border-radius: 2px;
+	border:  1px solid #DEDEDE;
 }
-
 #prevButton, #playButton, #stopButton, #nextButton {
-	border-image: url(button_normal.png);
-	min-height:15;
-	max-height:15;
-	border: 5;
+	border-radius: 2px;
+	border: 1px solid #4A4A4A;
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #FAFAFA, stop:1 #9b9b9b);
+	padding-top: 1px;
 }
-
 #prevButton, #playButton, #stopButton {
-	margin-right: -5;
-	padding-right: 5;
+	border-right: none;
 }
-
-#playButton, #stopButton,  #nextButton {
-	margin-left: -5;
-	padding-left: 5;
+#playButton, #stopButton {
+	border-radius: 0;
 }
-
+#prevButton {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+#nextButton {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
 #playButton:hover, #stopButton:hover,
-#nextButton:hover, #prevButton:hover {
-	border-image: url(button_hover.png);
+#nextButton:hover, #prevButton:hover  {
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #FFFFFE, stop:1 #FBFFDD);
 }
-
 #playButton:pressed, #stopButton:pressed,
 #nextButton:pressed, #prevButton:pressed {
-	border-image: url(button_pressed.png);
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #666666, stop:1 #9E9E9E);
+	padding-top: 2px;
 }
-
-
-#volumeSlider::groove:horizontal {
-	border-image: url(slider_groove.png);
-	border-width: 5;
-	height: 1;
-}
-
-#volumeSlider::handle:horizontal {
-	border-image: url(slider_handle_small.png);
-	border-width: 4;
-	width: 18;
-	margin: -6 -6 -4 -6;
-}
-
-#minimizeButton, #closeButton {
-	border-image: none;
-	background-image: url(title_button_normal.png);
-	min-height:17;
-	max-height:17;
-	min-width:16;
-	max-width:16;
-	border: 8;
-}
-
-#minimizeButton:hover, #closeButton:hover {
-	background-image: url(title_button_hover.png);
-}
-
-#minimizeButton:pressed, #closeButton:pressed {
-	background-image: url(title_button_pressed.png);
-}
-
 #prevButton {
 	qproperty-icon: url(prev.png);
 }
-
 #stopButton {
 	qproperty-icon: url(stop.png);
 }
-
 #playButton {
 	qproperty-icon: url(play.png);
 }
-
 #nextButton {
 	qproperty-icon: url(next.png);
 }
 
+#minimizeWrapperOuter,
+#closeWrapperOuter {
+	background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #EDEDED, stop:0.999 #EDEDED, stop:1 transparent);
+}
+#minimizeWrapperInner,
+#closeWrapperInner {
+	background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 #4A4A4A, stop:0.98 #4A4A4A, stop:1 transparent);
+}
+#minimizeButton,
+#closeButton {
+	border-radius: 8px;
+	border: 2px solid transparent;
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #F8F8F8, stop:1 #B4B4B4);
+}
+#minimizeButton:hover, #closeButton:hover  {
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #FFFFFB, stop:1 #FBFFE0);
+}
+#minimizeButton:pressed, #closeButton:pressed {
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #6F6F6F, stop:1 #B5B5B5);
+	padding-top: 2px;
+}
 #closeButton {
 	qproperty-icon: url(button_close.png);
 }
-
 #minimizeButton {
 	qproperty-icon: url(button_minimize.png);
+}
+
+#volumeWrapper {
+	margin: 8px 0;
+	border-radius: 4px;
+	border:  1px solid #DEDEDE;
+}
+#volumeSlider::groove:horizontal {
+	border-radius: 4px;
+	border: 1px solid #4A4A4A;
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #AAAAAA, stop:1 #8C8C8C);
+	height: 8;
+}
+#volumeSlider::handle:horizontal {
+	border-radius: 4px;
+	border: 1px solid #4A4A4A;
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #F8F8F8, stop:1 #B4B4B4);
+	width: 23;
+	margin: -1;
+}
+#volumeSlider::handle:horizontal:hover {
+	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #F8F8F8, stop:1 #FBFFE0);
 }
 </string>
   </property>
@@ -669,7 +695,7 @@
                  <number>3</number>
                 </property>
                 <item>
-                 <widget class="QWidget" name="" native="true">
+                 <widget class="QWidget" name="widget" native="true">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                     <horstretch>0</horstretch>
@@ -769,7 +795,7 @@ qproperty-shadowColor: white;
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QToolButton" name="minimizeButton">
+                    <widget class="QWidget" name="minimizeWrapperOuter" native="true">
                      <property name="minimumSize">
                       <size>
                        <width>16</width>
@@ -782,19 +808,46 @@ qproperty-shadowColor: white;
                        <height>17</height>
                       </size>
                      </property>
-                     <property name="font">
-                      <font>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="focusPolicy">
-                      <enum>Qt::NoFocus</enum>
-                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_9">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>1</number>
+                      </property>
+                      <item>
+                       <widget class="QWidget" name="minimizeWrapperInner" native="true">
+                        <layout class="QVBoxLayout" name="verticalLayout_10">
+                         <property name="margin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QToolButton" name="minimizeButton">
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QToolButton" name="closeButton">
+                    <widget class="QWidget" name="closeWrapperOuter" native="true">
                      <property name="minimumSize">
                       <size>
                        <width>16</width>
@@ -807,9 +860,42 @@ qproperty-shadowColor: white;
                        <height>17</height>
                       </size>
                      </property>
-                     <property name="focusPolicy">
-                      <enum>Qt::NoFocus</enum>
-                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_11">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>1</number>
+                      </property>
+                      <item>
+                       <widget class="QWidget" name="closeWrapperInner" native="true">
+                        <layout class="QVBoxLayout" name="verticalLayout_12">
+                         <property name="margin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QToolButton" name="closeButton">
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                   </layout>
@@ -842,7 +928,7 @@ qproperty-shadowColor: white;
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
-                    <height>50</height>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -882,7 +968,7 @@ qproperty-shadowColor: white;
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QWidget" name="" native="true">
+                 <widget class="QWidget" name="widget" native="true">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                     <horstretch>0</horstretch>
@@ -894,177 +980,107 @@ qproperty-shadowColor: white;
                     <number>0</number>
                    </property>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_2">
-                     <property name="spacing">
-                      <number>0</number>
+                    <widget class="QWidget" name="segmentWrapper" native="true">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
                      </property>
-                     <item>
-                      <widget class="QToolButton" name="prevButton">
-                       <property name="minimumSize">
-                        <size>
-                         <width>50</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>50</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="focusPolicy">
-                        <enum>Qt::NoFocus</enum>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QWidget" name="buttonSplitter_1" native="true">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>1</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>1</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QToolButton" name="playButton">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>50</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>50</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="focusPolicy">
-                        <enum>Qt::NoFocus</enum>
-                       </property>
-                       <property name="toolTip">
-                        <string>Play / Pause</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QWidget" name="buttonSplitter_2" native="true">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>1</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>1</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="baseSize">
-                        <size>
-                         <width>0</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QToolButton" name="stopButton">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>50</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>50</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="focusPolicy">
-                        <enum>Qt::NoFocus</enum>
-                       </property>
-                       <property name="toolTip">
-                        <string>Stop</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QWidget" name="buttonSplitter_3" native="true">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>1</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>1</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QToolButton" name="nextButton">
-                       <property name="minimumSize">
-                        <size>
-                         <width>50</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>50</width>
-                         <height>25</height>
-                        </size>
-                       </property>
-                       <property name="focusPolicy">
-                        <enum>Qt::NoFocus</enum>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
+                     <property name="minimumSize">
+                      <size>
+                       <width>210</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>200</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout_2">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>1</number>
+                      </property>
+                      <item>
+                       <widget class="QToolButton" name="prevButton">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
+                        </property>
+                        <property name="toolTip">
+                         <string>Previous</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="playButton">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
+                        </property>
+                        <property name="toolTip">
+                         <string>Play / Pause</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="stopButton">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
+                        </property>
+                        <property name="toolTip">
+                         <string>Stop</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="nextButton">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
+                        </property>
+                        <property name="toolTip">
+                         <string>Next</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
                    </item>
                    <item>
                     <widget class="QToolButton" name="playlistToggleButton">
@@ -1141,43 +1157,88 @@ qproperty-shadowColor: white;
                     </spacer>
                    </item>
                    <item>
-                    <widget class="NSlider" name="volumeSlider">
+                    <widget class="QWidget" name="volumeWrapper" native="true">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>120</width>
-                       <height>0</height>
+                       <width>0</width>
+                       <height>26</height>
                       </size>
                      </property>
                      <property name="maximumSize">
                       <size>
-                       <width>120</width>
-                       <height>16777215</height>
+                       <width>16777215</width>
+                       <height>26</height>
                       </size>
                      </property>
-                     <property name="focusPolicy">
-                      <enum>Qt::NoFocus</enum>
+                     <property name="sizeIncrement">
+                      <size>
+                       <width>0</width>
+                       <height>26</height>
+                      </size>
                      </property>
-                     <property name="toolTip">
-                      <string>Volume</string>
-                     </property>
-                     <property name="maximum">
-                      <number>100</number>
-                     </property>
-                     <property name="singleStep">
-                      <number>2</number>
-                     </property>
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="tickPosition">
-                      <enum>QSlider::NoTicks</enum>
-                     </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>1</number>
+                      </property>
+                      <item>
+                       <widget class="NSlider" name="volumeSlider">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>120</width>
+                          <height>25</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>120</width>
+                          <height>25</height>
+                         </size>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
+                        </property>
+                        <property name="toolTip">
+                         <string>Volume</string>
+                        </property>
+                        <property name="maximum">
+                         <number>100</number>
+                        </property>
+                        <property name="singleStep">
+                         <number>2</number>
+                        </property>
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="tickPosition">
+                         <enum>QSlider::NoTicks</enum>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                   </layout>
@@ -1188,7 +1249,7 @@ qproperty-shadowColor: white;
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="" native="true">
+           <widget class="QWidget" name="widget_4" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -1232,443 +1293,11 @@ qproperty-shadowColor: white;
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="palette">
-                <palette>
-                 <active>
-                  <colorrole role="WindowText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>0</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Button">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Light">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Midlight">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>203</red>
-                     <green>203</green>
-                     <blue>203</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Dark">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>130</red>
-                     <green>130</green>
-                     <blue>130</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Mid">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>184</red>
-                     <green>184</green>
-                     <blue>184</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Text">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>0</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="BrightText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="ButtonText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>0</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Base">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Window">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Shadow">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>167</red>
-                     <green>167</green>
-                     <blue>167</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Highlight">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>187</red>
-                     <green>187</green>
-                     <blue>187</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="HighlightedText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>0</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="AlternateBase">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>238</red>
-                     <green>238</green>
-                     <blue>238</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                 </active>
-                 <inactive>
-                  <colorrole role="WindowText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>0</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Button">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Light">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>63</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Midlight">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>203</red>
-                     <green>203</green>
-                     <blue>203</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Dark">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>130</red>
-                     <green>130</green>
-                     <blue>130</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Mid">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>184</red>
-                     <green>184</green>
-                     <blue>184</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Text">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>0</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="BrightText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="ButtonText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>0</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Base">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Window">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Shadow">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>167</red>
-                     <green>167</green>
-                     <blue>167</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Highlight">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>187</red>
-                     <green>187</green>
-                     <blue>187</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="HighlightedText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>51</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="AlternateBase">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>238</red>
-                     <green>238</green>
-                     <blue>238</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                 </inactive>
-                 <disabled>
-                  <colorrole role="WindowText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>181</red>
-                     <green>181</green>
-                     <blue>181</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Button">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Light">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>63</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Midlight">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>203</red>
-                     <green>203</green>
-                     <blue>203</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Dark">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>130</red>
-                     <green>130</green>
-                     <blue>130</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Mid">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>184</red>
-                     <green>184</green>
-                     <blue>184</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Text">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>181</red>
-                     <green>181</green>
-                     <blue>181</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="BrightText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="ButtonText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>181</red>
-                     <green>181</green>
-                     <blue>181</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Base">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Window">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>255</red>
-                     <green>255</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Shadow">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>167</red>
-                     <green>167</green>
-                     <blue>167</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Highlight">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>187</red>
-                     <green>187</green>
-                     <blue>187</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="HighlightedText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>51</red>
-                     <green>51</green>
-                     <blue>51</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="AlternateBase">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>238</red>
-                     <green>238</green>
-                     <blue>238</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                 </disabled>
-                </palette>
-               </property>
                <property name="focusPolicy">
                 <enum>Qt::ClickFocus</enum>
                </property>
                <property name="acceptDrops">
                 <bool>true</bool>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QScrollBar {
-	background: transparent;
-	width: 20;
-	margin-bottom: 15;
-}
-
-QScrollBar::handle {
-	border-image: url(scrollbar_handle.png);
-	margin: 6;
-	border: 5;
-}
-
-QScrollBar::add-line, QScrollBar::sub-line, QScrollBar::add-page, QScrollBar::sub-page {
-	background: none;
-}</string>
                </property>
                <property name="frameShape">
                 <enum>QFrame::NoFrame</enum>
