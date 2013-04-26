@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "playlistItem.h"
+#include "playlistWidget.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -60,15 +61,25 @@ void NPlaylistItemDelegate::paint(QPainter *painter,
 									const QStyleOptionViewItem &option,
 									const QModelIndex &index) const
 {
-	QStyleOptionViewItem opt = option;
+	QStyleOptionViewItemV4 opt = option;
+	const NPlaylistWidget *playlistWidget = dynamic_cast<const NPlaylistWidget *>(opt.widget);
 
-	if (index.data(NPlaylistItem::FailedRole).toBool()) {
-		QColor dark = option.palette.dark().color();
-		opt.palette.setColor(QPalette::HighlightedText, dark);
-		opt.palette.setColor(QPalette::Text, dark);
+	if (index == playlistWidget->currentIndex()) { // if currently playing item
+		QColor color = playlistWidget->property("currentTextColor").value<QColor>();
+		opt.palette.setColor(QPalette::HighlightedText, color);
+		opt.palette.setColor(QPalette::Text, color);
+	} else if (index.data(NPlaylistItem::FailedRole).toBool()) { // else if a failed one
+		QColor color = playlistWidget->property("failedTextColor").value<QColor>();
+		opt.palette.setColor(QPalette::HighlightedText, color);
+		opt.palette.setColor(QPalette::Text, color);
+	} else { // normal/selected item
+		QColor color = opt.palette.text().color();
+		opt.palette.setColor(QPalette::HighlightedText, color);
+		opt.palette.setColor(QPalette::Text, color);
 	}
 
-	QItemDelegate::paint(painter, opt, index);
+	QStyledItemDelegate::paint(painter, opt, index);
 }
+
 
 /* vim: set ts=4 sw=4: */

@@ -38,17 +38,14 @@ public:
 	void setData(int role, const QVariant &value);
 };
 
-#include <QItemDelegate>
+#include <QStyledItemDelegate>
 
-class NPlaylistItemDelegate : public QItemDelegate
+class NPlaylistItemDelegate : public QStyledItemDelegate
 {
-	Q_OBJECT
-
 public:
-	NPlaylistItemDelegate(QWidget *parent = 0) : QItemDelegate(parent) {}
+	NPlaylistItemDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
 	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
-
 
 #endif
 
