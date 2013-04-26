@@ -113,19 +113,12 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 {
 	QDialog *dialog = new QDialog(this);
 	dialog->setWindowTitle("Title Formats");
-	dialog->setMaximumSize(0, 0);
 
 	QVBoxLayout *layout = new QVBoxLayout;
 	dialog->setLayout(layout);
 
 	QTextBrowser *textBrowser = new QTextBrowser(this);
-	textBrowser->setStyleSheet("background: transparent");
-	textBrowser->setFrameShape(QFrame::NoFrame);
-#ifdef Q_WS_MAC
-	textBrowser->setHtml("<table width=\"300\">"
-#else
-	textBrowser->setHtml("<table width=\"200\">"
-#endif
+	textBrowser->setHtml("<table width=\"100%\">"
 						"<tr><td><b>%a</b></td><td>Artist</td></tr>"
 						"<tr><td><b>%t</b></td><td>Title</td></tr>"
 						"<tr><td><b>%A</b></td><td>Album</td></tr>"
@@ -144,17 +137,18 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 						"<tr><td><b>%p</b></td><td>File name including absolute path</td></tr>"
 						"<tr><td><b>%v</b></td><td>" + QCoreApplication::applicationName() + " version</td></tr>"
 						"<tr><td><b>%%</b></td><td>\'%\' character</td></tr>"
-						"</table><br>"
-						"<br>"
-						"Example: <b>%a - %t (%d)</b>");
+						"<tr><td></td><td></td></tr>"
+						"<tr><td>Conditions:</td><td></td></tr>"
+						"<tr><td><b>{</b><i>true</i><b>|</b><i>false</i><b>}</b></td><td>If / Else: evaluate for <i>true</i> or <i>false</i> case. Note: nesting conditions is not supported yet.</td></tr>"
+						"<tr><td></td><td></td></tr>"
+						"<tr><td>Examples:</td><td></td></tr>"
+						"<tr><td><b>{%a - %t|%F}</b></td><td>Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.</td></tr>"
+						"<tr><td></td><td></td></tr>"
+						"<tr><td><b>{%g|}</b></td><td>Print Genre. If not available, print nothing.</td></tr>"
+						"</table><br>");
 
-#ifdef Q_WS_MAC
-	textBrowser->setMinimumWidth(350);
-	textBrowser->setMinimumHeight(400);
-#else
-	textBrowser->setMinimumWidth(250);
-	textBrowser->setMinimumHeight(350);
-#endif
+	dialog->resize(450, 550);
+
 	layout->addWidget(textBrowser);
 
 	QPushButton *closeButton = new QPushButton("Close");
