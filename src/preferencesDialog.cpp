@@ -251,6 +251,12 @@ void NPreferencesDialog::loadSettings()
 		}
 	}
 
+	int height = ui.waveformTrackInfoTable->horizontalHeader()->height();
+	for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i)
+		height += ui.waveformTrackInfoTable->rowHeight(i);
+	height += 2; // frame
+	ui.waveformTrackInfoTable->setMaximumHeight(height);
+
 	int index;
 
 #ifndef _N_NO_SKINS_

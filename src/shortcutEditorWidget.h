@@ -34,9 +34,6 @@ private:
 		GlobalShortcut = 3,
 	};
 
-	QSize minimumSizeHint() const;
-	QSize sizeHint() const;
-
 public:
 	NShortcutEditorWidget(QWidget *parent = 0);
 	~NShortcutEditorWidget(void);

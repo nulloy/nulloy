@@ -20,7 +20,7 @@ NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(par
 {
 	setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	setColumnCount(4);
-	setHorizontalHeaderLabels(QStringList() << "Name" << "Description" << "Shortcut" << "Global Shortcut");
+	setHorizontalHeaderLabels(QStringList() << "Action" << "Description" << "Shortcut" << "Global Shortcut");
 
 	verticalHeader()->setVisible(FALSE);
 
@@ -30,21 +30,6 @@ NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(par
 	setStyleSheet("QTableView::item:disabled { color: black; }");
 
 	m_init = FALSE;
-}
-
-QSize NShortcutEditorWidget::minimumSizeHint() const
-{
-	QSize size(QTableWidget::sizeHint());
-	int height = horizontalHeader()->height();
-	for (int i = 0; i < rowCount(); ++i)
-		height += rowHeight(i);
-	size.setHeight(height);
-	return size;
-}
-
-QSize NShortcutEditorWidget::sizeHint() const
-{
-	return minimumSizeHint();
 }
 
 NShortcutEditorWidget::~NShortcutEditorWidget() {}
@@ -90,6 +75,11 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 	horizontalHeader()->setResizeMode(Shortcut, QHeaderView::Stretch);
 	horizontalHeader()->setResizeMode(GlobalShortcut, QHeaderView::Stretch);
 	horizontalHeader()->setStretchLastSection(TRUE);
+
+	int height = horizontalHeader()->height();
+	for (int i = 0; i < rowCount(); ++i)
+		height += rowHeight(i);
+	setMaximumHeight(height);
 
 	m_init = TRUE;
 }
