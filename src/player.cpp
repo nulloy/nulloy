@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2012 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2013 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -700,7 +700,7 @@ void NPlayer::showAboutMessageBox()
 #endif
 						"Version: " + QCoreApplication::applicationVersion() +
 							(QString(_N_TIME_STAMP_).isEmpty() ? "" : " (Build " + QString(_N_TIME_STAMP_) + ")") + "<br><br>" +
-						"Copyright (C) 2010-2011  Sergey Vlasov &lt;<a href='mailto:Sergey Vlasov <sergey@vlasov.me>" +
+						"Copyright (C) 2010-2013  Sergey Vlasov &lt;<a href='mailto:Sergey Vlasov <sergey@vlasov.me>" +
 							"?subject=" + QCoreApplication::applicationName() + " " +
 							QCoreApplication::applicationVersion() + "'>sergey@vlasov.me</a>&gt;" +
 					"</span>";
