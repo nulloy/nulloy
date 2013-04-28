@@ -75,6 +75,7 @@ signals:
 	void finished();
 	void failed();
 	void stateChanged(int state);
+	void tick(qint64 msec);
 };
 
 #endif

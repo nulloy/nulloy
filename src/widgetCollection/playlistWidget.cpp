@@ -124,7 +124,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistItem *item)
 
 	m_tagReader->setSource(file);
 	if (m_tagReader->isValid()) {
-		item->setText(m_tagReader->toString(NSettings::instance()->value("GUI/PlaylistTitleFormat").toString()));
+		item->setText(m_tagReader->toString(NSettings::instance()->value("GUI/PlaylistTrackInfo").toString()));
 		item->setData(NPlaylistItem::DurationRole, m_tagReader->toString("%D").toInt());
 	} else {
 		item->setText(fileName);

@@ -59,6 +59,7 @@ signals:
 	virtual void finished() = 0;
 	virtual void failed() = 0;
 	virtual void stateChanged(int state) = 0;
+	virtual void tick(qint64 msec) = 0;
 };
 
 Q_DECLARE_INTERFACE(NPlaybackEngineInterface, PLAYBACK_INTERFACE)

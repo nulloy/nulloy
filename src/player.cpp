@@ -43,6 +43,7 @@
 #include <QMetaObject>
 #include <QNetworkRequest>
 #include <QTextBrowser>
+#include <QToolTip>
 
 #include <QDebug>
 
@@ -173,6 +174,15 @@ NPlayer::NPlayer()
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
 	m_playlistWidget->setTagReader(NPluginLoader::tagReaderPlugin());
 
+	m_waveformSlider = qFindChild<QWidget *>(m_mainWindow, "waveformSlider");
+	m_trackInfoWidget = new NTrackInfoWidget();
+	m_trackInfoWidget->setTagReader(NPluginLoader::tagReaderPlugin());
+	QVBoxLayout *trackInfoLayout = new QVBoxLayout;
+	trackInfoLayout->setContentsMargins(0, 0, 0, 0);
+	trackInfoLayout->addWidget(m_trackInfoWidget);
+	m_waveformSlider->setLayout(trackInfoLayout);
+	connect(m_waveformSlider, SIGNAL(mouseMoved(int, int)), this, SLOT(waveformSliderToolTip(int, int)));
+	connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
 
 	// actions
 	NAction *playAction = new NAction(style()->standardIcon(QStyle::SP_MediaPlay), tr("Play / Pause"), this);
@@ -489,6 +499,8 @@ void NPlayer::saveSettings()
 void NPlayer::preferencesDialogSettingsChanged()
 {
 	NSystemTray::setEnabled(m_settings->value("GUI/TrayIcon").toBool());
+	m_trackInfoWidget->readSettings();
+	m_trackInfoWidget->updateInfo();
 }
 
 void NPlayer::versionOnlineFetch()
@@ -592,7 +604,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	if (QFile(path).exists()) {
 		NTagReaderInterface *tagReader = NPluginLoader::tagReaderPlugin();
 		tagReader->setSource(path);
-		QString format = NSettings::instance()->value("GUI/WindowTitleFormat").toString();
+		QString format = NSettings::instance()->value("GUI/WindowTitleTrackInfo").toString();
 		if (!format.isEmpty() && tagReader->isValid())
 			title = tagReader->toString(format);
 		else
@@ -601,6 +613,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 		title = app_title_version;
 	}
 	m_mainWindow->setTitle(title);
+	m_trackInfoWidget->updateInfo();
 	NSystemTray::setToolTip(title);
 }
 
@@ -803,5 +816,25 @@ void NPlayer::showContextMenu(QPoint pos)
 {
 	m_contextMenu->exec(m_mainWindow->mapToGlobal(pos));
 }
+
+void NPlayer::waveformSliderToolTip(int x, int y)
+{
+	if (x != -1 && y != -1) {
+		float pos = (float)x / m_waveformSlider->width();
+		int duration = NPluginLoader::tagReaderPlugin()->toString("%D").toInt();
+		int res = duration * pos;
+
+		int hours = res / 60 / 60;
+		QTime time = QTime().addSecs(res);
+		QString timeStr;
+		if (hours > 0)
+			timeStr = time.toString("h:mm:ss");
+		else
+			timeStr = time.toString("m:ss");
+
+		QToolTip::showText(m_waveformSlider->mapToGlobal(QPoint(x, y)), timeStr);
+	}
+}
+
 
 /* vim: set ts=4 sw=4: */

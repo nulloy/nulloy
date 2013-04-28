@@ -38,8 +38,8 @@ NSettings::NSettings(QObject *parent)
 	setValue("Shortcuts/prevAction", value("Shortcuts/prevAction", "Z").toString());
 	setValue("Shortcuts/nextAction", value("Shortcuts/nextAction", "B").toString());
 
-	setValue("GUI/PlaylistTitleFormat", value("GUI/PlaylistTitleFormat", "%a - %t (%d)").toString());
-	setValue("GUI/WindowTitleFormat", value("GUI/WindowTitleFormat", "\"%a - %t\" - " + QCoreApplication::applicationName() + " %v").toString());
+	setValue("GUI/PlaylistTrackInfo", value("GUI/PlaylistTrackInfo", "%a - %t (%d)").toString());
+	setValue("GUI/WindowTitleTrackInfo", value("GUI/WindowTitleTrackInfo", "\"%a - %t\" - " + QCoreApplication::applicationName() + " %v").toString());
 
 	setValue("GUI/MinimizeToTray", value("GUI/MinimizeToTray", FALSE).toBool());
 	setValue("GUI/TrayIcon", value("GUI/TrayIcon", FALSE).toBool());
@@ -53,6 +53,13 @@ NSettings::NSettings(QObject *parent)
 	setValue("LoadNext", value("LoadNext", FALSE).toBool());
 	setValue("LoadNextSort", value("LoadNextSort", QDir::Name).toInt());
 	setValue("Volume", value("Volume", 0.8).toFloat());
+
+	setValue("TrackInfo/TopLeft", value("TrackInfo/TopLeft", "%s kHz").toString());
+	setValue("TrackInfo/BottomLeft", value("TrackInfo/BottomLeft", "%B kBps").toString());
+	setValue("TrackInfo/MiddleCenter", value("TrackInfo/MiddleCenter", "%a - %t").toString());
+
+	setValue("TrackInfo/BottomRight", value("TrackInfo/BottomRight", "%d").toString());
+	setValue("TrackInfo/BottomCenter", value("TrackInfo/BottomCenter", "%T").toString());
 }
 
 NSettings::~NSettings()

@@ -21,6 +21,7 @@
 #include "waveformSlider.h"
 #include "preferencesDialog.h"
 #include "playlistWidget.h"
+#include "trackInfoWidget.h"
 #include "mainWindow.h"
 #include "logDialog.h"
 
@@ -40,11 +41,13 @@ private:
 	NPlaybackEngineInterface *m_playbackEngine;
 	QMenu *m_contextMenu;
 	NPlaylistWidget *m_playlistWidget;
+	NTrackInfoWidget *m_trackInfoWidget;
 	NLogDialog *m_logDialog;
 	QString m_localPlaylist;
 	QNetworkAccessManager *m_networkManager;
 	QTimer *m_trayIconDoubleClickTimer;
 	bool m_trayIconDoubleClickCheck;
+	QWidget *m_waveformSlider;
 
 public:
 	NPlayer();
@@ -72,6 +75,7 @@ private slots:
 	void loadNextActionTriggered();
 	void trayIconDoubleClick_timeout();
 	void trackIcon_clicked(int clicks);
+	void waveformSliderToolTip(int x, int y);
 
 public slots:
 	void quit();

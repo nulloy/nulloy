@@ -30,6 +30,8 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_progressBackground = QBrush(Qt::darkCyan);
 	m_pausedBackground = QBrush(Qt::darkGray);
 
+	setMouseTracking(TRUE);
+
 	m_waveBuilder = NULL;
 	m_bufImage.resize(7);
 
@@ -122,6 +124,16 @@ void NWaveformSlider::checkForUpdate()
 
 	if (needsUpdate)
 		update();
+}
+
+void NWaveformSlider::mouseMoveEvent(QMouseEvent *event)
+{
+	emit mouseMoved(event->x(), event->y());
+}
+
+void NWaveformSlider::leaveEvent(QEvent *event)
+{
+	emit mouseMoved(-1, -1);
 }
 
 void NWaveformSlider::paintEvent(QPaintEvent *event)

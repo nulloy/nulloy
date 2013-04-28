@@ -79,12 +79,15 @@
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">qproperty-radius: 3;
+            <string notr="true">#waveformSlider {
+qproperty-radius: 3;
 qproperty-background: #3f4f61;
 qproperty-waveBackground: #4e9a06;
 qproperty-waveBorderColor: #8ae234;
 qproperty-progressBackground: #0080ff;
-qproperty-pausedBackground: #ce8419;</string>
+qproperty-pausedBackground: #ce8419;
+}
+            </string>
            </property>
           </widget>
          </item>

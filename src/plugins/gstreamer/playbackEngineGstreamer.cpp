@@ -198,6 +198,8 @@ qreal NPlaybackEngineGStreamer::position()
 	if (format != GST_FORMAT_TIME)
 		return 0;
 
+	emit tick(pos / 1000000);
+
 	return (qreal)pos / len;
 }
 

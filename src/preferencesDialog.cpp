@@ -87,13 +87,9 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 
 	ui.skinRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.skinRestartLabel->text());
 	ui.pluginsRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.pluginsRestartLabel->text());
-
 #endif
 
-#if QT_VERSION >= 0x040700
-	ui.playlistTitleFormatLineEdit->setPlaceholderText("Example: %a - %t (%d)");
-	ui.windowTitleFormatLineEdit->setPlaceholderText("Example: \"%a - %t\" - Nulloy %v");
-#endif
+	ui.waveformTrackInfoTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 }
 
 void NPreferencesDialog::showEvent(QShowEvent *event)
@@ -137,8 +133,9 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 						"<tr><td><b>%g</b></td><td>Genre</td></tr>"
 						"<tr><td><b>%y</b></td><td>Year</td></tr>"
 						"<tr><td><b>%n</b></td><td>Track number</td></tr>"
-						"<tr><td><b>%d</b></td><td>Duration formated as h:mm:ss</td></tr>"
-						"<tr><td><b>%D</b></td><td>Duration in secods</td></tr>"
+						"<tr><td><b>%d</b></td><td>Duration</td></tr>"
+						"<tr><td><b>%T</b></td><td>Current time position (Waveform only)</td></tr>"
+						"<tr><td><b>%r</b></td><td>Remaining time (Waveform only)</td></tr>"
 						"<tr><td><b>%B</b></td><td>Bitrate in Kb/s</td></tr>"
 						"<tr><td><b>%s</b></td><td>Sample rate in kHz</td></tr>"
 						"<tr><td><b>%c</b></td><td>Number of channels</td></tr>"
@@ -149,9 +146,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 						"<tr><td><b>%%</b></td><td>\'%\' character</td></tr>"
 						"</table><br>"
 						"<br>"
-						"Examples<br>"
-						"Playlist: <b>%a - %t (%d)</b><br>"
-						"Window title: <b>\"%a - %t\" - Nulloy %v</b>");
+						"Example: <b>%a - %t (%d)</b>");
 
 #ifdef Q_WS_MAC
 	textBrowser->setMinimumWidth(350);
@@ -238,14 +233,23 @@ void NPreferencesDialog::loadSettings()
 {
 	ui.versionLabel->setText("");
 
-	ui.playlistTitleFormatLineEdit->setText(NSettings::instance()->value("GUI/PlaylistTitleFormat").toString());
-	ui.windowTitleFormatLineEdit->setText(NSettings::instance()->value("GUI/WindowTitleFormat").toString());
+	ui.playlistTrackInfoLineEdit->setText(NSettings::instance()->value("GUI/PlaylistTrackInfo").toString());
+	ui.windowTrackInfoLineEdit->setText(NSettings::instance()->value("GUI/WindowTitleTrackInfo").toString());
 	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("GUI/MinimizeToTray").toBool());
 	ui.restorePlaybackCheckBox->setChecked(NSettings::instance()->value("RestorePlayback").toBool());
 	ui.multipleInstansesCheckBox->setChecked(!NSettings::instance()->value("SingleInstanse").toBool());
 	ui.trayIconCheckBox->setChecked(NSettings::instance()->value("GUI/TrayIcon").toBool());
 	ui.versionCheckBox->setChecked(NSettings::instance()->value("AutoCheckUpdates").toBool());
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
+
+	for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
+		for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {
+			QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() + ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
+			QTableWidgetItem *item = new QTableWidgetItem(NSettings::instance()->value("TrackInfo/" + objecName).toString());
+			item->setTextAlignment(Qt::AlignCenter);
+			ui.waveformTrackInfoTable->setItem(i, j, item);
+		}
+	}
 
 	int index;
 
@@ -269,8 +273,8 @@ void NPreferencesDialog::loadSettings()
 
 void NPreferencesDialog::saveSettings()
 {
-	NSettings::instance()->setValue("GUI/PlaylistTitleFormat", ui.playlistTitleFormatLineEdit->text());
-	NSettings::instance()->setValue("GUI/WindowTitleFormat", ui.windowTitleFormatLineEdit->text());
+	NSettings::instance()->setValue("GUI/PlaylistTrackInfo", ui.playlistTrackInfoLineEdit->text());
+	NSettings::instance()->setValue("GUI/WindowTitleTrackInfo", ui.windowTrackInfoLineEdit->text());
 	NSettings::instance()->setValue("GUI/MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
 	NSettings::instance()->setValue("RestorePlayback", ui.restorePlaybackCheckBox->isChecked());
 	NSettings::instance()->setValue("SingleInstanse", !ui.multipleInstansesCheckBox->isChecked());
@@ -278,6 +282,12 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 
+	for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
+		for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {
+			QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() + ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
+			NSettings::instance()->setValue("TrackInfo/" + objecName, ui.waveformTrackInfoTable->item(i, j)->text());
+		}
+	}
 
 #ifndef _N_NO_PLUGINS_
 	// plugins

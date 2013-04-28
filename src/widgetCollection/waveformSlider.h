@@ -45,6 +45,8 @@ private:
 	float m_oldBuildPos;
 
 	void mousePressEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
+	void leaveEvent(QEvent *event);
 	void wheelEvent(QWheelEvent *event);
 	void paintEvent(QPaintEvent *event);
 	void reset();
@@ -59,6 +61,9 @@ public slots:
 	void drawFile(const QString &file);
 	void setValue(int value);
 	void setPausedState(bool);
+
+signals:
+	void mouseMoved(int x, int y);
 
 private slots:
 	void checkForUpdate();
