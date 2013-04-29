@@ -1,3 +1,11 @@
+* 0.5, Sun April 28 2013
+- New Metro skin
+- Resizable waveform
+- Displaying tags on top of the waveform
+- Tags conditions support
+- Plugins rewritten
+- Many other bug fixes and improvements
+
 * 0.4.5, Tue Dec 20 2011
 - Tags support added
 - Showing changelog in 'About'

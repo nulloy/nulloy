@@ -28,6 +28,6 @@ public:
 	virtual QString version() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/NPluginInterface/0.1")
+Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/NPluginInterface/0.5")
 
 #endif

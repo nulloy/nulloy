@@ -47,6 +47,6 @@ public:
 	virtual void init() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/NPluginElementInterface/0.1")
+Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/NPluginElementInterface/0.5")
 
 #endif

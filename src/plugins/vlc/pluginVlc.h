@@ -31,7 +31,7 @@ public:
 	~NPluginVlc();
 	QObjectList elements();
 	QString name() { return "VLC"; }
-	QString version() { return "0.1"; }
+	QString version() { return "0.5"; }
 };
 
 #endif
