@@ -84,8 +84,8 @@ function Program(player)
 			this.mainWindow.setSizeGripEnabled(true);
 		}
 
-		if (Q_WS == "win")
-			this.mainWindow.setFramelessShadow(true);
+		/*if (Q_WS == "win")
+			this.mainWindow.setFramelessShadow(true);*/
 
 		if (WS_BUTTOS_SIDE == "left") {
 			var titleBarlLayout = this.mainWindow.findChild("titleBarlLayout");
