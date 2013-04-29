@@ -28,6 +28,7 @@ class NSettings : public QSettings
 private:
 	static NSettings *m_instance;
 	QList<NAction *> m_actionList;
+	void initValue(const QString &key, const QVariant &defaultValue);
 
 public:
 	NSettings(QObject *parent = 0);

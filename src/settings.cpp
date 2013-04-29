@@ -33,33 +33,33 @@ NSettings::NSettings(QObject *parent)
 	Q_ASSERT_X(!m_instance, "NSettings", "NSettings instance already exists.");
 	m_instance = this;
 
-	setValue("Shortcuts/playAction", value("Shortcuts/playAction", QStringList() << "X" << "C" << "Space").toStringList());
-	setValue("Shortcuts/stopAction", value("Shortcuts/stopAction", "V").toString());
-	setValue("Shortcuts/prevAction", value("Shortcuts/prevAction", "Z").toString());
-	setValue("Shortcuts/nextAction", value("Shortcuts/nextAction", "B").toString());
+	initValue("Shortcuts/playAction", QStringList() << "X" << "C" << "Space");
+	initValue("Shortcuts/stopAction", "V");
+	initValue("Shortcuts/prevAction", "Z");
+	initValue("Shortcuts/nextAction", "B");
 
-	setValue("GUI/PlaylistTrackInfo", value("GUI/PlaylistTrackInfo", "%a - %t (%d)").toString());
-	setValue("GUI/WindowTitleTrackInfo", value("GUI/WindowTitleTrackInfo", "\"%a - %t\" - " + QCoreApplication::applicationName() + " %v").toString());
+	initValue("GUI/PlaylistTrackInfo", "%a - %t (%d)");
+	initValue("GUI/WindowTitleTrackInfo","\"%a - %t\" - " + QCoreApplication::applicationName() + " %v");
 
-	setValue("GUI/MinimizeToTray", value("GUI/MinimizeToTray", FALSE).toBool());
-	setValue("GUI/TrayIcon", value("GUI/TrayIcon", FALSE).toBool());
-	setValue("GUI/AlwaysOnTop", value("GUI/AlwaysOnTop", FALSE).toBool());
-	setValue("GUI/WhilePlayingOnTop", value("GUI/WhilePlayingOnTop", FALSE).toBool());
-	setValue("RestorePlayback", value("RestorePlayback", TRUE).toBool());
-	setValue("SingleInstanse", value("SingleInstanse", TRUE).toBool());
-	setValue("AutoCheckUpdates", value("AutoCheckUpdates", TRUE).toBool());
-	setValue("DisplayLogDialog", value("DisplayLogDialog", TRUE).toBool());
-	setValue("LastDirectory", value("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation)).toString());
-	setValue("LoadNext", value("LoadNext", FALSE).toBool());
-	setValue("LoadNextSort", value("LoadNextSort", QDir::Name).toInt());
-	setValue("Volume", value("Volume", 0.8).toFloat());
+	initValue("GUI/MinimizeToTray", FALSE);
+	initValue("GUI/TrayIcon", FALSE);
+	initValue("GUI/AlwaysOnTop", FALSE);
+	initValue("GUI/WhilePlayingOnTop", FALSE);
+	initValue("RestorePlayback", TRUE);
+	initValue("SingleInstanse", TRUE);
+	initValue("AutoCheckUpdates", TRUE);
+	initValue("DisplayLogDialog", TRUE);
+	initValue("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
+	initValue("LoadNext", FALSE);
+	initValue("LoadNextSort", QDir::Name);
+	initValue("Volume", 0.8);
 
-	setValue("TrackInfo/TopLeft", value("TrackInfo/TopLeft", "%s kHz").toString());
-	setValue("TrackInfo/BottomLeft", value("TrackInfo/BottomLeft", "%B kBps").toString());
-	setValue("TrackInfo/MiddleCenter", value("TrackInfo/MiddleCenter", "%a - %t").toString());
+	initValue("TrackInfo/TopLeft", "%s kHz");
+	initValue("TrackInfo/BottomLeft", "%B kBps");
+	initValue("TrackInfo/MiddleCenter", "%a - %t");
 
-	setValue("TrackInfo/BottomRight", value("TrackInfo/BottomRight", "%d").toString());
-	setValue("TrackInfo/BottomCenter", value("TrackInfo/BottomCenter", "%T").toString());
+	initValue("TrackInfo/BottomRight", "%d");
+	initValue("TrackInfo/BottomCenter", "%T");
 }
 
 NSettings::~NSettings()
@@ -138,6 +138,11 @@ void NSettings::setValue(const QString &key, const QVariant &value)
 {
 	QSettings::setValue(key, value);
 	emit valueChanged(key, value);
+}
+
+void NSettings::initValue(const QString &key, const QVariant &defaultValue)
+{
+	setValue(key, value(key, defaultValue));
 }
 
 void NSettings::remove(const QString &key)
