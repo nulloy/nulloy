@@ -603,7 +603,6 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	QString app_title_version = QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion();
 	if (QFile(path).exists()) {
 		NTagReaderInterface *tagReader = NPluginLoader::tagReaderPlugin();
-		tagReader->setSource(path);
 		QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
 		if (!format.isEmpty() && tagReader->isValid())
 			title = tagReader->toString(format);

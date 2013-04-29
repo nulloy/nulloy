@@ -148,8 +148,9 @@ void NTrackInfoWidget::tick(qint64 msec)
 			text.replace("%T", current.toString("m:ss"));
 			text.replace("%r", remaining.toString("m:ss"));
 		}
-
-		label->setText(m_tagReader->toString(text));
+		if (text.contains("%"))
+			text = m_tagReader->toString(text);
+		label->setText(text);
 		label->show();
 	}
 }

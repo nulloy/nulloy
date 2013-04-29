@@ -57,6 +57,9 @@ void NTagReaderGstreamer::init()
 
 void NTagReaderGstreamer::setSource(const QString &file)
 {
+	if (m_taglist)
+		gst_tag_list_free(m_taglist);
+
 	m_isValid = FALSE;
 
 	m_path = file;
@@ -82,8 +85,9 @@ void NTagReaderGstreamer::setSource(const QString &file)
 
 	m_nanosecs = gst_discoverer_info_get_duration(info);
 
-	m_taglist = gst_discoverer_info_get_tags(info);
-	if (gst_is_tag_list(m_taglist))
+	const GstTagList *tagList = gst_discoverer_info_get_tags(info);
+	m_taglist = gst_tag_list_copy(tagList);
+	if (gst_is_tag_list(m_taglist) && !gst_tag_list_is_empty(m_taglist))
 		m_isValid = TRUE;
 }
 
@@ -91,6 +95,8 @@ NTagReaderGstreamer::~NTagReaderGstreamer()
 {
 	if (!m_init)
 		return;
+	if (m_taglist)
+		gst_tag_list_free(m_taglist);
 }
 
 QString NTagReaderGstreamer::toString(const QString &format)
@@ -105,49 +111,39 @@ QString NTagReaderGstreamer::toString(const QString &format)
 
 	QString res;
 	for (int i = 0; i < format.size(); ++i) {
+		gchar *gstr = NULL;
 		if (format.at(i) == '%') {
 			++i;
 			QChar ch = format.at(i);
 			if (ch == 'a') {
-				gchar *gstr;
-				bool exists = gst_tag_list_get_string(m_taglist, "artist", &gstr);
-				QString str(gstr);
-				if (str.isEmpty() || !exists)
-					str = "<Unknown artist>";
-				res += str;
+				if (!gst_tag_list_get_string(m_taglist, "artist", &gstr))
+					res += "<Unknown artist>";
+				else
+					res += gstr;
 			} else if (ch == 't') {
-				gchar *gstr;
-				bool exists = gst_tag_list_get_string(m_taglist, "title", &gstr);
-				QString str(gstr);
-				if (str.isEmpty() || !exists)
-					str = QFileInfo(m_path).baseName();
-				res += str;
+				if (!gst_tag_list_get_string(m_taglist, "title", &gstr))
+					res += QFileInfo(m_path).baseName();
+				else
+					res += gstr;
 			} else if (ch == 'A') {
-				gchar *gstr;
-				bool exists = gst_tag_list_get_string(m_taglist, "album", &gstr);
-				QString str(gstr);
-				if (str.isEmpty() || !exists)
-					str = "<Unknown album>";
-				res += str;
+				if (!gst_tag_list_get_string(m_taglist, "album", &gstr))
+					res += "<Unknown album>";
+				else
+					res += gstr;
 			} else if (ch == 'c') {
-				gchar *gstr;
-				bool exists = gst_tag_list_get_string(m_taglist, "comment", &gstr);
-				QString str(gstr);
-				if (str.isEmpty() || !exists)
-					str = "<Empty comment>";
-				res += str;
+				if (!gst_tag_list_get_string(m_taglist, "comment", &gstr))
+					res += "<Empty comment>";
+				else
+					res += gstr;
 			} else if (ch == 'g') {
-				gchar *gstr;
-				bool exists = gst_tag_list_get_string(m_taglist, "genre", &gstr);
-				QString str(gstr);
-				if (str.isEmpty() || !exists)
-					str = "<Unknown genre>";
-				res += str;
+				if (!gst_tag_list_get_string(m_taglist, "genre", &gstr))
+					res += "<Unknown genre>";
+				else
+					res += gstr;
 			} else if (ch == 'y') {
 				GDate *date = NULL;
 				QString str = "0";
-				bool exists = gst_tag_list_get_date(m_taglist, "date", &date);
-				if (exists) {
+				if (gst_tag_list_get_date(m_taglist, "date", &date)) {
 					GDateYear year = g_date_get_year(date);
 					if (year != G_DATE_BAD_YEAR)
 						str = QString::number(year);
@@ -157,8 +153,7 @@ QString NTagReaderGstreamer::toString(const QString &format)
 				res += str;
 			} else if (ch == 'n') {
 				unsigned int track = 0;
-				bool exists = gst_tag_list_get_uint(m_taglist, "track-number", &track);
-				if (!track || !exists)
+				if (!gst_tag_list_get_uint(m_taglist, "track-number", &track))
 					res += "<Unknown track number>";
 				else
 					res += QString::number(track);
@@ -186,8 +181,7 @@ QString NTagReaderGstreamer::toString(const QString &format)
 				res += duration;
 			} else if (ch == 'B') {
 				unsigned int bitrate = 0;
-				bool exists = gst_tag_list_get_uint(m_taglist, "bitrate", &bitrate);
-				if (!bitrate || !exists)
+				if (!gst_tag_list_get_uint(m_taglist, "bitrate", &bitrate))
 					res += "<Unknown bitrate>";
 				else
 					res += QString::number(bitrate / 1000);

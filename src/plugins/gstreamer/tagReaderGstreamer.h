@@ -27,7 +27,7 @@ class NTagReaderGstreamer : public NTagReaderInterface, public NPluginElementInt
 
 private:
 	QString m_path;
-	const GstTagList *m_taglist;
+	GstTagList *m_taglist;
 	gint64 m_nanosecs;
 	float m_sampleRate;
 	bool m_isValid;
