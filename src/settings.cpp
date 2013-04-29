@@ -23,6 +23,8 @@
 
 #include <QDebug>
 
+#define MIN_VERSION "0.4.5"
+
 NSettings *NSettings::m_instance = NULL;
 
 NSettings::NSettings(QObject *parent)
@@ -32,6 +34,13 @@ NSettings::NSettings(QObject *parent)
 {
 	Q_ASSERT_X(!m_instance, "NSettings", "NSettings instance already exists.");
 	m_instance = this;
+
+	QString version = value("SettingsVersion").toString();
+	if (version.isEmpty() || version < MIN_VERSION) {
+		foreach (QString key, allKeys())
+			remove(key);
+		setValue("SettingsVersion", MIN_VERSION);
+	}
 
 	initValue("Shortcuts/playAction", QStringList() << "X" << "C" << "Space");
 	initValue("Shortcuts/stopAction", "V");
