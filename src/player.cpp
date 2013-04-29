@@ -179,6 +179,7 @@ NPlayer::NPlayer()
 
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
 	m_playlistWidget->setTagReader(NPluginLoader::tagReaderPlugin());
+	connect(m_playlistWidget, SIGNAL(activateEmptyFail()), this, SLOT(showOpenFileDialog()));
 
 	m_waveformSlider = qFindChild<QWidget *>(m_mainWindow, "waveformSlider");
 	m_trackInfoWidget = new NTrackInfoWidget();

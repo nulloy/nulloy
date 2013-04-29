@@ -197,7 +197,10 @@ void NPlaylistWidget::activateRow(int row)
 
 void NPlaylistWidget::activateItem(NPlaylistItem *item)
 {
-	emit itemActivated(item);
+	if (count() > 0)
+		emit itemActivated(item);
+	else
+		emit activateEmptyFail();
 }
 
 void NPlaylistWidget::on_itemActivated(QListWidgetItem *item)

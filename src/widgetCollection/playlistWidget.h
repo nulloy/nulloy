@@ -93,6 +93,7 @@ signals:
 	void currentActivated();
 	void mediaSet(const QString &file);
 	void closed();
+	void activateEmptyFail();
 
 // STYLESHEET PROPERTIES >>
 private:
