@@ -108,11 +108,11 @@ void NMainWindow::toggleVisibility()
 
 void NMainWindow::loadSettings()
 {
-	QStringList posList = NSettings::instance()->value("GUI/Position").toStringList();
+	QStringList posList = NSettings::instance()->value("Position").toStringList();
 	if (!posList.isEmpty())
 		move(posList.at(0).toInt(), posList.at(1).toInt());
 
-	QStringList sizeList = NSettings::instance()->value("GUI/Size").toStringList();
+	QStringList sizeList = NSettings::instance()->value("Size").toStringList();
 	if (!sizeList.isEmpty())
 		resize(sizeList.at(0).toInt(), sizeList.at(1).toInt());
 	else
@@ -121,8 +121,8 @@ void NMainWindow::loadSettings()
 
 void NMainWindow::saveSettings()
 {
-	NSettings::instance()->setValue("GUI/Position", QStringList() << QString::number(pos().x()) << QString::number(pos().y()));
-	NSettings::instance()->setValue("GUI/Size", QStringList() << QString::number(width()) << QString::number(height()));
+	NSettings::instance()->setValue("Position", QStringList() << QString::number(pos().x()) << QString::number(pos().y()));
+	NSettings::instance()->setValue("Size", QStringList() << QString::number(width()) << QString::number(height()));
 }
 
 void NMainWindow::setTitle(QString title)

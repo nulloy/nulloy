@@ -38,13 +38,13 @@ NSettings::NSettings(QObject *parent)
 	initValue("Shortcuts/prevAction", "Z");
 	initValue("Shortcuts/nextAction", "B");
 
-	initValue("GUI/PlaylistTrackInfo", "%a - %t (%d)");
-	initValue("GUI/WindowTitleTrackInfo","\"%a - %t\" - " + QCoreApplication::applicationName() + " %v");
+	initValue("PlaylistTrackInfo", "%a - %t (%d)");
+	initValue("WindowTitleTrackInfo","\"%a - %t\" - " + QCoreApplication::applicationName() + " %v");
 
-	initValue("GUI/MinimizeToTray", FALSE);
-	initValue("GUI/TrayIcon", FALSE);
-	initValue("GUI/AlwaysOnTop", FALSE);
-	initValue("GUI/WhilePlayingOnTop", FALSE);
+	initValue("MinimizeToTray", FALSE);
+	initValue("TrayIcon", FALSE);
+	initValue("AlwaysOnTop", FALSE);
+	initValue("WhilePlayingOnTop", FALSE);
 	initValue("RestorePlayback", TRUE);
 	initValue("SingleInstanse", TRUE);
 	initValue("AutoCheckUpdates", TRUE);

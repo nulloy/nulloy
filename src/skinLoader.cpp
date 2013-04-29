@@ -148,7 +148,7 @@ void NSkinLoader::_loadSkins()
 		_identifiers.insert(i, id);
 	}
 
-	QString skinStr = NSettings::instance()->value("GUI/Skin").toString();
+	QString skinStr = NSettings::instance()->value("Skin").toString();
 	QStringList values = _identifiers.values();
 	int index;
 	index = values.indexOf("Nulloy/Skin/" + skinStr);
@@ -206,7 +206,7 @@ void NSkinLoader::_loadSkins()
 		}
 	}
 
-	NSettings::instance()->setValue("GUI/Skin", _identifiers.value(index).section('/', 2));
+	NSettings::instance()->setValue("Skin", _identifiers.value(index).section('/', 2));
 }
 
 QStringList NSkinLoader::skinIdentifiers()

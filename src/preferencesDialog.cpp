@@ -233,12 +233,12 @@ void NPreferencesDialog::loadSettings()
 {
 	ui.versionLabel->setText("");
 
-	ui.playlistTrackInfoLineEdit->setText(NSettings::instance()->value("GUI/PlaylistTrackInfo").toString());
-	ui.windowTrackInfoLineEdit->setText(NSettings::instance()->value("GUI/WindowTitleTrackInfo").toString());
-	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("GUI/MinimizeToTray").toBool());
+	ui.playlistTrackInfoLineEdit->setText(NSettings::instance()->value("PlaylistTrackInfo").toString());
+	ui.windowTrackInfoLineEdit->setText(NSettings::instance()->value("WindowTitleTrackInfo").toString());
+	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("MinimizeToTray").toBool());
 	ui.restorePlaybackCheckBox->setChecked(NSettings::instance()->value("RestorePlayback").toBool());
 	ui.multipleInstansesCheckBox->setChecked(!NSettings::instance()->value("SingleInstanse").toBool());
-	ui.trayIconCheckBox->setChecked(NSettings::instance()->value("GUI/TrayIcon").toBool());
+	ui.trayIconCheckBox->setChecked(NSettings::instance()->value("TrayIcon").toBool());
 	ui.versionCheckBox->setChecked(NSettings::instance()->value("AutoCheckUpdates").toBool());
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
 
@@ -262,7 +262,7 @@ void NPreferencesDialog::loadSettings()
 	if (ui.skinComboBox->count() == 1)
 		ui.skinComboBox->setEnabled(FALSE);
 
-	index = ui.skinComboBox->findData(NSettings::instance()->value("GUI/Skin"));
+	index = ui.skinComboBox->findData(NSettings::instance()->value("Skin"));
 	if (index != -1)
 		ui.skinComboBox->setCurrentIndex(index);
 #endif
@@ -273,12 +273,12 @@ void NPreferencesDialog::loadSettings()
 
 void NPreferencesDialog::saveSettings()
 {
-	NSettings::instance()->setValue("GUI/PlaylistTrackInfo", ui.playlistTrackInfoLineEdit->text());
-	NSettings::instance()->setValue("GUI/WindowTitleTrackInfo", ui.windowTrackInfoLineEdit->text());
-	NSettings::instance()->setValue("GUI/MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
+	NSettings::instance()->setValue("PlaylistTrackInfo", ui.playlistTrackInfoLineEdit->text());
+	NSettings::instance()->setValue("WindowTitleTrackInfo", ui.windowTrackInfoLineEdit->text());
+	NSettings::instance()->setValue("MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
 	NSettings::instance()->setValue("RestorePlayback", ui.restorePlaybackCheckBox->isChecked());
 	NSettings::instance()->setValue("SingleInstanse", !ui.multipleInstansesCheckBox->isChecked());
-	NSettings::instance()->setValue("GUI/TrayIcon", ui.trayIconCheckBox->isChecked());
+	NSettings::instance()->setValue("TrayIcon", ui.trayIconCheckBox->isChecked());
 	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 
@@ -303,9 +303,9 @@ void NPreferencesDialog::saveSettings()
 #ifndef _N_NO_SKINS_
 	// skins
 	QVariant skinVariant = ui.skinComboBox->itemData(ui.skinComboBox->currentIndex());
-	NSettings::instance()->setValue("GUI/Skin", skinVariant);
+	NSettings::instance()->setValue("Skin", skinVariant);
 
-	ui.skinRestartLabel->setVisible(NSettings::instance()->value("GUI/Skin").isValid() && skinVariant != NSettings::instance()->value("GUI/Skin"));
+	ui.skinRestartLabel->setVisible(NSettings::instance()->value("Skin").isValid() && skinVariant != NSettings::instance()->value("Skin"));
 #endif
 
 	ui.shortcutEditorWidget->applyShortcuts();

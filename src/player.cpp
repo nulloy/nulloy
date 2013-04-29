@@ -450,19 +450,19 @@ void NPlayer::savePlaylist()
 
 void NPlayer::loadSettings()
 {
-	NSystemTray::setEnabled(m_settings->value("GUI/TrayIcon").toBool());
+	NSystemTray::setEnabled(m_settings->value("TrayIcon").toBool());
 
 	if (m_settings->value("AutoCheckUpdates").toBool())
 		versionOnlineFetch();
 
-	bool alwaysOnTop = m_settings->value("GUI/AlwaysOnTop").toBool();
+	bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
 	if (alwaysOnTop) {
 		NAction *alwaysOnTopAction = qFindChild<NAction *>(this, "alwaysOnTopAction");
 		alwaysOnTopAction->setChecked(TRUE);
 		on_alwaysOnTopAction_toggled(TRUE);
 	}
 
-	bool whilePlaying = m_settings->value("GUI/WhilePlayingOnTop").toBool();
+	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
 	if (whilePlaying) {
 		NAction *whilePlayingOnTopAction = qFindChild<NAction *>(this, "whilePlayingOnTopAction");
 		whilePlayingOnTopAction->setChecked(TRUE);
@@ -498,7 +498,7 @@ void NPlayer::saveSettings()
 
 void NPlayer::preferencesDialogSettingsChanged()
 {
-	NSystemTray::setEnabled(m_settings->value("GUI/TrayIcon").toBool());
+	NSystemTray::setEnabled(m_settings->value("TrayIcon").toBool());
 	m_trackInfoWidget->readSettings();
 	m_trackInfoWidget->updateInfo();
 }
@@ -541,7 +541,7 @@ void NPlayer::on_networkManager_finished(QNetworkReply *reply)
 
 void NPlayer::mainWindowClosed()
 {
-	if (m_settings->value("GUI/MinimizeToTray").toBool()) {
+	if (m_settings->value("MinimizeToTray").toBool()) {
 		NSystemTray::setEnabled(TRUE);
 	} else {
 		quit();
@@ -576,14 +576,14 @@ void NPlayer::trackIcon_clicked(int clicks)
 			m_mainWindow->showNormal();
 			m_mainWindow->activateWindow();
 			m_mainWindow->raise();
-		} else if (m_settings->value("GUI/MinimizeToTray").toBool()) {
+		} else if (m_settings->value("MinimizeToTray").toBool()) {
 			m_mainWindow->setVisible(FALSE);
 			NSystemTray::setEnabled(TRUE);
 		} else {
 			m_mainWindow->showMinimized();
 		}
 	}
-	if (!m_settings->value("GUI/TrayIcon").toBool())
+	if (!m_settings->value("TrayIcon").toBool())
 		NSystemTray::setEnabled(!m_mainWindow->isVisible());
 }
 
@@ -604,7 +604,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	if (QFile(path).exists()) {
 		NTagReaderInterface *tagReader = NPluginLoader::tagReaderPlugin();
 		tagReader->setSource(path);
-		QString format = NSettings::instance()->value("GUI/WindowTitleTrackInfo").toString();
+		QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
 		if (!format.isEmpty() && tagReader->isValid())
 			title = tagReader->toString(format);
 		else
@@ -619,8 +619,8 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 
 void NPlayer::on_playbackEngine_stateChanged(int state)
 {
-	bool whilePlaying = m_settings->value("GUI/WhilePlayingOnTop").toBool();
-	bool alwaysOnTop = m_settings->value("GUI/AlwaysOnTop").toBool();
+	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
+	bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
 	if (!alwaysOnTop)
 		m_mainWindow->setOnTop(whilePlaying && state == NPlaybackEngineInterface::Playing);
 #ifdef Q_WS_WIN
@@ -641,18 +641,18 @@ void NPlayer::on_playbackEngine_stateChanged(int state)
 
 void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 {
-	m_settings->setValue("GUI/AlwaysOnTop", checked);
+	m_settings->setValue("AlwaysOnTop", checked);
 
-	bool whilePlaying = m_settings->value("GUI/WhilePlayingOnTop").toBool();
+	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
 	if (!whilePlaying || m_playbackEngine->state() != NPlaybackEngineInterface::Playing)
 		m_mainWindow->setOnTop(checked);
 }
 
 void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)
 {
-	m_settings->setValue("GUI/WhilePlayingOnTop", checked);
+	m_settings->setValue("WhilePlayingOnTop", checked);
 
-	bool alwaysOnTop = m_settings->value("GUI/AlwaysOnTop").toBool();
+	bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
 	if (!alwaysOnTop)
 		m_mainWindow->setOnTop(checked && m_playbackEngine->state() == NPlaybackEngineInterface::Playing);
 }
