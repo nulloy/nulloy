@@ -57,7 +57,7 @@ void NTagReaderGstreamer::init()
 
 void NTagReaderGstreamer::setSource(const QString &file)
 {
-	m_isValid = TRUE;
+	m_isValid = FALSE;
 
 	m_path = file;
 	gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL, NULL);
@@ -72,13 +72,19 @@ void NTagReaderGstreamer::setSource(const QString &file)
 
 	GstDiscovererInfo *info = gst_discoverer_discover_uri(discoverer, uri, &err);
 	GList *audioInfo = gst_discoverer_info_get_audio_streams(info);
+	if (!audioInfo) {
+		qWarning() << "NTagReaderGstreamer :: GstDiscoverer error ::" << "not an audio file";
+		return;
+	}
+
 	m_sampleRate = gst_discoverer_audio_info_get_sample_rate((GstDiscovererAudioInfo *)audioInfo->data) / (float)1000;
+	gst_discoverer_stream_info_list_free(audioInfo);
+
+	m_nanosecs = gst_discoverer_info_get_duration(info);
 
 	m_taglist = gst_discoverer_info_get_tags(info);
 	if (gst_is_tag_list(m_taglist))
 		m_isValid = TRUE;
-
-	m_nanosecs = gst_discoverer_info_get_duration(info);
 }
 
 NTagReaderGstreamer::~NTagReaderGstreamer()
