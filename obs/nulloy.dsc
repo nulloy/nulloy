@@ -5,4 +5,4 @@ Architecture: any
 Version: _N_VERS_-1
 Maintainer: Sergey Vlasov <sergey@vlasov.me>
 Homepage: http://nulloy.com
-Build-Depends: debhelper (>= 5), libqt4-dev, qt4-qmake, libgstreamer0.10-dev, libphonon-dev, zip, libx11-dev
+Build-Depends: debhelper (>= 5), libqt4-dev, qt4-qmake, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, zip, libx11-dev
