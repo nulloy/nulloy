@@ -408,8 +408,11 @@ void NPlaylistWidget::mouseMoveEvent(QMouseEvent *event)
 
 void NPlaylistWidget::dropEvent(QDropEvent *event)
 {
-	// change to move action
-	event->setDropAction(Qt::MoveAction);
+	if (m_drag) // moving withing playlist
+		event->setDropAction(Qt::MoveAction);
+	else // dropping from file manager
+		event->setDropAction(Qt::CopyAction);
+
 	QListWidget::dropEvent(event);
 }
 
