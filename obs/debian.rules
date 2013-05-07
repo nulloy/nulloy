@@ -2,10 +2,22 @@
 
 export DH_COMPAT=5
 
+
+LSB_CODENAME := $(shell lsb_release -cs)
+
+ifeq ($(LSB_CODENAME), squeeze)
+CONFIG_FLAGS += --no-gstreamer-tagreader
+endif
+
+ifeq ($(LSB_CODENAME), lucid)
+CONFIG_FLAGS += --no-gstreamer-tagreader
+endif
+
+
 build: build-stamp
 build-stamp:
 	dh_testdir
-	./configure --prefix=/usr
+	./configure --prefix=/usr --taglib $(CONFIG_FLAGS)
 	make
 	touch build-stamp
 

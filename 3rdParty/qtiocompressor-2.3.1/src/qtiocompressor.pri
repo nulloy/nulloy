@@ -19,7 +19,7 @@ win32 {
     else:qtiocompressor-uselib:DEFINES += QT_QTIOCOMPRESSOR_IMPORT
 }
 
-mac {
+unix {
     CONFIG += link_pkgconfig
     PKGCONFIG += zlib
 }

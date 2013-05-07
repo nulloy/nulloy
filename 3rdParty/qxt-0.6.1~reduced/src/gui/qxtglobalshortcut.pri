@@ -11,6 +11,9 @@ SOURCES  += qxtglobalshortcut.cpp
 
 unix:!macx {
 	SOURCES += qxtglobalshortcut_x11.cpp
+
+	CONFIG += link_pkgconfig
+	PKGCONFIG += x11
 }
 macx {
 	SOURCES += qxtglobalshortcut_mac.cpp

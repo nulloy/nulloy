@@ -18,6 +18,14 @@ MOC_DIR		= $$TMP_DIR
 RCC_DIR		= $$TMP_DIR
 UI_DIR		= $$TMP_DIR
 
+unix {
+	CONFIG += link_pkgconfig
+	# zlib
+	PKGCONFIG += zlib
+	# X11
+	!mac:PKGCONFIG += x11
+}
+
 # trash
 HEADERS += trash/trash.h
 INCLUDEPATH += trash/

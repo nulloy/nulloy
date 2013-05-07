@@ -3,11 +3,10 @@ Section: sound
 Priority: extra
 Maintainer: Sergey Vlasov <sergey@vlasov.me>
 Homepage: http://nulloy.com
-Build-Depends: debhelper (>= 5), libqt4-dev, qt4-qmake, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, zip, libx11-dev
 
 Package: nulloy
 Architecture: any
-Depends: libqtgui4, libqt4-script, libqt4-network, libtag1c2a
+Depends: libqtgui4, libqt4-script, libqt4-network
 Suggests: nulloy-gstreamer, trash-cli
 Description: Music player with a waveform progress bar
 
@@ -16,4 +15,9 @@ Architecture: any
 Depends: nulloy, libgstreamer0.10-0
 Suggests: libgstreamer-plugins-base0.10-0
 Description: GStreamer backend for Nulloy
+
+Package: nulloy-taglib
+Architecture: any
+Depends: nulloy, libtag1c2a
+Description: TagLib backend for Nulloy
 
