@@ -60,12 +60,13 @@ void NPlaybackEngineGStreamer::init()
 	if (m_init)
 		return;
 
+	QDir executable_path(QCoreApplication::applicationDirPath());
+
 #ifdef Q_WS_WIN
-	_putenv("GST_PLUGIN_PATH=Plugins\\GStreamer");
+	_putenv(QString("GST_PLUGIN_PATH=" + executable_path.absolutePath() + "/Plugins/GStreamer").replace('/', '\\').toAscii().data());
 #endif
 
 #ifdef Q_WS_MAC
-	QDir executable_path(QCoreApplication::applicationDirPath());
 	if (executable_path.dirName() == "MacOS") {
 		executable_path.cd("GStreamer/plugins");
 		if (executable_path.exists())
