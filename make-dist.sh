@@ -72,7 +72,7 @@ if [ -f "src/version-git.sh" ]; then
 fi
 
 # remove extras
-rm -f .gitignore make-dist.sh
+rm -f .gitignore make-dist.sh src/version-git.sh
 
 # generate debian changelog
 src/changelog.sh -i ChangeLog -c "Sergey Vlasov <sergey@vlasov.me>" -p nulloy -r obs/nulloy.changes -d obs/debian.changelog -f $VERSION
