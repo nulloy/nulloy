@@ -121,15 +121,15 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 
 	QString res;
 	for (int i = 0; i < format.size(); ++i) {
-		gchar *gstr = NULL;
 		if (format.at(i) == '%') {
+			gchar *gstr = NULL;
 			++i;
 			QChar ch = format.at(i);
 			if (ch == 'a') {
 				if (!(*success = gst_tag_list_get_string(m_taglist, "artist", &gstr)))
 					res += "<Unknown artist>";
 				else
-					res += gstr;
+					res += QString::fromUtf8(gstr);
 			} else if (ch == 't') {
 				if (!(*success = gst_tag_list_get_string(m_taglist, "title", &gstr)))
 					res += "<Unknown title>";
@@ -139,17 +139,17 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 				if (!(*success = gst_tag_list_get_string(m_taglist, "album", &gstr)))
 					res += "<Unknown album>";
 				else
-					res += gstr;
+					res += QString::fromUtf8(gstr);
 			} else if (ch == 'c') {
 				if (!(*success = gst_tag_list_get_string(m_taglist, "comment", &gstr)))
 					res += "<Empty comment>";
 				else
-					res += gstr;
+					res += QString::fromUtf8(gstr);
 			} else if (ch == 'g') {
 				if (!(*success = gst_tag_list_get_string(m_taglist, "genre", &gstr)))
 					res += "<Unknown genre>";
 				else
-					res += gstr;
+					res += QString::fromUtf8(gstr);
 			} else if (ch == 'y') {
 				GDate *date = NULL;
 				QString str = "0";
@@ -220,6 +220,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 			} else {
 				res += ch;
 			}
+			g_free(gstr);
 		} else if (format.at(i) == '{') {
 			++i;
 			int matchedAt = format.indexOf('}', i);
