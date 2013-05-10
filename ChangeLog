@@ -1,8 +1,13 @@
+* 0.5.0.3, Sat May 11 2013
+- Fix/Windows: failed to run from shortcut
+- Fix: Unicode tags reading
+- Windows: moved Tag.dll to Plugins direcotry
+
 * 0.5.0.2, Wed May 8 2013
-- Enabled Debian 7 and Ubuntu 13.04 builds
+- Linux: enabled Debian 7 and Ubuntu 13.04 builds
 
 * 0.5.0.1, Tue May 7 2013
-- Fixed drag'n'drop moving files to Recycle Bin in Windows
+- Fix/Windows: drag'n'drop moved files to Recycle Bin
 
 * 0.5, Sun April 28 2013
 - New Metro skin
@@ -27,7 +32,7 @@
 - Mac OS X release
 
 * 0.3.1, Wed Aug 24 2011
-- Quicklist integration for Ubuntu Unity Launcher
+- Ubuntu: Quicklist integration for Unity Launcher
 - Option to keep window on top during playback
 - Loading next file from directory when playlist ends
 - Minor bug fixes and improvements
@@ -43,7 +48,7 @@
 - Minor bug fixes and improvements
 
 * 0.2.3, Fri Jun 17 2011
-- Fixed restoring playlist only if no files passed within arguments
+- Fix: restoring playlist only if running without arguments
 - Silver Skin improvements
 
 * 0.2.2, Sun May 29 2011
@@ -54,7 +59,7 @@
 - Checking for updates online
 
 * 0.1.1, Sun May 8 2011
-- Shipping GStreamer along with the Windows package
+- Windows: Shipping GStreamer along
 
 * 0.1, Thu May 5 2011
 - Initial release
