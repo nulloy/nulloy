@@ -164,6 +164,11 @@ void NPluginLoader::_loadPlugins()
 		if (dir.exists()) {
 			foreach (QString fileName, dir.entryList(QDir::Files)) {
 				QString fileFullPath = dir.absoluteFilePath(fileName);
+#ifdef Q_WS_WIN
+				// skip non plugin files
+				if (!fileName.startsWith("plugin", Qt::CaseInsensitive) || !fileName.endsWith("dll", Qt::CaseInsensitive))
+					continue;
+#endif
 				if (!QLibrary::isLibrary(fileFullPath))
 					continue;
 				QPluginLoader *loader = new QPluginLoader(fileFullPath);
