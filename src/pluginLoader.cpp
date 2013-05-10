@@ -157,7 +157,7 @@ void NPluginLoader::_loadPlugins()
 			}
 		}
 		_putenv(QString("PATH=" + pluginsDirList.join(";") + ";" +
-				subDirsList.join(";") + ";" + getenv("PATH")).toAscii());
+				subDirsList.join(";") + ";" + getenv("PATH")).replace('/', '\\').toUtf8());
 #endif
 	foreach (QString dirStr, pluginsDirList) {
 		QDir dir(dirStr);
