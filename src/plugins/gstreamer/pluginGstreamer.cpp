@@ -22,6 +22,13 @@
 
 NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
 {
+	QDir executable_path(QCoreApplication::applicationDirPath());
+#ifdef Q_WS_WIN
+	_putenv(QString("GST_PLUGIN_PATH=" + executable_path.absolutePath() + "/Plugins/GStreamer"         + ";" + getenv("GST_PLUGIN_PATH")).replace('/', '\\').toUtf8());
+#elif defined Q_WS_MAC
+	putenv(QString("GST_PLUGIN_PATH="  + executable_path.absolutePath() + "/plugins/GStreamer/plugins" + ":" + getenv("GST_PLUGIN_PATH")).toUtf8().data());
+#endif
+
 	m_elements << new NPlaybackEngineGStreamer()
 #ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
 				<< new NTagReaderGstreamer()

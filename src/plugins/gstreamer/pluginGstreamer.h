@@ -31,7 +31,7 @@ public:
 	~NPluginGstreamer();
 	QObjectList elements();
 	QString name() { return "GStreamer"; }
-	QString version() { return "0.5"; }
+	QString version() { return "0.5.1"; }
 };
 
 #endif

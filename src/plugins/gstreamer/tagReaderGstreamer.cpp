@@ -29,21 +29,6 @@ void NTagReaderGstreamer::init()
 	m_isValid = FALSE;
 	m_taglist = NULL;
 
-	QDir executable_path(QCoreApplication::applicationDirPath());
-
-#ifdef Q_WS_WIN
-	_putenv(QString("GST_PLUGIN_PATH=" + executable_path.absolutePath() + "/Plugins/GStreamer").replace('/', '\\').toUtf8());
-#endif
-
-#ifdef Q_WS_MAC
-	if (executable_path.dirName() == "MacOS") {
-		executable_path.cd("GStreamer/plugins");
-		if (executable_path.exists())
-			putenv(QString("GST_PLUGIN_PATH=" + executable_path.absolutePath() +
-							":" + getenv("GST_PLUGIN_PATH")).toUtf8().data());
-	}
-#endif
-
 	int argc;
 	const char **argv;
 	GError *init_err;
