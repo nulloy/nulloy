@@ -18,59 +18,38 @@ BUILD_PHONON=no
 SUPPORT_SKINS=yes
 SUPPORT_PLUGINS=yes
 
-HAS_GNU_GETOPT=no
 
 echo_help()
 {
-	if [ $HAS_GNU_GETOPT == "yes" ]; then
-		echo "Usage:  $BASENAME [options]"
-		echo '    --no-gstreamer              do not build GStreamer plugins'
-		echo '    --no-gstreamer-tagreader    do not build GStreamer TagReader plugin'
-		echo '    --embed-gstreamer           embed GStreamer plugins statically'
-		echo '    --vlc                       build VLC plugins'
-		echo '    --phonon                    build Phonon plugins'
-		echo '    --taglib                    build with TagLib'
-		echo '    --no-skins                  disable skins support'
-		echo '    --no-plugins                disable plugins support'
-		echo '    --force-version VERSION     overrides version.pri'
-		echo '    --prefix PREFIX             installation prefix'
-		echo '    --debug                     build in debug mode'
-	else
-		echo "Usage:  $BASENAME [options]"
-		echo '    -G                          do not build GStreamer plugins'
-		echo '    -T                          do not build GStreamer TagReader plugin'
-		echo '    -s                          embed GStreamer plugins statically'
-		echo '    -l                          build VLC plugins'
-		echo '    -n                          build Phonon plugins'
-		echo '    -t                          build with TagLib'
-		echo '    -S                          disable skins support'
-		echo '    -U                          disable plugins support'
-		echo '    -f VERSION                  overrides version.pri'
-		echo '    -p PREFIX                   installation prefix'
-		echo '    -d                          build in debug mode'
-	fi
+	echo "Usage:  $BASENAME [options]"
+	echo '    --no-gstreamer              do not build GStreamer plugins'
+	echo '    --no-gstreamer-tagreader    do not build GStreamer TagReader plugin'
+	echo '    --embed-gstreamer           embed GStreamer plugins statically'
+	echo '    --vlc                       build VLC plugins'
+	echo '    --phonon                    build Phonon plugins'
+	echo '    --taglib                    build with TagLib'
+	echo '    --no-skins                  disable skins support'
+	echo '    --no-plugins                disable plugins support'
+	echo '    --force-version VERSION     overrides version.pri'
+	echo '    --prefix PREFIX             installation prefix'
+	echo '    --debug                     build in debug mode'
 }
 
 echo_try()
 {
 	echo
-	if [ $HAS_GNU_GETOPT == "yes" ]; then
-		echo "Try \`$BASENAME --help' for more information"
-	else
-		echo "Try \`$BASENAME -h' for more information"
-	fi
+	echo "Try \`$BASENAME --help' for more information"
 }
 
 getopt -T > /dev/null
-if [ $? -eq 4 ]; then
-	HAS_GNU_GETOPT=yes
+if [ ! $? -eq 4 ]; then
+	echo "$BASENAME: BSD version of 'getopt' is not supported."
+	echo "Install GNU getopt (enhanced) and check PATH environment variable."
+	echo
+	exit 1
 fi
 
-if [ $HAS_GNU_GETOPT == "yes" ]; then
-	args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer no-gstreamer-tagreader embed-gstreamer vlc phonon taglib no-skins no-plugins debug prefix: help" -- "$@"`
-else
-	args=`getopt GTslntSUf:p:dh "$@"`
-fi
+args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer no-gstreamer-tagreader embed-gstreamer vlc phonon taglib no-skins no-plugins debug prefix: help" -- "$@"`
 
 if test $? != 0; then
 	echo_try; exit 1
@@ -78,29 +57,29 @@ fi
 
 eval set -- $args
 while [ $# -gt 0 ]; do
-	if [[ $1 == "p" || $1 == "--prefix" ]]; then
+	if [ $1 == "--prefix" ]; then
 		shift; PREFIX=`readlink -m "$1"`
-	elif [[ $1 == "d" || $1 == "--debug" ]]; then
+	elif [ $1 == "--debug" ]; then
 		DEBUG=yes
-	elif [[ $1 == "f" || $1 == "--force-version" ]]; then
+	elif [ $1 == "--force-version" ]; then
 		shift; FORCE_VERSION=$1
-	elif [[ $1 == "G" || $1 == "--no-gstreamer" ]]; then
+	elif [ $1 == "--no-gstreamer" ]; then
 		BUILD_GSTREAMER=no
-	elif [[ $1 == "T" || $1 == "--no-gstreamer-tagreader" ]]; then
+	elif [ $1 == "--no-gstreamer-tagreader" ]; then
 		BUILD_GSTREAMER_TAGREADER=no
-	elif [[ $1 == "s" || $1 == "--embed-gstreamer" ]]; then
+	elif [ $1 == "--embed-gstreamer" ]; then
 		EMBED_GSTREAMER=yes
-	elif [[ $1 == "l" || $1 == "--vlc" ]]; then
+	elif [ $1 == "--vlc" ]; then
 		BUILD_VLC=yes
-	elif [[ $1 == "n" || $1 == "--phonon" ]]; then
+	elif [ $1 == "--phonon" ]; then
 		BUILD_PHONON=yes
-	elif [[ $1 == "t" || $1 == "--taglib" ]]; then
+	elif [ $1 == "--taglib" ]; then
 		BUILD_TAGLIB=yes
-	elif [[ $1 == "S" || $1 == "--no-skins" ]]; then
+	elif [ $1 == "--no-skins" ]; then
 		SUPPORT_SKINS=no
-	elif [[ $1 == "U" || $1 == "--no-plugins" ]]; then
+	elif [ $1 == "--no-plugins" ]; then
 		SUPPORT_PLUGINS=no
-	elif [[ $1 == "-h"  || $1 == "--help" ]]; then
+	elif [ $1 == "--help" ]; then
 		echo_help; exit 0
 	elif [ $1 == "--" ]; then
 		shift
@@ -115,10 +94,10 @@ done
 
 if [[ ! -n $QMAKE && ! -f $QMAKE ]]; then
 	QMAKE=`which qmake` 2> /dev/null
-	if [ ! -f $QMAKE ]; then
+	if [[ ! -n $QMAKE || ! -f $QMAKE ]]; then
 		QMAKE=$QTDIR/bin/qmake
 		if [ ! -f $QMAKE ]; then
-			echo "$BASENAME: Unable to find qmake. Try \`QTDIR=/path/to/qt $0' or \`QMAKE=/path/to/qmake $0'."
+			echo "$BASENAME: Unable to find 'qmake'. Try \`QTDIR=/path/to/qt $0' or \`QMAKE=/path/to/qmake $0'."
 			exit 1
 		fi
 	fi
@@ -127,30 +106,46 @@ fi
 QMAKE_CACHE=`pwd`/.qmake.cache
 [ -f $QMAKE_CACHE ] && rm -f $QMAKE_CACHE
 
+
+PKG_MISSING_STR=\
+$'Package \'_LIB_NAME_\' was not found in the pkg-config search path.
+Perhaps you should add the directory containing \'_LIB_NAME_.pc\'
+to the PKG_CONFIG_PATH environment variable.'
+pkg_check_lib()
+{
+	pkg-config --exists $1
+	if [ $? -eq 0 ]; then
+		echo "found $1"
+	else
+		echo "${PKG_MISSING_STR//_LIB_NAME_/$1}"
+		echo
+		exit 1
+	fi
+}
+
 which pkg-config > /dev/null
 if [ $? -eq 0 ]; then
+	echo "checking for pkg-config... yes"
+
 	if [[ $BUILD_GSTREAMER == "yes" || $EMBED_GSTREAMER == "yes" ]]; then
-		pkg-config --exists gstreamer-0.10
-		if [ $? -eq 0 ]; then
-			echo "found gstreamer-0.10"
-		else
-			echo "Package 'gstreamer-0.10' was not found in the pkg-config search path."
-			echo "Perhaps you should add the directory containing \`gstreamer-0.10.pc'"
-			echo "to the PKG_CONFIG_PATH environment variable."
-			exit 1
-		fi
+		pkg_check_lib gstreamer-0.10
 	fi
+
 	if [ "$BUILD_VLC" == "yes" ]; then
-		pkg-config --exists libvlc
-		if [ $? -eq 0 ]; then
-			echo "found libvlc"
-		else
-			echo "Package 'libvlc' was not found in the pkg-config search path."
-			echo "Perhaps you should add the directory containing \`libvlc.pc'"
-			echo "to the PKG_CONFIG_PATH environment variable."
-			exit 1
-		fi
+		pkg_check_lib libvlc
 	fi
+
+	if [ "$BUILD_TAGLIB" == "yes" ]; then
+		pkg_check_lib taglib
+	fi
+
+	if [ "$BUILD_PHONON" == "yes" ]; then
+		pkg_check_lib phonon
+	fi
+else
+	echo "$BASENAME: Unable to find 'pkg-config'. Check PATH environment variable."
+	echo
+	exit 1
 fi
 
 if [ $SUPPORT_PLUGINS == "no" ]; then
