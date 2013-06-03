@@ -1,6 +1,8 @@
 TEMPLATE = app
 QT += script
 
+mac:no-app-bundle:CONFIG -= app_bundle
+
 unix:TARGET = nulloy
 win32:TARGET = Nulloy
 DESTDIR = ..

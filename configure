@@ -17,6 +17,7 @@ BUILD_VLC=no
 BUILD_PHONON=no
 SUPPORT_SKINS=yes
 SUPPORT_PLUGINS=yes
+OSX_BUNDLE=yes
 
 
 echo_help()
@@ -32,6 +33,7 @@ echo_help()
 	echo '    --no-plugins                disable plugins support'
 	echo '    --force-version VERSION     overrides version.pri'
 	echo '    --prefix PREFIX             installation prefix'
+	echo '    --no-app-bundle             do not make .app, Mac OS X only'
 	echo '    --debug                     build in debug mode'
 }
 
@@ -49,7 +51,7 @@ if [ ! $? -eq 4 ]; then
 	exit 1
 fi
 
-args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer no-gstreamer-tagreader embed-gstreamer vlc phonon taglib no-skins no-plugins debug prefix: help" -- "$@"`
+args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer no-gstreamer-tagreader embed-gstreamer vlc phonon taglib no-skins no-plugins debug prefix: no-app-bundle help" -- "$@"`
 
 if test $? != 0; then
 	echo_try; exit 1
@@ -79,6 +81,8 @@ while [ $# -gt 0 ]; do
 		SUPPORT_SKINS=no
 	elif [ $1 == "--no-plugins" ]; then
 		SUPPORT_PLUGINS=no
+	elif [ $1 == "--no-app-bundle" ]; then
+		OSX_BUNDLE=no
 	elif [ $1 == "--help" ]; then
 		echo_help; exit 0
 	elif [ $1 == "--" ]; then
@@ -177,6 +181,7 @@ fi
 [ $BUILD_TAGLIB == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG taglib"
 [ $SUPPORT_SKINS == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-skins"
 [ $SUPPORT_PLUGINS == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-plugins"
+[ $OSX_BUNDLE == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-app-bundle"
 if [ $DEBUG == "yes" ]; then
 	QMAKE_CONFIG="$QMAKE_CONFIG debug"
 else
