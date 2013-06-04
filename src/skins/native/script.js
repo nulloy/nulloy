@@ -64,6 +64,7 @@ function Program(player)
 		this.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
 
 		if (Q_WS == "mac") {
+			this.mainWindow.styleSheet = "";
 			this.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
 
 			var playlistWidget = this.mainWindow.findChild("playlistWidget");

@@ -64,6 +64,7 @@ void NMainWindow::init(const QString &uiFile)
 	layout->setContentsMargins(0, 0, 0, 0);
 	setLayout(layout);
 	setStyleSheet(form->styleSheet());
+	form->setStyleSheet("");
 #else
 	Q_UNUSED(uiFile)
 	ui.setupUi(this);
