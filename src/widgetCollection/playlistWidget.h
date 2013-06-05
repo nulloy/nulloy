@@ -101,10 +101,10 @@ private:
 	QColor m_currentTextColor;
 
 public:
-	QColor getFailedTextColor();
+	QColor getFailedTextColor() const;
 	void setFailedTextColor(QColor color);
 
-	QColor getCurrentTextColor();
+	QColor getCurrentTextColor() const;
 	void setCurrentTextColor(QColor color);
 // << STYLESHEET PROPERTIES
 };

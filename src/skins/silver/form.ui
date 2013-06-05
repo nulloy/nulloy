@@ -48,6 +48,7 @@
 
 #playlistWidget {
 	color: black;
+	qproperty-currentTextColor: black;
 	qproperty-failedTextColor: #949494;
 	background: white;
 	padding: 5;
@@ -59,6 +60,7 @@
 	background: #E9E9E9;
 }
 #playlistWidget::item:selected {
+	color: black;
 	background: #BBBBBB;
 }
 
