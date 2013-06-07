@@ -88,6 +88,7 @@ private slots:
 	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
 	void moveToTrash();
 	void removeFromPlaylist();
+	void revealInFileManager();
 
 signals:
 	void currentActivated();

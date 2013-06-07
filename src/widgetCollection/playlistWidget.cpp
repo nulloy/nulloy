@@ -20,6 +20,7 @@
 #include "trash.h"
 
 #include <QtGui>
+#include <QProcess>
 
 #include <QDebug>
 
@@ -29,6 +30,15 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	setItemDelegate(new NPlaylistItemDelegate(this));
 	m_currentItem = NULL;
 
+	QShortcut *revealShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Return), this);
+	connect(revealShortcut, SIGNAL(activated()), this, SLOT(revealInFileManager()));
+	QAction *revealAction = new QAction(QIcon::fromTheme("fileopen",
+										style()->standardIcon(QStyle::SP_DirOpenIcon)),
+										tr("Reveal in File Manager..."), this);
+	revealAction->setShortcut(revealShortcut->key());
+	connect(revealAction, SIGNAL(triggered()), this, SLOT(revealInFileManager()));
+
+
 	QShortcut *removeShortcut = new QShortcut(QKeySequence(Qt::Key_Delete), this);
 	connect(removeShortcut, SIGNAL(activated()), this, SLOT(removeFromPlaylist()));
 	QAction *removeAction = new QAction(QIcon::fromTheme("edit-clear",
@@ -36,6 +46,7 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 												tr("Remove From Playlist"), this);
 	removeAction->setShortcut(removeShortcut->key());
 	connect(removeAction, SIGNAL(triggered()), this, SLOT(removeFromPlaylist()));
+
 
 	QShortcut *trashShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Delete), this);
 	connect(trashShortcut, SIGNAL(activated()), this, SLOT(moveToTrash()));
@@ -45,7 +56,9 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	trashAction->setShortcut(trashShortcut->key());
 	connect(trashAction, SIGNAL(triggered()), this, SLOT(moveToTrash()));
 
+
 	m_contextMenu = new QMenu(this);
+	m_contextMenu->addAction(revealAction);
 	m_contextMenu->addAction(removeAction);
 	m_contextMenu->addAction(trashAction);
 
@@ -98,6 +111,42 @@ void NPlaylistWidget::removeFromPlaylist()
 		delete takenItem;
 	}
 	viewport()->update();
+}
+
+void NPlaylistWidget::revealInFileManager()
+{
+	QFileInfo fileInfo(selectedItems().first()->data(NPlaylistItem::PathRole).toString());
+
+	if (!fileInfo.exists()) {
+		QMessageBox::warning(this, "File Manager Error", "File doesn't exist: " + selectedItems().first()->text());
+		return;
+	}
+
+	QString fileManagerCommand;
+	QStringList arguments;
+	QString path = fileInfo.canonicalFilePath();
+#if defined Q_WS_WIN
+	fileManagerCommand = "explorer.exe";
+	arguments << "/n,/select,";
+	path = path.replace('/', '\\');
+#elif defined Q_WS_X11
+	QProcess xdg;
+	xdg.start("xdg-mime query default inode/directory");
+	xdg.waitForStarted();
+	xdg.waitForFinished();
+
+	fileManagerCommand = QString::fromUtf8(xdg.readAll()).simplified().remove(".desktop");
+#elif defined Q_WS_MAC
+	fileManagerCommand = "open";
+	arguments << "-R";
+#endif
+
+	arguments << path;
+
+	QProcess reveal;
+	reveal.start(fileManagerCommand, arguments);
+	reveal.waitForStarted();
+	reveal.waitForFinished();
 }
 
 NPlaylistWidget::~NPlaylistWidget() {}
