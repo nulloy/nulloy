@@ -1,3 +1,7 @@
+* 0.5.1, Sun Jun 9 2013
+- New "Locate in File Manager..." playlist action
+- Fix/Mac: Open with Nulloy via Finder context menu
+
 * 0.5.0.3, Sat May 11 2013
 - Fix/Windows: failed to run from shortcut
 - Fix: Unicode tags reading
