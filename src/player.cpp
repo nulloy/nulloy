@@ -396,6 +396,20 @@ NSettings* NPlayer::settings()
 	return NSettings::instance();
 }
 
+bool NPlayer::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::FileOpen) {
+		QFileOpenEvent* fileEvent = static_cast<QFileOpenEvent*>(event);
+
+		if (!fileEvent->file().isEmpty())
+		m_playlistWidget->activateMediaList(QStringList() << fileEvent->file());
+
+		return FALSE;
+	}
+
+	return QObject::eventFilter(obj, event);
+}
+
 void NPlayer::message(const QString &str)
 {
 	if (str.isEmpty()) {
@@ -842,6 +856,5 @@ void NPlayer::waveformSliderToolTip(int x, int y)
 		QToolTip::showText(m_waveformSlider->mapToGlobal(QPoint(x, y)), timeStr);
 	}
 }
-
 
 /* vim: set ts=4 sw=4: */

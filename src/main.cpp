@@ -51,6 +51,8 @@ int main(int argc, char *argv[])
 		p.message(msg);
 	p.restorePlaylist();
 
+	instance.installEventFilter(&p);
+
 	return instance.exec();
 }
 

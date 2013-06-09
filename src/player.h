@@ -49,6 +49,8 @@ private:
 	bool m_trayIconDoubleClickCheck;
 	QWidget *m_waveformSlider;
 
+	bool eventFilter(QObject *obj, QEvent *event);
+
 public:
 	NPlayer();
 	~NPlayer();
