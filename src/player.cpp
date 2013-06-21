@@ -222,13 +222,13 @@ NPlayer::NPlayer()
 	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activateNext()));
 
 	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
-											style()->standardIcon(QStyle::SP_MessageBoxInformation)),
-											tr("Preferences..."), this);
+	                                         style()->standardIcon(QStyle::SP_MessageBoxInformation)),
+	                                         tr("Preferences..."), this);
 	connect(preferencesAction, SIGNAL(triggered()), m_preferencesDialog, SLOT(exec()));
 
 	NAction *exitAction = new NAction(QIcon::fromTheme("exit",
-										style()->standardIcon(QStyle::SP_DialogCloseButton)),
-										tr("Exit"), this);
+	                                  style()->standardIcon(QStyle::SP_DialogCloseButton)),
+	                                  tr("Exit"), this);
 	connect(exitAction, SIGNAL(triggered()), this, SLOT(quit()));
 
 	NAction *openFileDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Add Files..."), this);
@@ -238,8 +238,8 @@ NPlayer::NPlayer()
 	connect(savePlaylistDialogAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
 
 	NAction *aboutAction = new NAction(QIcon::fromTheme("help-about",
-										style()->standardIcon(QStyle::SP_MessageBoxQuestion)),
-										tr("About") + " " + QCoreApplication::applicationName(), this);
+	                                   style()->standardIcon(QStyle::SP_MessageBoxQuestion)),
+	                                   tr("About") + " " + QCoreApplication::applicationName(), this);
 	connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutMessageBox()));
 
 	NAction *whilePlayingOnTopAction = new NAction(tr("On Top During Playback"), this);
@@ -355,7 +355,7 @@ NPlayer::NPlayer()
 
 	m_logDialog = new NLogDialog(m_mainWindow);
 	connect(m_playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)),
-			m_logDialog, SLOT(showMessage(QMessageBox::Icon, const QString &, const QString &)));
+	        m_logDialog, SLOT(showMessage(QMessageBox::Icon, const QString &, const QString &)));
 
 	QMetaObject::connectSlotsByName(this);
 
@@ -538,7 +538,7 @@ void NPlayer::versionOnlineFetch()
 
 	if (!suffix.isEmpty())
 		m_networkManager->get(QNetworkRequest(QUrl("http://" +
-								QCoreApplication::organizationDomain() + "/version_" + suffix)));
+		                      QCoreApplication::organizationDomain() + "/version_" + suffix)));
 }
 
 void NPlayer::on_networkManager_finished(QNetworkReply *reply)
@@ -551,10 +551,10 @@ void NPlayer::on_networkManager_finished(QNetworkReply *reply)
 
 		if (QCoreApplication::applicationVersion() < versionOnline) {
 			QMessageBox::information(m_mainWindow,
-				QCoreApplication::applicationName() + " Update",
-				"A newer version is available: " + versionOnline + "<br><br>" +
-				"<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
-					QCoreApplication::organizationDomain() + "/download</a>");
+			                         QCoreApplication::applicationName() + " Update",
+			                         "A newer version is available: " + versionOnline + "<br><br>" +
+			                         "<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
+			                         QCoreApplication::organizationDomain() + "/download</a>");
 		}
 	}
 
@@ -699,25 +699,25 @@ void NPlayer::showAboutMessageBox()
 {
 	QString html = QString() +
 #ifdef Q_WS_MAC
-					"<span style=\" font-size:14pt;\">" +
+	               "<span style=\" font-size:14pt;\">" +
 #else
-					"<span style=\" font-size:9pt;\">" +
+	               "<span style=\" font-size:9pt;\">" +
 #endif
-						"<b>" +  QCoreApplication::applicationName() + "</b> Music Player " +
-							"<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
-								QCoreApplication::organizationDomain() + "</a>" +
-					"</span><br>" +
+	                 "<b>" +  QCoreApplication::applicationName() + "</b> Music Player " +
+	                 "<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
+	                                      QCoreApplication::organizationDomain() + "</a>" +
+	               "</span><br>" +
 #ifdef Q_WS_MAC
-					"<span style=\" font-size:10pt;\">" +
+	               "<span style=\" font-size:10pt;\">" +
 #else
-					"<span style=\" font-size:8pt;\">" +
+	               "<span style=\" font-size:8pt;\">" +
 #endif
-						"Version: " + QCoreApplication::applicationVersion() +
-							(QString(_N_TIME_STAMP_).isEmpty() ? "" : " (Build " + QString(_N_TIME_STAMP_) + ")") + "<br><br>" +
-						"Copyright (C) 2010-2013  Sergey Vlasov &lt;<a href='mailto:Sergey Vlasov <sergey@vlasov.me>" +
-							"?subject=" + QCoreApplication::applicationName() + " " +
-							QCoreApplication::applicationVersion() + "'>sergey@vlasov.me</a>&gt;" +
-					"</span>";
+	                 "Version: " + QCoreApplication::applicationVersion() +
+	                               (QString(_N_TIME_STAMP_).isEmpty() ? "" : " (Build " + QString(_N_TIME_STAMP_) + ")") + "<br><br>" +
+	                 "Copyright (C) 2010-2013  Sergey Vlasov &lt;<a href='mailto:Sergey Vlasov <sergey@vlasov.me>" +
+	                 "?subject=" + QCoreApplication::applicationName() + " " +
+	                               QCoreApplication::applicationVersion() + "'>sergey@vlasov.me</a>&gt;" +
+	               "</span>";
 
 	QDialog *dialog = new QDialog(m_mainWindow);
 	dialog->setWindowTitle(QObject::tr("About ") + QCoreApplication::applicationName());
@@ -792,16 +792,16 @@ void NPlayer::showAboutMessageBox()
 void NPlayer::showOpenFileDialog()
 {
 	QString music = "*.mp3 *.ogg *.flac *.wma *.wav "
-					"*.aac *.m4a *.spx *.mp4 "
-					"*.xm *.s3m *.it *.mod";
+	                "*.aac *.m4a *.spx *.mp4 "
+	                "*.xm *.s3m *.it *.mod";
 	QString playlist = "*.m3u *.m3u8";
 
 	QStringList files = QFileDialog::getOpenFileNames(m_mainWindow, tr("Open Files"),
-														m_settings->value("LastDirectory").toString(),
-														"All supported (" + music + " " + playlist + ");;"
-														"Music files (" + music + ");;"
-														"Playlist files (" + playlist + ");;"
-														"All files (*)");
+	                                                  m_settings->value("LastDirectory").toString(),
+	                                                  "All supported (" + music + " " + playlist + ");;"
+	                                                  "Music files (" + music + ");;"
+	                                                  "Playlist files (" + playlist + ");;"
+	                                                  "All files (*)");
 
 	if (files.isEmpty())
 		return;
@@ -818,8 +818,8 @@ void NPlayer::showOpenFileDialog()
 void NPlayer::showSavePlaylistDialog()
 {
 	QString file = QFileDialog::getSaveFileName(this, tr("Save File"),
-												m_settings->value("LastDirectory").toString(),
-												"M3U Playlist (*.m3u)");
+	                                            m_settings->value("LastDirectory").toString(),
+	                                            "M3U Playlist (*.m3u)");
 
 	if (file.isEmpty())
 		return;
@@ -857,4 +857,3 @@ void NPlayer::waveformSliderToolTip(int x, int y)
 	}
 }
 
-/* vim: set ts=4 sw=4: */

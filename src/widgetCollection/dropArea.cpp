@@ -59,4 +59,3 @@ QStringList NDropArea::mimeTypes() const
 	return qstrList;
 }
 
-/* vim: set ts=4 sw=4: */

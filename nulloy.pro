@@ -2,7 +2,7 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 unix:isEmpty(N_CONFIG_SUCCESS) {
-    error(Please run configure.)
+	error(Please run configure.)
 }
 
 # qmake -config no-skins
@@ -44,4 +44,3 @@ plugins-all {
 src.file = src/player.pro
 SUBDIRS += src
 
-# vim: set ts=4 sw=4: #

@@ -33,3 +33,4 @@ QObjectList NPluginTaglib::elements()
 }
 
 Q_EXPORT_PLUGIN2(plugin_taglib, NPluginTaglib)
+

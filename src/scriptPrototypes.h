@@ -63,10 +63,10 @@ class NSplitterPrototype : public QObject, public QScriptable
 {
 	Q_OBJECT
 
-	public:
-		NSplitterPrototype(QObject *parent = 0);
-		Q_INVOKABLE QList<int> sizes();
-		Q_INVOKABLE void setSizes(const QList<int> &list);
+public:
+	NSplitterPrototype(QObject *parent = 0);
+	Q_INVOKABLE QList<int> sizes();
+	Q_INVOKABLE void setSizes(const QList<int> &list);
 };
 
 namespace NMarginsPrototype
@@ -76,6 +76,4 @@ namespace NMarginsPrototype
 }
 
 #endif
-
-/* vim: set ts=4 sw=4: */
 

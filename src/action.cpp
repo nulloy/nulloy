@@ -80,4 +80,3 @@ void NAction::setGlobalShortcuts(const QList<QKeySequence> &shortcuts)
 	}
 }
 
-/* vim: set ts=4 sw=4: */

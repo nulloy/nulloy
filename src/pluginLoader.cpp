@@ -88,10 +88,10 @@ QObject* NPluginLoader::_findPlugin(PluginType type, QObjectList &objects, QMap<
 
 		if (el_interface_ver != base_interface_ver) {
 			QMessageBox::warning(NULL, QObject::tr("Plugin Interface Mismatch"),
-								plug_name + " " + plug_ver + " plugin has a different version of " + base_interface_name +".\n" +
-								"Internal version: " + base_interface_ver + "\n" +
-								"Plugin version: " + el_interface_ver,
-								QMessageBox::Close);
+			                     plug_name + " " + plug_ver + " plugin has a different version of " + base_interface_name +".\n" +
+			                     "Internal version: " + base_interface_ver + "\n" +
+			                     "Plugin version: " + el_interface_ver,
+			                     QMessageBox::Close);
 		}
 
 		el->init();
@@ -157,7 +157,7 @@ void NPluginLoader::_loadPlugins()
 			}
 		}
 		_putenv(QString("PATH=" + pluginsDirList.join(";") + ";" +
-				subDirsList.join(";") + ";" + getenv("PATH")).replace('/', '\\').toUtf8());
+			subDirsList.join(";") + ";" + getenv("PATH")).replace('/', '\\').toUtf8());
 #endif
 	foreach (QString dirStr, pluginsDirList) {
 		QDir dir(dirStr);
@@ -187,7 +187,7 @@ void NPluginLoader::_loadPlugins()
 					}
 				} else {
 					QMessageBox box(QMessageBox::Warning, QObject::tr("Plugin loading error"), QObject::tr("Failed to load plugin: ") +
-									fileFullPath + "\n\n" + loader->errorString(), QMessageBox::Close);
+					                fileFullPath + "\n\n" + loader->errorString(), QMessageBox::Close);
 					box.exec();
 					delete loader;
 				}
@@ -242,4 +242,3 @@ QStringList NPluginLoader::pluginIdentifiers()
 	return _identifiers;
 }
 
-/* vim: set ts=4 sw=4: */

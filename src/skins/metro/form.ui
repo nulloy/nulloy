@@ -98,7 +98,7 @@ QScrollBar::sub-page {
 #prevButton, #playButton, #stopButton, #nextButton {
 	background: transparent;
 }
-#prevButtonWrapper, #playButtonWrapper, #stopButtonWrapper, #nextButtonWrapper  {
+#prevButtonWrapper, #playButtonWrapper, #stopButtonWrapper, #nextButtonWrapper {
 	border: 2px solid #fff;
 	border-radius: 15px;
 	margin: 3px 15px;

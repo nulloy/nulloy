@@ -146,8 +146,8 @@ void NWaveformBuilderGstreamer::start(const QString &file)
 	m_currentFile = file;
 
 	m_playbin = gst_parse_launch("uridecodebin name=w_uridecodebin \
-								! audioconvert ! audio/x-raw-int, width=16, signed=true \
-								! fakesink name=w_sink", NULL);
+	                              ! audioconvert ! audio/x-raw-int, width=16, signed=true \
+	                              ! fakesink name=w_sink", NULL);
 
 #if !defined Q_WS_WIN && !defined Q_WS_MAC
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
@@ -224,4 +224,3 @@ void NWaveformBuilderGstreamer::update()
 }
 #endif
 
-/* vim: set ts=4 sw=4: */

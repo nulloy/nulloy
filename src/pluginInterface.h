@@ -31,3 +31,4 @@ public:
 Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/NPluginInterface/0.5")
 
 #endif
+

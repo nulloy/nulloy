@@ -33,4 +33,3 @@ namespace NM3uPlaylist
 
 #endif
 
-/* vim: set ts=4 sw=4: */

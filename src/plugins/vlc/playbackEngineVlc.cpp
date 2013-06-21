@@ -51,8 +51,8 @@ void NPlaybackEngineVlc::init()
 		argVector << argv[i];
 
 	argVector << "-I" << "dummy"
-			<< "--ignore-config"
-			<< "--no-xlib";
+	          << "--ignore-config"
+	          << "--no-xlib";
 
 	m_vlcInstance = libvlc_new(argVector.size(), &argVector[0]);
 	m_mediaPlayer = libvlc_media_player_new(m_vlcInstance);
@@ -199,4 +199,3 @@ void NPlaybackEngineVlc::_emitFinished()
 	emit finished();
 }
 
-/* vim: set ts=4 sw=4: */

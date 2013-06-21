@@ -105,4 +105,3 @@ void NWaveformPeaks::append(qreal value)
 	m_vector[m_index].second = qMin(m_vector[m_index].second, value);
 }
 
-/* vim: set ts=4 sw=4: */

@@ -110,4 +110,3 @@ void NLabel::paintEvent(QPaintEvent *event)
 	painter.end();
 }
 
-/* vim: set ts=4 sw=4: */

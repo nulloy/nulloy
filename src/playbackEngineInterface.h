@@ -66,4 +66,3 @@ Q_DECLARE_INTERFACE(NPlaybackEngineInterface, PLAYBACK_INTERFACE)
 
 #endif
 
-/* vim: set ts=4 sw=4: */

@@ -33,5 +33,3 @@ int NTrash(const QString &path, QString *error)
 		return 0;
 }
 
-/* vim: set ts=4 sw=4: */
-

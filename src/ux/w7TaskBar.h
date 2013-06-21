@@ -50,8 +50,7 @@ public slots:
 	void setState(State state);
 };
 
-#endif
+#endif // WIN32
 
 #endif
 
-/* vim: set ts=4 sw=4: */

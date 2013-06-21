@@ -20,7 +20,7 @@
 NPluginPhonon::NPluginPhonon(QObject *parent) : QObject(parent)
 {
 	m_elements << new NPlaybackEnginePhonon()
-				<< new NWaveformBuilderPhonon();
+	           << new NWaveformBuilderPhonon();
 }
 
 NPluginPhonon::~NPluginPhonon()
@@ -35,6 +35,4 @@ QObjectList NPluginPhonon::elements()
 }
 
 Q_EXPORT_PLUGIN2(plugin_phonon, NPluginPhonon)
-
-/* vim: set ts=4 sw=4: */
 

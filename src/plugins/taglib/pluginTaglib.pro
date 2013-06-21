@@ -16,3 +16,4 @@ INCLUDEPATH += ..
 
 HEADERS += *.h
 SOURCES += *.cpp
+

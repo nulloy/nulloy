@@ -133,4 +133,3 @@ QAbstractFileEngine::FileFlags NSkinFileEngine::fileFlags(QAbstractFileEngine::F
 	return flags;
 }
 
-/* vim: set ts=4 sw=4: */

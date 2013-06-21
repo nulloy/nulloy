@@ -46,4 +46,3 @@ void NSystemTray::setToolTip(const QString &str)
 	_trayIcon->setToolTip(str);
 }
 
-/* vim: set ts=4 sw=4: */

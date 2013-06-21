@@ -35,3 +35,4 @@ QObjectList NPluginVlc::elements()
 }
 
 Q_EXPORT_PLUGIN2(plugin_vlc, NPluginVlc)
+

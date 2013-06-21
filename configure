@@ -220,3 +220,4 @@ echo "Nulloy has been configured. Now run \`make'."
 echo
 
 exit 0
+

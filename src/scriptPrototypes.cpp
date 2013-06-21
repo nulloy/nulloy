@@ -196,4 +196,3 @@ void NMarginsPrototype::fromScriptValue(const QScriptValue &obj, QMargins &m)
 	m.setTop(obj.property("top").toInt32());
 }
 
-/* vim: set ts=4 sw=4: */

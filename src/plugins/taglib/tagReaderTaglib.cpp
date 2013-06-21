@@ -211,4 +211,3 @@ bool NTagReaderTaglib::isValid()
 	return (m_tagRef && m_tagRef->file() && m_tagRef->file()->isValid());
 }
 
-/* vim: set ts=4 sw=4: */

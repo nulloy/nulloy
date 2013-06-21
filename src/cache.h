@@ -215,4 +215,3 @@ template <class Key, class T> void NCache<Key, T>::trim(int m)
 
 #endif
 
-/* vim: set ts=4 sw=4: */

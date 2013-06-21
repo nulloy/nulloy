@@ -119,33 +119,33 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 
 	QTextBrowser *textBrowser = new QTextBrowser(this);
 	textBrowser->setHtml("<table width=\"100%\">"
-						"<tr><td><b>%a</b></td><td>Artist</td></tr>"
-						"<tr><td><b>%t</b></td><td>Title</td></tr>"
-						"<tr><td><b>%A</b></td><td>Album</td></tr>"
-						"<tr><td><b>%c</b></td><td>Comment</td></tr>"
-						"<tr><td><b>%g</b></td><td>Genre</td></tr>"
-						"<tr><td><b>%y</b></td><td>Year</td></tr>"
-						"<tr><td><b>%n</b></td><td>Track number</td></tr>"
-						"<tr><td><b>%d</b></td><td>Duration</td></tr>"
-						"<tr><td><b>%T</b></td><td>Current time position (Waveform only)</td></tr>"
-						"<tr><td><b>%r</b></td><td>Remaining time (Waveform only)</td></tr>"
-						"<tr><td><b>%B</b></td><td>Bitrate in Kb/s</td></tr>"
-						"<tr><td><b>%s</b></td><td>Sample rate in kHz</td></tr>"
-						"<tr><td><b>%c</b></td><td>Number of channels</td></tr>"
-						"<tr><td><b>%f</b></td><td>File name without extension</td></tr>"
-						"<tr><td><b>%F</b></td><td>File name</td></tr>"
-						"<tr><td><b>%p</b></td><td>File name including absolute path</td></tr>"
-						"<tr><td><b>%v</b></td><td>" + QCoreApplication::applicationName() + " version</td></tr>"
-						"<tr><td><b>%%</b></td><td>\'%\' character</td></tr>"
-						"<tr><td></td><td></td></tr>"
-						"<tr><td>Conditions:</td><td></td></tr>"
-						"<tr><td><b>{</b><i>true</i><b>|</b><i>false</i><b>}</b></td><td>If / Else: evaluate for <i>true</i> or <i>false</i> case. Note: nesting conditions is not supported yet.</td></tr>"
-						"<tr><td></td><td></td></tr>"
-						"<tr><td>Examples:</td><td></td></tr>"
-						"<tr><td><b>{%a - %t|%F}</b></td><td>Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.</td></tr>"
-						"<tr><td></td><td></td></tr>"
-						"<tr><td><b>{%g|}</b></td><td>Print Genre. If not available, print nothing.</td></tr>"
-						"</table><br>");
+	                       "<tr><td><b>%a</b></td><td>Artist</td></tr>"
+	                       "<tr><td><b>%t</b></td><td>Title</td></tr>"
+	                       "<tr><td><b>%A</b></td><td>Album</td></tr>"
+	                       "<tr><td><b>%c</b></td><td>Comment</td></tr>"
+	                       "<tr><td><b>%g</b></td><td>Genre</td></tr>"
+	                       "<tr><td><b>%y</b></td><td>Year</td></tr>"
+	                       "<tr><td><b>%n</b></td><td>Track number</td></tr>"
+	                       "<tr><td><b>%d</b></td><td>Duration</td></tr>"
+	                       "<tr><td><b>%T</b></td><td>Current time position (Waveform only)</td></tr>"
+	                       "<tr><td><b>%r</b></td><td>Remaining time (Waveform only)</td></tr>"
+	                       "<tr><td><b>%B</b></td><td>Bitrate in Kb/s</td></tr>"
+	                       "<tr><td><b>%s</b></td><td>Sample rate in kHz</td></tr>"
+	                       "<tr><td><b>%c</b></td><td>Number of channels</td></tr>"
+	                       "<tr><td><b>%f</b></td><td>File name without extension</td></tr>"
+	                       "<tr><td><b>%F</b></td><td>File name</td></tr>"
+	                       "<tr><td><b>%p</b></td><td>File name including absolute path</td></tr>"
+	                       "<tr><td><b>%v</b></td><td>" + QCoreApplication::applicationName() + " version</td></tr>"
+	                       "<tr><td><b>%%</b></td><td>\'%\' character</td></tr>"
+	                       "<tr><td></td><td></td></tr>"
+	                       "<tr><td>Conditions:</td><td></td></tr>"
+	                       "<tr><td><b>{</b><i>true</i><b>|</b><i>false</i><b>}</b></td><td>If / Else: evaluate for <i>true</i> or <i>false</i> case. Note: nesting conditions is not supported yet.</td></tr>"
+	                       "<tr><td></td><td></td></tr>"
+	                       "<tr><td>Examples:</td><td></td></tr>"
+	                       "<tr><td><b>{%a - %t|%F}</b></td><td>Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.</td></tr>"
+	                       "<tr><td></td><td></td></tr>"
+	                       "<tr><td><b>{%g|}</b></td><td>Print Genre. If not available, print nothing.</td></tr>"
+	                     "</table><br>");
 
 	dialog->resize(450, 550);
 
@@ -316,4 +316,3 @@ void NPreferencesDialog::saveSettings()
 		QMessageBox::warning(this, "Systray Error", QObject::tr("System Tray (Notification Area) is not available on your system."));
 }
 
-/* vim: set ts=4 sw=4: */

@@ -31,9 +31,9 @@ static void _prepareBuffer(void *userData, uint8_t **pcmBuffer , unsigned int si
 }
 
 static void _handleBuffer(void *userData, uint8_t *pcmBuffer,
-						unsigned int nChannels, unsigned int frequency,
-						unsigned int nSamples, unsigned int bitsPerSample,
-						unsigned int size, int64_t pts)
+                          unsigned int nChannels, unsigned int frequency,
+                          unsigned int nSamples, unsigned int bitsPerSample,
+                          unsigned int size, int64_t pts)
 {
 	QMutexLocker locker(&_mutex);
 
@@ -77,13 +77,13 @@ void NWaveformBuilderVlc::init()
 
 	char smem_options[512];
 	sprintf(smem_options, "#transcode{acodec=s16l}:smem{"
-							"audio-prerender-callback=%lld,"
-							"audio-postrender-callback=%lld,"
-							"audio-data=%lld,"
-							"no-time-sync}",
-			(long long int)(intptr_t)(void*)&_prepareBuffer,
-			(long long int)(intptr_t)(void*)&_handleBuffer,
-			(long long int)(intptr_t)(void*)this);
+	                      "audio-prerender-callback=%lld,"
+	                      "audio-postrender-callback=%lld,"
+	                      "audio-data=%lld,"
+	                      "no-time-sync}",
+	        (long long int)(intptr_t)(void*)&_prepareBuffer,
+	        (long long int)(intptr_t)(void*)&_handleBuffer,
+	        (long long int)(intptr_t)(void*)this);
 
 	int argc;
 	const char **argv;
@@ -94,9 +94,9 @@ void NWaveformBuilderVlc::init()
 		argVector << argv[i];
 
 	argVector << "-I" << "dummy"
-			<< "--ignore-config"
-			<< "--no-xlib"
-			<< "--sout" << smem_options;
+	          << "--ignore-config"
+	          << "--no-xlib"
+	          << "--sout" << smem_options;
 
 	m_vlcInstance = libvlc_new(argVector.size(), &argVector[0]);
 	m_mediaPlayer = libvlc_media_player_new(m_vlcInstance);
@@ -179,4 +179,3 @@ qreal NWaveformBuilderVlc::position()
 	return libvlc_media_player_get_position(m_mediaPlayer);
 }
 
-/* vim: set ts=4 sw=4: */

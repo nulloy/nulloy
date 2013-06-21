@@ -53,4 +53,3 @@ void NSlider::wheelEvent(QWheelEvent *event)
 	emit sliderMoved(value());
 }
 
-/* vim: set ts=4 sw=4: */

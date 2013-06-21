@@ -123,9 +123,9 @@ Program.prototype.on_resized = function()
 {
 	if (Q_WS == "mac") {
 		this.sizeGrip.move(this.sizeGrip.parentWidget().width -
-							this.sizeGrip.width - 5,
-							this.sizeGrip.parentWidget().height -
-							this.sizeGrip.height - 4);
+		                   this.sizeGrip.width - 5,
+		                   this.sizeGrip.parentWidget().height -
+		                   this.sizeGrip.height - 4);
 	}
 }
 
@@ -160,4 +160,3 @@ Program.prototype.setTitle = function(title)
 	this.titleLabel.toolTip = title;
 }
 
-/* vim: set ts=4 sw=4: */

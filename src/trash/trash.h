@@ -16,3 +16,4 @@
 #include <QString>
 
 int NTrash(const QString &path, QString *error);
+

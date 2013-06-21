@@ -144,4 +144,3 @@ Program.prototype.waveformSlide_setValue = function(value)
 	this.waveformSlider.value = Math.round(value * this.waveformSlider.maximum);
 }
 
-/* vim: set ts=4 sw=4: */

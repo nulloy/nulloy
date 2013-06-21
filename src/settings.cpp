@@ -28,9 +28,9 @@
 NSettings *NSettings::m_instance = NULL;
 
 NSettings::NSettings(QObject *parent)
-:	QSettings(NCore::rcDir() + "/" +
-				NCore::applicationBinaryName() + ".cfg",
-				QSettings::IniFormat, parent)
+: QSettings(NCore::rcDir() + "/" +
+            NCore::applicationBinaryName() + ".cfg",
+            QSettings::IniFormat, parent)
 {
 	Q_ASSERT_X(!m_instance, "NSettings", "NSettings instance already exists.");
 	m_instance = this;
@@ -157,4 +157,3 @@ void NSettings::remove(const QString &key)
 	emit valueChanged(key, QString());
 }
 
-/* vim: set ts=4 sw=4: */

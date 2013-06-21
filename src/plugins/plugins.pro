@@ -11,3 +11,4 @@ SUBDIRS += vlc
 
 taglib.file = taglib/pluginTaglib.pro
 SUBDIRS += taglib
+

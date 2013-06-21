@@ -46,7 +46,7 @@ void NWaveformBuilderPhonon::init()
 	Phonon::createPath(m_audioDataOutput, m_audioOutput);
 
 	connect(m_audioDataOutput, SIGNAL(dataReady(const QMap< Phonon::AudioDataOutput::Channel, QVector<qint16> > &)),
-			this, SLOT(handleData(const QMap< Phonon::AudioDataOutput::Channel, QVector<qint16> > &)));
+	        this, SLOT(handleData(const QMap< Phonon::AudioDataOutput::Channel, QVector<qint16> > &)));
 
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
@@ -120,4 +120,3 @@ qreal NWaveformBuilderPhonon::position()
 	return (qreal)m_mediaObject->currentTime() / m_mediaObject->totalTime();
 }
 
-/* vim: set ts=4 sw=4: */

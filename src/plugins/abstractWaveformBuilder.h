@@ -51,7 +51,5 @@ public:
 	void positionAndIndex(float &pos, int &index);
 };
 
-
 #endif
 
-/* vim: set ts=4 sw=4: */

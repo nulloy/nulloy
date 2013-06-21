@@ -19,9 +19,9 @@
 static inline QString _domXml(const QString &className, const QString &name)
 {
 	return QString("<ui language=\"c++\">\n"
-					" <widget class=\"%1\" name=\"%2\">\n"
-					" </widget>\n"
-					"</ui>").arg(className).arg(name);
+	               " <widget class=\"%1\" name=\"%2\">\n"
+	               " </widget>\n"
+	               "</ui>").arg(className).arg(name);
 }
 
 NWidgetPlugin::NWidgetPlugin(const QString &className)
@@ -60,4 +60,3 @@ NWidgetCollection::NWidgetCollection(QObject *parent) : QObject(parent)
 
 Q_EXPORT_PLUGIN2(widget_collection, NWidgetCollection)
 
-/* vim: set ts=4 sw=4: */

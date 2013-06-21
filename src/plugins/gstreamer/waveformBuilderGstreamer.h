@@ -26,9 +26,9 @@
 #include <QTimer>
 #endif
 
-class NWaveformBuilderGstreamer :	public NWaveformBuilderInterface,
-									public NPluginElementInterface,
-									public NAbstractWaveformBuilder
+class NWaveformBuilderGstreamer : public NWaveformBuilderInterface,
+                                  public NPluginElementInterface,
+                                  public NAbstractWaveformBuilder
 {
 	Q_OBJECT
 	Q_INTERFACES(NWaveformBuilderInterface NPluginElementInterface)
@@ -63,4 +63,3 @@ public:
 
 #endif
 
-/* vim: set ts=4 sw=4: */

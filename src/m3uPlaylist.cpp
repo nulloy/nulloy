@@ -80,4 +80,3 @@ void NM3uPlaylist::write(const QString &file, QList<NM3uItem> items)
 	playlist.close();
 }
 
-/* vim: set ts=4 sw=4: */

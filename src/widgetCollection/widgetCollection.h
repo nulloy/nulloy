@@ -117,4 +117,3 @@ private:
 	QList<QDesignerCustomWidgetInterface *> m_plugins;
 };
 
-/* vim: set ts=4 sw=4: */

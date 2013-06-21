@@ -766,9 +766,9 @@ QScrollBar::sub-page {
                      </property>
                      <property name="styleSheet">
                       <string notr="true">#titleLabel {
-qproperty-shadowEnabled: true;
-qproperty-shadowOffsetY: 1;
-qproperty-shadowColor: white;
+	qproperty-shadowEnabled: true;
+	qproperty-shadowOffsetY: 1;
+	qproperty-shadowColor: white;
 }
                   </string>
                      </property>

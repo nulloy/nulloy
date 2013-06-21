@@ -9,17 +9,17 @@ unix {
 }
 
 win32 {
-	INCLUDEPATH +=	$(OSSBUILD_GSTREAMER_SDK_DIR)/include \
-					$(OSSBUILD_GSTREAMER_SDK_DIR)/include/gstreamer-0.10 \
-					$(OSSBUILD_GSTREAMER_SDK_DIR)/include/glib-2.0 \
-					$(OSSBUILD_GSTREAMER_SDK_DIR)/include/libxml2
+	INCLUDEPATH +=  $(OSSBUILD_GSTREAMER_SDK_DIR)/include \
+	                $(OSSBUILD_GSTREAMER_SDK_DIR)/include/gstreamer-0.10 \
+	                $(OSSBUILD_GSTREAMER_SDK_DIR)/include/glib-2.0 \
+	                $(OSSBUILD_GSTREAMER_SDK_DIR)/include/libxml2
 
-	LIBS +=			-L$(OSSBUILD_GSTREAMER_SDK_DIR)/lib \
-					-lgstreamer-0.10 \
-					-lglib-2.0 \
-					-liconv \
-					-lxml2 \
-					-lgobject-2.0
+	LIBS +=         -L$(OSSBUILD_GSTREAMER_SDK_DIR)/lib \
+	                -lgstreamer-0.10 \
+	                -lglib-2.0 \
+	                -liconv \
+	                -lxml2 \
+	                -lgobject-2.0
 }
 
 INCLUDEPATH += ..
@@ -34,6 +34,4 @@ gstreamer-tagreader {
 	HEADERS -= tagReaderGstreamer.h
 	SOURCES -= tagReaderGstreamer.cpp
 }
-
-# vim: set ts=4 sw=4: #
 

@@ -16,9 +16,9 @@ SOURCES += *.cpp ux/*.cpp
 FORMS += *.ui
 
 OBJECTS_DIR	= $$TMP_DIR
-MOC_DIR		= $$TMP_DIR
-RCC_DIR		= $$TMP_DIR
-UI_DIR		= $$TMP_DIR
+MOC_DIR     = $$TMP_DIR
+RCC_DIR     = $$TMP_DIR
+UI_DIR      = $$TMP_DIR
 
 unix {
 	CONFIG += link_pkgconfig
@@ -56,11 +56,11 @@ unix:!mac {
 		SRC_DIR=$$PWD
 		silver_skin.target = ../skins/silver.nzs
 		silver_skin.depends = skins/silver/*
-		silver_skin.commands =	[ -d $$SRC_DIR/../skins ] || mkdir $$SRC_DIR/../skins && \
-								cd $$TMP_DIR && cp -r $$SRC_DIR/skins/silver . && \
-								cd silver && \
-								rm design.svg && \
-								zip $$SRC_DIR/../skins/silver.nzs *
+		silver_skin.commands = [ -d $$SRC_DIR/../skins ] || mkdir $$SRC_DIR/../skins && \
+		                       cd $$TMP_DIR && cp -r $$SRC_DIR/skins/silver . && \
+		                       cd silver && \
+		                       rm design.svg && \
+		                       zip $$SRC_DIR/../skins/silver.nzs *
 		QMAKE_EXTRA_TARGETS += silver_skin
 		PRE_TARGETDEPS += $$silver_skin.target
 		#dirty hack for install
@@ -83,18 +83,18 @@ unix:!mac {
 
 	HEADERS -= skinFileSystem.h   skinLoader.h
 	SOURCES -= skinFileSystem.cpp skinLoader.cpp
-	HEADERS +=	widgetCollection/dropArea.h \
-				widgetCollection/label.h \
-				widgetCollection/playlistWidget.h \
-				widgetCollection/slider.h \
-				widgetCollection/waveformSlider.h \
-				widgetCollection/playlistItem.h
-	SOURCES +=	widgetCollection/dropArea.cpp \
-				widgetCollection/label.cpp \
-				widgetCollection/playlistWidget.cpp \
-				widgetCollection/slider.cpp \
-				widgetCollection/waveformSlider.cpp \
-				widgetCollection/playlistItem.cpp
+	HEADERS += widgetCollection/dropArea.h \
+	           widgetCollection/label.h \
+	           widgetCollection/playlistWidget.h \
+	           widgetCollection/slider.h \
+	           widgetCollection/waveformSlider.h \
+	           widgetCollection/playlistItem.h
+	SOURCES += widgetCollection/dropArea.cpp \
+	           widgetCollection/label.cpp \
+	           widgetCollection/playlistWidget.cpp \
+	           widgetCollection/slider.cpp \
+	           widgetCollection/waveformSlider.cpp \
+	           widgetCollection/playlistItem.cpp
 
 	DEPENDPATH += widgetCollection/
 	INCLUDEPATH += widgetCollection/
@@ -195,4 +195,3 @@ mac {
 	}
 }
 
-# vim: set ts=4 sw=4: #

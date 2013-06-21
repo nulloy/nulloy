@@ -31,19 +31,16 @@ int NTrash(const QString &path, QString *error)
 	[urls addObject:[NSURL fileURLWithPath:string]];
 	[[NSWorkspace sharedWorkspace] recycleURLs:urls comletionHandlerL:nil];*/
 
-	/*[[NSWorkspace sharedWorkspace]
-		performFileOperation:NSWorkspaceRecycleOperation
-		source:@"/Users/admin/Desktop/"
-		destination:@""
-		files:[NSArray arrayWithObject:@"replacepath2.py"]
-		tag:nil];*/
+	/*[[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
+	                                               source:@"/Users/admin/Desktop/"
+	                                          destination:@""
+	                       files:[NSArray arrayWithObject:@"replacepath2.py"]
+	                                                  tag:nil];*/
 
 	FSRef fsRef;
 	NSString *string = fromQString(path);
 	FSPathMakeRefWithOptions((const UInt8 *)[string fileSystemRepresentation],
-							kFSPathMakeRefDoNotFollowLeafSymlink, &fsRef, NULL);
+	                         kFSPathMakeRefDoNotFollowLeafSymlink, &fsRef, NULL);
 	return FSMoveObjectToTrashSync(&fsRef, NULL, kFSFileOperationDefaultOptions);;
 }
-
-/* vim: set ts=4 sw=4: */
 

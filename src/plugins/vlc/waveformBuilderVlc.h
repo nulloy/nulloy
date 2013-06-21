@@ -23,9 +23,9 @@
 #include <vlc/vlc.h>
 #include <QTimer>
 
-class NWaveformBuilderVlc :	public NWaveformBuilderInterface,
-							public NPluginElementInterface,
-							public NAbstractWaveformBuilder
+class NWaveformBuilderVlc : public NWaveformBuilderInterface,
+                            public NPluginElementInterface,
+                            public NAbstractWaveformBuilder
 {
 	Q_OBJECT
 	Q_INTERFACES(NWaveformBuilderInterface NPluginElementInterface)
@@ -60,4 +60,3 @@ private slots:
 
 #endif
 
-/* vim: set ts=4 sw=4: */

@@ -127,4 +127,3 @@ void NAbstractWaveformBuilder::positionAndIndex(float &pos, int &index)
 	index = m_oldIndex;
 }
 
-/* vim: set ts=4 sw=4: */

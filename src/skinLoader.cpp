@@ -226,4 +226,3 @@ QString NSkinLoader::skinScriptFile()
 	return _scriptFile;
 }
 
-/* vim: set ts=4 sw=4: */

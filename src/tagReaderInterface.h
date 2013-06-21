@@ -38,4 +38,3 @@ Q_DECLARE_INTERFACE(NTagReaderInterface, TAGREADER_INTERFACE)
 
 #endif
 
-/* vim: set ts=4 sw=4: */

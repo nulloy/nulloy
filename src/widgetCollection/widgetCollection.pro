@@ -9,3 +9,4 @@ INCLUDEPATH += ../trash/
 
 OBJECTS_DIR = $$TMP_DIR
 MOC_DIR = $$TMP_DIR
+

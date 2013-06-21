@@ -58,8 +58,8 @@ void NPlaylistItem::setData(int role, const QVariant &value)
 }
 
 void NPlaylistItemDelegate::paint(QPainter *painter,
-									const QStyleOptionViewItem &option,
-									const QModelIndex &index) const
+                                  const QStyleOptionViewItem &option,
+                                  const QModelIndex &index) const
 {
 	QStyleOptionViewItemV4 opt = option;
 	const NPlaylistWidget *playlistWidget = dynamic_cast<const NPlaylistWidget *>(opt.widget);
@@ -81,5 +81,3 @@ void NPlaylistItemDelegate::paint(QPainter *painter,
 	QStyledItemDelegate::paint(painter, opt, index);
 }
 
-
-/* vim: set ts=4 sw=4: */

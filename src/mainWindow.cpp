@@ -92,7 +92,7 @@ void NMainWindow::init(const QString &uiFile)
 	if (icon.isNull()) {
 		QStringList files = QDir(":").entryList(QStringList() << "icon-*", QDir::Files);
 		foreach (QString fileName, files)
-				icon.addFile(":" + fileName);
+			icon.addFile(":" + fileName);
 	}
 #else
 	icon.addFile(":icon-16.png");
@@ -258,4 +258,3 @@ void NMainWindow::setOnTop(bool onTop)
 #endif
 }
 
-/* vim: set ts=4 sw=4: */

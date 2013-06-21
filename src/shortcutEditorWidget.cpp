@@ -115,9 +115,9 @@ QString NShortcutEditorWidget::keyEventToString(QKeyEvent *e)
 	QString seqStr = QKeySequence(e->key()).toString();
 
 	if (seqStr.isEmpty() ||
-		keyInt == Qt::Key_Control ||
-		keyInt == Qt::Key_Alt || keyInt == Qt::Key_AltGr ||
-		keyInt == Qt::Key_Shift)
+	    keyInt == Qt::Key_Control ||
+	    keyInt == Qt::Key_Alt || keyInt == Qt::Key_AltGr ||
+	    keyInt == Qt::Key_Shift)
 	{
 		return "";
 	}
@@ -161,4 +161,3 @@ void NShortcutEditorWidget::keyPressEvent(QKeyEvent *e)
 	currentItem->setText(text + shortcut);
 }
 
-/* vim: set ts=4 sw=4: */

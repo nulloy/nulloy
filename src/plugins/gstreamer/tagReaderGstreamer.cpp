@@ -253,5 +253,3 @@ bool NTagReaderGstreamer::isValid()
 	return m_isValid;
 }
 
-
-/* vim: set ts=4 sw=4: */

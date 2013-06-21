@@ -33,8 +33,8 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	QShortcut *revealShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Return), this);
 	connect(revealShortcut, SIGNAL(activated()), this, SLOT(revealInFileManager()));
 	QAction *revealAction = new QAction(QIcon::fromTheme("fileopen",
-										style()->standardIcon(QStyle::SP_DirOpenIcon)),
-										tr("Reveal in File Manager..."), this);
+	                                    style()->standardIcon(QStyle::SP_DirOpenIcon)),
+	                                    tr("Reveal in File Manager..."), this);
 	revealAction->setShortcut(revealShortcut->key());
 	connect(revealAction, SIGNAL(triggered()), this, SLOT(revealInFileManager()));
 
@@ -51,8 +51,8 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	QShortcut *trashShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Delete), this);
 	connect(trashShortcut, SIGNAL(activated()), this, SLOT(moveToTrash()));
 	QAction *trashAction = new QAction(QIcon::fromTheme("trashcan_empty",
-										style()->standardIcon(QStyle::SP_TrashIcon)),
-										tr("Move To Trash"), this);
+	                                   style()->standardIcon(QStyle::SP_TrashIcon)),
+	                                   tr("Move To Trash"), this);
 	trashAction->setShortcut(trashShortcut->key());
 	connect(trashAction, SIGNAL(triggered()), this, SLOT(moveToTrash()));
 
@@ -520,4 +520,3 @@ QColor NPlaylistWidget::getFailedTextColor() const
 
 // << STYLESHEET PROPERTIES
 
-/* vim: set ts=4 sw=4: */

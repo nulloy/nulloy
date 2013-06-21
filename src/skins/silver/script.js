@@ -144,15 +144,15 @@ Program.prototype.on_failed = function()
 Program.prototype.on_resized = function()
 {
 	this.playlistToggleButton.move(this.playlistToggleButton.parentWidget().width -
-									this.playlistToggleButton.width - 40,
-									this.playlistToggleButton.parentWidget().height -
-									this.playlistToggleButton.height);
+	                               this.playlistToggleButton.width - 40,
+	                               this.playlistToggleButton.parentWidget().height -
+	                               this.playlistToggleButton.height);
 
 	if (Q_WS == "mac") {
 		this.sizeGrip.move(this.sizeGrip.parentWidget().width -
-							this.sizeGrip.width - 5,
-							this.sizeGrip.parentWidget().height -
-							this.sizeGrip.height - 4);
+		                   this.sizeGrip.width - 5,
+		                   this.sizeGrip.parentWidget().height -
+		                   this.sizeGrip.height - 4);
 	}
 
 	this.shadowWidget.resize(this.playlistWidget.width, this.shadowWidget.height);
@@ -206,4 +206,3 @@ Program.prototype.setTitle = function(title)
 	this.titleLabel.toolTip = title;
 }
 
-/* vim: set ts=4 sw=4: */

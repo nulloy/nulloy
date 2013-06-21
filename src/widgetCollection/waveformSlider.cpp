@@ -83,9 +83,9 @@ void NWaveformSlider::checkForUpdate()
 	m_waveBuilder->positionAndIndex(pos, index);
 
 	if (!(pos < 0 || index < 0) &&
-		!(m_oldBuildPos == pos &&
-		m_oldIndex == index &&
-		m_waveImage.size() == size()))
+	    !(m_oldBuildPos == pos &&
+	    m_oldIndex == index &&
+	    m_waveImage.size() == size()))
 	{
 		m_oldBuildPos = pos;
 		m_oldIndex = index;
@@ -328,4 +328,3 @@ void NWaveformSlider::setPausedBackground(QBrush brush)
 	m_pausedBackground = brush;
 }
 
-/* vim: set ts=4 sw=4: */

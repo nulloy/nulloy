@@ -39,4 +39,3 @@ Q_DECLARE_INTERFACE(NWaveformBuilderInterface, WAVEFORM_INTERFACE)
 
 #endif
 
-/* vim: set ts=4 sw=4: */

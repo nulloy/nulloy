@@ -36,7 +36,8 @@ public:
 	NPluginElementInterface() { m_init = FALSE; }
 	virtual ~NPluginElementInterface() {}
 	virtual QString name()
-	{	QObject *obj = dynamic_cast<QObject *>(this);
+	{
+		QObject *obj = dynamic_cast<QObject *>(this);
 		if (obj)
 			return obj->metaObject()->className();
 		else
@@ -50,3 +51,4 @@ public:
 Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/NPluginElementInterface/0.5")
 
 #endif
+

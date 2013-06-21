@@ -35,5 +35,3 @@ int NTrash(const QString &path, QString *error)
 	return SHFileOperation(&shfo);
 }
 
-/* vim: set ts=4 sw=4: */
-

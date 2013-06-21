@@ -63,9 +63,9 @@ bool NW7TaskBar::winEvent(MSG *message, long *result)
 
 	if (message->message == _messageId) {
 		HRESULT hr = CoCreateInstance(CLSID_TaskbarList, NULL,
-										CLSCTX_INPROC_SERVER,
-										IID_ITaskbarList3,
-										reinterpret_cast<void **>(&_taskBar));
+		                              CLSCTX_INPROC_SERVER,
+		                              IID_ITaskbarList3,
+		                              reinterpret_cast<void **>(&_taskBar));
 		if (SUCCEEDED(hr)) {
 			hr = _taskBar->HrInit();
 			if (FAILED(hr)) {
@@ -135,4 +135,3 @@ void NW7TaskBar::setOverlayIcon(const QIcon &icon, const QString &text)
 
 #endif
 
-/* vim: set ts=4 sw=4: */

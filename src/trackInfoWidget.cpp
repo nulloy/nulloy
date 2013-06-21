@@ -170,4 +170,3 @@ void NTrackInfoWidget::tick(qint64 msec)
 	}
 }
 
-/* vim: set ts=4 sw=4: */

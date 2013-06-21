@@ -92,5 +92,3 @@ QStringList NCore::dirListRecursive(const QString &path)
 	return _processPath(path);
 }
 
-/* vim: set ts=4 sw=4: */
-

@@ -154,10 +154,10 @@ void NPlaybackEngineGStreamer::setPosition(qreal pos)
 	gint64 len;
 	if (gst_element_query_duration(m_playbin, &format, &len)) {
 		gst_element_seek(m_playbin, 1.0,
-						GST_FORMAT_TIME,
-						GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
-						GST_SEEK_TYPE_SET, pos * len,
-						GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
+		                 GST_FORMAT_TIME,
+		                 GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
+		                 GST_SEEK_TYPE_SET, pos * len,
+		                 GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
 	} else {
 		m_savedPosition = pos;
 	}
@@ -299,4 +299,3 @@ void NPlaybackEngineGStreamer::_emitError(QString error)
 	emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), error);
 }
 
-/* vim: set ts=4 sw=4: */

@@ -102,4 +102,3 @@ void NLogDialog::closeEvent(QCloseEvent *event)
 	m_oldTitle.clear();
 }
 
-/* vim: set ts=4 sw=4: */

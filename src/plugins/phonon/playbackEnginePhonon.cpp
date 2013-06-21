@@ -130,7 +130,7 @@ bool NPlaybackEnginePhonon::hasMedia()
 	Phonon::MediaSource source = m_mediaObject->currentSource();
 
 	if (source.type() == Phonon::MediaSource::Invalid ||
-		source.type() == Phonon::MediaSource::Empty)
+	    source.type() == Phonon::MediaSource::Empty)
 	{
 		return FALSE;
 	} else {
@@ -170,4 +170,3 @@ int NPlaybackEnginePhonon::state()
 	return fromPhononState(m_mediaObject->state());
 }
 
-/* vim: set ts=4 sw=4: */

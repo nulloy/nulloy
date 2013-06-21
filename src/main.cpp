@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
 	NPlayer p;
 	QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
-					&p, SLOT(message(const QString &)));
+	                 &p, SLOT(message(const QString &)));
 	if (!msg.isEmpty())
 		p.message(msg);
 	p.restorePlaylist();
@@ -56,4 +56,3 @@ int main(int argc, char *argv[])
 	return instance.exec();
 }
 
-/* vim: set ts=4 sw=4: */
