@@ -63,8 +63,8 @@ bool NSkinFileSystem::init()
 
 NSkinFileEngine::NSkinFileEngine(const QByteArray &ba, const QString &fileName)
 {
-    m_bytes = ba;
-    m_fileName = fileName;
+	m_bytes = ba;
+	m_fileName = fileName;
 }
 
 QAbstractFileEngine* NSkinFileSystem::create(const QString &fileName) const

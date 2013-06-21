@@ -22,9 +22,8 @@ void NWaveformBuilderPhonon::handleData(const QMap< Phonon::AudioDataOutput::Cha
 {
 	for (int i = 0; i < m_audioDataOutput->dataSize(); ++i) {
 		qint32 pcmValue = 0;
-		for (int j = 0; j < data.size(); ++j) {
+		for (int j = 0; j < data.size(); ++j)
 			pcmValue += data[(Phonon::AudioDataOutput::Channel)j][i] ;
-		}
 		qreal realValue = -((qreal)pcmValue / data.size()) / (1<<15);
 		m_peaks.append(realValue);
 	}

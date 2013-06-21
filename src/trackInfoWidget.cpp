@@ -66,7 +66,6 @@ bool NTrackInfoWidget::eventFilter(QObject *object, QEvent *event)
 	if (event->type() == QEvent::DragEnter || event->type() == QEvent::Leave)
 		QApplication::sendEvent(parent(), event);
 
-
 	if (event->type() == QEvent::GraphicsSceneMouseMove) {
 		QGraphicsSceneMouseEvent *gfx_event = static_cast<QGraphicsSceneMouseEvent*>(event);
 		QMouseEvent mouse_event(QEvent::MouseMove, gfx_event->scenePos().toPoint(), gfx_event->screenPos(), Qt::NoButton, Qt::NoButton, Qt::NoModifier);

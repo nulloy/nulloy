@@ -731,7 +731,7 @@ void NPlayer::showAboutMessageBox()
 
 	// about tab
 	QWidget *tab1 = new QWidget(m_mainWindow);
-    tabWidget->addTab(tab1, tr("About"));
+	tabWidget->addTab(tab1, tr("About"));
 	QVBoxLayout *tab1Layout = new QVBoxLayout;
 	tab1->setLayout(tab1Layout);
 
@@ -758,7 +758,7 @@ void NPlayer::showAboutMessageBox()
 
 	// changelog tab
 	QWidget *tab2 = new QWidget(m_mainWindow);
-    tabWidget->addTab(tab2, tr("Changelog"));
+	tabWidget->addTab(tab2, tr("Changelog"));
 	QVBoxLayout *tab2Layout = new QVBoxLayout;
 	tab2Layout->setContentsMargins(0, 0, 0, 0);
 	tab2->setLayout(tab2Layout);

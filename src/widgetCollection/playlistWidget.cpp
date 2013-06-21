@@ -42,8 +42,8 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	QShortcut *removeShortcut = new QShortcut(QKeySequence(Qt::Key_Delete), this);
 	connect(removeShortcut, SIGNAL(activated()), this, SLOT(removeFromPlaylist()));
 	QAction *removeAction = new QAction(QIcon::fromTheme("edit-clear",
-												style()->standardIcon(QStyle::SP_DialogResetButton)),
-												tr("Remove From Playlist"), this);
+	                                    style()->standardIcon(QStyle::SP_DialogResetButton)),
+	                                    tr("Remove From Playlist"), this);
 	removeAction->setShortcut(removeShortcut->key());
 	connect(removeAction, SIGNAL(triggered()), this, SLOT(removeFromPlaylist()));
 

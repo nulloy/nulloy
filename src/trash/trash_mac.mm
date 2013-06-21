@@ -19,8 +19,8 @@
 
 static inline NSString* fromQString(const QString &string)
 {
-    char* cString = string.toUtf8().data();
-    return [[NSString alloc] initWithUTF8String:cString];
+	char* cString = string.toUtf8().data();
+	return [[NSString alloc] initWithUTF8String:cString];
 }
 
 int NTrash(const QString &path, QString *error)

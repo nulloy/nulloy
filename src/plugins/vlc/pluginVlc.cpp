@@ -20,7 +20,7 @@
 NPluginVlc::NPluginVlc(QObject *parent) : QObject(parent)
 {
 	m_elements << new NPlaybackEngineVlc()
-				<< new NWaveformBuilderVlc();
+	           << new NWaveformBuilderVlc();
 }
 
 NPluginVlc::~NPluginVlc()

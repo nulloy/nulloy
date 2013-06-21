@@ -161,36 +161,36 @@ void NPluginLoader::_loadPlugins()
 #endif
 	foreach (QString dirStr, pluginsDirList) {
 		QDir dir(dirStr);
-		if (dir.exists()) {
-			foreach (QString fileName, dir.entryList(QDir::Files)) {
-				QString fileFullPath = dir.absoluteFilePath(fileName);
+		if (!dir.exists())
+			continue;
+		foreach (QString fileName, dir.entryList(QDir::Files)) {
+			QString fileFullPath = dir.absoluteFilePath(fileName);
 #ifdef Q_WS_WIN
-				// skip non plugin files
-				if (!fileName.startsWith("plugin", Qt::CaseInsensitive) || !fileName.endsWith("dll", Qt::CaseInsensitive))
-					continue;
+			// skip non plugin files
+			if (!fileName.startsWith("plugin", Qt::CaseInsensitive) || !fileName.endsWith("dll", Qt::CaseInsensitive))
+				continue;
 #endif
-				if (!QLibrary::isLibrary(fileFullPath))
-					continue;
-				QPluginLoader *loader = new QPluginLoader(fileFullPath);
-				QObject *instance = loader->instance();
-				NPluginInterface *plugin = qobject_cast<NPluginInterface *>(instance);
-				if (plugin) {
-					QObjectList elements = plugin->elements();
-					objects << elements;
-					foreach (QObject *obj, elements) {
-						NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(obj);
-						QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
-						                     ((el->type() == Other) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
-						_identifiers << identifier;
-						_loaders[identifier] = loader;
-						usedFlags[identifier] = FALSE;
-					}
-				} else {
-					QMessageBox box(QMessageBox::Warning, QObject::tr("Plugin loading error"), QObject::tr("Failed to load plugin: ") +
-					                fileFullPath + "\n\n" + loader->errorString(), QMessageBox::Close);
-					box.exec();
-					delete loader;
+			if (!QLibrary::isLibrary(fileFullPath))
+				continue;
+			QPluginLoader *loader = new QPluginLoader(fileFullPath);
+			QObject *instance = loader->instance();
+			NPluginInterface *plugin = qobject_cast<NPluginInterface *>(instance);
+			if (plugin) {
+				QObjectList elements = plugin->elements();
+				objects << elements;
+				foreach (QObject *obj, elements) {
+					NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(obj);
+					QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
+					                     ((el->type() == Other) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
+					_identifiers << identifier;
+					_loaders[identifier] = loader;
+					usedFlags[identifier] = FALSE;
 				}
+			} else {
+				QMessageBox box(QMessageBox::Warning, QObject::tr("Plugin loading error"), QObject::tr("Failed to load plugin: ") +
+				                fileFullPath + "\n\n" + loader->errorString(), QMessageBox::Close);
+				box.exec();
+				delete loader;
 			}
 		}
 	}

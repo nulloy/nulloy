@@ -27,10 +27,9 @@
 
 NSettings *NSettings::m_instance = NULL;
 
-NSettings::NSettings(QObject *parent)
-: QSettings(NCore::rcDir() + "/" +
-            NCore::applicationBinaryName() + ".cfg",
-            QSettings::IniFormat, parent)
+NSettings::NSettings(QObject *parent) : QSettings(NCore::rcDir() + "/" +
+                                                  NCore::applicationBinaryName() + ".cfg",
+                                                  QSettings::IniFormat, parent)
 {
 	Q_ASSERT_X(!m_instance, "NSettings", "NSettings instance already exists.");
 	m_instance = this;

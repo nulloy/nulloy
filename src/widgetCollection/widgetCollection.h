@@ -46,7 +46,7 @@ public:
 	virtual QString toolTip() const { return QString(); }
 	virtual QString group() const { return "Nulloy"; }
 	virtual QString domXml() const { return m_domXml; }
-    virtual QString includeFile() const { return m_header; }
+	virtual QString includeFile() const { return m_header; }
 };
 
 class NLabelPlugin : public QObject, public NWidgetPlugin
