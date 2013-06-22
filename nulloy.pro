@@ -1,8 +1,8 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-unix:isEmpty(N_CONFIG_SUCCESS) {
-	error(Please run configure.)
+isEmpty(N_CONFIG_SUCCESS) {
+	error(Please run `configure\')
 }
 
 # qmake -config no-skins
