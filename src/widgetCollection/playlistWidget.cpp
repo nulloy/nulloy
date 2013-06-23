@@ -136,6 +136,12 @@ void NPlaylistWidget::revealInFileManager()
 	xdg.waitForFinished();
 
 	fileManagerCommand = QString::fromUtf8(xdg.readAll()).simplified().remove(".desktop");
+
+	if (fileManagerCommand == "dolphin") {
+		arguments << "--select";
+	} else (fileManagerCommand != "nautilus") {
+		path = fileInfo.canonicalPath();
+	}
 #elif defined Q_WS_MAC
 	fileManagerCommand = "open";
 	arguments << "-R";
