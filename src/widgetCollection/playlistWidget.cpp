@@ -139,7 +139,7 @@ void NPlaylistWidget::revealInFileManager()
 
 	if (fileManagerCommand == "dolphin") {
 		arguments << "--select";
-	} else (fileManagerCommand != "nautilus") {
+	} else if (fileManagerCommand != "nautilus") {
 		path = fileInfo.canonicalPath();
 	}
 #elif defined Q_WS_MAC
