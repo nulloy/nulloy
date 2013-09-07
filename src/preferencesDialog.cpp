@@ -254,6 +254,7 @@ void NPreferencesDialog::loadSettings()
 	int index;
 
 #ifndef _N_NO_SKINS_
+	ui.skinComboBox->clear();
 	foreach (QString str, NSkinLoader::skinIdentifiers()) {
 		QString id = str.section('/', 2);
 		ui.skinComboBox->addItem(id.replace('/', ' '), id);
