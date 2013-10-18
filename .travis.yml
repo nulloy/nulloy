@@ -1,0 +1,13 @@
+language: cpp
+
+compiler:
+  - clang
+  - gcc
+
+install:
+  - sudo apt-get update
+  - sudo apt-get install libqt4-dev qt4-qmake libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev zip libx11-dev libtag1-dev
+
+script:
+  - ./configure
+  - make -j4
