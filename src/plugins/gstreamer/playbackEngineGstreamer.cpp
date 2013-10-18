@@ -285,6 +285,7 @@ void NPlaybackEngineGStreamer::_emitFinished()
 	stop();
 	emit finished();
 	emit stateChanged(Stopped);
+	m_oldState = Stopped;
 }
 
 void NPlaybackEngineGStreamer::_emitFailed()
@@ -292,6 +293,7 @@ void NPlaybackEngineGStreamer::_emitFailed()
 	stop();
 	emit failed();
 	emit stateChanged(Stopped);
+	m_oldState = Stopped;
 }
 
 void NPlaybackEngineGStreamer::_emitError(QString error)
