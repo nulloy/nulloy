@@ -214,7 +214,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 				return res;
 			}
 
-			QString condition = format.mid(i, matchedAt - 1);
+			QString condition = format.mid(i, matchedAt - i);
 
 			if (condition.indexOf('{') != -1) {
 				res += "<condition error: extra '{'>";
