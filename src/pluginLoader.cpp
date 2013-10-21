@@ -200,9 +200,19 @@ void NPluginLoader::_loadPlugins()
 	_tagReader = qobject_cast<NTagReaderInterface *>(_findPlugin(TagReader, objects, usedFlags));
 
 	// remove not used plugins
-	foreach (QString key, usedFlags.keys(FALSE)) {
-		_loaders[key]->unload();
-		_loaders.remove(key);
+	foreach (QString identifier, usedFlags.keys(FALSE)) {
+		QStringList boundIdentifiers = _loaders.keys(_loaders[identifier]);
+		bool safeToUnload = TRUE;
+		foreach (QString boundIdentifier, boundIdentifiers) {
+			if (usedFlags[boundIdentifier] == TRUE) {
+				safeToUnload = FALSE;
+				break;
+			}
+		}
+		if (safeToUnload) {
+			_loaders[identifier]->unload();
+			_loaders.remove(identifier);
+		}
 	}
 
 	if (!_waveform || !_playback || !_tagReader) {
