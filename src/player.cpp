@@ -200,28 +200,28 @@ NPlayer::NPlayer()
 	showHideAction->setCustomizable(TRUE);
 	connect(showHideAction, SIGNAL(triggered()), this, SLOT(toggleWindowVisibility()));
 
-	NAction *playAction = new NAction(style()->standardIcon(QStyle::SP_MediaPlay), tr("Play / Pause"), this);
+	NAction *playAction = new NAction(QIcon::fromTheme("media-playback-start", style()->standardIcon(QStyle::SP_MediaPlay)), tr("Play / Pause"), this);
 	playAction->setObjectName("playAction");
 	playAction->setStatusTip(tr("Toggle playback"));
 	playAction->setGlobal(TRUE);
 	playAction->setCustomizable(TRUE);
 	connect(playAction, SIGNAL(triggered()), m_playbackEngine, SLOT(play()));
 
-	NAction *stopAction = new NAction(style()->standardIcon(QStyle::SP_MediaStop), tr("Stop"), this);
+	NAction *stopAction = new NAction(QIcon::fromTheme("media-playback-stop", style()->standardIcon(QStyle::SP_MediaStop)), tr("Stop"), this);
 	stopAction->setObjectName("stopAction");
 	stopAction->setStatusTip(tr("Stop playback"));
 	stopAction->setGlobal(TRUE);
 	stopAction->setCustomizable(TRUE);
 	connect(stopAction, SIGNAL(triggered()), m_playbackEngine, SLOT(stop()));
 
-	NAction *prevAction = new NAction(style()->standardIcon(QStyle::SP_MediaSkipBackward), tr("Previous"), this);
+	NAction *prevAction = new NAction(QIcon::fromTheme("media-playback-backward", style()->standardIcon(QStyle::SP_MediaSkipBackward)), tr("Previous"), this);
 	prevAction->setObjectName("prevAction");
 	prevAction->setStatusTip(tr("Play previous track in playlist"));
 	prevAction->setGlobal(TRUE);
 	prevAction->setCustomizable(TRUE);
 	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activatePrev()));
 
-	NAction *nextAction = new NAction(style()->standardIcon(QStyle::SP_MediaSkipForward), tr("Next"), this);
+	NAction *nextAction = new NAction(QIcon::fromTheme("media-playback-forward", style()->standardIcon(QStyle::SP_MediaSkipForward)), tr("Next"), this);
 	nextAction->setObjectName("nextAction");
 	nextAction->setStatusTip(tr("Play next track in playlist"));
 	nextAction->setGlobal(TRUE);
