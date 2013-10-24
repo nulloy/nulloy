@@ -81,6 +81,7 @@ private slots:
 
 public slots:
 	void quit();
+	void toggleWindowVisibility();
 	void showAboutMessageBox();
 	void showOpenFileDialog();
 	void showSavePlaylistDialog();

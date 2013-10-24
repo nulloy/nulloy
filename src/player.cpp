@@ -193,6 +193,13 @@ NPlayer::NPlayer()
 	connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
 
 	// actions
+	NAction *showHideAction = new NAction(QIcon::fromTheme("preferences-system-windows", QIcon(":/trolltech/styles/commonstyle/images/dockdock-16.png")), tr("Show / Hide"), this);
+	showHideAction->setObjectName("showHideAction");
+	showHideAction->setStatusTip(tr("Toggle window visibility"));
+	showHideAction->setGlobal(TRUE);
+	showHideAction->setCustomizable(TRUE);
+	connect(showHideAction, SIGNAL(triggered()), this, SLOT(toggleWindowVisibility()));
+
 	NAction *playAction = new NAction(style()->standardIcon(QStyle::SP_MediaPlay), tr("Play / Pause"), this);
 	playAction->setObjectName("playAction");
 	playAction->setStatusTip(tr("Toggle playback"));
@@ -288,12 +295,14 @@ NPlayer::NPlayer()
 
 	// tray icon
 	QMenu *trayIconMenu = new QMenu(this);
+	trayIconMenu->addAction(showHideAction);
+	trayIconMenu->addSeparator();
 	trayIconMenu->addAction(playAction);
 	trayIconMenu->addAction(stopAction);
 	trayIconMenu->addAction(prevAction);
 	trayIconMenu->addAction(nextAction);
-	trayIconMenu->addAction(preferencesAction);
 	trayIconMenu->addSeparator();
+	trayIconMenu->addAction(preferencesAction);
 	trayIconMenu->addAction(exitAction);
 	NSystemTray::init(this);
 	NSystemTray::setContextMenu(trayIconMenu);
@@ -587,6 +596,20 @@ void NPlayer::on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
 	}
 }
 
+void NPlayer::toggleWindowVisibility()
+{
+	if (!m_mainWindow->isVisible() || !m_mainWindow->isActiveWindow()) {
+		m_mainWindow->showNormal();
+		m_mainWindow->activateWindow();
+		m_mainWindow->raise();
+	} else if (m_settings->value("MinimizeToTray").toBool()) {
+		m_mainWindow->setVisible(FALSE);
+		NSystemTray::setEnabled(TRUE);
+	} else {
+		m_mainWindow->showMinimized();
+	}
+}
+
 void NPlayer::trackIcon_clicked(int clicks)
 {
 	if (clicks == 1) {
@@ -594,16 +617,7 @@ void NPlayer::trackIcon_clicked(int clicks)
 		m_mainWindow->activateWindow();
 		m_mainWindow->raise();
 	} else if (clicks == 2) {
-		if (!m_mainWindow->isVisible() || !m_mainWindow->isActiveWindow()) {
-			m_mainWindow->showNormal();
-			m_mainWindow->activateWindow();
-			m_mainWindow->raise();
-		} else if (m_settings->value("MinimizeToTray").toBool()) {
-			m_mainWindow->setVisible(FALSE);
-			NSystemTray::setEnabled(TRUE);
-		} else {
-			m_mainWindow->showMinimized();
-		}
+		toggleWindowVisibility();
 	}
 	if (!m_settings->value("TrayIcon").toBool())
 		NSystemTray::setEnabled(!m_mainWindow->isVisible());
