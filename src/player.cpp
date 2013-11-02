@@ -718,20 +718,20 @@ void NPlayer::showAboutMessageBox()
 #else
 	               "<span style=\" font-size:9pt;\">" +
 #endif
-	                 "<b>" +  QCoreApplication::applicationName() + "</b> Music Player " +
+	                 "<b>" +  QCoreApplication::applicationName() + " Music Player</b>" +
+	                 "<br>" +
 	                 "<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
 	                                      QCoreApplication::organizationDomain() + "</a>" +
-	               "</span><br>" +
+	               "</span><br><br>" +
 #ifdef Q_WS_MAC
 	               "<span style=\" font-size:10pt;\">" +
 #else
 	               "<span style=\" font-size:8pt;\">" +
 #endif
-	                 "Version: " + QCoreApplication::applicationVersion() +
-	                               (QString(_N_TIME_STAMP_).isEmpty() ? "" : " (Build " + QString(_N_TIME_STAMP_) + ")") + "<br><br>" +
-	                 "Copyright (C) 2010-2013  Sergey Vlasov &lt;<a href='mailto:Sergey Vlasov <sergey@vlasov.me>" +
-	                 "?subject=" + QCoreApplication::applicationName() + " " +
-	                               QCoreApplication::applicationVersion() + "'>sergey@vlasov.me</a>&gt;" +
+	                 "Version: " + QCoreApplication::applicationVersion() + "<br>" +
+	                 (QString(_N_TIME_STAMP_).isEmpty() ? "" : "Build: " + QString(_N_TIME_STAMP_)) +
+	                 "<br><br>" +
+	                 "Copyright (C) 2010-2013  Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
 	               "</span>";
 
 	QDialog *dialog = new QDialog(m_mainWindow);
@@ -768,6 +768,9 @@ void NPlayer::showAboutMessageBox()
 	tab1TextBrowser->setFrameShape(QFrame::NoFrame);
 	tab1TextBrowser->setHtml("<center>" + html + "</center>");
 	tab1TextBrowser->setMinimumWidth(350);
+	tab1TextBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	tab1TextBrowser->setOpenExternalLinks(TRUE);
+
 	tab1Layout->addWidget(tab1TextBrowser);
 	//
 
@@ -802,6 +805,10 @@ void NPlayer::showAboutMessageBox()
 	layout->addLayout(buttonLayout);
 
 	dialog->show();
+
+	// resize according to content
+    QSize textSize = tab1TextBrowser->document()->size().toSize();
+	tab1TextBrowser->setMinimumHeight(textSize.height());
 }
 
 void NPlayer::showOpenFileDialog()
