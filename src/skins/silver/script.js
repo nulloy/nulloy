@@ -38,6 +38,10 @@ function Program(player)
 		this.prevButton.clicked.connect(this.playlistWidget.activatePrev);
 		this.nextButton.clicked.connect(this.playlistWidget.activateNext);
 
+		this.titleWidget = this.mainWindow.findChild("titleWidget");
+		this.titleWidget.enableDoubleClick();
+		this.titleWidget.doubleClicked.connect(this.mainWindow.toggleMaximize);
+
 		this.volumeSlider.minimum = 0;
 		this.volumeSlider.maximum = 100;
 
@@ -61,7 +65,7 @@ function Program(player)
 		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.FramelessWindowHint | Qt.WindowCloseButtonHint) ^ (Qt.WindowTitleHint | Qt.Dialog);
 
 		this.closeButton.clicked.connect(this.mainWindow.close);
-		this.minimizeButton.clicked.connect(this.mainWindow.minimize);
+		this.minimizeButton.clicked.connect(this.mainWindow.showMinimized);
 
 		this.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
 		this.mainWindow.resized.connect(this, "on_resized");

@@ -22,6 +22,7 @@
 #include <QScriptEngine>
 #include <QWidget>
 #include <QLayout>
+#include <QMouseEvent>
 
 class NWidgetPrototype : public QObject, public QScriptable
 {
@@ -40,9 +41,16 @@ public:
 	Q_INVOKABLE void setStandardIcon(QString name, QString fallback = "");
 	Q_INVOKABLE QLayout* layout();
 	Q_INVOKABLE void setFontSize(int size);
+	Q_INVOKABLE void enableDoubleClick();
+
+signals:
+	void doubleClicked();
 
 public slots:
 	void setParent(QWidget *parent);
+
+private:
+	bool eventFilter(QObject *obj, QEvent *event);
 };
 
 class NLayoutPrototype : public QObject, public QScriptable

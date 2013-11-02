@@ -49,6 +49,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::rcDir() + "/" +
 	initValue("PlaylistTrackInfo", "%F (%d)");
 	initValue("WindowTitleTrackInfo","\"{%a - %t|%F}\" - " + QCoreApplication::applicationName() + " %v");
 
+	initValue("Maximized", FALSE);
 	initValue("MinimizeToTray", FALSE);
 	initValue("TrayIcon", FALSE);
 	initValue("AlwaysOnTop", FALSE);

@@ -33,7 +33,10 @@ private:
 	bool m_skinEnabled;
 	QPoint m_dragPoint;
 	QString m_styleSheet;
+	QPoint m_oldPos;
+	QSize m_oldSize;
 
+	void changeEvent(QEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
 	void showEvent(QShowEvent *event);
 	void hideEvent(QHideEvent *event);
@@ -58,7 +61,7 @@ public:
 
 public slots:
 	void setTitle(QString title);
-	void minimize();
+	void toggleMaximize();
 	void toggleVisibility();
 	void setOnTop(bool onTop);
 

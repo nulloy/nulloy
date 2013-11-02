@@ -58,7 +58,7 @@ function Program(player)
 		this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlide_setValue");
 
 		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["activateMediaList(const QStringList &)"]);
-		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.WindowMinimizeButtonHint) ^ Qt.Dialog;
+		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
 
 		this.splitter = this.mainWindow.findChild("splitter");
 		this.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");

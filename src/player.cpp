@@ -625,6 +625,7 @@ void NPlayer::trackIcon_clicked(int clicks)
 
 void NPlayer::quit()
 {
+	m_mainWindow->close();
 	savePlaylist();
 	saveSettings();
 	QCoreApplication::quit();

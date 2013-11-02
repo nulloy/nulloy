@@ -70,6 +70,9 @@ void NMainWindow::init(const QString &uiFile)
 	ui.setupUi(this);
 #endif
 
+	m_oldPos = QPoint(-1, -1);
+	m_oldSize = QSize(-1, -1);
+
 	NWaveformSlider *waveformSlider = qFindChild<NWaveformSlider *>(this, "waveformSlider");
 #ifndef _N_NO_PLUGINS_
 	waveformSlider->setBuilder(NPluginLoader::waveformPlugin());
@@ -110,26 +113,61 @@ void NMainWindow::toggleVisibility()
 void NMainWindow::loadSettings()
 {
 	QStringList posList = NSettings::instance()->value("Position").toStringList();
-	if (!posList.isEmpty())
-		move(posList.at(0).toInt(), posList.at(1).toInt());
+	if (!posList.isEmpty()) {
+		m_oldPos = QPoint(posList.at(0).toInt(), posList.at(1).toInt());
+		move(m_oldPos);
+	}
 
 	QStringList sizeList = NSettings::instance()->value("Size").toStringList();
 	if (!sizeList.isEmpty())
-		resize(sizeList.at(0).toInt(), sizeList.at(1).toInt());
+		m_oldSize = QSize(sizeList.at(0).toInt(), sizeList.at(1).toInt());
 	else
-		resize(430, 350);
+		m_oldSize = QSize(430, 350);
+
+	resize(m_oldSize);
+
+	bool maximized = NSettings::instance()->value("Maximized").toBool();
+	if (maximized)
+		showMaximized();
 }
 
 void NMainWindow::saveSettings()
 {
-	NSettings::instance()->setValue("Position", QStringList() << QString::number(pos().x()) << QString::number(pos().y()));
-	NSettings::instance()->setValue("Size", QStringList() << QString::number(width()) << QString::number(height()));
+	bool maximized = isMaximized();
+	NSettings::instance()->setValue("Maximized", maximized);
+
+	QPoint savePos;
+	QSize saveSize;
+	if (!maximized) {
+		savePos = pos();
+		saveSize = size();
+	} else {
+		savePos = m_oldPos;
+		saveSize = m_oldSize;
+	}
+
+	NSettings::instance()->setValue("Position", QStringList() << QString::number(savePos.x()) << QString::number(savePos.y()));
+	NSettings::instance()->setValue("Size", QStringList() << QString::number(saveSize.width()) << QString::number(saveSize.height()));
 }
 
 void NMainWindow::setTitle(QString title)
 {
 	setWindowTitle(title);
 	emit newTitle(title);
+}
+
+void NMainWindow::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::WindowStateChange) {
+		QWindowStateChangeEvent *stateEvent = static_cast<QWindowStateChangeEvent *>(event);
+
+		if (stateEvent->oldState() == Qt::WindowNoState && isMaximized()) {
+			m_oldPos = pos();
+			m_oldSize = size();
+		}
+	}
+
+	QWidget::changeEvent(event);
 }
 
 bool NMainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -231,9 +269,12 @@ bool NMainWindow::winEvent(MSG *message, long *result)
 }
 #endif
 
-void NMainWindow::minimize()
+void NMainWindow::toggleMaximize()
 {
-	setWindowState(Qt::WindowMinimized);
+	if (isMaximized())
+		showNormal();
+	else
+		showMaximized();
 }
 
 void NMainWindow::setOnTop(bool onTop)

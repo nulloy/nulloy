@@ -32,6 +32,26 @@ Q_DECLARE_METATYPE(QMargins)
 
 NWidgetPrototype::NWidgetPrototype(QObject *parent) : QObject(parent) {}
 
+void NWidgetPrototype::enableDoubleClick()
+{
+	QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
+	if (widget) {
+		widget->installEventFilter(this);
+	}
+}
+
+bool NWidgetPrototype::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::MouseButtonDblClick) {
+		QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+
+		if (mouseEvent->button() == Qt::LeftButton)
+			emit doubleClicked();
+	}
+
+	return FALSE;
+}
+
 void NWidgetPrototype::setParent(QWidget *parent)
 {
 	QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
