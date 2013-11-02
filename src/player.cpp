@@ -712,7 +712,7 @@ void NPlayer::loadNextActionTriggered()
 
 void NPlayer::showAboutMessageBox()
 {
-	QString html = QString() +
+	QString aboutHtml = QString() +
 #ifdef Q_WS_MAC
 	               "<span style=\" font-size:14pt;\">" +
 #else
@@ -763,15 +763,15 @@ void NPlayer::showAboutMessageBox()
 	iconLayout->addStretch();
 	tab1Layout->addLayout(iconLayout);
 
-	QTextBrowser *tab1TextBrowser = new QTextBrowser(this);
-	tab1TextBrowser->setStyleSheet("background: transparent");
-	tab1TextBrowser->setFrameShape(QFrame::NoFrame);
-	tab1TextBrowser->setHtml("<center>" + html + "</center>");
-	tab1TextBrowser->setMinimumWidth(350);
-	tab1TextBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	tab1TextBrowser->setOpenExternalLinks(TRUE);
+	QTextBrowser *aboutTextBrowser = new QTextBrowser(this);
+	aboutTextBrowser->setStyleSheet("background: transparent");
+	aboutTextBrowser->setFrameShape(QFrame::NoFrame);
+	aboutTextBrowser->setHtml("<center>" + aboutHtml + "</center>");
+	aboutTextBrowser->setMinimumWidth(350);
+	aboutTextBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	aboutTextBrowser->setOpenExternalLinks(TRUE);
 
-	tab1Layout->addWidget(tab1TextBrowser);
+	tab1Layout->addWidget(aboutTextBrowser);
 	//
 
 	// changelog tab
@@ -784,17 +784,15 @@ void NPlayer::showAboutMessageBox()
 	QFile file( ":/ChangeLog");
 	file.open(QIODevice::ReadOnly | QIODevice::Text);
 	QTextStream stream(&file);
-	QString line;
-	QString str = stream.readAll();
+	QString changelogHtml = stream.readAll();
+	changelogHtml.replace("\n", "<br>\n");
+	changelogHtml.replace(QRegExp("(\\*[^<]*)(<br>)"), "<b>\\1</b>\\2");
 	file.close();
 
-	str.replace("\n", "<br>\n");
-	str.replace(QRegExp("(\\*[^<]*)(<br>)"), "<b>\\1</b>\\2");
-
-	QTextBrowser *tab2TextBrowser = new QTextBrowser(this);
-	tab2TextBrowser->setHtml(str);
-	tab2TextBrowser->setOpenExternalLinks(TRUE);
-	tab2Layout->addWidget(tab2TextBrowser);
+	QTextBrowser *changelogTextBrowser = new QTextBrowser(this);
+	changelogTextBrowser->setHtml(changelogHtml);
+	changelogTextBrowser->setOpenExternalLinks(TRUE);
+	tab2Layout->addWidget(changelogTextBrowser);
 	//
 
 	QPushButton *closeButton = new QPushButton("Close");
@@ -808,8 +806,8 @@ void NPlayer::showAboutMessageBox()
 	dialog->show();
 
 	// resize according to content
-	QSize textSize = tab1TextBrowser->document()->size().toSize();
-	tab1TextBrowser->setMinimumHeight(textSize.height());
+	QSize aboutTextSize = aboutTextBrowser->document()->size().toSize();
+	aboutTextBrowser->setMinimumHeight(aboutTextSize.height());
 }
 
 void NPlayer::showOpenFileDialog()
