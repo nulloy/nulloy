@@ -793,6 +793,7 @@ void NPlayer::showAboutMessageBox()
 
 	QTextBrowser *tab2TextBrowser = new QTextBrowser(this);
 	tab2TextBrowser->setHtml(str);
+	tab2TextBrowser->setOpenExternalLinks(TRUE);
 	tab2Layout->addWidget(tab2TextBrowser);
 	//
 
@@ -807,7 +808,7 @@ void NPlayer::showAboutMessageBox()
 	dialog->show();
 
 	// resize according to content
-    QSize textSize = tab1TextBrowser->document()->size().toSize();
+	QSize textSize = tab1TextBrowser->document()->size().toSize();
 	tab1TextBrowser->setMinimumHeight(textSize.height());
 }
 
