@@ -113,6 +113,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 {
 	QDialog *dialog = new QDialog(this);
 	dialog->setWindowTitle("Title Formats");
+	dialog->setMaximumSize(0, 0);
 
 	QVBoxLayout *layout = new QVBoxLayout;
 	dialog->setLayout(layout);
@@ -142,12 +143,14 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	                       "<tr><td><b>{</b><i>true</i><b>|</b><i>false</i><b>}</b></td><td>If / Else: evaluate for <i>true</i> or <i>false</i> case. Note: nesting conditions is not supported yet.</td></tr>"
 	                       "<tr><td></td><td></td></tr>"
 	                       "<tr><td>Examples:</td><td></td></tr>"
-	                       "<tr><td><b>{%a - %t|%F}</b></td><td>Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.</td></tr>"
+	                       "<tr><td><b>{%a - %t|%F}&nbsp;&nbsp;</b></td><td>Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.</td></tr>"
 	                       "<tr><td></td><td></td></tr>"
 	                       "<tr><td><b>{%g|}</b></td><td>Print Genre. If not available, print nothing.</td></tr>"
 	                     "</table><br>");
-
-	dialog->resize(450, 550);
+	textBrowser->setStyleSheet("background: transparent");
+	textBrowser->setFrameShape(QFrame::NoFrame);
+	textBrowser->setMinimumWidth(400);
+	textBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	layout->addWidget(textBrowser);
 
@@ -160,6 +163,10 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	layout->addLayout(buttonLayout);
 
 	dialog->show();
+
+	// resize according to content
+	QSize textSize = textBrowser->document()->size().toSize();
+	textBrowser->setMinimumHeight(textSize.height());
 }
 
 QGroupBox* NPreferencesDialog::generatePluginsGroup(PluginType type, const QStringList &identifiers, const QString &def)
