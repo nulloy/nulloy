@@ -812,8 +812,10 @@ void NPlayer::showAboutMessageBox()
 
 void NPlayer::showOpenFileDialog()
 {
-	QString music = "*.mp3 *.ogg *.flac *.wma *.wav "
-	                "*.aac *.m4a *.spx *.mp4 "
+	QString music = "*.mp3 *.ogg *.mp4 *.wma "
+	                "*.flac *.ape *.wav *.wv "
+	                "*.mpc *.spx *.opus "
+	                "*.m4a *.aac "
 	                "*.xm *.s3m *.it *.mod";
 	QString playlist = "*.m3u *.m3u8";
 

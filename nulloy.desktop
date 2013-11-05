@@ -8,7 +8,7 @@ GenericName=Audio Player
 Comment=Music player with a waveform progress bar
 Categories=AudioVideo;Audio;Player;
 Terminal=false
-MimeType=audio/mp3;audio/x-mp3;application/x-flac;audio/x-flac;audio/x-wav;application/ogg;application/x-ogg;audio/x-vorbis+ogg;x-content/audio-player;audio/mpeg;audio/x-mpeg;
+MimeType=x-content/audio-player;audio/mp3;audio/flac;audio/wav;audio/ogg;audio/mpeg;audio/ape;audio/wavpack;audio/wv;audio/x-musepack;audio/mp4;
 Icon=nulloy
 Exec=nulloy %U
 
