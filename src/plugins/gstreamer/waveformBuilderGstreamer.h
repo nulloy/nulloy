@@ -16,6 +16,7 @@
 #ifndef N_WAVEFORM_BUILDER_GSTREAMER_H
 #define N_WAVEFORM_BUILDER_GSTREAMER_H
 
+#include "global.h"
 #include "pluginElementInterface.h"
 #include "waveformBuilderInterface.h"
 #include "abstractWaveformBuilder.h"
@@ -51,7 +52,7 @@ public:
 
 	void init();
 	QString interface() { return NWaveformBuilderInterface::interface(); }
-	PluginType type() { return WaveformBuilder; }
+	N::PluginElementType type() { return N::WaveformBuilderType; }
 
 	void start(const QString &file);
 	void stop();

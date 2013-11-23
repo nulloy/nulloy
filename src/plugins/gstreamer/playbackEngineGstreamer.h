@@ -16,9 +16,9 @@
 #ifndef N_PLAYBACK_ENGINE_GSTREAMER_H
 #define N_PLAYBACK_ENGINE_GSTREAMER_H
 
+#include "global.h"
 #include "pluginElementInterface.h"
 #include "playbackEngineInterface.h"
-#include "global.h"
 
 #include <QObject>
 #include <QTimer>
@@ -46,7 +46,7 @@ public:
 	~NPlaybackEngineGStreamer();
 	void init();
 	QString interface() { return NPlaybackEngineInterface::interface(); }
-	PluginType type() { return PlaybackEngine; }
+	N::PluginElementType type() { return N::PlaybackEngineType; }
 
 	Q_INVOKABLE bool hasMedia();
 	Q_INVOKABLE QString currentMedia();

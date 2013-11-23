@@ -16,6 +16,7 @@
 #ifndef N_TAG_READER_GSTREAMER_H
 #define N_TAG_READER_GSTREAMER_H
 
+#include "global.h"
 #include "pluginElementInterface.h"
 #include "tagReaderInterface.h"
 #include <gst/gst.h>
@@ -39,7 +40,7 @@ public:
 
 	void init();
 	QString interface() { return NTagReaderInterface::interface(); }
-	PluginType type() { return TagReader; }
+	N::PluginElementType type() { return N::TagReaderType; }
 
 	void setSource(const QString &file);
 	QString toString(const QString &format);

@@ -58,15 +58,15 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	QVBoxLayout *scrollLayout = new QVBoxLayout;
 	ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
 
-	QGroupBox *playbackBox = generatePluginsGroup(PlaybackEngine, identifiers, NSettings::instance()->value("Playback").toString());
+	QGroupBox *playbackBox = generatePluginsGroup(N::PlaybackEngineType, identifiers, NSettings::instance()->value("Playback").toString());
 	if (playbackBox)
 		scrollLayout->addWidget(playbackBox);
 
-	QGroupBox *wavefowmBox = generatePluginsGroup(WaveformBuilder, identifiers, NSettings::instance()->value("Waveform").toString());
+	QGroupBox *wavefowmBox = generatePluginsGroup(N::WaveformBuilderType, identifiers, NSettings::instance()->value("Waveform").toString());
 	if (wavefowmBox)
 		scrollLayout->addWidget(wavefowmBox);
 
-	QGroupBox *tagReaderBox = generatePluginsGroup(TagReader, identifiers, NSettings::instance()->value("TagReader").toString());
+	QGroupBox *tagReaderBox = generatePluginsGroup(N::TagReaderType, identifiers, NSettings::instance()->value("TagReader").toString());
 	if (tagReaderBox)
 		scrollLayout->addWidget(tagReaderBox);
 
@@ -169,14 +169,14 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	textBrowser->setMinimumHeight(textSize.height());
 }
 
-QGroupBox* NPreferencesDialog::generatePluginsGroup(PluginType type, const QStringList &identifiers, const QString &def)
+QGroupBox* NPreferencesDialog::generatePluginsGroup(N::PluginElementType type, const QStringList &identifiers, const QString &def)
 {
 	QString type_str;
-	if (type == PlaybackEngine)
+	if (type == N::PlaybackEngineType)
 		type_str = "Playback";
-	else if (type == WaveformBuilder)
+	else if (type == N::WaveformBuilderType)
 		type_str = "Waveform";
-	else if (type == TagReader)
+	else if (type == N::TagReaderType)
 		type_str = "TagReader";
 
 	QStringList groupedIds = identifiers.filter(QRegExp("^" + QString::number(type) + "/.*"));
@@ -212,7 +212,7 @@ void NPreferencesDialog::on_skinComboBox_activated(int index)
 	ui.skinRestartLabel->setVisible(TRUE);
 }
 
-QString NPreferencesDialog::selectedPluginsGroup(PluginType type)
+QString NPreferencesDialog::selectedPluginsGroup(N::PluginElementType type)
 {
 	QString str;
 
@@ -299,9 +299,9 @@ void NPreferencesDialog::saveSettings()
 
 #ifndef _N_NO_PLUGINS_
 	// plugins
-	QVariant playbackVariant(selectedPluginsGroup(PlaybackEngine));
-	QVariant waveformVariant(selectedPluginsGroup(WaveformBuilder));
-	QVariant tagReaderVariant(selectedPluginsGroup(TagReader));
+	QVariant playbackVariant(selectedPluginsGroup(N::PlaybackEngineType));
+	QVariant waveformVariant(selectedPluginsGroup(N::WaveformBuilderType));
+	QVariant tagReaderVariant(selectedPluginsGroup(N::TagReaderType));
 
 	NSettings::instance()->setValue("Playback", playbackVariant);
 	NSettings::instance()->setValue("Waveform", waveformVariant);

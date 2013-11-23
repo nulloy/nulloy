@@ -15,6 +15,7 @@
 
 #include "pluginLoader.h"
 
+#include "global.h"
 #include "core.h"
 #include "settings.h"
 
@@ -39,7 +40,7 @@ namespace NPluginLoader
 	static NTagReaderInterface *_tagReader = NULL;
 
 	void _loadPlugins();
-	QObject* _findPlugin(PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags);
+	QObject* _findPlugin(N::PluginElementType type, QObjectList &objects, QMap<QString, bool> &usedFlags);
 	static QMap<QString, QPluginLoader *> _loaders;
 }
 
@@ -52,17 +53,17 @@ void NPluginLoader::deinit()
 	}
 }
 
-QObject* NPluginLoader::_findPlugin(PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags)
+QObject* NPluginLoader::_findPlugin(N::PluginElementType type, QObjectList &objects, QMap<QString, bool> &usedFlags)
 {
 	QString base_interface;
 	QString type_str;
-	if (type == PlaybackEngine) {
+	if (type == N::PlaybackEngineType) {
 		base_interface = NPlaybackEngineInterface::interface();
 		type_str = "Playback";
-	} else if (type == WaveformBuilder) {
+	} else if (type == N::WaveformBuilderType) {
 		base_interface = NWaveformBuilderInterface::interface();
 		type_str = "Waveform";
-	} else if (type == TagReader) {
+	} else if (type == N::TagReaderType) {
 		base_interface = NTagReaderInterface::interface();
 		type_str = "TagReader";
 	}
@@ -181,7 +182,7 @@ void NPluginLoader::_loadPlugins()
 				foreach (QObject *obj, elements) {
 					NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(obj);
 					QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
-					                     ((el->type() == Other) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
+					                     ((el->type() == N::OtherElementType) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
 					_identifiers << identifier;
 					_loaders[identifier] = loader;
 					usedFlags[identifier] = FALSE;
@@ -195,9 +196,9 @@ void NPluginLoader::_loadPlugins()
 		}
 	}
 
-	_playback = qobject_cast<NPlaybackEngineInterface *>(_findPlugin(PlaybackEngine, objects, usedFlags));
-	_waveform = qobject_cast<NWaveformBuilderInterface *>(_findPlugin(WaveformBuilder, objects, usedFlags));
-	_tagReader = qobject_cast<NTagReaderInterface *>(_findPlugin(TagReader, objects, usedFlags));
+	_playback = qobject_cast<NPlaybackEngineInterface *>(_findPlugin(N::PlaybackEngineType, objects, usedFlags));
+	_waveform = qobject_cast<NWaveformBuilderInterface *>(_findPlugin(N::WaveformBuilderType, objects, usedFlags));
+	_tagReader = qobject_cast<NTagReaderInterface *>(_findPlugin(N::TagReaderType, objects, usedFlags));
 
 	// remove not used plugins
 	foreach (QString identifier, usedFlags.keys(FALSE)) {

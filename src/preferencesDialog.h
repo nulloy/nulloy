@@ -19,6 +19,7 @@
 #include <QDialog>
 #include "ui_preferencesDialog.h"
 #include "pluginElementInterface.h"
+#include "global.h"
 
 class NPreferencesDialog : public QDialog
 {
@@ -27,8 +28,8 @@ class NPreferencesDialog : public QDialog
 private:
 	Ui::PreferencesDialog ui;
 	void showEvent(QShowEvent *event);
-	QGroupBox* generatePluginsGroup(PluginType type, const QStringList &identifiers, const QString &def = QString());
-	QString selectedPluginsGroup(PluginType type);
+	QGroupBox* generatePluginsGroup(N::PluginElementType type, const QStringList &identifiers, const QString &def = QString());
+	QString selectedPluginsGroup(N::PluginElementType type);
 	QMap<QString, QRadioButton *> m_pluginButtonsMap;
 
 public:

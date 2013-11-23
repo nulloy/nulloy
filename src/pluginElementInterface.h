@@ -16,16 +16,8 @@
 #ifndef N_PLUGIN_ELEMENT_INTERFACE_H
 #define N_PLUGIN_ELEMENT_INTERFACE_H
 
+#include "global.h"
 #include <QtCore>
-
-enum PluginType {
-	Other = 0x0,
-	PlaybackEngine = 0x1,
-	WaveformBuilder = 0x2,
-	TagReader = 0x3
-};
-Q_DECLARE_FLAGS(PluginFlags, PluginType)
-Q_DECLARE_OPERATORS_FOR_FLAGS(PluginFlags)
 
 class NPluginElementInterface
 {
@@ -44,7 +36,7 @@ public:
 			return "";
 	}
 	virtual QString interface() = 0;
-	virtual PluginType type() { return Other; }
+	virtual N::PluginElementType type() { return N::OtherElementType; }
 	virtual void init() = 0;
 };
 

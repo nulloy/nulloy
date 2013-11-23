@@ -36,6 +36,16 @@ public:
 		PlaybackPaused
 	};
 
+	enum PluginElementType {
+		OtherElementType = 0x0,
+		PlaybackEngineType = 0x1,
+		WaveformBuilderType = 0x2,
+		TagReaderType = 0x3
+	};
+
+	Q_DECLARE_FLAGS(PluginElementFlags, PluginElementType)
+	Q_DECLARE_OPERATORS_FOR_FLAGS(PluginElementFlags)
+
 	extern const QMetaObject staticMetaObject;
 };
 
