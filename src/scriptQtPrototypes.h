@@ -20,9 +20,15 @@
 #include <QScriptable>
 #include <QScriptValue>
 #include <QScriptEngine>
-#include <QWidget>
-#include <QLayout>
-#include <QMouseEvent>
+
+#include <QtGui>
+
+Q_DECLARE_METATYPE(QWidget *)
+Q_DECLARE_METATYPE(QLayout *)
+Q_DECLARE_METATYPE(QDialog *)
+Q_DECLARE_METATYPE(QPushButton *)
+Q_DECLARE_METATYPE(QSplitter *)
+Q_DECLARE_METATYPE(QMargins)
 
 class NWidgetPrototype : public QObject, public QScriptable
 {

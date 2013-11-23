@@ -24,8 +24,8 @@
 #include "trackInfoWidget.h"
 #include "mainWindow.h"
 #include "logDialog.h"
+#include "scriptEngine.h"
 
-#include <QtScript>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
@@ -35,7 +35,7 @@ class NPlayer : public QWidget
 
 private:
 	NSettings *m_settings;
-	QScriptEngine *m_scriptEngine;
+	NScriptEngine *m_scriptEngine;
 	NMainWindow *m_mainWindow;
 	NPreferencesDialog *m_preferencesDialog;
 	NPlaybackEngineInterface *m_playbackEngine;

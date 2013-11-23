@@ -13,22 +13,9 @@
 **
 *********************************************************************/
 
-#include "scriptPrototypes.h"
-
-#include <QPushButton>
-#include <QDialog>
-#include <QSplitter>
-#include <QScriptValue>
-#include <QScriptEngine>
-
-#include <QDebug>
-
-Q_DECLARE_METATYPE(QWidget *)
-Q_DECLARE_METATYPE(QLayout *)
-Q_DECLARE_METATYPE(QDialog *)
-Q_DECLARE_METATYPE(QPushButton *)
-Q_DECLARE_METATYPE(QSplitter *)
-Q_DECLARE_METATYPE(QMargins)
+#include "scriptQtPrototypes.h"
+#include "global.h"
+#include <QMouseEvent>
 
 NWidgetPrototype::NWidgetPrototype(QObject *parent) : QObject(parent) {}
 
@@ -42,6 +29,7 @@ void NWidgetPrototype::enableDoubleClick()
 
 bool NWidgetPrototype::eventFilter(QObject *obj, QEvent *event)
 {
+	Q_UNUSED(obj)
 	if (event->type() == QEvent::MouseButtonDblClick) {
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
 

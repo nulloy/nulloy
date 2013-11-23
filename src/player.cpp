@@ -16,12 +16,10 @@
 #include "player.h"
 #include "global.h"
 
-#include "scriptPrototypes.h"
 #include "core.h"
 #include "action.h"
 #include "systemTray.h"
 #include "m3uPlaylist.h"
-#include "tagReaderInterface.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -32,6 +30,7 @@
 #include "pluginLoader.h"
 #else
 #include "playbackEngineGstreamer.h"
+#include "tagReaderInterface.h"
 #endif
 
 #ifdef Q_WS_WIN
@@ -47,60 +46,6 @@
 #include <QToolTip>
 
 #include <QDebug>
-
-NWidgetPrototype widgetPrototype;
-NLayoutPrototype layoutPrototype;
-NSplitterPrototype splitterPrototype;
-
-Q_DECLARE_METATYPE(QWidget *)
-Q_DECLARE_METATYPE(QLayout *)
-Q_DECLARE_METATYPE(QDialog *)
-Q_DECLARE_METATYPE(QPushButton *)
-Q_DECLARE_METATYPE(QSplitter *)
-Q_DECLARE_METATYPE(QMargins)
-
-Q_DECLARE_METATYPE(NMainWindow *)
-Q_DECLARE_METATYPE(NPlaybackEngineInterface *)
-Q_DECLARE_METATYPE(N::PlaybackState)
-Q_DECLARE_METATYPE(NSettings *)
-Q_DECLARE_METATYPE(QList<QWidget *>)
-
-struct QtMetaObject : private QObject
-{
-public:
-	static const QMetaObject *get() { return &static_cast<QtMetaObject *>(0)->staticQtMetaObject; }
-};
-
-template <typename T>
-QScriptValue qScriptValueFromQObject(QScriptEngine *engine, T const &obj)
-{
-	return engine->newQObject(obj);
-}
-
-template <typename T>
-void qScriptValueToQObject(const QScriptValue &value, T &obj)
-{
-	obj = qobject_cast<T>(value.toQObject());
-}
-
-template <typename T>
-int qScriptRegisterQObjectMetaType(QScriptEngine *engine, const QScriptValue &prototype = QScriptValue(), T *obj = 0)
-{
-	Q_UNUSED(obj);
-	return qScriptRegisterMetaType<T>(engine, qScriptValueFromQObject, qScriptValueToQObject, prototype);
-}
-
-template <typename T>
-QScriptValue enumToScriptValue(QScriptEngine *engine, T const &en)
-{
-	return engine->newVariant((int)en);
-}
-
-template <typename T>
-void enumFromScriptValue(const QScriptValue &value, T &en)
-{
-	en = (T)value.toInt32();
-}
 
 NPlayer::NPlayer()
 {
@@ -133,7 +78,7 @@ NPlayer::NPlayer()
 
 
 	// loading skin script
-	m_scriptEngine = new QScriptEngine(this);
+	m_scriptEngine = new NScriptEngine(this);
 #ifndef _N_NO_SKINS_
 	QString scriptFileName(NSkinLoader::skinScriptFile());
 #else
@@ -143,47 +88,6 @@ NPlayer::NPlayer()
 	scriptFile.open(QIODevice::ReadOnly);
 	m_scriptEngine->evaluate(scriptFile.readAll(), scriptFileName);
 	scriptFile.close();
-
-	QScriptValue Qt = m_scriptEngine->newQMetaObject(QtMetaObject::get());
-	m_scriptEngine->globalObject().setProperty("Qt", Qt);
-
-	QString ws;
-#if defined Q_WS_MAC
-	ws = "mac";
-#elif defined Q_WS_WIN
-	ws = "win";
-#elif defined Q_WS_X11
-	ws = "x11";
-#endif
-	m_scriptEngine->globalObject().setProperty("Q_WS", ws);
-
-	QString buttons_side = "right";
-	if (ws == "mac") {
-		buttons_side = "left";
-	} else if (ws == "x11") {
-		QProcess gconftool;
-		gconftool.start("gconftool-2 --get \"/apps/metacity/general/button_layout\"");
-		gconftool.waitForStarted();
-		gconftool.waitForFinished();
-		if (gconftool.readAll().endsWith(":\n"))
-			buttons_side = "left";
-	}
-	m_scriptEngine->globalObject().setProperty("WS_BUTTOS_SIDE", buttons_side);
-
-	m_scriptEngine->globalObject().setProperty("QT_VERSION", QT_VERSION);
-
-	qScriptRegisterMetaType<N::PlaybackState>(m_scriptEngine, enumToScriptValue, enumFromScriptValue);
-	QScriptValue N = m_scriptEngine->newQMetaObject(&N::staticMetaObject);
-	m_scriptEngine->globalObject().setProperty("N", N);
-
-	qScriptRegisterQObjectMetaType<NMainWindow *>(m_scriptEngine);
-	qScriptRegisterQObjectMetaType<NPlaybackEngineInterface *>(m_scriptEngine);
-	qScriptRegisterQObjectMetaType<NSettings *>(m_scriptEngine);
-	qScriptRegisterMetaType(m_scriptEngine, NMarginsPrototype::toScriptValue, NMarginsPrototype::fromScriptValue);
-	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QWidget *>(), m_scriptEngine->newQObject(&widgetPrototype));
-	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QLayout *>(), m_scriptEngine->newQObject(&layoutPrototype));
-	m_scriptEngine->setDefaultPrototype(qMetaTypeId<QSplitter *>(), m_scriptEngine->newQObject(&splitterPrototype));
-	qScriptRegisterSequenceMetaType< QList<QWidget *> >(m_scriptEngine);
 
 	QScriptValue constructor = m_scriptEngine->evaluate("Program");
 	QScriptValue playerEngineObject = m_scriptEngine->newQObject(this, QScriptEngine::QtOwnership);
@@ -303,7 +207,7 @@ NPlayer::NPlayer()
 	loadNextDateUpAction->setObjectName("loadNextDateUpAction");
 	connect(loadNextDateUpAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
 
-	QActionGroup* group = new QActionGroup(this);
+	QActionGroup *group = new QActionGroup(this);
 	loadNextNameDownAction->setActionGroup(group);
 	loadNextNameUpAction->setActionGroup(group);
 	loadNextDateDownAction->setActionGroup(group);
