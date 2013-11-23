@@ -18,6 +18,8 @@
 
 #include "pluginElementInterface.h"
 #include "playbackEngineInterface.h"
+#include "global.h"
+
 #include <QObject>
 #include <QTimer>
 #include <gst/gst.h>
@@ -33,9 +35,11 @@ private:
 	QTimer *m_timer;
 	qreal m_oldVolume;
 	qreal m_oldPosition;
-	State m_oldState;
+	N::PlaybackState m_oldState;
 	qreal m_savedPosition;
 	QString m_currentMedia;
+
+	N::PlaybackState fromGstState(GstState state);
 
 public:
 	NPlaybackEngineGStreamer(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
@@ -46,7 +50,7 @@ public:
 
 	Q_INVOKABLE bool hasMedia();
 	Q_INVOKABLE QString currentMedia();
-	Q_INVOKABLE int state() { return m_oldState; }
+	Q_INVOKABLE N::PlaybackState state() { return m_oldState; }
 
 	Q_INVOKABLE qreal volume();
 	Q_INVOKABLE qreal position();
@@ -74,7 +78,7 @@ signals:
 	void mediaChanged(const QString &file);
 	void finished();
 	void failed();
-	void stateChanged(int state);
+	void stateChanged(N::PlaybackState state);
 	void tick(qint64 msec);
 };
 

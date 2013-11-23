@@ -43,15 +43,15 @@ static void _on_error(GstBus *bus, GstMessage *msg, gpointer userData)
 	g_error_free(err);
 }
 
-static NPlaybackEngineInterface::State fromGstState(GstState state)
+N::PlaybackState NPlaybackEngineGStreamer::fromGstState(GstState state)
 {
 	switch (state) {
 		case GST_STATE_PAUSED:
-			return NPlaybackEngineInterface::Paused;
+			return N::PlaybackPaused;
 		case GST_STATE_PLAYING:
-			return NPlaybackEngineInterface::Playing;
+			return N::PlaybackPlaying;
 		default:
-			return NPlaybackEngineInterface::Stopped;
+			return N::PlaybackStopped;
 	}
 }
 
@@ -83,7 +83,7 @@ void NPlaybackEngineGStreamer::init()
 	m_oldVolume = -1;
 	m_oldPosition = -1;
 	m_savedPosition = -1;
-	m_oldState = Stopped;
+	m_oldState = N::PlaybackStopped;
 	m_currentMedia = "";
 
 	m_timer = new QTimer(this);
@@ -273,7 +273,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 
 	GstState gstState;
 	gst_element_get_state(m_playbin, &gstState, NULL, 0);
-	State state = fromGstState(gstState);
+	N::PlaybackState state = fromGstState(gstState);
 	if (m_oldState != state) {
 		emit stateChanged(state);
 		m_oldState = state;
@@ -284,16 +284,16 @@ void NPlaybackEngineGStreamer::_emitFinished()
 {
 	stop();
 	emit finished();
-	emit stateChanged(Stopped);
-	m_oldState = Stopped;
+	emit stateChanged(N::PlaybackStopped);
+	m_oldState = N::PlaybackStopped;
 }
 
 void NPlaybackEngineGStreamer::_emitFailed()
 {
 	stop();
 	emit failed();
-	emit stateChanged(Stopped);
-	m_oldState = Stopped;
+	emit stateChanged(N::PlaybackStopped);
+	m_oldState = N::PlaybackStopped;
 }
 
 void NPlaybackEngineGStreamer::_emitError(QString error)

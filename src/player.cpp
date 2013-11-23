@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "player.h"
+#include "global.h"
 
 #include "scriptPrototypes.h"
 #include "core.h"
@@ -60,6 +61,7 @@ Q_DECLARE_METATYPE(QMargins)
 
 Q_DECLARE_METATYPE(NMainWindow *)
 Q_DECLARE_METATYPE(NPlaybackEngineInterface *)
+Q_DECLARE_METATYPE(N::PlaybackState)
 Q_DECLARE_METATYPE(NSettings *)
 Q_DECLARE_METATYPE(QList<QWidget *>)
 
@@ -86,6 +88,18 @@ int qScriptRegisterQObjectMetaType(QScriptEngine *engine, const QScriptValue &pr
 {
 	Q_UNUSED(obj);
 	return qScriptRegisterMetaType<T>(engine, qScriptValueFromQObject, qScriptValueToQObject, prototype);
+}
+
+template <typename T>
+QScriptValue enumToScriptValue(QScriptEngine *engine, T const &en)
+{
+	return engine->newVariant((int)en);
+}
+
+template <typename T>
+void enumFromScriptValue(const QScriptValue &value, T &en)
+{
+	en = (T)value.toInt32();
 }
 
 NPlayer::NPlayer()
@@ -157,6 +171,10 @@ NPlayer::NPlayer()
 	m_scriptEngine->globalObject().setProperty("WS_BUTTOS_SIDE", buttons_side);
 
 	m_scriptEngine->globalObject().setProperty("QT_VERSION", QT_VERSION);
+
+	qScriptRegisterMetaType<N::PlaybackState>(m_scriptEngine, enumToScriptValue, enumFromScriptValue);
+	QScriptValue N = m_scriptEngine->newQMetaObject(&N::staticMetaObject);
+	m_scriptEngine->globalObject().setProperty("N", N);
 
 	qScriptRegisterQObjectMetaType<NMainWindow *>(m_scriptEngine);
 	qScriptRegisterQObjectMetaType<NPlaybackEngineInterface *>(m_scriptEngine);
@@ -653,14 +671,14 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	NSystemTray::setToolTip(title);
 }
 
-void NPlayer::on_playbackEngine_stateChanged(int state)
+void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
 {
 	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
 	bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
 	if (!alwaysOnTop)
-		m_mainWindow->setOnTop(whilePlaying && state == NPlaybackEngineInterface::Playing);
+		m_mainWindow->setOnTop(whilePlaying && state == N::PlaybackPlaying);
 #ifdef Q_WS_WIN
-	if (state == NPlaybackEngineInterface::Playing) {
+	if (state == N::PlaybackPlaying) {
 		NW7TaskBar::instance()->setState(NW7TaskBar::Normal);
 		NW7TaskBar::setOverlayIcon(QIcon(":/trolltech/styles/commonstyle/images/media-play-32.png"), "Playing");
 	} else {
@@ -680,7 +698,7 @@ void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 	m_settings->setValue("AlwaysOnTop", checked);
 
 	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
-	if (!whilePlaying || m_playbackEngine->state() != NPlaybackEngineInterface::Playing)
+	if (!whilePlaying || m_playbackEngine->state() != N::PlaybackPlaying)
 		m_mainWindow->setOnTop(checked);
 }
 
@@ -690,7 +708,7 @@ void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)
 
 	bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
 	if (!alwaysOnTop)
-		m_mainWindow->setOnTop(checked && m_playbackEngine->state() == NPlaybackEngineInterface::Playing);
+		m_mainWindow->setOnTop(checked && m_playbackEngine->state() == N::PlaybackPlaying);
 }
 
 void NPlayer::loadNextActionTriggered()

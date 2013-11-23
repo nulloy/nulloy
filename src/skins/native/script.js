@@ -44,7 +44,7 @@ function Program(player)
 		this.waveformSlider.minimum = 0;
 		this.waveformSlider.maximum = 10000;
 
-		this.playbackEngine["stateChanged(int)"].connect(this, "on_stateChanged");
+		this.playbackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
 		this.playbackEngine["finished()"].connect(this.playlistWidget.activateNext);
 		this.playbackEngine["failed()"].connect(this, "on_failed");
@@ -110,12 +110,12 @@ Program.prototype.on_splitterMoved = function(pos, index)
 
 Program.prototype.on_stateChanged = function(state)
 {
-	if (state == 1) // NPlaybackEngineInterface::Playing == 1
+	if (state == N.PlaybackPlaying)
 		this.playButton.setStandardIcon("media-playback-pause", ":/trolltech/styles/commonstyle/images/media-pause-16.png");
 	else
 		this.playButton.setStandardIcon("media-playback-start", ":/trolltech/styles/commonstyle/images/media-play-16.png");
 
-	this.waveformSlider.setPausedState(state == 2);
+	this.waveformSlider.setPausedState(state == N.PlaybackPaused);
 }
 
 Program.prototype.on_failed = function()

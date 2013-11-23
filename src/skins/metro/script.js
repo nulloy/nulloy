@@ -47,7 +47,7 @@ function Program(player)
 		this.waveformSlider.minimum = 0;
 		this.waveformSlider.maximum = 10000;
 
-		this.playbackEngine["stateChanged(int)"].connect(this, "on_stateChanged");
+		this.playbackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
 		this.playbackEngine["finished()"].connect(this.playlistWidget.activateNext);
 		this.playbackEngine["failed()"].connect(this, "on_failed");
@@ -110,12 +110,12 @@ Program.prototype.afterShow = function()
 
 Program.prototype.on_stateChanged = function(state)
 {
-	if (state == 1) // NPlaybackEngineInterface::Playing == 1
+	if (state == N.PlaybackPlaying)
 		this.playButton.styleSheet = "qproperty-icon: url(pause.png)";
 	else
 		this.playButton.styleSheet = "qproperty-icon: url(play.png)";
 
-	this.waveformSlider.setPausedState(state == 2);
+	this.waveformSlider.setPausedState(state == N.PlaybackPaused);
 }
 
 Program.prototype.on_failed = function()
