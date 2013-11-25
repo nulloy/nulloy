@@ -21,7 +21,7 @@
 class NScriptEngine : public QScriptEngine
 {
 public:
- 	NScriptEngine(QObject *parent);
+	NScriptEngine(QObject *parent);
 	virtual ~NScriptEngine() {};
 };
 
