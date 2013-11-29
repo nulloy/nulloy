@@ -14,8 +14,10 @@
 *********************************************************************/
 
 #include "playbackEngineGstreamer.h"
-#include <QtGlobal>
+
 #include "core.h"
+#include <QtGlobal>
+#include <QTimer>
 
 static void _on_eos(GstBus *bus, GstMessage *msg, gpointer userData)
 {

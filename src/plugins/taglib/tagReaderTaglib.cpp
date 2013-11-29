@@ -17,6 +17,7 @@
 
 #include <QCoreApplication>
 #include <QFileInfo>
+#include <QString>
 
 void NTagReaderTaglib::init()
 {

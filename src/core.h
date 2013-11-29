@@ -16,7 +16,8 @@
 #ifndef N_CORE_H
 #define N_CORE_H
 
-#include <QStringList>
+class QString;
+class QStringList;
 
 namespace NCore
 {

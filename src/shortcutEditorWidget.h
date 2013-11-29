@@ -16,9 +16,12 @@
 #ifndef N_SHORTCUT_EDITOR_WIDGET_H
 #define N_SHORTCUT_EDITOR_WIDGET_H
 
-#include "action.h"
-#include <QtGui>
-#include <QAction>
+#include <QTableWidget>
+#include <QList>
+
+class NAction;
+class QKeyEvent;
+class QString;
 
 class NShortcutEditorWidget : public QTableWidget
 {

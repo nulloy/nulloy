@@ -14,8 +14,12 @@
 *********************************************************************/
 
 #include "abstractWaveformBuilder.h"
+
 #include "core.h"
+
 #include <QCryptographicHash>
+#include <QObject>
+#include <QtCore>
 
 NAbstractWaveformBuilder::NAbstractWaveformBuilder()
 {

@@ -16,8 +16,12 @@
 #include "dropArea.h"
 
 #include "core.h"
+
 #include <QUrl>
-#include <QFile>
+#include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
 
 NDropArea::NDropArea(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f) {}
 

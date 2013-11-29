@@ -17,9 +17,13 @@
 
 #include "core.h"
 
-#include <QDir>
+#include "action.h"
+
 #include <QCoreApplication>
 #include <QDesktopServices>
+#include <QDir>
+#include <QSettings>
+#include <QVariant>
 
 #include <QDebug>
 

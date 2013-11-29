@@ -14,8 +14,10 @@
 *********************************************************************/
 
 #include "slider.h"
+
 #include <QStyleOptionSlider>
-#include <QDebug>
+#include <QMouseEvent>
+#include <QWheelEvent>
 
 NSlider::NSlider(QWidget *parent) : QSlider(parent) {}
 

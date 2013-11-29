@@ -19,6 +19,8 @@
 #include <QVector>
 #include <QPair>
 
+class QDataStream;
+
 class NWaveformPeaks
 {
 private:

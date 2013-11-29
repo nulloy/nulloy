@@ -16,11 +16,11 @@
 #ifndef N_ABSTRACT_WAVEFORM_BUILDER_H
 #define N_ABSTRACT_WAVEFORM_BUILDER_H
 
-#include <QtCore>
-#include <QObject>
-
-#include "waveformPeaks.h"
+#include <QHash>
 #include "cache.h"
+#include "waveformPeaks.h"
+
+class QString;
 
 class NAbstractWaveformBuilder
 {

@@ -14,8 +14,11 @@
 *********************************************************************/
 
 #include "label.h"
+
 #include <QPen>
-#include <QDebug>
+#include <QPaintEvent>
+#include <QPainter>
+#include <QPoint>
 
 NLabel::NLabel(QWidget* parent) : QLabel(parent)
 {

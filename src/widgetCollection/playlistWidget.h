@@ -16,12 +16,19 @@
 #ifndef N_PLAYLIST_WIDGET_H
 #define N_PLAYLIST_WIDGET_H
 
-#include "playlistItem.h"
 #include "m3uPlaylist.h"
-#include "tagReaderInterface.h"
 
-#include <QPointer>
 #include <QListWidget>
+#include <QList>
+#include <QPointer>
+
+class NPlaylistItem;
+class NTagReaderInterface;
+class QContextMenuEvent;
+class QDropEvent;
+class QMenu;
+class QString;
+class QStringList;
 
 class NPlaylistWidget : public QListWidget
 {

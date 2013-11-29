@@ -24,7 +24,7 @@
 #include <gst/gst.h>
 
 #if defined Q_WS_WIN || defined Q_WS_MAC
-#include <QTimer>
+class QTimer;
 #endif
 
 class NWaveformBuilderGstreamer : public NWaveformBuilderInterface,

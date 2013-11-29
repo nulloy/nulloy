@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "waveformPeaks.h"
+
 #include <QDebug>
 
 #define MAX_RES 2048

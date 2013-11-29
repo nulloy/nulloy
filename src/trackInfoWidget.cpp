@@ -15,10 +15,14 @@
 
 #include "trackInfoWidget.h"
 
+#include "tagReaderInterface.h"
 #include "settings.h"
-#include <QTime>
+
+#include <QGraphicsProxyWidget>
 #include <QGraphicsSceneMouseEvent>
-#include <QDebug>
+#include <QGraphicsView>
+#include <QPropertyAnimation>
+#include <QTime>
 
 NTrackInfoWidget::~NTrackInfoWidget() {}
 

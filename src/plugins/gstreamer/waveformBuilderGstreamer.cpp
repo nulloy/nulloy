@@ -15,9 +15,14 @@
 
 #include "waveformBuilderGstreamer.h"
 
+#include "core.h"
+
+#if defined Q_WS_WIN || defined Q_WS_MAC
+#include <QTimer>
+#endif
+
 #include <QFile>
 #include <QDebug>
-#include "core.h"
 
 static QMutex _mutex;
 

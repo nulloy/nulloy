@@ -16,10 +16,10 @@
 #ifndef N_WAVEFORM_SLIDER_H
 #define N_WAVEFORM_SLIDER_H
 
-#include "waveformBuilderInterface.h"
-#include <QMouseEvent>
 #include <QAbstractSlider>
-#include <QTimer>
+#include <QVector>
+
+class NWaveformBuilderInterface;
 
 class NWaveformSlider : public QAbstractSlider
 {

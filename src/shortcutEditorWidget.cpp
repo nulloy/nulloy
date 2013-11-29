@@ -16,6 +16,10 @@
 #include "shortcutEditorWidget.h"
 #include "action.h"
 
+#include <QAction>
+#include <QHeaderView>
+#include <QKeyEvent>
+
 NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(parent)
 {
 	setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);

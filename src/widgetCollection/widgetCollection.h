@@ -13,15 +13,15 @@
 **
 *********************************************************************/
 
-#include "label.h"
-#include "dropArea.h"
-#include "playlistWidget.h"
-#include "slider.h"
-#include "waveformSlider.h"
-#include <QSizeGrip>
-
 #include <QDesignerCustomWidgetCollectionInterface>
 #include <QDesignerCustomWidgetInterface>
+
+class NDropArea;
+class NLabel;
+class NPlaylistWidget;
+class NSlider;
+class NWaveformSlider;
+class QSizeGrip;
 
 class NWidgetPlugin : public QDesignerCustomWidgetInterface
 {
@@ -55,7 +55,7 @@ class NLabelPlugin : public QObject, public NWidgetPlugin
 
 public:
 	NLabelPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget *createWidget(QWidget *parent) { return new NLabel(parent); }
+	virtual QWidget *createWidget(QWidget *parent);
 };
 
 class NDropAreaPlugin : public QObject, public NWidgetPlugin
@@ -65,7 +65,7 @@ class NDropAreaPlugin : public QObject, public NWidgetPlugin
 public:
 	NDropAreaPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
 	virtual bool isContainer() const { return TRUE; }
-	virtual QWidget *createWidget(QWidget *parent) { return new NDropArea(parent); }
+	virtual QWidget* createWidget(QWidget *parent);
 };
 
 class NPlaylistWidgetPlugin : public QObject, public NWidgetPlugin
@@ -74,7 +74,7 @@ class NPlaylistWidgetPlugin : public QObject, public NWidgetPlugin
 
 public:
 	NPlaylistWidgetPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget *createWidget(QWidget *parent) { return new NPlaylistWidget(parent); }
+	virtual QWidget* createWidget(QWidget *parent);
 };
 
 class NSliderPlugin : public QObject, public NWidgetPlugin
@@ -83,7 +83,7 @@ class NSliderPlugin : public QObject, public NWidgetPlugin
 
 public:
 	NSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget *createWidget(QWidget *parent) { return new NSlider(parent); }
+	virtual QWidget* createWidget(QWidget *parent);
 };
 
 class NWaveformSliderPlugin : public QObject, public NWidgetPlugin
@@ -92,7 +92,7 @@ class NWaveformSliderPlugin : public QObject, public NWidgetPlugin
 
 public:
 	NWaveformSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget *createWidget(QWidget *parent) { return new NWaveformSlider(parent); }
+	virtual QWidget* createWidget(QWidget *parent);
 };
 
 class QSizeGripPlugin : public QObject, public NWidgetPlugin
@@ -101,7 +101,7 @@ class QSizeGripPlugin : public QObject, public NWidgetPlugin
 
 public:
 	QSizeGripPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget *createWidget(QWidget *parent) { return new QSizeGrip(parent); }
+	virtual QWidget* createWidget(QWidget *parent);
 };
 
 class NWidgetCollection: public QObject, public QDesignerCustomWidgetCollectionInterface

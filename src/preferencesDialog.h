@@ -18,8 +18,10 @@
 
 #include <QDialog>
 #include "ui_preferencesDialog.h"
-#include "pluginElementInterface.h"
 #include "global.h"
+
+class QGroupBox;
+class QRadioButton;
 
 class NPreferencesDialog : public QDialog
 {

@@ -17,10 +17,12 @@
 #define N_DROP_AREA_H
 
 #include <QWidget>
-#include <QDragEnterEvent>
-#include <QDragLeaveEvent>
-#include <QDragMoveEvent>
-#include <QDropEvent>
+
+class QStringList;
+class QDragEnterEvent;
+class QDragMoveEvent;
+class QDragLeaveEvent;
+class QDropEvent;
 
 class NDropArea : public QWidget
 {

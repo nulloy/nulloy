@@ -19,10 +19,17 @@
 #include "core.h"
 #include "trash.h"
 
-#include <QtGui>
-#include <QProcess>
+#include "playlistItem.h"
+#include "tagReaderInterface.h"
 
-#include <QDebug>
+#include <QContextMenuEvent>
+#include <QDir>
+#include <QFileInfo>
+#include <QMenu>
+#include <QMessageBox>
+#include <QProcess>
+#include <QShortcut>
+#include <QUrl>
 
 NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 {

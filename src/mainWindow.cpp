@@ -36,10 +36,10 @@
 #include <windows.h>
 #endif
 
-#include <QLayout>
+#include <QEvent>
 #include <QIcon>
-
-#include <QDebug>
+#include <QLayout>
+#include <QWindowStateChangeEvent>
 
 NMainWindow::NMainWindow(QWidget *parent) : QDialog(parent)
 {

@@ -16,8 +16,9 @@
 #ifndef N_TAG_READER_INTERFACE_H
 #define N_TAG_READER_INTERFACE_H
 
-#include <QString>
 #include <QObject>
+
+class QString;
 
 #define TAGREADER_INTERFACE "Nulloy/NTagReaderInterface/0.5"
 

@@ -17,9 +17,11 @@
 #define N_LABEL_H
 
 #include <QLabel>
-#include <QPaintEvent>
-#include <QPainter>
-#include <QPoint>
+
+class QPoint;
+class QColor;
+class QString;
+class QPaintEvent;
 
 class NLabel : public QLabel
 {

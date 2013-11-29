@@ -20,9 +20,9 @@
 #include "pluginElementInterface.h"
 #include "playbackEngineInterface.h"
 
-#include <QObject>
-#include <QTimer>
 #include <gst/gst.h>
+
+class QTimer;
 
 class NPlaybackEngineGStreamer : public NPlaybackEngineInterface, public NPluginElementInterface
 {

@@ -17,8 +17,6 @@
 #define N_SLIDER_H
 
 #include <QSlider>
-#include <QMouseEvent>
-#include <QWheelEvent>
 
 class NSlider : public QSlider
 {

@@ -16,11 +16,10 @@
 #ifndef N_PLUGIN_LOADER_H
 #define N_PLUGIN_LOADER_H
 
-#include "waveformBuilderInterface.h"
-#include "playbackEngineInterface.h"
-#include "tagReaderInterface.h"
-
-#include <QStringList>
+class NPlaybackEngineInterface;
+class NTagReaderInterface;
+class NWaveformBuilderInterface;
+class QStringList;
 
 namespace NPluginLoader
 {

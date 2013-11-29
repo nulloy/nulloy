@@ -14,7 +14,15 @@
 *********************************************************************/
 
 #include "widgetCollection.h"
+
+#include "dropArea.h"
+#include "label.h"
+#include "playlistWidget.h"
+#include "slider.h"
+#include "waveformSlider.h"
+
 #include <QtPlugin>
+#include <QSizeGrip>
 
 static inline QString _domXml(const QString &className, const QString &name)
 {
@@ -56,6 +64,36 @@ NWidgetCollection::NWidgetCollection(QObject *parent) : QObject(parent)
 	m_plugins.push_back(new NSliderPlugin(this));
 	m_plugins.push_back(new NPlaylistWidgetPlugin(this));
 	m_plugins.push_back(new NLabelPlugin(this));
+}
+
+QWidget* NLabelPlugin::createWidget(QWidget *parent)
+{
+	return new NLabel(parent);
+}
+
+QWidget* NDropAreaPlugin::createWidget(QWidget *parent)
+{
+	return new NDropArea(parent);
+}
+
+QWidget* NPlaylistWidgetPlugin::createWidget(QWidget *parent)
+{
+	return new NPlaylistWidget(parent);
+}
+
+QWidget* NSliderPlugin::createWidget(QWidget *parent)
+{
+	return new NSlider(parent);
+}
+
+QWidget* NWaveformSliderPlugin::createWidget(QWidget *parent)
+{
+	return new NWaveformSlider(parent);
+}
+
+QWidget* QSizeGripPlugin::createWidget(QWidget *parent)
+{
+	return new QSizeGrip(parent);
 }
 
 Q_EXPORT_PLUGIN2(widget_collection, NWidgetCollection)

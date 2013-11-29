@@ -22,9 +22,14 @@
 #include "pluginInterface.h"
 #include "pluginElementInterface.h"
 
-#include <QObject>
+#include "waveformBuilderInterface.h"
+#include "playbackEngineInterface.h"
+#include "tagReaderInterface.h"
+
 #include <QMessageBox>
+#include <QObject>
 #include <QPluginLoader>
+#include <QStringList>
 
 #ifdef _N_GSTREAMER_PLUGINS_BUILTIN_
 #include "playbackEngineGstreamer.h"

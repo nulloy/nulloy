@@ -16,18 +16,24 @@
 #ifndef N_PLAYER_H
 #define N_PLAYER_H
 
-#include "settings.h"
-#include "playbackEngineInterface.h"
-#include "waveformSlider.h"
-#include "preferencesDialog.h"
-#include "playlistWidget.h"
-#include "trackInfoWidget.h"
-#include "mainWindow.h"
-#include "logDialog.h"
-#include "scriptEngine.h"
+#include <QWidget>
+#include <QSystemTrayIcon>
+#include "global.h"
 
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
+class NLogDialog;
+class NMainWindow;
+class NPlaybackEngineInterface;
+class NPlaylistWidget;
+class NPreferencesDialog;
+class NScriptEngine;
+class NSettings;
+class NTrackInfoWidget;
+class QMenu;
+class QNetworkAccessManager;
+class QNetworkReply;
+class QString;
+class QSystemTrayIcon;
+class QTimer;
 
 class NPlayer : public QWidget
 {

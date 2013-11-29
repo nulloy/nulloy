@@ -19,9 +19,10 @@
 #include "pluginElementInterface.h"
 #include "tagReaderInterface.h"
 
-#include <QString>
 #include <taglib/tag.h>
 #include <taglib/fileref.h>
+
+class QString;
 
 class NTagReaderTaglib : public NTagReaderInterface, public NPluginElementInterface
 {

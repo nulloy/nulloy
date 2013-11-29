@@ -18,6 +18,7 @@
 #include "settings.h"
 #include "player.h"
 #include "skinFileSystem.h"
+#include "pluginElementInterface.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -27,11 +28,13 @@
 #include "pluginLoader.h"
 #endif
 
+#include <QGroupBox>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QRadioButton>
 #include <QSpacerItem>
-
-#include <QDebug>
+#include <QTextBrowser>
+#include <QVBoxLayout>
 
 NPreferencesDialog::~NPreferencesDialog() {}
 

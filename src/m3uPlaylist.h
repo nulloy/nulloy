@@ -12,9 +12,11 @@
 **  http://www.gnu.org/licenses/gpl-3.0.html
 **
 *********************************************************************/
+
 #ifndef N_M3U_PLAYLIST_H
 #define N_M3U_PLAYLIST_H
 
+#include <QList>
 #include <QString>
 
 typedef struct

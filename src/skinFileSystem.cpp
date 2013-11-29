@@ -14,7 +14,10 @@
 *********************************************************************/
 
 #include "skinFileSystem.h"
-#include <QtDebug>
+
+#include <QAbstractFileEngine>
+#include <QByteArray>
+#include <QString>
 
 QHash<QString, QByteArray> NSkinFileSystem::m_fileHash;
 QString NSkinFileSystem::m_prefix;

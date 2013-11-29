@@ -16,12 +16,15 @@
 #ifndef N_TRACK_INFO_WIDGET_H
 #define N_TRACK_INFO_WIDGET_H
 
-#include <QGraphicsView>
-#include <QGraphicsProxyWidget>
-#include <QPropertyAnimation>
+#include <QWidget>
 #include <QMap>
 #include "ui_trackInfoWidget.h"
-#include "tagReaderInterface.h"
+
+class QGraphicsView;
+class QGraphicsScene;
+class QGraphicsProxyWidget;
+class QPropertyAnimation;
+class NTagReaderInterface;
 
 class NTrackInfoWidget : public QWidget
 {

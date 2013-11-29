@@ -17,10 +17,10 @@
 #define N_SKIN_FILE_SYSTEM_H
 
 #include <QAbstractFileEngineHandler>
-#include <QAbstractFileEngine>
-#include <QByteArray>
 #include <QHash>
-#include <QString>
+
+class QByteArray;
+class QString;
 
 class NSkinFileSystem : public QAbstractFileEngineHandler
 {

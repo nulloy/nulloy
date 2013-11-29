@@ -17,9 +17,12 @@
 #define N_LOG_DIALOG_H
 
 #include <QDialog>
-#include <QTextBrowser>
 #include <QMessageBox>
-#include <QCheckBox>
+
+class QCheckBox;
+class QString;
+class QTextBrowser;
+class QTextBrowser;
 
 class NLogDialog : public QDialog
 {

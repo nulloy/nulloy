@@ -18,6 +18,8 @@
 
 #include <QScriptEngine>
 
+class QObject;
+
 class NScriptEngine : public QScriptEngine
 {
 public:

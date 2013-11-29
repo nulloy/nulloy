@@ -16,12 +16,15 @@
 #include "logDialog.h"
 
 #include "settings.h"
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QSpacerItem>
+
+#include <QCheckBox>
 #include <QCoreApplication>
-#include <QDebug>
+#include <QHBoxLayout>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QTextBrowser>
+#include <QVBoxLayout>
 
 NLogDialog::NLogDialog(QWidget *parent) : QDialog(parent)
 {

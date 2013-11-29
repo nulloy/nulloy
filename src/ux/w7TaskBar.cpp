@@ -21,8 +21,6 @@
 #include <shlobj.h>
 #include <QIcon>
 
-#include <QDebug>
-
 static WId _winId;
 static ITaskbarList3 *_taskBar = NULL;
 static UINT _messageId;

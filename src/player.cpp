@@ -14,12 +14,21 @@
 *********************************************************************/
 
 #include "player.h"
-#include "global.h"
 
-#include "core.h"
 #include "action.h"
-#include "systemTray.h"
+#include "core.h"
+#include "logDialog.h"
 #include "m3uPlaylist.h"
+#include "mainWindow.h"
+#include "playbackEngineInterface.h"
+#include "playlistWidget.h"
+#include "preferencesDialog.h"
+#include "scriptEngine.h"
+#include "settings.h"
+#include "systemTray.h"
+#include "tagReaderInterface.h"
+#include "trackInfoWidget.h"
+#include "waveformSlider.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -30,22 +39,22 @@
 #include "pluginLoader.h"
 #else
 #include "playbackEngineGstreamer.h"
-#include "tagReaderInterface.h"
 #endif
 
 #ifdef Q_WS_WIN
 #include "w7TaskBar.h"
 #endif
 
-#include <QFileInfo>
-#include <QPluginLoader>
 #include <QFileDialog>
+#include <QFileInfo>
+#include <QMenu>
 #include <QMetaObject>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QTextBrowser>
+#include <QResizeEvent>
 #include <QToolTip>
-
-#include <QDebug>
 
 NPlayer::NPlayer()
 {

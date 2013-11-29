@@ -18,14 +18,15 @@
 #include "core.h"
 #include "settings.h"
 #include "skinFileSystem.h"
-#include <qtiocompressor.h>
 
 #include <QBuffer>
+#include <QCoreApplication>
 #include <QDir>
 #include <QMessageBox>
-#include <QCoreApplication>
+#include <QString>
+#include <QStringList>
 
-#include <QDebug>
+#include <qtiocompressor.h>
 
 namespace NSkinLoader
 {

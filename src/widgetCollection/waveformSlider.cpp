@@ -14,10 +14,11 @@
 *********************************************************************/
 
 #include "waveformSlider.h"
+#include "waveformBuilderInterface.h"
 
+#include <QMouseEvent>
 #include <QPainter>
 #include <QFile>
-#include <QDebug>
 #include <QStylePainter>
 #include <QStyleOptionFocusRect>
 

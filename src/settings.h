@@ -16,10 +16,11 @@
 #ifndef N_SETTINGS_H
 #define N_SETTINGS_H
 
-#include "action.h"
-
 #include <QSettings>
-#include <QVariant>
+
+class QVariant;
+class QString;
+class NAction;
 
 class NSettings : public QSettings
 {
