@@ -25,6 +25,7 @@
 #include "waveformBuilderInterface.h"
 #include "playbackEngineInterface.h"
 #include "tagReaderInterface.h"
+#include "coverReaderInterface.h"
 
 #include <QMessageBox>
 #include <QObject>
@@ -43,6 +44,7 @@ namespace NPluginLoader
 	static NPlaybackEngineInterface *_playback = NULL;
 	static NWaveformBuilderInterface *_waveform = NULL;
 	static NTagReaderInterface *_tagReader = NULL;
+	static NCoverReaderInterface *_coverReader = NULL;
 
 	void _loadPlugins();
 	QObject* _findPlugin(N::PluginElementType type, QObjectList &objects, QMap<QString, bool> &usedFlags);
@@ -71,6 +73,9 @@ QObject* NPluginLoader::_findPlugin(N::PluginElementType type, QObjectList &obje
 	} else if (type == N::TagReaderType) {
 		base_interface = NTagReaderInterface::interface();
 		type_str = "TagReader";
+	} else if (type == N::CoverReaderType) {
+		base_interface = NCoverReaderInterface::interface();
+		type_str = "CoverReader";
 	}
 
 	int index;
@@ -204,6 +209,7 @@ void NPluginLoader::_loadPlugins()
 	_playback = qobject_cast<NPlaybackEngineInterface *>(_findPlugin(N::PlaybackEngineType, objects, usedFlags));
 	_waveform = qobject_cast<NWaveformBuilderInterface *>(_findPlugin(N::WaveformBuilderType, objects, usedFlags));
 	_tagReader = qobject_cast<NTagReaderInterface *>(_findPlugin(N::TagReaderType, objects, usedFlags));
+	_coverReader = qobject_cast<NCoverReaderInterface *>(_findPlugin(N::CoverReaderType, objects, usedFlags));
 
 	// remove not used plugins
 	foreach (QString identifier, usedFlags.keys(FALSE)) {
@@ -250,6 +256,12 @@ NTagReaderInterface* NPluginLoader::tagReaderPlugin()
 {
 	_loadPlugins();
 	return _tagReader;
+}
+
+NCoverReaderInterface* NPluginLoader::coverReaderPlugin()
+{
+	_loadPlugins();
+	return _coverReader;
 }
 
 QStringList NPluginLoader::pluginIdentifiers()

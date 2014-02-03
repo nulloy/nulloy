@@ -73,7 +73,11 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	if (tagReaderBox)
 		scrollLayout->addWidget(tagReaderBox);
 
-	if (playbackBox || wavefowmBox || tagReaderBox)
+	QGroupBox *coverReaderBox = generatePluginsGroup(N::CoverReaderType, identifiers, NSettings::instance()->value("CoverReader").toString());
+	if (coverReaderBox)
+		scrollLayout->addWidget(coverReaderBox);
+
+	if (playbackBox || wavefowmBox || tagReaderBox || coverReaderBox)
 		scrollLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	else
 		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
@@ -181,6 +185,8 @@ QGroupBox* NPreferencesDialog::generatePluginsGroup(N::PluginElementType type, c
 		type_str = "Waveform";
 	else if (type == N::TagReaderType)
 		type_str = "TagReader";
+	else if (type == N::CoverReaderType)
+		type_str = "CoverReader";
 
 	QStringList groupedIds = identifiers.filter(QRegExp("^" + QString::number(type) + "/.*"));
 	if (groupedIds.count() > 1) {
@@ -305,10 +311,12 @@ void NPreferencesDialog::saveSettings()
 	QVariant playbackVariant(selectedPluginsGroup(N::PlaybackEngineType));
 	QVariant waveformVariant(selectedPluginsGroup(N::WaveformBuilderType));
 	QVariant tagReaderVariant(selectedPluginsGroup(N::TagReaderType));
+	QVariant coverReaderVariant(selectedPluginsGroup(N::CoverReaderType));
 
 	NSettings::instance()->setValue("Playback", playbackVariant);
 	NSettings::instance()->setValue("Waveform", waveformVariant);
 	NSettings::instance()->setValue("TagReader", tagReaderVariant);
+	NSettings::instance()->setValue("CoverReader", coverReaderVariant);
 #endif
 
 #ifndef _N_NO_SKINS_

@@ -21,6 +21,7 @@ class NLabel;
 class NPlaylistWidget;
 class NSlider;
 class NWaveformSlider;
+class NCoverWidget;
 class QSizeGrip;
 
 class NWidgetPlugin : public QDesignerCustomWidgetInterface
@@ -92,6 +93,15 @@ class NWaveformSliderPlugin : public QObject, public NWidgetPlugin
 
 public:
 	NWaveformSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
+	virtual QWidget* createWidget(QWidget *parent);
+};
+
+class NCoverWidgetPlugin : public QObject, public NWidgetPlugin
+{
+	Q_OBJECT
+
+public:
+	NCoverWidgetPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
 	virtual QWidget* createWidget(QWidget *parent);
 };
 

@@ -20,6 +20,7 @@
 #include "playlistWidget.h"
 #include "slider.h"
 #include "waveformSlider.h"
+#include "coverWidget.h"
 
 #include <QtPlugin>
 #include <QSizeGrip>
@@ -64,6 +65,7 @@ NWidgetCollection::NWidgetCollection(QObject *parent) : QObject(parent)
 	m_plugins.push_back(new NSliderPlugin(this));
 	m_plugins.push_back(new NPlaylistWidgetPlugin(this));
 	m_plugins.push_back(new NLabelPlugin(this));
+	m_plugins.push_back(new NCoverWidgetPlugin(this));
 }
 
 QWidget* NLabelPlugin::createWidget(QWidget *parent)
@@ -89,6 +91,11 @@ QWidget* NSliderPlugin::createWidget(QWidget *parent)
 QWidget* NWaveformSliderPlugin::createWidget(QWidget *parent)
 {
 	return new NWaveformSlider(parent);
+}
+
+QWidget* NCoverWidgetPlugin::createWidget(QWidget *parent)
+{
+	return new NCoverWidget(parent);
 }
 
 QWidget* QSizeGripPlugin::createWidget(QWidget *parent)

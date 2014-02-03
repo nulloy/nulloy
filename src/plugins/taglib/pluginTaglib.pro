@@ -1,6 +1,8 @@
 unix:TARGET = plugin_taglib
 win32:TARGET = PluginTagLib
 
+QMAKE_CXXFLAGS += -std=c++0x
+
 include(../plugin.pri)
 
 unix {

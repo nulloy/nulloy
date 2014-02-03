@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2013 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2014 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -13,26 +13,31 @@
 **
 *********************************************************************/
 
-#include "pluginTaglib.h"
-#include "tagReaderTaglib.h"
-#include "coverReaderTaglib.h"
+#ifndef N_COVER_WIDGET_H
+#define N_COVER_WIDGET_H
 
-NPluginTaglib::NPluginTaglib(QObject *parent) : QObject(parent)
+#include <QLabel>
+
+class NCoverReaderInterface;
+
+class NCoverWidget : public QLabel
 {
-	m_elements << new NTagReaderTaglib()
-	           << new NCoverReaderTaglib();
-}
+	Q_OBJECT
 
-NPluginTaglib::~NPluginTaglib()
-{
-	foreach (QObject *obj, m_elements)
-		delete obj;
-}
+private:
+	NCoverReaderInterface *m_coverReader;
+	QSize m_sourceSize;
 
-QObjectList NPluginTaglib::elements()
-{
-	return m_elements;
-}
+	void resizeEvent(QResizeEvent *event);
+	void fitToHeight(int height);
+	void init();
 
-Q_EXPORT_PLUGIN2(plugin_taglib, NPluginTaglib)
+public:
+	NCoverWidget(QWidget *parent = 0);
+
+public slots:
+	void setSource(const QString &file);
+};
+
+#endif
 

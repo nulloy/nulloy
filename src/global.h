@@ -40,7 +40,8 @@ public:
 		OtherElementType = 0x0,
 		PlaybackEngineType = 0x1,
 		WaveformBuilderType = 0x2,
-		TagReaderType = 0x3
+		TagReaderType = 0x3,
+		CoverReaderType = 0x4
 	};
 
 	Q_DECLARE_FLAGS(PluginElementFlags, PluginElementType)

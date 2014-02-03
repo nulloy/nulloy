@@ -36,15 +36,12 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_waveBuilder = NULL;
 	m_bufImage.resize(7);
 
-	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-	setMinimumHeight(50);
-
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
 	m_timer->start(50);
 
 	m_oldSize = QSize(0, 0);
-	reset();
+	init();
 }
 
 void NWaveformSlider::setBuilder(NWaveformBuilderInterface *builder)
@@ -59,13 +56,17 @@ void NWaveformSlider::setPausedState(bool state)
 	update();
 }
 
-void NWaveformSlider::reset()
+void NWaveformSlider::init()
 {
 	m_oldValue = -1;
 	m_oldIndex = -1;
 	m_oldBuildPos = -1;
 	m_pausedState = FALSE;
 	setEnabled(FALSE);
+
+	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+	setMinimumHeight(50);
+	setMinimumWidth(150);
 }
 
 NWaveformSlider::~NWaveformSlider() {}
@@ -258,7 +259,7 @@ void NWaveformSlider::setValue(int value)
 
 void NWaveformSlider::drawFile(const QString &file)
 {
-	reset();
+	init();
 
 	if (!QFile(file).exists())
 		return;

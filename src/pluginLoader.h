@@ -19,6 +19,7 @@
 class NPlaybackEngineInterface;
 class NTagReaderInterface;
 class NWaveformBuilderInterface;
+class NCoverReaderInterface;
 class QStringList;
 
 namespace NPluginLoader
@@ -26,6 +27,7 @@ namespace NPluginLoader
 	NPlaybackEngineInterface* playbackPlugin();
 	NWaveformBuilderInterface* waveformPlugin();
 	NTagReaderInterface* tagReaderPlugin();
+	NCoverReaderInterface* coverReaderPlugin();
 
 	QStringList pluginIdentifiers();
 	void deinit();

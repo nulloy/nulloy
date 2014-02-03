@@ -49,7 +49,7 @@ private:
 	void leaveEvent(QEvent *event);
 	void wheelEvent(QWheelEvent *event);
 	void paintEvent(QPaintEvent *event);
-	void reset();
+	void init();
 
 public:
 	NWaveformSlider(QWidget *parent = 0);

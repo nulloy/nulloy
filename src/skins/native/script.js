@@ -27,6 +27,7 @@ function Program(player)
 		this.nextButton = this.mainWindow.findChild("nextButton");
 		this.volumeSlider = this.mainWindow.findChild("volumeSlider");
 		this.waveformSlider = this.mainWindow.findChild("waveformSlider");
+		this.coverWidget = this.mainWindow.findChild("coverWidget");
 
 		this.playButton.clicked.connect(this.playlistWidget.activateCurrent);
 		this.stopButton.clicked.connect(this.playbackEngine.stop);
@@ -46,6 +47,7 @@ function Program(player)
 
 		this.playbackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
+		this.playbackEngine["mediaChanged(const QString &)"].connect(this.coverWidget["setSource(const QString &)"]);
 		this.playbackEngine["finished()"].connect(this.playlistWidget.activateNext);
 		this.playbackEngine["failed()"].connect(this, "on_failed");
 		this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
