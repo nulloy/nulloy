@@ -163,7 +163,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 
 	QPushButton *closeButton = new QPushButton("Close");
 	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept()));
-	QHBoxLayout* buttonLayout = new QHBoxLayout();
+	QHBoxLayout *buttonLayout = new QHBoxLayout();
 	buttonLayout->addStretch();
 	buttonLayout->addWidget(closeButton);
 	buttonLayout->addStretch();

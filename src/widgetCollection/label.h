@@ -48,7 +48,7 @@ private:
 	void updateElidedText();
 
 public:
-	NLabel(QWidget* parent = 0);
+	NLabel(QWidget *parent = 0);
 
 	Q_INVOKABLE void setText(const QString &text);
 	void setElideMode(Qt::TextElideMode mode);

@@ -63,7 +63,7 @@ static void _handleBuffer(GstPad *pad, GstBuffer *buffer, gpointer userData)
 	Q_UNUSED(pad);
 
 	int nChannels;
-	GstStructure* structure = gst_caps_get_structure(GST_BUFFER_CAPS(buffer), 0);
+	GstStructure *structure = gst_caps_get_structure(GST_BUFFER_CAPS(buffer), 0);
 	gst_structure_get_int(structure, "channels", &nChannels);
 
 	gint16 *pcmBuffer = reinterpret_cast<gint16 *>(GST_BUFFER_DATA(buffer));

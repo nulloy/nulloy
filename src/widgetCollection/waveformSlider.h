@@ -31,7 +31,6 @@ class NWaveformSlider : public QAbstractSlider
 	Q_PROPERTY(QBrush progressBackground READ getProgressBackground WRITE setProgressBackground DESIGNABLE true)
 	Q_PROPERTY(QBrush pausedBackground READ getPausedBackground WRITE setPausedBackground DESIGNABLE true)
 
-
 private:
 	NWaveformBuilderInterface *m_waveBuilder;
 	QImage m_waveImage;

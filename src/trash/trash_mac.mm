@@ -19,7 +19,7 @@
 
 static inline NSString* fromQString(const QString &string)
 {
-	char* cString = string.toUtf8().data();
+	char *cString = string.toUtf8().data();
 	return [[NSString alloc] initWithUTF8String:cString];
 }
 

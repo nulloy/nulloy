@@ -20,7 +20,7 @@
 #include <QPainter>
 #include <QPoint>
 
-NLabel::NLabel(QWidget* parent) : QLabel(parent)
+NLabel::NLabel(QWidget *parent) : QLabel(parent)
 {
 	m_shadowOffset = QPoint(0, 0);
 	m_enabled = FALSE;

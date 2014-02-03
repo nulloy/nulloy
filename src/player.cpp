@@ -339,7 +339,7 @@ NSettings* NPlayer::settings()
 bool NPlayer::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::FileOpen) {
-		QFileOpenEvent* fileEvent = static_cast<QFileOpenEvent*>(event);
+		QFileOpenEvent *fileEvent = static_cast<QFileOpenEvent *>(event);
 
 		if (!fileEvent->file().isEmpty())
 		m_playlistWidget->activateMediaList(QStringList() << fileEvent->file());
@@ -688,7 +688,7 @@ void NPlayer::showAboutMessageBox()
 	iconLabel->setMask(pixmap.mask());
 #endif
 
-	QHBoxLayout* iconLayout = new QHBoxLayout();
+	QHBoxLayout *iconLayout = new QHBoxLayout();
 	iconLayout->addStretch();
 	iconLayout->addWidget(iconLabel);
 	iconLayout->addStretch();
@@ -728,7 +728,7 @@ void NPlayer::showAboutMessageBox()
 
 	QPushButton *closeButton = new QPushButton("Close");
 	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept()));
-	QHBoxLayout* buttonLayout = new QHBoxLayout();
+	QHBoxLayout *buttonLayout = new QHBoxLayout();
 	buttonLayout->addStretch();
 	buttonLayout->addWidget(closeButton);
 	buttonLayout->addStretch();
