@@ -53,7 +53,6 @@ private:
 	QNetworkAccessManager *m_networkManager;
 	QTimer *m_trayIconDoubleClickTimer;
 	bool m_trayIconDoubleClickCheck;
-	QWidget *m_waveformSlider;
 
 	bool eventFilter(QObject *obj, QEvent *event);
 
@@ -83,7 +82,6 @@ private slots:
 	void loadNextActionTriggered();
 	void trayIconDoubleClick_timeout();
 	void trackIcon_clicked(int clicks);
-	void waveformSliderToolTip(int x, int y);
 
 public slots:
 	void quit();

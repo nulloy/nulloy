@@ -54,7 +54,6 @@
 #include <QNetworkRequest>
 #include <QTextBrowser>
 #include <QResizeEvent>
-#include <QToolTip>
 
 NPlayer::NPlayer()
 {
@@ -112,15 +111,14 @@ NPlayer::NPlayer()
 	m_playlistWidget->setTagReader(NPluginLoader::tagReaderPlugin());
 	connect(m_playlistWidget, SIGNAL(activateEmptyFail()), this, SLOT(showOpenFileDialog()));
 
-	m_waveformSlider = qFindChild<QWidget *>(m_mainWindow, "waveformSlider");
 	m_trackInfoWidget = new NTrackInfoWidget();
 	m_trackInfoWidget->setStyleSheet(m_trackInfoWidget->styleSheet() + m_mainWindow->styleSheet());
 	m_trackInfoWidget->setTagReader(NPluginLoader::tagReaderPlugin());
 	QVBoxLayout *trackInfoLayout = new QVBoxLayout;
 	trackInfoLayout->setContentsMargins(0, 0, 0, 0);
 	trackInfoLayout->addWidget(m_trackInfoWidget);
-	m_waveformSlider->setLayout(trackInfoLayout);
-	connect(m_waveformSlider, SIGNAL(mouseMoved(int, int)), this, SLOT(waveformSliderToolTip(int, int)));
+	QWidget *waveformSlider = qFindChild<QWidget *>(m_mainWindow, "waveformSlider");
+	waveformSlider->setLayout(trackInfoLayout);
 	connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
 
 	// actions
@@ -790,24 +788,5 @@ void NPlayer::showSavePlaylistDialog()
 void NPlayer::showContextMenu(QPoint pos)
 {
 	m_contextMenu->exec(m_mainWindow->mapToGlobal(pos));
-}
-
-void NPlayer::waveformSliderToolTip(int x, int y)
-{
-	if (x != -1 && y != -1) {
-		float pos = (float)x / m_waveformSlider->width();
-		int duration = NPluginLoader::tagReaderPlugin()->toString("%D").toInt();
-		int res = duration * pos;
-
-		int hours = res / 60 / 60;
-		QTime time = QTime().addSecs(res);
-		QString timeStr;
-		if (hours > 0)
-			timeStr = time.toString("h:mm:ss");
-		else
-			timeStr = time.toString("m:ss");
-
-		QToolTip::showText(m_waveformSlider->mapToGlobal(QPoint(x, y)), timeStr);
-	}
 }
 

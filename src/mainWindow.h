@@ -35,6 +35,7 @@ private:
 	QString m_styleSheet;
 	QPoint m_oldPos;
 	QSize m_oldSize;
+	QWidget *m_waveformSlider;
 
 	void changeEvent(QEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);
@@ -68,6 +69,7 @@ public slots:
 private slots:
 	void loadSettings();
 	void saveSettings();
+	void waveformSliderToolTip(int x, int y);
 
 signals:
 	void closed();
