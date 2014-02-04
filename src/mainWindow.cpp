@@ -17,18 +17,11 @@
 
 #include "core.h"
 #include "settings.h"
-#include "waveformSlider.h"
 #include "dropArea.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinFileSystem.h"
 #include <QUiLoader>
-#endif
-
-#ifndef _N_NO_PLUGINS_
-#include "pluginLoader.h"
-#else
-#include "waveformBuilderGstreamer.h"
 #endif
 
 #ifdef Q_WS_WIN
@@ -72,15 +65,6 @@ void NMainWindow::init(const QString &uiFile)
 
 	m_oldPos = QPoint(-1, -1);
 	m_oldSize = QSize(-1, -1);
-
-	NWaveformSlider *waveformSlider = qFindChild<NWaveformSlider *>(this, "waveformSlider");
-#ifndef _N_NO_PLUGINS_
-	waveformSlider->setBuilder(NPluginLoader::waveformPlugin());
-#else
-	NWaveformBuilderInterface *builder = dynamic_cast<NWaveformBuilderInterface *>(new NWaveformBuilderGstreamer());
-	dynamic_cast<NPluginElementInterface *>(builder)->init();
-	waveformSlider->setBuilder(builder);
-#endif
 
 	// enabling dragging window from any point
 	QList<QWidget *> widgets = findChildren<QWidget *>();

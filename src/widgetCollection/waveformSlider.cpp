@@ -22,6 +22,12 @@
 #include <QStylePainter>
 #include <QStyleOptionFocusRect>
 
+#ifndef _N_NO_PLUGINS_
+#include "pluginLoader.h"
+#else
+#include "waveformBuilderGstreamer.h"
+#endif
+
 NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 {
 	m_radius = 0;
@@ -33,7 +39,14 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 
 	setMouseTracking(TRUE);
 
-	m_waveBuilder = NULL;
+#ifndef _N_NO_PLUGINS_
+	m_waveBuilder = NPluginLoader::waveformPlugin();
+#else
+	NWaveformBuilderInterface *builder = dynamic_cast<NWaveformBuilderInterface *>(new NWaveformBuilderGstreamer());
+	dynamic_cast<NPluginElementInterface *>(builder)->init();
+	m_waveBuilder = builder;
+#endif
+
 	m_bufImage.resize(7);
 
 	m_timer = new QTimer(this);
@@ -42,12 +55,6 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 
 	m_oldSize = QSize(0, 0);
 	init();
-}
-
-void NWaveformSlider::setBuilder(NWaveformBuilderInterface *builder)
-{
-	m_waveBuilder = builder;
-	m_waveBuilder->setParent(this);
 }
 
 void NWaveformSlider::setPausedState(bool state)

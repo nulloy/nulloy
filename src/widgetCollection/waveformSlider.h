@@ -54,8 +54,6 @@ public:
 	NWaveformSlider(QWidget *parent = 0);
 	~NWaveformSlider();
 
-	void setBuilder(NWaveformBuilderInterface *builder);
-
 public slots:
 	void drawFile(const QString &file);
 	void setValue(int value);
