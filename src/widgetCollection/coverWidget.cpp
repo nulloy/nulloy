@@ -65,10 +65,8 @@ void NCoverWidget::init()
 {
 	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
 
-	setMinimumWidth(0);
-	setMinimumHeight(0);
-	setMaximumWidth(QWIDGETSIZE_MAX);
-	setMaximumHeight(QWIDGETSIZE_MAX);
+	setMinimumSize(0, 0);
+	setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 }
 
 void NCoverWidget::resizeEvent(QResizeEvent *event)
