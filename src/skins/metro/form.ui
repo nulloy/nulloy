@@ -21,6 +21,14 @@
 	background-color: #5882CF;
 }
 
+#coverWidget {
+	background: transparent;
+	border: 1px solid #252526;
+}
+#coverWidget:hover {
+	border: 1px solid #5882CF;
+}
+
 #splitter {
 	background: #2D2D30; /* also main skin background */
 }
@@ -826,10 +834,6 @@ QScrollBar::sub-page {
                    <width>60</width>
                    <height>60</height>
                   </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background: transparent;
-border: 1px solid #252526;</string>
                  </property>
                  <property name="text">
                   <string/>

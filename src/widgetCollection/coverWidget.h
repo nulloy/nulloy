@@ -19,6 +19,7 @@
 #include <QLabel>
 
 class NCoverReaderInterface;
+class QDialog;
 
 class NCoverWidget : public QLabel
 {
@@ -26,14 +27,18 @@ class NCoverWidget : public QLabel
 
 private:
 	NCoverReaderInterface *m_coverReader;
-	QSize m_sourceSize;
+	QPixmap m_pixmap;
+	QDialog *m_popup;
+	QLabel *m_fullsizeLabel;
 
 	void resizeEvent(QResizeEvent *event);
+	void mousePressEvent(QMouseEvent *event);
 	void fitToHeight(int height);
 	void init();
 
 public:
 	NCoverWidget(QWidget *parent = 0);
+	~NCoverWidget();
 
 public slots:
 	void setSource(const QString &file);

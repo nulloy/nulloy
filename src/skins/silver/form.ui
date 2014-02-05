@@ -21,6 +21,14 @@
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #767676, stop: 1 #515151);
 }
 
+#coverWidget {
+	background: transparent;
+	border: 1px solid #767676;
+}
+#coverWidget:hover {
+	border: 1px solid #FBFFDD;
+}
+
 #backgroundWidget {
 	background: #c8c8c8;
 	border-top: 22px solid qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #f0f0f0, stop:1 #c8c8c8);
@@ -937,10 +945,6 @@ QScrollBar::sub-page {
                       <width>60</width>
                       <height>60</height>
                      </size>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">background: transparent;
-border: 1px solid #767676;</string>
                     </property>
                     <property name="text">
                      <string/>

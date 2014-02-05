@@ -18,15 +18,30 @@
 #include "pluginLoader.h"
 
 #include <QResizeEvent>
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QCoreApplication>
 
 NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 {
 	m_coverReader = NPluginLoader::coverReaderPlugin();
 
-	hide();
+	if (m_coverReader) {
+		m_popup = new QDialog(this);
+		m_popup->setMaximumSize(0, 0);
+		m_popup->setWindowTitle(" ");
+		QVBoxLayout *layout = new QVBoxLayout;
+		layout->setContentsMargins(0, 0, 0, 0);
+		m_popup->setLayout(layout);
+		m_fullsizeLabel = new QLabel;
+		layout->addWidget(m_fullsizeLabel);
+	}
 
+	hide();
 	setScaledContents(TRUE);
 }
+
+NCoverWidget::~NCoverWidget() {}
 
 void NCoverWidget::setSource(const QString &file)
 {
@@ -37,11 +52,10 @@ void NCoverWidget::setSource(const QString &file)
 	init();
 
 	m_coverReader->setSource(file);
-	QPixmap pixmap = QPixmap::fromImage(m_coverReader->getImage());
-	m_sourceSize = pixmap.size();
+	m_pixmap = QPixmap::fromImage(m_coverReader->getImage());
 
-	if (!pixmap.isNull()) { // first scale, then show
-		setPixmap(pixmap);
+	if (!m_pixmap.isNull()) { // first scale, then show
+		setPixmap(m_pixmap);
 		fitToHeight(height());
 		show();
 	}
@@ -62,9 +76,15 @@ void NCoverWidget::resizeEvent(QResizeEvent *event)
 	fitToHeight(event->size().height());
 }
 
+void NCoverWidget::mousePressEvent(QMouseEvent *event)
+{
+	m_fullsizeLabel->setPixmap(m_pixmap);
+	m_popup->show();
+}
+
 void NCoverWidget::fitToHeight(int height)
 {
-	QSize fixedAspect(m_sourceSize);
+	QSize fixedAspect(m_pixmap.size());
 	fixedAspect.scale(parentWidget()->width() / 2, height, Qt::KeepAspectRatio);
 
 	setMaximumWidth(fixedAspect.width());
