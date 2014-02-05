@@ -29,7 +29,6 @@ NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 	if (m_coverReader) {
 		m_popup = new QDialog(this);
 		m_popup->setMaximumSize(0, 0);
-		m_popup->setWindowTitle(" ");
 		QVBoxLayout *layout = new QVBoxLayout;
 		layout->setContentsMargins(0, 0, 0, 0);
 		m_popup->setLayout(layout);
@@ -77,6 +76,7 @@ void NCoverWidget::resizeEvent(QResizeEvent *event)
 void NCoverWidget::mousePressEvent(QMouseEvent *event)
 {
 	m_fullsizeLabel->setPixmap(m_pixmap);
+	m_popup->setWindowTitle(QString("%1x%2px").arg(m_pixmap.width()).arg(m_pixmap.height()));
 	m_popup->show();
 }
 
