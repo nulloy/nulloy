@@ -64,6 +64,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::rcDir() + "/" +
 	initValue("DisplayLogDialog", TRUE);
 	initValue("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
 	initValue("LoadNext", FALSE);
+	initValue("ShowCoverArt", TRUE);
 	initValue("LoadNextSort", QDir::Name);
 	initValue("Volume", 0.8);
 

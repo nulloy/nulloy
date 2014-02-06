@@ -42,6 +42,14 @@ NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 
 NCoverWidget::~NCoverWidget() {}
 
+void NCoverWidget::setEnabled(bool enabled)
+{
+	QLabel::setEnabled(enabled);
+
+	if (!m_pixmap.isNull())
+		setVisible(enabled);
+}
+
 void NCoverWidget::setSource(const QString &file)
 {
 	if (!m_coverReader)
@@ -56,7 +64,8 @@ void NCoverWidget::setSource(const QString &file)
 	if (!m_pixmap.isNull()) { // first scale, then show
 		setPixmap(m_pixmap);
 		fitToHeight(height());
-		show();
+		if (isEnabled())
+			show();
 	}
 }
 

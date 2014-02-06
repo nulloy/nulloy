@@ -38,6 +38,7 @@ private:
 
 public:
 	NCoverWidget(QWidget *parent = 0);
+	void setEnabled(bool enabled);
 	~NCoverWidget();
 
 public slots:

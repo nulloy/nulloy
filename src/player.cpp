@@ -28,7 +28,7 @@
 #include "systemTray.h"
 #include "tagReaderInterface.h"
 #include "trackInfoWidget.h"
-#include "waveformSlider.h"
+#include "coverWidget.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -173,6 +173,10 @@ NPlayer::NPlayer()
 	NAction *savePlaylistDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save Playlist..."), this);
 	connect(savePlaylistDialogAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
 
+	NAction *showCoverAction = new NAction(tr("Show Cover Art"), this);
+	showCoverAction->setCheckable(TRUE);
+	showCoverAction->setObjectName("showCoverAction");
+
 	NAction *aboutAction = new NAction(QIcon::fromTheme("help-about",
 	                                   style()->standardIcon(QStyle::SP_MessageBoxQuestion)),
 	                                   tr("About") + " " + QCoreApplication::applicationName(), this);
@@ -266,6 +270,8 @@ NPlayer::NPlayer()
 	playlistSubMenu->addAction(loadNextDateUpAction);
 	m_contextMenu->addMenu(playlistSubMenu);
 
+	if (NPluginLoader::coverReaderPlugin())
+		m_contextMenu->addAction(showCoverAction);
 	m_contextMenu->addAction(preferencesAction);
 	m_contextMenu->addSeparator();
 	m_contextMenu->addAction(aboutAction);
@@ -421,6 +427,11 @@ void NPlayer::loadSettings()
 		alwaysOnTopAction->setChecked(TRUE);
 		on_alwaysOnTopAction_toggled(TRUE);
 	}
+
+	bool showCover = m_settings->value("ShowCoverArt").toBool();
+	NAction *showCoverAction = qFindChild<NAction *>(this, "showCoverAction");
+	showCoverAction->setChecked(showCover);
+	on_showCoverAction_toggled(showCover);
 
 	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
 	if (whilePlaying) {
@@ -637,6 +648,13 @@ void NPlayer::loadNextActionTriggered()
 		m_settings->setValue("LoadNextSort", (int)QDir::Time | QDir::Reversed);
 	else if (name == "loadNextDateUpAction")
 		m_settings->setValue("LoadNextSort", (int)(QDir::Time));
+}
+
+void NPlayer::on_showCoverAction_toggled(bool checked)
+{
+	m_settings->setValue("ShowCoverArt", checked);
+	NCoverWidget *coverWidget = qFindChild<NCoverWidget *>(m_mainWindow, "coverWidget");
+	coverWidget->setEnabled(checked);
 }
 
 void NPlayer::showAboutMessageBox()
