@@ -89,6 +89,7 @@ public slots:
 	void toggleWindowVisibility();
 	void showAboutMessageBox();
 	void showOpenFileDialog();
+	void showOpenDirDialog();
 	void showSavePlaylistDialog();
 	void showContextMenu(QPoint pos);
 	void message(const QString &str);

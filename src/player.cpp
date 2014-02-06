@@ -170,6 +170,9 @@ NPlayer::NPlayer()
 	NAction *openFileDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Add Files..."), this);
 	connect(openFileDialogAction, SIGNAL(triggered()), this, SLOT(showOpenFileDialog()));
 
+	NAction *openDirDialogAction = new NAction(style()->standardIcon(QStyle::SP_FileDialogNewFolder), tr("Add Directory..."), this);
+	connect(openDirDialogAction, SIGNAL(triggered()), this, SLOT(showOpenDirDialog()));
+
 	NAction *savePlaylistDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save Playlist..."), this);
 	connect(savePlaylistDialogAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
 
@@ -255,6 +258,7 @@ NPlayer::NPlayer()
 	m_mainWindow->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 	m_contextMenu->addAction(openFileDialogAction);
+	m_contextMenu->addAction(openDirDialogAction);
 	m_contextMenu->addAction(savePlaylistDialogAction);
 
 	QMenu *windowSubMenu = new QMenu("Window", m_mainWindow);
@@ -766,12 +770,14 @@ void NPlayer::showOpenFileDialog()
 	                "*.xm *.s3m *.it *.mod";
 	QString playlist = "*.m3u *.m3u8";
 
-	QStringList files = QFileDialog::getOpenFileNames(m_mainWindow, tr("Open Files"),
-	                                                  m_settings->value("LastDirectory").toString(),
-	                                                  "All supported (" + music + " " + playlist + ");;"
-	                                                  "Music files (" + music + ");;"
-	                                                  "Playlist files (" + playlist + ");;"
-	                                                  "All files (*)");
+	QStringList files = QFileDialog::getOpenFileNames(
+		m_mainWindow, qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
+		m_settings->value("LastDirectory").toString(),
+		"All supported (" + music + " " + playlist + ");;"
+		"Music files (" + music + ");;"
+		"Playlist files (" + playlist + ");;"
+		"All files (*)"
+	);
 
 	if (files.isEmpty())
 		return;
@@ -785,11 +791,34 @@ void NPlayer::showOpenFileDialog()
 		m_playlistWidget->activateFirst();
 }
 
+void NPlayer::showOpenDirDialog()
+{
+
+	QString dir = QFileDialog::getExistingDirectory(
+		m_mainWindow, qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
+		m_settings->value("LastDirectory").toString(),
+		QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+	);
+
+	if (dir.isEmpty())
+		return;
+
+	QString lastDir = QFileInfo(dir).path();
+	m_settings->setValue("LastDirectory", lastDir);
+
+	bool isEmpty = (m_playlistWidget->count() == 0);
+	m_playlistWidget->appendMediaList(NCore::dirListRecursive(dir));
+	if (isEmpty)
+		m_playlistWidget->activateFirst();
+}
+
 void NPlayer::showSavePlaylistDialog()
 {
-	QString file = QFileDialog::getSaveFileName(this, tr("Save File"),
-	                                            m_settings->value("LastDirectory").toString(),
-	                                            "M3U Playlist (*.m3u)");
+	QString file = QFileDialog::getSaveFileName(
+		m_mainWindow, qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
+		m_settings->value("LastDirectory").toString(),
+		"M3U Playlist (*.m3u)"
+	);
 
 	if (file.isEmpty())
 		return;
