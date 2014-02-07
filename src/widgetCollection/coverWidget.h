@@ -33,12 +33,12 @@ private:
 
 	void resizeEvent(QResizeEvent *event);
 	void mousePressEvent(QMouseEvent *event);
+	void changeEvent(QEvent *event);
 	void fitToHeight(int height);
 	void init();
 
 public:
 	NCoverWidget(QWidget *parent = 0);
-	void setEnabled(bool enabled);
 	~NCoverWidget();
 
 public slots:

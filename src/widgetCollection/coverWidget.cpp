@@ -42,12 +42,14 @@ NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 
 NCoverWidget::~NCoverWidget() {}
 
-void NCoverWidget::setEnabled(bool enabled)
+void NCoverWidget::changeEvent(QEvent *event)
 {
-	QLabel::setEnabled(enabled);
+	if (event->type() == QEvent::EnabledChange) {
+		if (!m_pixmap.isNull())
+			setVisible(isEnabled());
+	}
 
-	if (!m_pixmap.isNull())
-		setVisible(enabled);
+	QLabel::changeEvent(event);
 }
 
 void NCoverWidget::setSource(const QString &file)
@@ -84,6 +86,7 @@ void NCoverWidget::resizeEvent(QResizeEvent *event)
 
 void NCoverWidget::mousePressEvent(QMouseEvent *event)
 {
+	Q_UNUSED(event);
 	m_fullsizeLabel->setPixmap(m_pixmap);
 	m_popup->setWindowTitle(QString("%1x%2px").arg(m_pixmap.width()).arg(m_pixmap.height()));
 	m_popup->show();

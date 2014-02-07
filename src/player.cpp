@@ -28,7 +28,6 @@
 #include "systemTray.h"
 #include "tagReaderInterface.h"
 #include "trackInfoWidget.h"
-#include "coverWidget.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -657,7 +656,7 @@ void NPlayer::loadNextActionTriggered()
 void NPlayer::on_showCoverAction_toggled(bool checked)
 {
 	m_settings->setValue("ShowCoverArt", checked);
-	NCoverWidget *coverWidget = qFindChild<NCoverWidget *>(m_mainWindow, "coverWidget");
+	QWidget *coverWidget = qFindChild<QWidget *>(m_mainWindow, "coverWidget");
 	coverWidget->setEnabled(checked);
 }
 
