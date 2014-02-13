@@ -109,7 +109,10 @@ void NPlaylistStorage::writeM3u(const QString &file, QList<NPlaylistDataItem> it
 		out << "#NULLOY:" << failed << "," << items.at(i).position << "\n";
 
 		out << "#EXTINF:" << items.at(i).duration << "," << items.at(i).title << "\n";
-		out << itemPath << "\n";
+		if (QFileInfo(itemPath).exists())
+			out << itemPath << "\n";
+		else
+			out << items.at(i).path << "\n";
 	}
 
 	playlist.close();
