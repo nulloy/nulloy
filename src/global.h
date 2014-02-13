@@ -30,6 +30,14 @@ class N
 public:
 #endif
 
+	enum PlaylistRole {
+		FailedRole = Qt::UserRole + 1,
+		PathRole,
+		DurationRole,
+		CountRole,
+		PositionRole
+	};
+
 	enum PlaybackState {
 		PlaybackStopped,
 		PlaybackPlaying,

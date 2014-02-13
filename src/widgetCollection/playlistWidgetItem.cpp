@@ -15,6 +15,7 @@
 
 #include "playlistWidgetItem.h"
 #include "playlistWidget.h"
+#include "global.h"
 
 #include <QPainter>
 #include <QFileInfo>
@@ -36,12 +37,16 @@ NPlaylistWidgetItem::NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QLis
 QVariant NPlaylistWidgetItem::data(int role) const
 {
 	switch (role) {
-		case (FailedRole):
+		case (N::FailedRole):
 			return m_data.failed;
-		case (PathRole):
+		case (N::PathRole):
 			return m_data.path;
-		case (DurationRole):
+		case (N::DurationRole):
 			return m_data.duration;
+		case (N::CountRole):
+			return m_data.count;
+		case (N::PositionRole):
+			return m_data.position;
 		default:
 			return QListWidgetItem::data(role);
 	}
@@ -50,14 +55,20 @@ QVariant NPlaylistWidgetItem::data(int role) const
 void NPlaylistWidgetItem::setData(int role, const QVariant &value)
 {
 	switch (role) {
-		case (FailedRole):
+		case (N::FailedRole):
 			m_data.failed = value.toBool();
 			break;
-		case (PathRole):
+		case (N::PathRole):
 			m_data.path = value.toString();
 			break;
-		case (DurationRole):
+		case (N::DurationRole):
 			m_data.duration = value.toInt();
+			break;
+		case (N::CountRole):
+			m_data.count = value.toInt();
+			break;
+		case (N::PositionRole):
+			m_data.position = value.toFloat();
 			break;
 		default:
 			QListWidgetItem::setData(role, value);
@@ -83,7 +94,7 @@ void NPlaylistWidgetItemDelegate::paint(QPainter *painter,
 			opt.palette.setColor(QPalette::HighlightedText, color);
 			opt.palette.setColor(QPalette::Text, color);
 		}
-	} else if (index.data(NPlaylistWidgetItem::FailedRole).toBool()) { // else if a failed one
+	} else if (index.data(N::FailedRole).toBool()) { // else if a failed one
 		QColor color = playlistWidget->getFailedTextColor();
 		if (color.isValid()) {
 			opt.palette.setColor(QPalette::HighlightedText, color);

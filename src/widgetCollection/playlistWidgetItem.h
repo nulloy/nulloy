@@ -27,12 +27,6 @@ private:
 	NPlaylistDataItem m_data;
 
 public:
-	enum PlaylistRole {
-		FailedRole = Qt::UserRole + 1,
-		PathRole,
-		DurationRole
-	};
-
 	NPlaylistWidgetItem(QListWidget *parent = 0);
 	NPlaylistWidgetItem(const QFileInfo &fileinfo, QListWidget *parent = 0);
 	NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QListWidget *parent = 0);

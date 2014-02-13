@@ -15,6 +15,7 @@
 
 #include "playlistWidget.h"
 
+#include "global.h"
 #include "settings.h"
 #include "core.h"
 #include "trash.h"
@@ -24,6 +25,7 @@
 
 #include "pluginLoader.h"
 #include "tagReaderInterface.h"
+#include "playbackEngineInterface.h"
 
 #include <QContextMenuEvent>
 #include <QDir>
@@ -36,6 +38,7 @@
 NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 {
 	m_tagReader = NPluginLoader::tagReaderPlugin();
+	m_playbackEngine = NPluginLoader::playbackPlugin();
 
 	connect(this, SIGNAL(itemActivated(QListWidgetItem *)), this, SLOT(on_itemActivated(QListWidgetItem *)));
 	setItemDelegate(new NPlaylistWidgetItemDelegate(this));
@@ -89,11 +92,11 @@ void NPlaylistWidget::on_trashAction_triggered()
 {
 	QStringList files;
 	foreach (QListWidgetItem *item, selectedItems())
-		files << QFileInfo(item->data(NPlaylistWidgetItem::PathRole).toString()).canonicalFilePath();
+		files << QFileInfo(item->data(N::PathRole).toString()).canonicalFilePath();
 		
 	QStringList undeleted = NTrash::moveToTrash(files);
 	foreach (QListWidgetItem *item, selectedItems()) {
-		if (undeleted.contains(QFileInfo(item->data(NPlaylistWidgetItem::PathRole).toString()).canonicalFilePath()))
+		if (undeleted.contains(QFileInfo(item->data(N::PathRole).toString()).canonicalFilePath()))
 			continue;
 
 		QListWidgetItem *takenItem = takeItem(row(item));
@@ -114,7 +117,7 @@ void NPlaylistWidget::on_removeAction_triggered()
 
 void NPlaylistWidget::on_revealAction_triggered()
 {
-	if (!NCore::revealInFileManager(selectedItems().first()->data(NPlaylistWidgetItem::PathRole).toString()))
+	if (!NCore::revealInFileManager(selectedItems().first()->data(N::PathRole).toString()))
 		QMessageBox::warning(this, "File Manager Error", "File doesn't exist: " + selectedItems().first()->text());
 }
 
@@ -122,7 +125,7 @@ NPlaylistWidget::~NPlaylistWidget() {}
 
 void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 {
-	QString file = item->data(NPlaylistWidgetItem::PathRole).toString();
+	QString file = item->data(N::PathRole).toString();
 	// check if it's a playlist file:
 	QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readPlaylist(file);
 	if (dataItemsList.count() > 1) {
@@ -145,32 +148,36 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 	m_tagReader->setSource(file);
 	if (m_tagReader->isValid()) {
 		item->setText(m_tagReader->toString(NSettings::instance()->value("PlaylistTrackInfo").toString()));
-		item->setData(NPlaylistWidgetItem::DurationRole, m_tagReader->toString("%D").toInt());
+		item->setData(N::DurationRole, m_tagReader->toString("%D").toInt());
 	} else {
 		item->setText(QFileInfo(file).fileName());
 	}
 
-	// reset failed role
-	item->setData(NPlaylistWidgetItem::FailedRole, FALSE);
+	item->setData(N::FailedRole, FALSE); // reset failed role
 
 	// setting currently playing font to bold, colors set in delegate
 	QFont f = item->font();
-	if (m_currentItem) { // reset old item to defaults
+	if (m_currentItem) {
+		// reset old item to defaults
 		f.setBold(FALSE);
 		m_currentItem->setFont(f);
+
+		m_currentItem->setData(N::PositionRole, m_playbackEngine->position());
+		m_currentItem->setData(N::CountRole, m_currentItem->data(N::CountRole).toInt() + 1);
 	}
 	f.setBold(TRUE);
 	item->setFont(f);
 
 	scrollToItem(item);
-	m_currentItem = item;update();
+	m_currentItem = item;
+	update();
 
 	emit mediaSet(file);
 }
 
 void NPlaylistWidget::markCurrentFailed()
 {
-	m_currentItem->setData(NPlaylistWidgetItem::FailedRole, TRUE);
+	m_currentItem->setData(N::FailedRole, TRUE);
 }
 
 int NPlaylistWidget::currentRow()
@@ -271,7 +278,7 @@ void NPlaylistWidget::playNext()
 		activateItem(item(row + 1));
 	} else if (NSettings::instance()->value("LoadNext").toBool()) {
 		QDir::SortFlag flag = (QDir::SortFlag)NSettings::instance()->value("LoadNextSort").toInt();
-		QString file = m_currentItem->data(NPlaylistWidgetItem::PathRole).toString();
+		QString file = m_currentItem->data(N::PathRole).toString();
 		QString path = QFileInfo(file).path();
 		QStringList entryList = QDir(path).entryList(QDir::Files | QDir::NoDotAndDotDot, flag);
 		int index = entryList.indexOf(QFileInfo(file).fileName());
@@ -352,7 +359,7 @@ QMimeData* NPlaylistWidget::mimeData(const QList<NPlaylistWidgetItem *> items) c
 {
 	QList<QUrl> urls;
 	foreach (NPlaylistWidgetItem *item, items)
-		urls << QUrl::fromLocalFile(item->data(NPlaylistWidgetItem::PathRole).toString());
+		urls << QUrl::fromLocalFile(item->data(N::PathRole).toString());
 
 	QPointer<QMimeData> data = new QMimeData();
 	data->setUrls(urls);
@@ -374,7 +381,7 @@ void NPlaylistWidget::mouseMoveEvent(QMouseEvent *event)
 		return;
 
 	QList<QUrl> urls;
-	urls << QUrl::fromLocalFile(currentItem()->data(NPlaylistWidgetItem::PathRole).toString());
+	urls << QUrl::fromLocalFile(currentItem()->data(N::PathRole).toString());
 
 	QMimeData *mimeData = new QMimeData;
 	mimeData->setUrls(urls);

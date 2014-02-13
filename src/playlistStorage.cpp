@@ -41,7 +41,7 @@ QList<NPlaylistDataItem> NPlaylistStorage::readPlaylist(const QString &file)
 
 /*
 *  Prefixed data order:
-*  #NULLOY:failed,position
+*  #NULLOY:failed,count,position
 *  #EXTINF:durationSeconds,playlistTitle
 */
 
@@ -67,11 +67,12 @@ QList<NPlaylistDataItem> NPlaylistStorage::readM3u(const QString &file)
 				line.remove(0, nulloyPrefix.size());
 
 				QStringList split = line.split(",");
-				if (split.count() != 2)
+				if (split.count() != 3)
 					continue;
 
 				dataItem.failed    = split.at(0).toInt();
-				dataItem.position  = split.at(1).toFloat();
+				dataItem.count     = split.at(1).toInt();
+				dataItem.position  = split.at(2).toFloat();
 			} else if (line.startsWith(extinfPrefix)) {
 				line.remove(0, extinfPrefix.size());
 
@@ -106,7 +107,7 @@ void NPlaylistStorage::writeM3u(const QString &file, QList<NPlaylistDataItem> it
 		QString itemPath = QFileInfo(items.at(i).path).canonicalFilePath();
 
 		bool failed = items.at(i).failed || !QFileInfo(itemPath).exists();
-		out << "#NULLOY:" << failed << "," << items.at(i).position << "\n";
+		out << "#NULLOY:" << failed << "," << items.at(i).count << "," << items.at(i).position << "\n";
 
 		out << "#EXTINF:" << items.at(i).duration << "," << items.at(i).title << "\n";
 		if (QFileInfo(itemPath).exists())

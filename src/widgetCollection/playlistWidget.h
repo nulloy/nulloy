@@ -22,6 +22,7 @@
 
 class NPlaylistWidgetItem;
 class NTagReaderInterface;
+class NPlaybackEngineInterface;
 class QContextMenuEvent;
 class QDropEvent;
 class QMenu;
@@ -38,6 +39,7 @@ private:
 	NPlaylistWidgetItem *m_currentItem;
 	QMenu *m_contextMenu;
 	NTagReaderInterface *m_tagReader;
+	NPlaybackEngineInterface *m_playbackEngine;
 
 	void contextMenuEvent(QContextMenuEvent *event);
 	void setCurrentRow(int row);
