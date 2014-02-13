@@ -13,22 +13,21 @@
 **
 *********************************************************************/
 
-#include <QProcess>
+#ifndef N_PLAYLIST_DATA_ITEM_H
+#define N_PLAYLIST_DATA_ITEM_H
 
-int _trash(const QString &path, QString *error)
+#include <QString>
+
+struct NPlaylistDataItem
 {
-	if (QProcess::execute("which trash") != 0) {
-		*error = "'trash-cli' is not available on your system.";
-		return -1;
-	}
+	QString title;
+	QString path;
+	int duration;
+	bool failed;
+	float position; // reserved
 
-	QProcess trash;
-	trash.start("trash \"" +  path + "\"");
-	trash.waitForStarted();
-	trash.waitForFinished();
-	if ( trash.readAll().startsWith("trash: cannot trash"))
-		return -1;
-	else
-		return 0;
-}
+	NPlaylistDataItem(const QString &file = "") : path(file), duration(-1), failed(FALSE), position(0) {};
+};
+
+#endif
 

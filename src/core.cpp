@@ -92,3 +92,45 @@ QStringList NCore::dirListRecursive(const QString &path)
 	return _processPath(path);
 }
 
+bool NCore::revealInFileManager(const QString &file)
+{
+	QFileInfo fileInfo(file);
+
+	if (!fileInfo.exists())
+		return FALSE;
+
+	QString fileManagerCommand;
+	QStringList arguments;
+	QString path = fileInfo.canonicalFilePath();
+#if defined Q_WS_WIN
+	fileManagerCommand = "explorer.exe";
+	arguments << "/n,/select,";
+	path = path.replace('/', '\\');
+#elif defined Q_WS_X11
+	QProcess xdg;
+	xdg.start("xdg-mime query default inode/directory");
+	xdg.waitForStarted();
+	xdg.waitForFinished();
+
+	fileManagerCommand = QString::fromUtf8(xdg.readAll()).simplified().remove(".desktop");
+
+	if (fileManagerCommand == "dolphin") {
+		arguments << "--select";
+	} else if (fileManagerCommand != "nautilus") {
+		path = fileInfo.canonicalPath();
+	}
+#elif defined Q_WS_MAC
+	fileManagerCommand = "open";
+	arguments << "-R";
+#endif
+
+	arguments << path;
+
+	QProcess reveal;
+	reveal.start(fileManagerCommand, arguments);
+	reveal.waitForStarted();
+	reveal.waitForFinished();
+
+	return TRUE;
+}
+

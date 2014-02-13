@@ -16,13 +16,11 @@
 #ifndef N_PLAYLIST_WIDGET_H
 #define N_PLAYLIST_WIDGET_H
 
-#include "m3uPlaylist.h"
-
 #include <QListWidget>
 #include <QList>
 #include <QPointer>
 
-class NPlaylistItem;
+class NPlaylistWidgetItem;
 class NTagReaderInterface;
 class QContextMenuEvent;
 class QDropEvent;
@@ -37,22 +35,57 @@ class NPlaylistWidget : public QListWidget
 	Q_PROPERTY(QColor currentTextColor READ getCurrentTextColor WRITE setCurrentTextColor DESIGNABLE true)
 
 private:
-	NPlaylistItem *m_currentItem;
+	NPlaylistWidgetItem *m_currentItem;
 	QMenu *m_contextMenu;
 	NTagReaderInterface *m_tagReader;
 
 	void contextMenuEvent(QContextMenuEvent *event);
 	void setCurrentRow(int row);
-	void setCurrentItem(NPlaylistItem *item);
-	void activateItem(NPlaylistItem *item);
-	NPlaylistItem* createItemFromPath(const QString &file);
-	NPlaylistItem* createItemFromM3uItem(NM3uItem item);
+	void setCurrentItem(NPlaylistWidgetItem *item);
+	void activateItem(NPlaylistWidgetItem *item);
+
+private slots:
+	void on_itemActivated(QListWidgetItem *item);
+	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+	void on_trashAction_triggered();
+	void on_removeAction_triggered();
+	void on_revealAction_triggered();
+
+public:
+	NPlaylistWidget(QWidget *parent = 0);
+	~NPlaylistWidget();
+
+	NPlaylistWidgetItem* item(int row);
+
+	int currentRow();
+	QModelIndex currentIndex() const;
+	QString currentTitle();
+
+public slots:
+	void playFirst();
+	void playNext();
+	void playPrevious();
+	void playCurrent();
+	void playRow(int row);
+
+	void addFiles(const QStringList &files);
+	void setFiles(const QStringList &files);
+	void playFiles(const QStringList &files);
+	bool setPlaylist(const QString &file);
+
+	void markCurrentFailed();
+
+signals:
+	void currentActivated();
+	void mediaSet(const QString &file);
+	void activateEmptyFail();
 
 // DRAG & DROP >>
+private:
 	QPointer<QDrag> m_drag;
 	QList<QUrl> m_mimeDataUrls;
 	QStringList mimeTypes() const;
-	QMimeData* mimeData(const QList<NPlaylistItem *> items) const;
+	QMimeData* mimeData(const QList<NPlaylistWidgetItem *> items) const;
 	bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
 #ifdef Q_WS_MAC
 	Qt::DropActions supportedDropActions() const;
@@ -64,44 +97,6 @@ protected:
 	void dragLeaveEvent(QDragLeaveEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 // << DRAG & DROP
-
-public:
-	NPlaylistWidget(QWidget *parent = 0);
-	~NPlaylistWidget();
-
-	NPlaylistItem* item(int row);
-
-	QStringList mediaList();
-	int currentRow();
-	QModelIndex currentIndex() const;
-	QString currentTitle();
-	void setTagReader(NTagReaderInterface *tagReader);
-
-public slots:
-	void activateFirst();
-	void activateNext();
-	void activatePrev();
-	void activateCurrent();
-	void setCurrentFailed();
-	void activateRow(int row);
-	void appendMediaList(const QStringList &pathList);
-	void setMediaList(const QStringList &pathList);
-	void activateMediaList(const QStringList &pathList) { setMediaList(pathList); activateFirst(); }
-	void setMediaListFromPlaylist(const QString &file);
-	void writePlaylist(const QString &file);
-
-private slots:
-	void on_itemActivated(QListWidgetItem *item);
-	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
-	void moveToTrash();
-	void removeFromPlaylist();
-	void revealInFileManager();
-
-signals:
-	void currentActivated();
-	void mediaSet(const QString &file);
-	void closed();
-	void activateEmptyFail();
 
 // STYLESHEET PROPERTIES >>
 private:

@@ -13,50 +13,87 @@
 **
 *********************************************************************/
 
-#include "m3uPlaylist.h"
+#include "playlistStorage.h"
 
 #include <QStringList>
 #include <QFileInfo>
 #include <QTextStream>
 
-QList<NM3uItem> NM3uPlaylist::read(const QString &file)
+QList<NPlaylistDataItem> _processDataItem(const NPlaylistDataItem &dataItem)
 {
-	QList<NM3uItem> m3uItems;
+	QList<NPlaylistDataItem> dataItemsList;
+	QString fileName = QFileInfo(dataItem.path).fileName();
+	if (fileName.endsWith(".m3u") || fileName.endsWith(".m3u8")) {
+		QList<NPlaylistDataItem> _dataItemsList = NPlaylistStorage::readM3u(dataItem.path);
+		foreach (NPlaylistDataItem _dataItem, _dataItemsList)
+			dataItemsList << _processDataItem(_dataItem);
+	} else {
+		dataItemsList << dataItem;
+	}
+
+	return dataItemsList;
+}
+
+QList<NPlaylistDataItem> NPlaylistStorage::readPlaylist(const QString &file)
+{
+	return _processDataItem(NPlaylistDataItem(file));
+}
+
+/*
+*  Prefixed data order:
+*  #NULLOY:failed,position
+*  #EXTINF:durationSeconds,playlistTitle
+*/
+
+QList<NPlaylistDataItem> NPlaylistStorage::readM3u(const QString &file)
+{
+	QList<NPlaylistDataItem> dataItemsList;
 	QString nulloyPrefix = "#NULLOY:";
 	QString extinfPrefix = "#EXTINF:";
 
 	QString line;
 	QFile playlist(file);
 	if (!playlist.exists() || !playlist.open(QFile::ReadOnly))
-		return m3uItems;
+		return dataItemsList;
 
-	NM3uItem m3uItem = {"", "", 0, 0};
+	NPlaylistDataItem dataItem;
 	QTextStream in(&playlist);
 	while (!in.atEnd()) {
 		line = in.readLine();
+		if (line.trimmed().isEmpty())
+			continue;
 		if (line.startsWith("#")) {
 			if (line.startsWith(nulloyPrefix)) {
 				line.remove(0, nulloyPrefix.size());
-				m3uItem.position = line.split(",").at(0).toFloat();
+
+				QStringList split = line.split(",");
+				if (split.count() != 2)
+					continue;
+
+				dataItem.failed    = split.at(0).toInt();
+				dataItem.position  = split.at(1).toFloat();
 			} else if (line.startsWith(extinfPrefix)) {
 				line.remove(0, extinfPrefix.size());
+
 				QStringList split = line.split(",");
-				m3uItem.duration = split.at(0).toInt();
-				m3uItem.title = split.at(1);
+				if (split.count() != 2)
+					continue;
+
+				dataItem.duration  = split.at(0).toInt();
+				dataItem.title     = split.at(1);
 			}
 		} else {
-			m3uItem.path = line;
-			m3uItems << m3uItem;
-			NM3uItem item = {"", "", 0, 0};
-			m3uItem = item;
+			dataItem.path = line;
+			dataItemsList << dataItem;
+			dataItem = NPlaylistDataItem();
 		}
 	}
 
 	playlist.close();
-	return m3uItems;
+	return dataItemsList;
 }
 
-void NM3uPlaylist::write(const QString &file, QList<NM3uItem> items)
+void NPlaylistStorage::writeM3u(const QString &file, QList<NPlaylistDataItem> items)
 {
 	QFile playlist(file);
 	if (!playlist.open(QFile::WriteOnly | QFile::Truncate))
@@ -68,10 +105,8 @@ void NM3uPlaylist::write(const QString &file, QList<NM3uItem> items)
 	for (int i = 0; i < items.count(); ++i) {
 		QString itemPath = QFileInfo(items.at(i).path).canonicalFilePath();
 
-		if (items.at(i).position != 0)
-			out << "#NULLOY:" << items.at(i).position << "\n";
-		if (items.at(i).position != -1 && !QFileInfo(itemPath).exists()) // keep old item, but mark failed
-			out << "#NULLOY:" << -1 << "\n";
+		bool failed = items.at(i).failed || !QFileInfo(itemPath).exists();
+		out << "#NULLOY:" << failed << "," << items.at(i).position << "\n";
 
 		out << "#EXTINF:" << items.at(i).duration << "," << items.at(i).title << "\n";
 		out << itemPath << "\n";

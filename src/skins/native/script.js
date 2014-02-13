@@ -29,10 +29,10 @@ function Program(player)
 		this.waveformSlider = this.mainWindow.findChild("waveformSlider");
 		this.coverWidget = this.mainWindow.findChild("coverWidget");
 
-		this.playButton.clicked.connect(this.playlistWidget.activateCurrent);
+		this.playButton.clicked.connect(this.playlistWidget.playCurrent);
 		this.stopButton.clicked.connect(this.playbackEngine.stop);
-		this.prevButton.clicked.connect(this.playlistWidget.activatePrev);
-		this.nextButton.clicked.connect(this.playlistWidget.activateNext);
+		this.prevButton.clicked.connect(this.playlistWidget.playPrevious);
+		this.nextButton.clicked.connect(this.playlistWidget.playNext);
 
 		this.playButton.setStandardIcon("media-playback-start", ":/trolltech/styles/commonstyle/images/media-play-16.png");
 		this.stopButton.setStandardIcon("media-playback-stop", ":/trolltech/styles/commonstyle/images/media-stop-16.png");
@@ -48,7 +48,7 @@ function Program(player)
 		this.playbackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.coverWidget["setSource(const QString &)"]);
-		this.playbackEngine["finished()"].connect(this.playlistWidget.activateNext);
+		this.playbackEngine["finished()"].connect(this.playlistWidget.playNext);
 		this.playbackEngine["failed()"].connect(this, "on_failed");
 		this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
 		this.playlistWidget["currentActivated()"].connect(this.playbackEngine.play);
@@ -59,7 +59,7 @@ function Program(player)
 		this.waveformSlider["sliderMoved(int)"].connect(this, "on_waveformSlider_sliderMoved");
 		this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlide_setValue");
 
-		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["activateMediaList(const QStringList &)"]);
+		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["playFiles(const QStringList &)"]);
 		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
 
 		this.splitter = this.mainWindow.findChild("splitter");
@@ -122,8 +122,8 @@ Program.prototype.on_stateChanged = function(state)
 
 Program.prototype.on_failed = function()
 {
-	this.playlistWidget.setCurrentFailed();
-	this.playlistWidget.activateNext();
+	this.playlistWidget.markCurrentFailed();
+	this.playlistWidget.playNext();
 }
 
 Program.prototype.on_volumeSlider_sliderMoved = function(value)

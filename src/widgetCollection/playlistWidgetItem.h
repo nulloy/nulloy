@@ -16,14 +16,15 @@
 #ifndef N_PLAYLIST_ITEM_H
 #define N_PLAYLIST_ITEM_H
 
+#include "playlistDataItem.h"
 #include <QListWidgetItem>
 
-class NPlaylistItem : public QListWidgetItem
+class QFileInfo;
+
+class NPlaylistWidgetItem : public QListWidgetItem
 {
 private:
-	bool m_failed;
-	QString m_path;
-	int m_duration;
+	NPlaylistDataItem m_data;
 
 public:
 	enum PlaylistRole {
@@ -32,18 +33,22 @@ public:
 		DurationRole
 	};
 
-	NPlaylistItem(QListWidget *parent = 0);
+	NPlaylistWidgetItem(QListWidget *parent = 0);
+	NPlaylistWidgetItem(const QFileInfo &fileinfo, QListWidget *parent = 0);
+	NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QListWidget *parent = 0);
 
 	QVariant data(int role) const;
 	void setData(int role, const QVariant &value);
+
+	NPlaylistDataItem dataItem() const;
 };
 
 #include <QStyledItemDelegate>
 
-class NPlaylistItemDelegate : public QStyledItemDelegate
+class NPlaylistWidgetItemDelegate : public QStyledItemDelegate
 {
 public:
-	NPlaylistItemDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
+	NPlaylistWidgetItemDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
 	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 

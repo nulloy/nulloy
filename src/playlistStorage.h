@@ -13,24 +13,19 @@
 **
 *********************************************************************/
 
-#ifndef N_M3U_PLAYLIST_H
-#define N_M3U_PLAYLIST_H
+#ifndef N_PLAYLIST_STORAGE_H
+#define N_PLAYLIST_STORAGE_H
 
+#include "playlistDataItem.h"
 #include <QList>
 #include <QString>
 
-typedef struct
+namespace NPlaylistStorage
 {
-	QString title;
-	QString path;
-	int duration;
-	float position; // -1 == failed
-} NM3uItem;
+	QList<NPlaylistDataItem> readPlaylist(const QString &file);
+	QList<NPlaylistDataItem> readM3u(const QString &file);
 
-namespace NM3uPlaylist
-{
-	QList<NM3uItem> read(const QString &file);
-	void write(const QString &file, QList<NM3uItem> items);
+	void writeM3u(const QString &file, QList<NPlaylistDataItem> items);
 };
 
 #endif

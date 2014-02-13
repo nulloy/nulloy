@@ -13,12 +13,10 @@
 **
 *********************************************************************/
 
-#include  "trash.h"
-
 #include <windows.h>
 #include <shellapi.h>
 
-int NTrash(const QString &path, QString *error)
+int _trash(const QString &path, QString *error)
 {
 	QString new_path = path;
 	new_path.append("00");

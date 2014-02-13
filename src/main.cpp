@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 	                 &p, SLOT(message(const QString &)));
 	if (!msg.isEmpty())
 		p.message(msg);
-	p.restorePlaylist();
+	p.loadDefaultPlaylist();
 
 	instance.installEventFilter(&p);
 

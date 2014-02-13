@@ -18,10 +18,11 @@
 #include "action.h"
 #include "core.h"
 #include "logDialog.h"
-#include "m3uPlaylist.h"
+#include "playlistStorage.h"
 #include "mainWindow.h"
 #include "playbackEngineInterface.h"
 #include "playlistWidget.h"
+#include "playlistWidgetItem.h"
 #include "preferencesDialog.h"
 #include "scriptEngine.h"
 #include "settings.h"
@@ -107,7 +108,6 @@ NPlayer::NPlayer()
 	connect(m_preferencesDialog, SIGNAL(versionOnlineRequested()), this, SLOT(versionOnlineFetch()));
 
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
-	m_playlistWidget->setTagReader(NPluginLoader::tagReaderPlugin());
 	connect(m_playlistWidget, SIGNAL(activateEmptyFail()), this, SLOT(showOpenFileDialog()));
 
 	m_trackInfoWidget = new NTrackInfoWidget();
@@ -147,14 +147,14 @@ NPlayer::NPlayer()
 	prevAction->setStatusTip(tr("Play previous track in playlist"));
 	prevAction->setGlobal(TRUE);
 	prevAction->setCustomizable(TRUE);
-	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activatePrev()));
+	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playPrevious()));
 
 	NAction *nextAction = new NAction(QIcon::fromTheme("media-playback-forward", style()->standardIcon(QStyle::SP_MediaSkipForward)), tr("Next"), this);
 	nextAction->setObjectName("nextAction");
 	nextAction->setStatusTip(tr("Play next track in playlist"));
 	nextAction->setGlobal(TRUE);
 	nextAction->setCustomizable(TRUE);
-	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activateNext()));
+	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playNext()));
 
 	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
 	                                         style()->standardIcon(QStyle::SP_MessageBoxInformation)),
@@ -349,7 +349,7 @@ bool NPlayer::eventFilter(QObject *obj, QEvent *event)
 		QFileOpenEvent *fileEvent = static_cast<QFileOpenEvent *>(event);
 
 		if (!fileEvent->file().isEmpty())
-		m_playlistWidget->activateMediaList(QStringList() << fileEvent->file());
+		m_playlistWidget->playFiles(QStringList() << fileEvent->file());
 
 		return FALSE;
 	}
@@ -366,40 +366,38 @@ void NPlayer::message(const QString &str)
 		return;
 	}
 	QStringList argList = str.split("<|>");
-	QStringList pathList;
+	QStringList files;
 	QStringList notPathArgList;
 	foreach (QString arg, argList) {
 		if (QFile(arg).exists())
-			pathList << arg;
+			files << arg;
 		else
 			notPathArgList << arg;
 	}
 
 	foreach (QString arg, notPathArgList) {
 		if (arg == "--next")
-			m_playlistWidget->activateNext();
+			m_playlistWidget->playNext();
 		else if (arg == "--prev")
-			m_playlistWidget->activatePrev();
+			m_playlistWidget->playPrevious();
 		else if (arg == "--stop")
 			m_playbackEngine->stop();
 		else if (arg == "--pause")
-			m_playlistWidget->activateCurrent();
+			m_playlistWidget->playCurrent();
 	}
 
-	if (!pathList.isEmpty())
-		m_playlistWidget->activateMediaList(pathList);
+	if (!files.isEmpty())
+		m_playlistWidget->playFiles(files);
 }
 
-void NPlayer::restorePlaylist()
+void NPlayer::loadDefaultPlaylist()
 {
-	if (m_playlistWidget->count() > 0)
+	if (!QFileInfo(m_localPlaylist).exists() || !m_playlistWidget->setPlaylist(m_localPlaylist))
 		return;
-
-	m_playlistWidget->setMediaListFromPlaylist(m_localPlaylist);
 
 	QStringList playlistRowValues = m_settings->value("PlaylistRow").toStringList();
 	if (!playlistRowValues.isEmpty()) {
-		m_playlistWidget->activateRow(playlistRowValues.at(0).toInt());
+		m_playlistWidget->playRow(playlistRowValues.at(0).toInt());
 		qreal pos = playlistRowValues.at(1).toFloat();
 		if (m_settings->value("RestorePlayback").toBool() && pos != 0 && pos != 1) {
 			m_playbackEngine->play();
@@ -408,9 +406,20 @@ void NPlayer::restorePlaylist()
 	}
 }
 
-void NPlayer::savePlaylist()
+void NPlayer::writePlaylist(const QString &file)
 {
-	m_playlistWidget->writePlaylist(m_localPlaylist);
+	QList<NPlaylistDataItem> dataItemsList;
+	for (int i = 0; i < m_playlistWidget->count(); ++i) {
+		NPlaylistDataItem dataItem = m_playlistWidget->item(i)->dataItem();
+		dataItem.title = m_playlistWidget->item(i)->text();
+		dataItemsList << dataItem;
+	}
+	NPlaylistStorage::writeM3u(file, dataItemsList);
+}
+
+void NPlayer::saveDefaultPlaylist()
+{
+	writePlaylist(m_localPlaylist);
 
 	int row = m_playlistWidget->currentRow();
 	qreal pos = m_playbackEngine->position();
@@ -569,7 +578,7 @@ void NPlayer::trackIcon_clicked(int clicks)
 void NPlayer::quit()
 {
 	m_mainWindow->close();
-	savePlaylist();
+	saveDefaultPlaylist();
 	saveSettings();
 	QCoreApplication::quit();
 }
@@ -785,9 +794,9 @@ void NPlayer::showOpenFileDialog()
 	m_settings->setValue("LastDirectory", lastDir);
 
 	bool isEmpty = (m_playlistWidget->count() == 0);
-	m_playlistWidget->appendMediaList(files);
+	m_playlistWidget->addFiles(files);
 	if (isEmpty)
-		m_playlistWidget->activateFirst();
+		m_playlistWidget->playFirst();
 }
 
 void NPlayer::showOpenDirDialog()
@@ -806,9 +815,9 @@ void NPlayer::showOpenDirDialog()
 	m_settings->setValue("LastDirectory", lastDir);
 
 	bool isEmpty = (m_playlistWidget->count() == 0);
-	m_playlistWidget->appendMediaList(NCore::dirListRecursive(dir));
+	m_playlistWidget->addFiles(NCore::dirListRecursive(dir));
 	if (isEmpty)
-		m_playlistWidget->activateFirst();
+		m_playlistWidget->playFirst();
 }
 
 void NPlayer::showSavePlaylistDialog()
@@ -828,7 +837,7 @@ void NPlayer::showSavePlaylistDialog()
 	if (!file.endsWith(".m3u"))
 		file.append(".m3u");
 
-	m_playlistWidget->writePlaylist(file);
+	writePlaylist(file);
 }
 
 void NPlayer::showContextMenu(QPoint pos)

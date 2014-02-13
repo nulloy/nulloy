@@ -13,43 +13,51 @@
 **
 *********************************************************************/
 
-#include "playlistItem.h"
+#include "playlistWidgetItem.h"
 #include "playlistWidget.h"
 
 #include <QPainter>
-#include <QDebug>
+#include <QFileInfo>
 
-NPlaylistItem::NPlaylistItem(QListWidget *parent) : QListWidgetItem(parent)
+NPlaylistWidgetItem::NPlaylistWidgetItem(QListWidget *parent) : QListWidgetItem(parent) {}
+
+NPlaylistWidgetItem::NPlaylistWidgetItem(const QFileInfo &fileinfo, QListWidget *parent) : QListWidgetItem(parent)
 {
-	m_failed = FALSE;
-	m_duration = -1;
+	m_data.path = fileinfo.filePath();
+	setText(fileinfo.fileName());
 }
 
-QVariant NPlaylistItem::data(int role) const
+NPlaylistWidgetItem::NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QListWidget *parent) : QListWidgetItem(parent)
+{
+	m_data = dataItem;
+	setText(dataItem.title);
+}
+
+QVariant NPlaylistWidgetItem::data(int role) const
 {
 	switch (role) {
 		case (FailedRole):
-			return m_failed;
+			return m_data.failed;
 		case (PathRole):
-			return m_path;
+			return m_data.path;
 		case (DurationRole):
-			return m_duration;
+			return m_data.duration;
 		default:
 			return QListWidgetItem::data(role);
 	}
 }
 
-void NPlaylistItem::setData(int role, const QVariant &value)
+void NPlaylistWidgetItem::setData(int role, const QVariant &value)
 {
 	switch (role) {
 		case (FailedRole):
-			m_failed = value.toBool();
+			m_data.failed = value.toBool();
 			break;
 		case (PathRole):
-			m_path = value.toString();
+			m_data.path = value.toString();
 			break;
 		case (DurationRole):
-			m_duration = value.toInt();
+			m_data.duration = value.toInt();
 			break;
 		default:
 			QListWidgetItem::setData(role, value);
@@ -57,7 +65,12 @@ void NPlaylistItem::setData(int role, const QVariant &value)
 	}
 }
 
-void NPlaylistItemDelegate::paint(QPainter *painter,
+NPlaylistDataItem NPlaylistWidgetItem::dataItem() const
+{
+	return m_data;
+}
+
+void NPlaylistWidgetItemDelegate::paint(QPainter *painter,
                                   const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
@@ -70,7 +83,7 @@ void NPlaylistItemDelegate::paint(QPainter *painter,
 			opt.palette.setColor(QPalette::HighlightedText, color);
 			opt.palette.setColor(QPalette::Text, color);
 		}
-	} else if (index.data(NPlaylistItem::FailedRole).toBool()) { // else if a failed one
+	} else if (index.data(NPlaylistWidgetItem::FailedRole).toBool()) { // else if a failed one
 		QColor color = playlistWidget->getFailedTextColor();
 		if (color.isValid()) {
 			opt.palette.setColor(QPalette::HighlightedText, color);

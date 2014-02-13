@@ -25,6 +25,7 @@ namespace NCore
 	QString applicationBinaryName();
 	QString rcDir();
 	QStringList dirListRecursive(const QString &path);
+	bool revealInFileManager(const QString &file);
 }
 
 #endif

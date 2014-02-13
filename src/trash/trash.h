@@ -13,7 +13,15 @@
 **
 *********************************************************************/
 
+#ifndef N_TRASH_H
+#define N_TRASH_H
+
 #include <QString>
 
-int NTrash(const QString &path, QString *error);
+namespace NTrash
+{
+	QStringList moveToTrash(QStringList files);
+}
+
+#endif
 

@@ -32,15 +32,15 @@ function Program(player)
 		this.titleLabel = this.mainWindow.findChild("titleLabel");
 		this.coverWidget = this.mainWindow.findChild("coverWidget");
 
-		this.playButton.clicked.connect(this.playlistWidget.activateCurrent);
+		this.playButton.clicked.connect(this.playlistWidget.playCurrent);
 		this.stopButton.clicked.connect(this.playbackEngine.stop);
-		this.prevButton.clicked.connect(this.playlistWidget.activatePrev);
+		this.prevButton.clicked.connect(this.playlistWidget.playPrevious);
 
 		this.titleWidget = this.mainWindow.findChild("titleWidget");
 		this.titleWidget.enableDoubleClick();
 		this.titleWidget.doubleClicked.connect(this.mainWindow.toggleMaximize);
 
-		this.nextButton.clicked.connect(this.playlistWidget.activateNext);
+		this.nextButton.clicked.connect(this.playlistWidget.playNext);
 
 		this.volumeSlider.minimum = 0;
 		this.volumeSlider.maximum = 100;
@@ -51,7 +51,7 @@ function Program(player)
 		this.playbackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.coverWidget["setSource(const QString &)"]);
-		this.playbackEngine["finished()"].connect(this.playlistWidget.activateNext);
+		this.playbackEngine["finished()"].connect(this.playlistWidget.playNext);
 		this.playbackEngine["failed()"].connect(this, "on_failed");
 		this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
 		this.playlistWidget["currentActivated()"].connect(this.playbackEngine.play);
@@ -62,7 +62,7 @@ function Program(player)
 		this.waveformSlider["sliderMoved(int)"].connect(this, "on_waveformSlider_sliderMoved");
 		this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlide_setValue");
 
-		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["activateMediaList(const QStringList &)"]);
+		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["playFiles(const QStringList &)"]);
 		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.FramelessWindowHint | Qt.WindowCloseButtonHint) ^ (Qt.WindowTitleHint | Qt.Dialog);
 
 		this.closeButton.clicked.connect(this.mainWindow.close);
@@ -122,8 +122,8 @@ Program.prototype.on_stateChanged = function(state)
 
 Program.prototype.on_failed = function()
 {
-	this.playlistWidget.setCurrentFailed();
-	this.playlistWidget.activateNext();
+	this.playlistWidget.markCurrentFailed();
+	this.playlistWidget.playNext();
 }
 
 Program.prototype.on_resized = function()

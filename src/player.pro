@@ -28,21 +28,6 @@ unix {
 	!mac:PKGCONFIG += x11
 }
 
-# trash
-HEADERS += trash/trash.h
-INCLUDEPATH += trash/
-win32 {
-	SOURCES += trash/trash_win.cpp
-	LIBS += -ladvapi32 -lshell32
-}
-mac {
-	OBJECTIVE_SOURCES += trash/trash_mac.mm
-	LIBS += -framework Foundation -framework Cocoa
-}
-unix:!mac {
-	SOURCES += trash/trash_x11.cpp
-}
-
 # qmake -config no-skins
 !no-skins {
 	CONFIG += uitools
@@ -88,13 +73,13 @@ unix:!mac {
 	           widgetCollection/playlistWidget.h \
 	           widgetCollection/slider.h \
 	           widgetCollection/waveformSlider.h \
-	           widgetCollection/playlistItem.h
+	           widgetCollection/playlistWidgetItem.h
 	SOURCES += widgetCollection/dropArea.cpp \
 	           widgetCollection/label.cpp \
 	           widgetCollection/playlistWidget.cpp \
 	           widgetCollection/slider.cpp \
 	           widgetCollection/waveformSlider.cpp \
-	           widgetCollection/playlistItem.cpp
+	           widgetCollection/playlistWidgetItem.cpp
 
 	DEPENDPATH += widgetCollection/
 	INCLUDEPATH += widgetCollection/

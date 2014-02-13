@@ -13,7 +13,6 @@
 **
 *********************************************************************/
 
-#import "trash.h"
 #import "Cocoa/Cocoa.h"
 #import "Foundation/Foundation.h"
 
@@ -23,7 +22,7 @@ static inline NSString* fromQString(const QString &string)
 	return [[NSString alloc] initWithUTF8String:cString];
 }
 
-int NTrash(const QString &path, QString *error)
+int _trash(const QString &path, QString *error)
 {
 	/*NSMutableArray *urls = [[NSMutableArray alloc] init];
 	NSString *string = fromQString(path);

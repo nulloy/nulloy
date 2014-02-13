@@ -55,6 +55,7 @@ private:
 	bool m_trayIconDoubleClickCheck;
 
 	bool eventFilter(QObject *obj, QEvent *event);
+	void writePlaylist(const QString &file);
 
 public:
 	NPlayer();
@@ -67,8 +68,6 @@ public:
 private slots:
 	void loadSettings();
 	void saveSettings();
-
-	void savePlaylist();
 
 	void preferencesDialogSettingsChanged();
 	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
@@ -93,7 +92,8 @@ public slots:
 	void showSavePlaylistDialog();
 	void showContextMenu(QPoint pos);
 	void message(const QString &str);
-	void restorePlaylist();
+	void loadDefaultPlaylist();
+	void saveDefaultPlaylist();
 };
 
 #endif
