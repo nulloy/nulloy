@@ -22,12 +22,20 @@
 #include <QVBoxLayout>
 #include <QCoreApplication>
 
+class NCoverWidgetPopup : public QDialog
+{
+private:
+	void mousePressEvent(QMouseEvent *)	{ hide(); }
+public:
+	NCoverWidgetPopup(QWidget *parent = 0) : QDialog(parent) {}
+};
+
 NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 {
 	m_coverReader = NPluginLoader::coverReaderPlugin();
 
 	if (m_coverReader) {
-		m_popup = new QDialog(this);
+		m_popup = new NCoverWidgetPopup(this);
 		m_popup->setMaximumSize(0, 0);
 		QVBoxLayout *layout = new QVBoxLayout;
 		layout->setContentsMargins(0, 0, 0, 0);
