@@ -103,8 +103,8 @@ NPlayer::NPlayer()
 
 
 	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
-	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(preferencesDialogSettingsChanged()));
-	connect(m_preferencesDialog, SIGNAL(versionOnlineRequested()), this, SLOT(versionOnlineFetch()));
+	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(on_preferencesDialog_settingsChanged()));
+	connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
 
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
 	connect(m_playlistWidget, SIGNAL(activateEmptyFail()), this, SLOT(showOpenFileDialog()));
@@ -245,9 +245,9 @@ NPlayer::NPlayer()
 #else
 	NSystemTray::setIcon(m_mainWindow->windowIcon());
 #endif
-	m_trayIconDoubleClickTimer = new QTimer(this);
-	m_trayIconDoubleClickTimer->setSingleShot(TRUE);
-	connect(m_trayIconDoubleClickTimer, SIGNAL(timeout()), this, SLOT(trayIconDoubleClick_timeout()));
+	m_trayClickTimer = new QTimer(this);
+	m_trayClickTimer->setSingleShot(TRUE);
+	connect(m_trayClickTimer, SIGNAL(timeout()), this, SLOT(on_trayClickTimer_timeout()));
 	//
 
 
@@ -294,10 +294,8 @@ NPlayer::NPlayer()
 	connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
 #endif
 
-	m_networkManager = new QNetworkAccessManager(this);
-	connect(m_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(on_networkManager_finished(QNetworkReply *)));
-
-	m_localPlaylist = NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".m3u";
+	m_versionDownloader = new QNetworkAccessManager(this);
+	connect(m_versionDownloader, SIGNAL(finished(QNetworkReply *)), this, SLOT(on_versionDownloader_finished(QNetworkReply *)));
 
 	m_logDialog = new NLogDialog(m_mainWindow);
 	connect(m_playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)),
@@ -388,7 +386,7 @@ void NPlayer::message(const QString &str)
 
 void NPlayer::loadDefaultPlaylist()
 {
-	if (!QFileInfo(m_localPlaylist).exists() || !m_playlistWidget->setPlaylist(m_localPlaylist))
+	if (!QFileInfo(NCore::defaultPlaylistPath()).exists() || !m_playlistWidget->setPlaylist(NCore::defaultPlaylistPath()))
 		return;
 
 	QStringList playlistRowValues = m_settings->value("PlaylistRow").toStringList();
@@ -415,7 +413,7 @@ void NPlayer::writePlaylist(const QString &file)
 
 void NPlayer::saveDefaultPlaylist()
 {
-	writePlaylist(m_localPlaylist);
+	writePlaylist(NCore::defaultPlaylistPath());
 
 	int row = m_playlistWidget->currentRow();
 	qreal pos = m_playbackEngine->position();
@@ -427,7 +425,7 @@ void NPlayer::loadSettings()
 	NSystemTray::setEnabled(m_settings->value("TrayIcon").toBool());
 
 	if (m_settings->value("AutoCheckUpdates").toBool())
-		versionOnlineFetch();
+		downloadVersion();
 
 	bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
 	if (alwaysOnTop) {
@@ -475,14 +473,14 @@ void NPlayer::saveSettings()
 	m_settings->setValue("Volume", QString::number(m_playbackEngine->volume()));
 }
 
-void NPlayer::preferencesDialogSettingsChanged()
+void NPlayer::on_preferencesDialog_settingsChanged()
 {
 	NSystemTray::setEnabled(m_settings->value("TrayIcon").toBool());
 	m_trackInfoWidget->readSettings();
 	m_trackInfoWidget->updateInfo();
 }
 
-void NPlayer::versionOnlineFetch()
+void NPlayer::downloadVersion()
 {
 	QString suffix;
 #if defined Q_WS_WIN
@@ -494,11 +492,11 @@ void NPlayer::versionOnlineFetch()
 #endif
 
 	if (!suffix.isEmpty())
-		m_networkManager->get(QNetworkRequest(QUrl("http://" +
+		m_versionDownloader->get(QNetworkRequest(QUrl("http://" +
 		                      QCoreApplication::organizationDomain() + "/version_" + suffix)));
 }
 
-void NPlayer::on_networkManager_finished(QNetworkReply *reply)
+void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
 {
 	if (!reply->error()) {
 		QString versionOnline = reply->readAll().simplified();
@@ -527,20 +525,20 @@ void NPlayer::on_mainWindow_closed()
 	}
 }
 
-void NPlayer::trayIconDoubleClick_timeout()
+void NPlayer::on_trayClickTimer_timeout()
 {
 	if (!m_trayIconDoubleClickCheck)
-		trackIcon_clicked(1);
+		trayIconCountClicks(1);
 }
 
 void NPlayer::on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
 {
 	if (reason == QSystemTrayIcon::Trigger) { // single click
 		m_trayIconDoubleClickCheck = FALSE;
-		m_trayIconDoubleClickTimer->start(QApplication::doubleClickInterval());
+		m_trayClickTimer->start(QApplication::doubleClickInterval());
 	} else if (reason == QSystemTrayIcon::DoubleClick) {
 		m_trayIconDoubleClickCheck = TRUE;
-		trackIcon_clicked(2);
+		trayIconCountClicks(2);
 	}
 }
 
@@ -558,7 +556,7 @@ void NPlayer::toggleWindowVisibility()
 	}
 }
 
-void NPlayer::trackIcon_clicked(int clicks)
+void NPlayer::trayIconCountClicks(int clicks)
 {
 	if (clicks == 1) {
 		m_mainWindow->showNormal();

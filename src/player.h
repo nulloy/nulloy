@@ -49,9 +49,8 @@ private:
 	NPlaylistWidget *m_playlistWidget;
 	NTrackInfoWidget *m_trackInfoWidget;
 	NLogDialog *m_logDialog;
-	QString m_localPlaylist;
-	QNetworkAccessManager *m_networkManager;
-	QTimer *m_trayIconDoubleClickTimer;
+	QNetworkAccessManager *m_versionDownloader;
+	QTimer *m_trayClickTimer;
 	bool m_trayIconDoubleClickCheck;
 
 	bool eventFilter(QObject *obj, QEvent *event);
@@ -69,7 +68,7 @@ private slots:
 	void loadSettings();
 	void saveSettings();
 
-	void preferencesDialogSettingsChanged();
+	void on_preferencesDialog_settingsChanged();
 	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
 	void on_mainWindow_closed();
 	void on_playbackEngine_mediaChanged(const QString &path);
@@ -77,11 +76,11 @@ private slots:
 	void on_alwaysOnTopAction_toggled(bool checked);
 	void on_whilePlayingOnTopAction_toggled(bool checked);
 	void on_showCoverAction_toggled(bool checked);
-	void versionOnlineFetch();
-	void on_networkManager_finished(QNetworkReply *reply);
+	void downloadVersion();
+	void on_versionDownloader_finished(QNetworkReply *reply);
 	void loadNextActionTriggered();
-	void trayIconDoubleClick_timeout();
-	void trackIcon_clicked(int clicks);
+	void on_trayClickTimer_timeout();
+	void trayIconCountClicks(int clicks);
 
 public slots:
 	void quit();

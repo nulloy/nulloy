@@ -23,6 +23,8 @@ namespace NCore
 {
 	void cArgs(int *argc, const char ***argv);
 	QString applicationBinaryName();
+	QString defaultPlaylistPath();
+	QString settingsPath();
 	QString rcDir();
 	QStringList dirListRecursive(const QString &path);
 	bool revealInFileManager(const QString &file);

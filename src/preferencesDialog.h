@@ -51,7 +51,7 @@ private slots:
 
 signals:
 	void settingsChanged();
-	void versionOnlineRequested();
+	void versionRequested();
 };
 
 #endif

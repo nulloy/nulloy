@@ -113,7 +113,7 @@ void NPreferencesDialog::setVersionLabel(QString text)
 void NPreferencesDialog::on_versionCheckButton_clicked()
 {
 	ui.versionLabel->setText("Checking...");
-	emit versionOnlineRequested();
+	emit versionRequested();
 }
 
 void NPreferencesDialog::on_titleFormatHelpButton_clicked()
