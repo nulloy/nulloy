@@ -71,7 +71,7 @@ private slots:
 
 	void preferencesDialogSettingsChanged();
 	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
-	void mainWindowClosed();
+	void on_mainWindow_closed();
 	void on_playbackEngine_mediaChanged(const QString &path);
 	void on_playbackEngine_stateChanged(N::PlaybackState state);
 	void on_alwaysOnTopAction_toggled(bool checked);

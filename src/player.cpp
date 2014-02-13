@@ -57,7 +57,6 @@
 
 NPlayer::NPlayer()
 {
-	setObjectName("NPlayer");
 	m_settings = new NSettings(this);
 
 
@@ -69,14 +68,14 @@ NPlayer::NPlayer()
 	dynamic_cast<NPluginElementInterface *>(m_playbackEngine)->init();
 #endif
 	m_playbackEngine->setParent(this);
-	m_playbackEngine->setObjectName("playbackEngine");
+	connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), this, SLOT(on_playbackEngine_mediaChanged(const QString &)));
+	connect(m_playbackEngine, SIGNAL(stateChanged(N::PlaybackState)), this, SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));
 	//
 
 
 	// construct mainWindow
 	m_mainWindow = new NMainWindow();
-	m_mainWindow->setObjectName("mainWindow");
-	connect(m_mainWindow, SIGNAL(closed()), this, SLOT(mainWindowClosed()));
+	connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
 #ifndef _N_NO_SKINS_
 	m_mainWindow->init(NSkinLoader::skinUiFormFile());
 #else
@@ -296,15 +295,13 @@ NPlayer::NPlayer()
 #endif
 
 	m_networkManager = new QNetworkAccessManager(this);
-	m_networkManager->setObjectName("networkManager");
+	connect(m_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(on_networkManager_finished(QNetworkReply *)));
 
 	m_localPlaylist = NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".m3u";
 
 	m_logDialog = new NLogDialog(m_mainWindow);
 	connect(m_playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)),
 	        m_logDialog, SLOT(showMessage(QMessageBox::Icon, const QString &, const QString &)));
-
-	QMetaObject::connectSlotsByName(this);
 
 	m_settings->initShortcuts(this);
 	m_settings->loadShortcuts();
@@ -314,7 +311,6 @@ NPlayer::NPlayer()
 	loadSettings();
 
 	m_mainWindow->setTitle(QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion());
-
 	m_mainWindow->show();
 	QResizeEvent e(m_mainWindow->size(), m_mainWindow->size());
 	QCoreApplication::sendEvent(m_mainWindow, &e);
@@ -522,7 +518,7 @@ void NPlayer::on_networkManager_finished(QNetworkReply *reply)
 	reply->deleteLater();
 }
 
-void NPlayer::mainWindowClosed()
+void NPlayer::on_mainWindow_closed()
 {
 	if (m_settings->value("MinimizeToTray").toBool()) {
 		NSystemTray::setEnabled(TRUE);
