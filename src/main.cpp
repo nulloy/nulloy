@@ -25,17 +25,19 @@ int main(int argc, char *argv[])
 {
 	QtSingleApplication instance(argc, argv);
 
+	// construct a message
 	QString msg;
 	if (QCoreApplication::arguments().size() > 1) {
 		QStringList argList = QCoreApplication::arguments();
 		argList.takeFirst();
 		msg = argList.join("<|>");
 	}
-	if (instance.sendMessage(msg))
-		return 0;
+
+	// try to send it to an already running instrance
+	if (!msg.isEmpty() && instance.sendMessage(msg))
+		return 0; // return if delivered
 
 	QApplication::setQuitOnLastWindowClosed(FALSE);
-
 	QCoreApplication::setApplicationName("Nulloy");
 	QCoreApplication::setApplicationVersion(QString(_N_VERSION_) + " Alpha");
 	QCoreApplication::setOrganizationDomain("nulloy.com");
@@ -47,8 +49,12 @@ int main(int argc, char *argv[])
 	NPlayer p;
 	QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
 	                 &p, SLOT(message(const QString &)));
+
+	// manually read the message
 	if (!msg.isEmpty())
 		p.message(msg);
+
+	// try to load default playlist (will fail if msg contained files)
 	p.loadDefaultPlaylist();
 
 	instance.installEventFilter(&p);

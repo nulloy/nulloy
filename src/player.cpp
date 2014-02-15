@@ -386,8 +386,12 @@ void NPlayer::message(const QString &str)
 
 void NPlayer::loadDefaultPlaylist()
 {
-	if (!QFileInfo(NCore::defaultPlaylistPath()).exists() || !m_playlistWidget->setPlaylist(NCore::defaultPlaylistPath()))
+	if (m_playlistWidget->count() > 0 || // files were added by calling message() directly in main()
+	    !QFileInfo(NCore::defaultPlaylistPath()).exists() ||
+	    !m_playlistWidget->setPlaylist(NCore::defaultPlaylistPath()))
+	{
 		return;
+	}
 
 	QStringList playlistRowValues = m_settings->value("PlaylistRow").toStringList();
 	if (!playlistRowValues.isEmpty()) {
