@@ -107,20 +107,24 @@ void NPlaylistStorage::writeM3u(const QString &file, QList<NPlaylistDataItem> it
 	if (!playlist.open(QFile::WriteOnly | QFile::Truncate))
 		return;
 
+	QString playlistPath = QFileInfo(file).absolutePath();
+
 	QTextStream out(&playlist);
 	out << "#EXTM3U\n";
 
 	for (int i = 0; i < items.count(); ++i) {
-		QString itemPath = QFileInfo(items.at(i).path).canonicalFilePath();
-
-		bool failed = items.at(i).failed || !QFileInfo(itemPath).exists();
+		bool failed = items.at(i).failed || !QFileInfo(items.at(i).path).exists();
 		out << "#NULLOY:" << failed << "," << items.at(i).count << "," << items.at(i).position << "\n";
 
 		out << "#EXTINF:" << items.at(i).duration << "," << items.at(i).title << "\n";
-		if (QFileInfo(itemPath).exists())
-			out << itemPath << "\n";
-		else
+		if (QFileInfo(items.at(i).path).exists()) {
+			if (playlistPath == QFileInfo(items.at(i).path).absolutePath()) // same directory
+				out << QFileInfo(items.at(i).path).fileName() << "\n";
+			else
+				out << QFileInfo(items.at(i).path).absoluteFilePath() << "\n";
+		} else { // keep as is
 			out << items.at(i).path << "\n";
+		}
 	}
 
 	playlist.close();
