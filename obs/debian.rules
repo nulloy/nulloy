@@ -18,7 +18,7 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 	./configure --prefix=/usr --taglib $(CONFIG_FLAGS)
-	make
+	make -j`grep processor /proc/cpuinfo | wc -l`
 	touch build-stamp
 
 clean:

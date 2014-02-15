@@ -10,4 +10,4 @@ install:
 
 script:
   - ./configure --taglib
-  - make -j4
+  - make -j`grep processor /proc/cpuinfo | wc -l`

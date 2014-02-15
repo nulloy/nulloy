@@ -26,7 +26,7 @@ Music player with a waveform progress bar.
 %define QMAKE qmake
 %endif
 QMAKE=%{QMAKE} ./configure --prefix=%{buildroot}%{_prefix}
-make
+make -j`grep processor /proc/cpuinfo | wc -l`
 
 %install
 %makeinstall
