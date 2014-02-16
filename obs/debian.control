@@ -13,7 +13,7 @@ Description: Music player with a waveform progress bar
 Package: nulloy-gstreamer
 Architecture: any
 Depends: nulloy, libgstreamer0.10-0
-Suggests: libgstreamer-plugins-base0.10-0
+Suggests: gstreamer0.10-plugins-base gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly gstreamer0.10-ffmpeg
 Description: GStreamer backend for Nulloy
 
 Package: nulloy-taglib
