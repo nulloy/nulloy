@@ -10,7 +10,7 @@ Categories=AudioVideo;Audio;Player;
 Terminal=false
 MimeType=x-content/audio-player;audio/mp3;audio/flac;audio/wav;audio/ogg;audio/mpeg;audio/ape;audio/wavpack;audio/wv;audio/x-musepack;audio/mp4;
 Icon=nulloy
-Exec=nulloy %U
+Exec=nulloy %F
 
 X-Ayatana-Desktop-Shortcuts=Pause;Stop;Next;Previous
 
