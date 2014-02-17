@@ -32,6 +32,15 @@ function Program(player)
 		this.titleLabel = this.mainWindow.findChild("titleLabel");
 		this.coverWidget = this.mainWindow.findChild("coverWidget");
 
+		this.repeatCheck = this.mainWindow.findChild("repeatCheck");
+		this.repeatCheck["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
+		this.playlistWidget["repeatModeChanged(bool)"].connect(this.repeatCheck["setChecked(bool)"]);
+		this.repeatCheck.setChecked(this.playlistWidget.repeatMode());
+
+		this.shuffleCheck = this.mainWindow.findChild("shuffleCheck");
+		this.shuffleCheck["clicked(bool)"].connect(this.playlistWidget["setShuffleMode(bool)"]);
+		this.playlistWidget["shuffleModeChanged(bool)"].connect(this.shuffleCheck["setChecked(bool)"]);
+
 		this.playButton.clicked.connect(this.playlistWidget.playCurrent);
 		this.stopButton.clicked.connect(this.playbackEngine.stop);
 		this.prevButton.clicked.connect(this.playlistWidget.playPrevious);

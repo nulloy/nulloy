@@ -17,6 +17,19 @@
    <string notr="true">#titleLabel {
 	color : white;
 }
+
+#repeatCheck, #shuffleCheck {
+	border: 1 solid transparent;
+}
+#repeatCheck:hover, #shuffleCheck:hover {
+	background: rgba(55, 99, 179, 80);
+	border: 1 solid #5882CF;
+	color: white;
+}
+#repeatCheck:checked , #shuffleCheck:checked {
+	color: #6798F2;
+}
+
 #borderWidget {
 	background-color: #5882CF;
 }
@@ -115,6 +128,7 @@ QScrollBar::sub-page {
 #nextButton:hover, #prevButton:hover {
 	border: 1 solid #5882CF;
 }
+
 #playButton:pressed, #stopButton:pressed,
 #nextButton:pressed, #prevButton:pressed {
 	background: rgba(55, 99, 179, 80);
@@ -1107,6 +1121,26 @@ margin: 2px 17px;
                  </layout>
                 </item>
                 <item>
+                 <widget class="QToolButton" name="repeatCheck">
+                  <property name="text">
+                   <string>REP</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="shuffleCheck">
+                  <property name="text">
+                   <string>SFL</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QSizeGrip" name="sizeGrip" native="true">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1144,7 +1178,7 @@ margin: 2px 17px;
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
-                    <width>40</width>
+                    <width>10</width>
                     <height>13</height>
                    </size>
                   </property>

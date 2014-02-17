@@ -16,6 +16,7 @@
 #ifndef N_PLAYLIST_WIDGET_H
 #define N_PLAYLIST_WIDGET_H
 
+#include "global.h"
 #include <QListWidget>
 #include <QList>
 #include <QPointer>
@@ -41,14 +42,22 @@ private:
 	NTagReaderInterface *m_tagReader;
 	NPlaybackEngineInterface *m_playbackEngine;
 
+	QList<NPlaylistWidgetItem *> m_shuffledItems;
+	int m_currentShuffledIndex;
+	bool m_shuffleMode;
+	bool m_repeatMode;
+
 	void contextMenuEvent(QContextMenuEvent *event);
 	void setCurrentRow(int row);
 	void setCurrentItem(NPlaylistWidgetItem *item);
 	void activateItem(NPlaylistWidgetItem *item);
 
+protected slots:
+	void rowsInserted(const QModelIndex &parent, int start, int end);
+	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+
 private slots:
 	void on_itemActivated(QListWidgetItem *item);
-	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
 	void on_trashAction_triggered();
 	void on_removeAction_triggered();
 	void on_revealAction_triggered();
@@ -62,6 +71,9 @@ public:
 	int currentRow();
 	QModelIndex currentIndex() const;
 	QString currentTitle();
+
+	Q_INVOKABLE bool shuffleMode();
+	Q_INVOKABLE bool repeatMode();
 
 public slots:
 	void playFirst();
@@ -77,10 +89,16 @@ public slots:
 
 	void markCurrentFailed();
 
+	void setShuffleMode(bool enable);
+	void setRepeatMode(bool enable);
+
 signals:
 	void currentActivated();
 	void mediaSet(const QString &file);
 	void activateEmptyFail();
+
+	void shuffleModeChanged(bool enable);
+	void repeatModeChanged(bool enable);
 
 // DRAG & DROP >>
 private:

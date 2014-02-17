@@ -51,6 +51,9 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("PlaylistTrackInfo", "%F (%d)");
 	initValue("WindowTitleTrackInfo","\"{%a - %t|%F}\" - " + QCoreApplication::applicationName() + " %v");
 
+	initValue("Shuffle", FALSE);
+	initValue("Repeat", FALSE);
+
 	initValue("Maximized", FALSE);
 	initValue("MinimizeToTray", FALSE);
 	initValue("TrayIcon", FALSE);

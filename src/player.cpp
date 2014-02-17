@@ -57,6 +57,7 @@
 
 NPlayer::NPlayer()
 {
+	qsrand((uint)QTime::currentTime().msec());
 	m_settings = new NSettings(this);
 
 
@@ -382,6 +383,8 @@ void NPlayer::message(const QString &str)
 
 	if (!files.isEmpty())
 		m_playlistWidget->playFiles(files);
+
+	m_playlistWidget->setShuffleMode(NSettings::instance()->value("Shuffle").toBool());
 }
 
 void NPlayer::loadDefaultPlaylist()
@@ -402,6 +405,8 @@ void NPlayer::loadDefaultPlaylist()
 			m_playbackEngine->setPosition(pos);
 		}
 	}
+
+	m_playlistWidget->setShuffleMode(NSettings::instance()->value("Shuffle").toBool());
 }
 
 void NPlayer::writePlaylist(const QString &file)
