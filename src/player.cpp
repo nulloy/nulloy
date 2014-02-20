@@ -178,6 +178,7 @@ NPlayer::NPlayer()
 	NAction *showCoverAction = new NAction(tr("Show Cover Art"), this);
 	showCoverAction->setCheckable(TRUE);
 	showCoverAction->setObjectName("showCoverAction");
+	connect(showCoverAction, SIGNAL(toggled(bool)), this, SLOT(on_showCoverAction_toggled(bool)));
 
 	NAction *aboutAction = new NAction(QIcon::fromTheme("help-about",
 	                                   style()->standardIcon(QStyle::SP_MessageBoxQuestion)),
@@ -187,10 +188,12 @@ NPlayer::NPlayer()
 	NAction *whilePlayingOnTopAction = new NAction(tr("On Top During Playback"), this);
 	whilePlayingOnTopAction->setCheckable(TRUE);
 	whilePlayingOnTopAction->setObjectName("whilePlayingOnTopAction");
+	connect(whilePlayingOnTopAction, SIGNAL(toggled(bool)), this, SLOT(on_whilePlayingOnTopAction_toggled(bool)));
 
 	NAction *alwaysOnTopAction = new NAction(tr("Always On Top"), this);
 	alwaysOnTopAction->setCheckable(TRUE);
 	alwaysOnTopAction->setObjectName("alwaysOnTopAction");
+	connect(alwaysOnTopAction, SIGNAL(toggled(bool)), this, SLOT(on_alwaysOnTopAction_toggled(bool)));
 	//
 
 
@@ -440,19 +443,16 @@ void NPlayer::loadSettings()
 	if (alwaysOnTop) {
 		NAction *alwaysOnTopAction = qFindChild<NAction *>(this, "alwaysOnTopAction");
 		alwaysOnTopAction->setChecked(TRUE);
-		on_alwaysOnTopAction_toggled(TRUE);
 	}
 
 	bool showCover = m_settings->value("ShowCoverArt").toBool();
 	NAction *showCoverAction = qFindChild<NAction *>(this, "showCoverAction");
 	showCoverAction->setChecked(showCover);
-	on_showCoverAction_toggled(showCover);
 
 	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
 	if (whilePlaying) {
 		NAction *whilePlayingOnTopAction = qFindChild<NAction *>(this, "whilePlayingOnTopAction");
 		whilePlayingOnTopAction->setChecked(TRUE);
-		on_whilePlayingOnTopAction_toggled(TRUE);
 	}
 
 	bool loadNext = m_settings->value("LoadNext").toBool();
