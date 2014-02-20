@@ -147,14 +147,14 @@ NPlayer::NPlayer()
 	prevAction->setStatusTip(tr("Play previous track in playlist"));
 	prevAction->setGlobal(TRUE);
 	prevAction->setCustomizable(TRUE);
-	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playPrevious()));
+	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playPreviousRow()));
 
 	NAction *nextAction = new NAction(QIcon::fromTheme("media-playback-forward", style()->standardIcon(QStyle::SP_MediaSkipForward)), tr("Next"), this);
 	nextAction->setObjectName("nextAction");
 	nextAction->setStatusTip(tr("Play next track in playlist"));
 	nextAction->setGlobal(TRUE);
 	nextAction->setCustomizable(TRUE);
-	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playNext()));
+	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playNextRow()));
 
 	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
 	                                         style()->standardIcon(QStyle::SP_MessageBoxInformation)),
@@ -375,13 +375,13 @@ void NPlayer::message(const QString &str)
 
 	foreach (QString arg, notPathArgList) {
 		if (arg == "--next")
-			m_playlistWidget->playNext();
+			m_playlistWidget->playNextRow();
 		else if (arg == "--prev")
-			m_playlistWidget->playPrevious();
+			m_playlistWidget->playPreviousRow();
 		else if (arg == "--stop")
 			m_playbackEngine->stop();
 		else if (arg == "--pause")
-			m_playlistWidget->playCurrent();
+			m_playbackEngine->play();
 	}
 
 	if (!files.isEmpty())
@@ -799,7 +799,7 @@ void NPlayer::showOpenFileDialog()
 	bool isEmpty = (m_playlistWidget->count() == 0);
 	m_playlistWidget->addFiles(files);
 	if (isEmpty)
-		m_playlistWidget->playFirst();
+		m_playlistWidget->playRow(0);
 }
 
 void NPlayer::showOpenDirDialog()
@@ -820,7 +820,7 @@ void NPlayer::showOpenDirDialog()
 	bool isEmpty = (m_playlistWidget->count() == 0);
 	m_playlistWidget->addFiles(NCore::dirListRecursive(dir));
 	if (isEmpty)
-		m_playlistWidget->playFirst();
+		m_playlistWidget->playRow(0);
 }
 
 void NPlayer::showSavePlaylistDialog()

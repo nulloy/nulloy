@@ -41,15 +41,15 @@ function Program(player)
 		this.shuffleCheck["clicked(bool)"].connect(this.playlistWidget["setShuffleMode(bool)"]);
 		this.playlistWidget["shuffleModeChanged(bool)"].connect(this.shuffleCheck["setChecked(bool)"]);
 
-		this.playButton.clicked.connect(this.playlistWidget.playCurrent);
+		this.playButton.clicked.connect(this, "on_playButton_clicked");
 		this.stopButton.clicked.connect(this.playbackEngine.stop);
-		this.prevButton.clicked.connect(this.playlistWidget.playPrevious);
+		this.prevButton.clicked.connect(this.playlistWidget.playPreviousRow);
 
 		this.titleWidget = this.mainWindow.findChild("titleWidget");
 		this.titleWidget.enableDoubleClick();
 		this.titleWidget.doubleClicked.connect(this.mainWindow.toggleMaximize);
 
-		this.nextButton.clicked.connect(this.playlistWidget.playNext);
+		this.nextButton.clicked.connect(this.playlistWidget.playNextRow);
 
 		this.volumeSlider.minimum = 0;
 		this.volumeSlider.maximum = 100;
@@ -60,7 +60,7 @@ function Program(player)
 		this.playbackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.coverWidget["setSource(const QString &)"]);
-		this.playbackEngine["finished()"].connect(this.playlistWidget.playNext);
+		this.playbackEngine["finished()"].connect(this.playlistWidget.currentFinished);
 		this.playbackEngine["failed()"].connect(this, "on_failed");
 		this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
 		this.playlistWidget["currentActivated()"].connect(this.playbackEngine.play);
@@ -119,6 +119,14 @@ Program.prototype.afterShow = function()
 	this.splitter.setSizes(this.player.settings().value("SilverSkin/Splitter"));
 }
 
+Program.prototype.on_playButton_clicked = function()
+{
+	if (!this.playlistWidget.hasCurrent())
+		this.playlistWidget.playRow(0);
+	else
+		this.playbackEngine.play(); // toggle play/pause
+}
+
 Program.prototype.on_stateChanged = function(state)
 {
 	if (state == N.PlaybackPlaying)
@@ -131,8 +139,8 @@ Program.prototype.on_stateChanged = function(state)
 
 Program.prototype.on_failed = function()
 {
-	this.playlistWidget.markCurrentFailed();
-	this.playlistWidget.playNext();
+	this.playlistWidget.currentFailed();
+	this.playlistWidget.playNextRow();
 }
 
 Program.prototype.on_resized = function()

@@ -69,6 +69,7 @@ public:
 	NPlaylistWidgetItem* item(int row);
 
 	int currentRow();
+	Q_INVOKABLE bool hasCurrent();
 	QModelIndex currentIndex() const;
 	QString currentTitle();
 
@@ -76,10 +77,8 @@ public:
 	Q_INVOKABLE bool repeatMode();
 
 public slots:
-	void playFirst();
-	void playNext();
-	void playPrevious();
-	void playCurrent();
+	void playNextRow();
+	void playPreviousRow();
 	void playRow(int row);
 
 	void addFiles(const QStringList &files);
@@ -87,7 +86,8 @@ public slots:
 	void playFiles(const QStringList &files);
 	bool setPlaylist(const QString &file);
 
-	void markCurrentFailed();
+	void currentFinished();
+	void currentFailed();
 
 	void setShuffleMode(bool enable);
 	void setRepeatMode(bool enable);
