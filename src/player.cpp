@@ -108,7 +108,6 @@ NPlayer::NPlayer()
 	connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
 
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
-	connect(m_playlistWidget, SIGNAL(activateEmptyFail()), this, SLOT(showOpenFileDialog()));
 
 	m_trackInfoWidget = new NTrackInfoWidget();
 	m_trackInfoWidget->setStyleSheet(m_trackInfoWidget->styleSheet() + m_mainWindow->styleSheet());
@@ -168,6 +167,7 @@ NPlayer::NPlayer()
 
 	NAction *openFileDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Add Files..."), this);
 	connect(openFileDialogAction, SIGNAL(triggered()), this, SLOT(showOpenFileDialog()));
+	connect(m_playlistWidget, SIGNAL(activateEmptyFail()), openFileDialogAction, SLOT(trigger()));
 
 	NAction *openDirDialogAction = new NAction(style()->standardIcon(QStyle::SP_FileDialogNewFolder), tr("Add Directory..."), this);
 	connect(openDirDialogAction, SIGNAL(triggered()), this, SLOT(showOpenDirDialog()));
