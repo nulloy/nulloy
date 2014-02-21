@@ -326,16 +326,17 @@ void NPlaylistWidget::playPreviousRow()
 	}
 }
 
-void NPlaylistWidget::rowsInserted(const QModelIndex &, int start, int end)
+void NPlaylistWidget::rowsInserted(const QModelIndex &parent, int start, int end)
 {
 	for (int i = start; i < end + 1; ++i) {
 		m_shuffledItems.append(item(i));
 	}
 	if (m_shuffleMode)
 		setShuffleMode(TRUE);
+	QListWidget::rowsInserted(parent, start, end);
 }
 
-void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &, int start, int end)
+void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end)
 {
 	for (int i = start; i < end + 1; ++i) {
 		if (item(i) == m_currentItem)
@@ -343,6 +344,7 @@ void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &, int start, int e
 
 		m_shuffledItems.removeAll(item(i));
 	}
+	QListWidget::rowsAboutToBeRemoved(parent, start, end);
 }
 
 bool NPlaylistWidget::shuffleMode()
