@@ -114,7 +114,7 @@ QScrollBar::sub-page {
 	border: 1 solid transparent;
 }
 #repeatCheck:checked , #shuffleCheck:checked {
-	background: #6798F2;
+	background: #4173D1;
 }
 #prevButton, #playButton, #stopButton, #nextButton {
 	background: transparent;
