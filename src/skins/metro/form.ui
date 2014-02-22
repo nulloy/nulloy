@@ -104,16 +104,16 @@ QScrollBar::sub-page {
 	border-image: url(icon.png);
 }
 
-#shuffleCheck {
+#shuffleCheckBox {
 	qproperty-icon: url(shuffle.png);
 }
-#repeatCheck {
+#repeatCheckBox {
 	qproperty-icon: url(repeat.png);
 }
-#repeatCheck, #shuffleCheck {
+#repeatCheckBox, #shuffleCheckBox {
 	border: 1 solid transparent;
 }
-#repeatCheck:checked , #shuffleCheck:checked {
+#repeatCheckBox:checked, #shuffleCheckBox:checked {
 	background: #4173D1;
 }
 #prevButton, #playButton, #stopButton, #nextButton {
@@ -127,13 +127,13 @@ QScrollBar::sub-page {
 }
 #playButton:hover, #stopButton:hover,
 #nextButton:hover, #prevButton:hover,
-#repeatCheck:hover, #shuffleCheck:hover {
+#repeatCheckBox:hover, #shuffleCheckBox:hover {
 	border: 1 solid #5882CF;
 }
 
 #playButton:pressed, #stopButton:pressed,
 #nextButton:pressed, #prevButton:pressed,
-#repeatCheck:pressed , #shuffleCheck:pressed {
+#repeatCheckBox:pressed, #shuffleCheckBox:pressed {
 	background: rgba(55, 99, 179, 80);
 	padding: 0;
 }
@@ -1145,7 +1145,7 @@ margin: 2px 17px;
                    <number>3</number>
                   </property>
                   <item>
-                   <widget class="QToolButton" name="repeatCheck">
+                   <widget class="QToolButton" name="repeatCheckBox">
                     <property name="minimumSize">
                      <size>
                       <width>30</width>
@@ -1173,7 +1173,7 @@ margin: 2px 17px;
                    </widget>
                   </item>
                   <item>
-                   <widget class="QToolButton" name="shuffleCheck">
+                   <widget class="QToolButton" name="shuffleCheckBox">
                     <property name="minimumSize">
                      <size>
                       <width>30</width>

@@ -32,14 +32,14 @@ function Program(player)
 		this.titleLabel = this.mainWindow.findChild("titleLabel");
 		this.coverWidget = this.mainWindow.findChild("coverWidget");
 
-		this.repeatCheck = this.mainWindow.findChild("repeatCheck");
-		this.repeatCheck["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
-		this.playlistWidget["repeatModeChanged(bool)"].connect(this.repeatCheck["setChecked(bool)"]);
-		this.repeatCheck.setChecked(this.playlistWidget.repeatMode());
+		this.repeatCheckBox = this.mainWindow.findChild("repeatCheckBox");
+		this.repeatCheckBox["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
+		this.playlistWidget["repeatModeChanged(bool)"].connect(this.repeatCheckBox["setChecked(bool)"]);
+		this.repeatCheckBox.setChecked(this.playlistWidget.repeatMode());
 
-		this.shuffleCheck = this.mainWindow.findChild("shuffleCheck");
-		this.shuffleCheck["clicked(bool)"].connect(this.playlistWidget["setShuffleMode(bool)"]);
-		this.playlistWidget["shuffleModeChanged(bool)"].connect(this.shuffleCheck["setChecked(bool)"]);
+		this.shuffleCheckBox = this.mainWindow.findChild("shuffleCheckBox");
+		this.shuffleCheckBox["clicked(bool)"].connect(this.playlistWidget["setShuffleMode(bool)"]);
+		this.playlistWidget["shuffleModeChanged(bool)"].connect(this.shuffleCheckBox["setChecked(bool)"]);
 
 		this.playButton.clicked.connect(this, "on_playButton_clicked");
 		this.stopButton.clicked.connect(this.playbackEngine.stop);
