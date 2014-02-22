@@ -18,18 +18,6 @@
 	color : white;
 }
 
-#repeatCheck, #shuffleCheck {
-	border: 1 solid transparent;
-}
-#repeatCheck:hover, #shuffleCheck:hover {
-	background: rgba(55, 99, 179, 80);
-	border: 1 solid #5882CF;
-	color: white;
-}
-#repeatCheck:checked , #shuffleCheck:checked {
-	color: #6798F2;
-}
-
 #borderWidget {
 	background-color: #5882CF;
 }
@@ -116,21 +104,36 @@ QScrollBar::sub-page {
 	border-image: url(icon.png);
 }
 
+#shuffleCheck {
+	qproperty-icon: url(shuffle.png);
+}
+#repeatCheck {
+	qproperty-icon: url(repeat.png);
+}
+#repeatCheck, #shuffleCheck {
+	border: 1 solid transparent;
+}
+#repeatCheck:checked , #shuffleCheck:checked {
+	background: #6798F2;
+}
 #prevButton, #playButton, #stopButton, #nextButton {
 	background: transparent;
 }
-#prevButtonWrapper, #playButtonWrapper, #stopButtonWrapper, #nextButtonWrapper {
+#prevButtonWrapper, #playButtonWrapper,
+#stopButtonWrapper, #nextButtonWrapper {
 	border: 2px solid #fff;
 	border-radius: 15px;
 	margin: 3px 15px;
 }
 #playButton:hover, #stopButton:hover,
-#nextButton:hover, #prevButton:hover {
+#nextButton:hover, #prevButton:hover,
+#repeatCheck:hover, #shuffleCheck:hover {
 	border: 1 solid #5882CF;
 }
 
 #playButton:pressed, #stopButton:pressed,
-#nextButton:pressed, #prevButton:pressed {
+#nextButton:pressed, #prevButton:pressed,
+#repeatCheck:pressed , #shuffleCheck:pressed {
 	background: rgba(55, 99, 179, 80);
 	padding: 0;
 }
@@ -1121,24 +1124,67 @@ margin: 2px 17px;
                  </layout>
                 </item>
                 <item>
-                 <widget class="QToolButton" name="repeatCheck">
-                  <property name="text">
-                   <string>REP</string>
+                 <layout class="QHBoxLayout" name="horizontalLayout">
+                  <property name="spacing">
+                   <number>0</number>
                   </property>
-                  <property name="checkable">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QToolButton" name="shuffleCheck">
-                  <property name="text">
-                   <string>SFL</string>
-                  </property>
-                  <property name="checkable">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
+                  <item>
+                   <widget class="QToolButton" name="repeatCheck">
+                    <property name="minimumSize">
+                     <size>
+                      <width>30</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>30</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="toolTip">
+                     <string>Repeat</string>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>18</width>
+                      <height>18</height>
+                     </size>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="shuffleCheck">
+                    <property name="minimumSize">
+                     <size>
+                      <width>30</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>30</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="toolTip">
+                     <string>Shuffle</string>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>18</width>
+                      <height>18</height>
+                     </size>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item>
                  <widget class="QSizeGrip" name="sizeGrip" native="true">
