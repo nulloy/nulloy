@@ -13,7 +13,7 @@
 **
 *********************************************************************/
 
-#include "core.h"
+#include "common.h"
 
 #include <QtCore>
 #include <QCoreApplication>

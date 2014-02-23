@@ -16,7 +16,7 @@
 #include "pluginLoader.h"
 
 #include "global.h"
-#include "core.h"
+#include "common.h"
 #include "settings.h"
 
 #include "pluginInterface.h"

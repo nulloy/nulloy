@@ -16,7 +16,7 @@
 #include "playlistWidget.h"
 
 #include "settings.h"
-#include "core.h"
+#include "common.h"
 #include "trash.h"
 
 #include "playlistWidgetItem.h"

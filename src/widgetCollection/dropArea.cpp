@@ -15,7 +15,7 @@
 
 #include "dropArea.h"
 
-#include "core.h"
+#include "common.h"
 
 #include <QUrl>
 #include <QDragEnterEvent>

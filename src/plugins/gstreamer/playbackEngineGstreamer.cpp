@@ -15,7 +15,7 @@
 
 #include "playbackEngineGstreamer.h"
 
-#include "core.h"
+#include "common.h"
 #include <QtGlobal>
 #include <QTimer>
 

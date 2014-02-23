@@ -13,8 +13,8 @@
 **
 *********************************************************************/
 
-#ifndef N_CORE_H
-#define N_CORE_H
+#ifndef N_COMMON_H
+#define N_COMMON_H
 
 class QString;
 class QStringList;

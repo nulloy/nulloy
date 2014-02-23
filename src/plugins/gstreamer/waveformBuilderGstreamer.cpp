@@ -15,7 +15,7 @@
 
 #include "waveformBuilderGstreamer.h"
 
-#include "core.h"
+#include "common.h"
 
 #if defined Q_WS_WIN || defined Q_WS_MAC
 #include <QTimer>

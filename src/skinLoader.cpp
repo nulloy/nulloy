@@ -15,7 +15,7 @@
 
 #include "skinLoader.h"
 
-#include "core.h"
+#include "common.h"
 #include "settings.h"
 #include "skinFileSystem.h"
 

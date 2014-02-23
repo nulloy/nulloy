@@ -15,7 +15,7 @@
 
 #include "tagReaderGstreamer.h"
 
-#include "core.h"
+#include "common.h"
 
 #include <QCoreApplication>
 #include <gst/pbutils/pbutils.h>

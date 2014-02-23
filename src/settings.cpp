@@ -15,7 +15,7 @@
 
 #include "settings.h"
 
-#include "core.h"
+#include "common.h"
 
 #include "action.h"
 

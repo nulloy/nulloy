@@ -15,7 +15,7 @@
 
 #include "abstractWaveformBuilder.h"
 
-#include "core.h"
+#include "common.h"
 
 #include <QCryptographicHash>
 #include <QObject>

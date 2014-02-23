@@ -17,7 +17,7 @@
 
 #include "action.h"
 #include "aboutDialog.h"
-#include "core.h"
+#include "common.h"
 #include "logDialog.h"
 #include "playlistStorage.h"
 #include "mainWindow.h"

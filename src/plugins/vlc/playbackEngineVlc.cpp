@@ -16,7 +16,7 @@
 #include "playbackEngineVlc.h"
 #include <QtGlobal>
 
-#include "core.h"
+#include "common.h"
 
 static void _eventHandler(const libvlc_event_t *event, void *userData)
 {

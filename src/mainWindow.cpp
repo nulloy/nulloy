@@ -15,7 +15,7 @@
 
 #include "mainWindow.h"
 
-#include "core.h"
+#include "common.h"
 #include "settings.h"
 #include "dropArea.h"
 

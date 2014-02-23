@@ -1,8 +1,8 @@
 TEMPLATE = lib
 CONFIG += plugin
 
-HEADERS += ../../core.h
-SOURCES += ../../core.cpp
+HEADERS += ../../common.h
+SOURCES += ../../common.cpp
 
 unix:DESTDIR = ../../../plugins
 win32:DESTDIR = ../../../Plugins

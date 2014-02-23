@@ -18,7 +18,7 @@
 #include <QMutex>
 #include <QFile>
 #include <QDebug>
-#include "core.h"
+#include "common.h"
 
 static QMutex _mutex;
 
