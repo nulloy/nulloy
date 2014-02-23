@@ -29,10 +29,19 @@ function Program(player)
 		this.waveformSlider = this.mainWindow.findChild("waveformSlider");
 		this.coverWidget = this.mainWindow.findChild("coverWidget");
 
-		this.playButton.clicked.connect(this.playlistWidget.playCurrent);
+		this.repeatCheckBox = this.mainWindow.findChild("repeatCheckBox");
+		this.repeatCheckBox["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
+		this.playlistWidget["repeatModeChanged(bool)"].connect(this.repeatCheckBox["setChecked(bool)"]);
+		this.repeatCheckBox.setChecked(this.playlistWidget.repeatMode());
+
+		this.shuffleCheckBox = this.mainWindow.findChild("shuffleCheckBox");
+		this.shuffleCheckBox["clicked(bool)"].connect(this.playlistWidget["setShuffleMode(bool)"]);
+		this.playlistWidget["shuffleModeChanged(bool)"].connect(this.shuffleCheckBox["setChecked(bool)"]);
+
+		this.playButton.clicked.connect(this, "on_playButton_clicked");
 		this.stopButton.clicked.connect(this.playbackEngine.stop);
-		this.prevButton.clicked.connect(this.playlistWidget.playPrevious);
-		this.nextButton.clicked.connect(this.playlistWidget.playNext);
+		this.prevButton.clicked.connect(this.playlistWidget.playPreviousRow);
+		this.nextButton.clicked.connect(this.playlistWidget.playNextRow);
 
 		this.playButton.setStandardIcon("media-playback-start", ":/trolltech/styles/commonstyle/images/media-play-16.png");
 		this.stopButton.setStandardIcon("media-playback-stop", ":/trolltech/styles/commonstyle/images/media-stop-16.png");
@@ -48,7 +57,7 @@ function Program(player)
 		this.playbackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
 		this.playbackEngine["mediaChanged(const QString &)"].connect(this.coverWidget["setSource(const QString &)"]);
-		this.playbackEngine["finished()"].connect(this.playlistWidget.playNext);
+		this.playbackEngine["finished()"].connect(this.playlistWidget.currentFinished);
 		this.playbackEngine["failed()"].connect(this, "on_failed");
 		this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
 		this.playlistWidget["currentActivated()"].connect(this.playbackEngine.play);
@@ -110,6 +119,14 @@ Program.prototype.on_splitterMoved = function(pos, index)
 	this.player.settings().setValue("NativeSkin/Splitter", this.splitter.sizes());
 }
 
+Program.prototype.on_playButton_clicked = function()
+{
+	if (!this.playlistWidget.hasCurrent())
+		this.playlistWidget.playRow(0);
+	else
+		this.playbackEngine.play(); // toggle play/pause
+}
+
 Program.prototype.on_stateChanged = function(state)
 {
 	if (state == N.PlaybackPlaying)
@@ -122,8 +139,8 @@ Program.prototype.on_stateChanged = function(state)
 
 Program.prototype.on_failed = function()
 {
-	this.playlistWidget.markCurrentFailed();
-	this.playlistWidget.playNext();
+	this.playlistWidget.currentFailed();
+	this.playlistWidget.playNextRow();
 }
 
 Program.prototype.on_volumeSlider_sliderMoved = function(value)
