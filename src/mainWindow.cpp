@@ -54,6 +54,8 @@ NMainWindow::~NMainWindow() {}
 
 void NMainWindow::init(const QString &uiFile)
 {
+	setObjectName("mainWindow");
+
 #ifndef _N_NO_SKINS_
 	QUiLoader loader;
 	QFile formFile(uiFile);
