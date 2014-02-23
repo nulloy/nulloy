@@ -16,6 +16,7 @@
 #include "player.h"
 
 #include "action.h"
+#include "aboutDialog.h"
 #include "core.h"
 #include "logDialog.h"
 #include "playlistStorage.h"
@@ -52,7 +53,6 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QTextBrowser>
 #include <QResizeEvent>
 
 NPlayer::NPlayer()
@@ -106,7 +106,7 @@ NPlayer::NPlayer()
 	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
 	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(on_preferencesDialog_settingsChanged()));
 	connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
-
+	
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
 
 	m_trackInfoWidget = new NTrackInfoWidget();
@@ -182,8 +182,9 @@ NPlayer::NPlayer()
 
 	NAction *aboutAction = new NAction(QIcon::fromTheme("help-about",
 	                                   style()->standardIcon(QStyle::SP_MessageBoxQuestion)),
-	                                   tr("About") + " " + QCoreApplication::applicationName(), this);
+	                                   tr("About"), this);
 	connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutMessageBox()));
+	m_aboutDialog = NULL;
 
 	NAction *whilePlayingOnTopAction = new NAction(tr("On Top During Playback"), this);
 	whilePlayingOnTopAction->setCheckable(TRUE);
@@ -674,102 +675,9 @@ void NPlayer::on_showCoverAction_toggled(bool checked)
 
 void NPlayer::showAboutMessageBox()
 {
-	QString aboutHtml = QString() +
-#ifdef Q_WS_MAC
-	               "<span style=\" font-size:14pt;\">" +
-#else
-	               "<span style=\" font-size:9pt;\">" +
-#endif
-	                 "<b>" +  QCoreApplication::applicationName() + " Music Player</b>" +
-	                 "<br>" +
-	                 "<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
-	                                      QCoreApplication::organizationDomain() + "</a>" +
-	               "</span><br><br>" +
-#ifdef Q_WS_MAC
-	               "<span style=\" font-size:10pt;\">" +
-#else
-	               "<span style=\" font-size:8pt;\">" +
-#endif
-	                 "Version: " + QCoreApplication::applicationVersion() + "<br>" +
-	                 (QString(_N_TIME_STAMP_).isEmpty() ? "" : "Build: " + QString(_N_TIME_STAMP_)) +
-	                 "<br><br>" +
-	                 "Copyright (C) 2010-2013  Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
-	               "</span>";
-
-	QDialog *dialog = new QDialog(m_mainWindow);
-	dialog->setWindowTitle(QObject::tr("About ") + QCoreApplication::applicationName());
-	dialog->setMaximumSize(0, 0);
-
-	QVBoxLayout *layout = new QVBoxLayout;
-	dialog->setLayout(layout);
-
-	QTabWidget *tabWidget = new QTabWidget(m_mainWindow);
-	layout->addWidget(tabWidget);
-
-	// about tab
-	QWidget *tab1 = new QWidget(m_mainWindow);
-	tabWidget->addTab(tab1, tr("About"));
-	QVBoxLayout *tab1Layout = new QVBoxLayout;
-	tab1->setLayout(tab1Layout);
-
-	QLabel *iconLabel = new QLabel;
-	QPixmap pixmap(":icon-96.png");
-	iconLabel->setPixmap(pixmap);
-#ifdef Q_WS_MAC
-	iconLabel->setMask(pixmap.mask());
-#endif
-
-	QHBoxLayout *iconLayout = new QHBoxLayout();
-	iconLayout->addStretch();
-	iconLayout->addWidget(iconLabel);
-	iconLayout->addStretch();
-	tab1Layout->addLayout(iconLayout);
-
-	QTextBrowser *aboutTextBrowser = new QTextBrowser(this);
-	aboutTextBrowser->setStyleSheet("background: transparent");
-	aboutTextBrowser->setFrameShape(QFrame::NoFrame);
-	aboutTextBrowser->setHtml("<center>" + aboutHtml + "</center>");
-	aboutTextBrowser->setMinimumWidth(350);
-	aboutTextBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	aboutTextBrowser->setOpenExternalLinks(TRUE);
-
-	tab1Layout->addWidget(aboutTextBrowser);
-	//
-
-	// changelog tab
-	QWidget *tab2 = new QWidget(m_mainWindow);
-	tabWidget->addTab(tab2, tr("Changelog"));
-	QVBoxLayout *tab2Layout = new QVBoxLayout;
-	tab2Layout->setContentsMargins(0, 0, 0, 0);
-	tab2->setLayout(tab2Layout);
-
-	QFile file( ":/ChangeLog");
-	file.open(QIODevice::ReadOnly | QIODevice::Text);
-	QTextStream stream(&file);
-	QString changelogHtml = stream.readAll();
-	changelogHtml.replace("\n", "<br>\n");
-	changelogHtml.replace(QRegExp("(\\*[^<]*)(<br>)"), "<b>\\1</b>\\2");
-	file.close();
-
-	QTextBrowser *changelogTextBrowser = new QTextBrowser(this);
-	changelogTextBrowser->setHtml(changelogHtml);
-	changelogTextBrowser->setOpenExternalLinks(TRUE);
-	tab2Layout->addWidget(changelogTextBrowser);
-	//
-
-	QPushButton *closeButton = new QPushButton("Close");
-	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept()));
-	QHBoxLayout *buttonLayout = new QHBoxLayout();
-	buttonLayout->addStretch();
-	buttonLayout->addWidget(closeButton);
-	buttonLayout->addStretch();
-	layout->addLayout(buttonLayout);
-
-	dialog->show();
-
-	// resize according to content
-	QSize aboutTextSize = aboutTextBrowser->document()->size().toSize();
-	aboutTextBrowser->setMinimumHeight(aboutTextSize.height());
+	if (!m_aboutDialog)
+		m_aboutDialog = new NAboutDialog(m_mainWindow);
+	m_aboutDialog->show();
 }
 
 void NPlayer::showOpenFileDialog()

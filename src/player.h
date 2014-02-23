@@ -25,6 +25,7 @@ class NMainWindow;
 class NPlaybackEngineInterface;
 class NPlaylistWidget;
 class NPreferencesDialog;
+class NAboutDialog;
 class NScriptEngine;
 class NSettings;
 class NTrackInfoWidget;
@@ -44,6 +45,7 @@ private:
 	NScriptEngine *m_scriptEngine;
 	NMainWindow *m_mainWindow;
 	NPreferencesDialog *m_preferencesDialog;
+	NAboutDialog *m_aboutDialog;
 	NPlaybackEngineInterface *m_playbackEngine;
 	QMenu *m_contextMenu;
 	NPlaylistWidget *m_playlistWidget;
