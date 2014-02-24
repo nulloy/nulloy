@@ -117,18 +117,24 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 	licenseTab->setLayout(licenseTabLayout);
 
 	QString licenseHtml =
-		"This program is free software: you can redistribute it and/or modify "
-		"it under the terms of the GNU General Public License version 3.0 "
-		"as published by the Free Software Foundation.<br>"
-		"<br>"
-		"This program is distributed in the hope that it will be useful, "
-		"but <b>WITHOUT ANY WARRANTY</b>; without even the implied warranty of "
-		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the "
-		"GNU General Public License for more details.<br>"
-		"<br>"
-		"You should have received a copy of the GNU General Public License "
-		"along with this program. If not, see "
-		"<a href='http://www.gnu.org/licenses/gpl-3.0.html'>http://www.gnu.org/licenses/gpl-3.0.html</a>.";
+#ifdef Q_WS_MAC
+		"<span style=\"font-size:10pt;\">"
+#else
+		"<span style=\"font-size:8pt;\">"
+#endif
+			"This program is free software: you can redistribute it and/or modify "
+			"it under the terms of the GNU General Public License version 3.0 "
+			"as published by the Free Software Foundation.<br>"
+			"<br>"
+			"This program is distributed in the hope that it will be useful, "
+			"but <b>WITHOUT ANY WARRANTY</b>; without even the implied warranty of "
+			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the "
+			"GNU General Public License for more details.<br>"
+			"<br>"
+			"You should have received a copy of the GNU General Public License "
+			"along with this program. If not, see "
+			"<a href='http://www.gnu.org/licenses/gpl-3.0.html'>http://www.gnu.org/licenses/gpl-3.0.html</a>.";
+		"</span>";
 
 	QTextBrowser *licenseTextBrowser = new QTextBrowser;
 	licenseTextBrowser->setObjectName("licenseTextBrowser");
@@ -139,9 +145,9 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 	licenseTextBrowser->setAlignment(Qt::AlignVCenter);
 	licenseTextBrowser->setHtml(licenseHtml);
 
-	licenseTabLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
+	licenseTabLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	licenseTabLayout->addWidget(licenseTextBrowser);
-	licenseTabLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
+	licenseTabLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	//
 
 	QPushButton *closeButton = new QPushButton("Close");
