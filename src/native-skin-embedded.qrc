@@ -4,5 +4,12 @@
     <file>skins/native/id.txt</file>
     <file>skins/native/script.js</file>
     <file>skins/native/form.ui</file>
+    <file alias="play.png">skins/native/play.png</file>
+    <file alias="pause.png">skins/native/pause.png</file>
+    <file alias="stop.png">skins/native/stop.png</file>
+    <file alias="prev.png">skins/native/prev.png</file>
+    <file alias="next.png">skins/native/next.png</file>
+    <file alias="repeat.png">skins/native/repeat.png</file>
+    <file alias="shuffle.png">skins/native/shuffle.png</file>
   </qresource>
 </RCC>

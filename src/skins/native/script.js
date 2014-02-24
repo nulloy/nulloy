@@ -43,10 +43,12 @@ function Program(player)
 		this.prevButton.clicked.connect(this.playlistWidget.playPreviousRow);
 		this.nextButton.clicked.connect(this.playlistWidget.playNextRow);
 
-		this.playButton.setStandardIcon("media-playback-start", ":/trolltech/styles/commonstyle/images/media-play-16.png");
-		this.stopButton.setStandardIcon("media-playback-stop", ":/trolltech/styles/commonstyle/images/media-stop-16.png");
-		this.prevButton.setStandardIcon("media-skip-backward", ":/trolltech/styles/commonstyle/images/media-skip-backward-16.png");
-		this.nextButton.setStandardIcon("media-skip-forward", ":/trolltech/styles/commonstyle/images/media-skip-forward-16.png");
+		this.playButton.setStandardIcon("media-playback-start", ":play.png");
+		this.stopButton.setStandardIcon("media-playback-stop", ":stop.png");
+		this.prevButton.setStandardIcon("media-skip-backward", ":prev.png");
+		this.nextButton.setStandardIcon("media-skip-forward", ":next.png");
+		this.repeatCheckBox.setStandardIcon("media-playlist-repeat", ":repeat.png");
+		this.shuffleCheckBox.setStandardIcon("media-playlist-shuffle", ":shuffle.png");
 
 		this.volumeSlider.minimum = 0;
 		this.volumeSlider.maximum = 100;
@@ -130,9 +132,9 @@ Program.prototype.on_playButton_clicked = function()
 Program.prototype.on_stateChanged = function(state)
 {
 	if (state == N.PlaybackPlaying)
-		this.playButton.setStandardIcon("media-playback-pause", ":/trolltech/styles/commonstyle/images/media-pause-16.png");
+		this.playButton.setStandardIcon("media-playback-pause", ":pause.png");
 	else
-		this.playButton.setStandardIcon("media-playback-start", ":/trolltech/styles/commonstyle/images/media-play-16.png");
+		this.playButton.setStandardIcon("media-playback-start", ":play.png");
 
 	this.waveformSlider.setPausedState(state == N.PlaybackPaused);
 }

@@ -177,9 +177,7 @@
                 <string>Previous</string>
                </property>
                <property name="icon">
-                <iconset theme="media-skip-backward">
-                 <normaloff/>
-                </iconset>
+                <iconset theme="media-skip-backward"/>
                </property>
               </widget>
              </item>
@@ -210,9 +208,7 @@
                 <string>Play / Pause</string>
                </property>
                <property name="icon">
-                <iconset theme="media-playback-start">
-                 <normaloff/>
-                </iconset>
+                <iconset theme="media-playback-start"/>
                </property>
               </widget>
              </item>
@@ -243,9 +239,7 @@
                 <string>Stop</string>
                </property>
                <property name="icon">
-                <iconset theme="media-playback-stop">
-                 <normaloff/>
-                </iconset>
+                <iconset theme="media-playback-stop"/>
                </property>
               </widget>
              </item>
@@ -270,9 +264,7 @@
                 <string>Next</string>
                </property>
                <property name="icon">
-                <iconset theme="media-skip-forward">
-                 <normaloff/>
-                </iconset>
+                <iconset theme="media-skip-forward"/>
                </property>
               </widget>
              </item>
@@ -312,8 +304,8 @@
                <property name="toolTip">
                 <string>Repeat</string>
                </property>
-               <property name="text">
-                <string>REP</string>
+               <property name="icon">
+                <iconset theme="media-playlist-repeat"/>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -324,13 +316,13 @@
               <widget class="QToolButton" name="shuffleCheckBox">
                <property name="minimumSize">
                 <size>
-                 <width>30</width>
+                 <width>29</width>
                  <height>29</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>29</width>
                  <height>29</height>
                 </size>
                </property>
@@ -340,8 +332,8 @@
                <property name="toolTip">
                 <string>Shuffle</string>
                </property>
-               <property name="text">
-                <string>SFL</string>
+               <property name="icon">
+                <iconset theme="media-playlist-shuffle"/>
                </property>
                <property name="checkable">
                 <bool>true</bool>
