@@ -116,7 +116,8 @@ function Program(player)
 
 Program.prototype.afterShow = function()
 {
-	this.splitter.setSizes(this.player.settings().value("SilverSkin/Splitter"));
+	if (this.player.settings().value("MetroSkin/Splitter"))
+		this.splitter.setSizes(this.player.settings().value("MetroSkin/Splitter"));
 }
 
 Program.prototype.on_playButton_clicked = function()
@@ -165,7 +166,7 @@ Program.prototype.volumeSlider_setValue = function(value)
 
 Program.prototype.on_splitterMoved = function(pos, index)
 {
-	this.player.settings().setValue("SilverSkin/Splitter", this.splitter.sizes());
+	this.player.settings().setValue("MetroSkin/Splitter", this.splitter.sizes());
 }
 
 Program.prototype.on_waveformSlider_sliderMoved = function(value)

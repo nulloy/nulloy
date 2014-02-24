@@ -137,7 +137,8 @@ Program.prototype.afterShow = function()
 		this.mainWindow.resize(this.mainWindow.width, this.mainWindow.minimumHeigh);
 	}
 
-	this.splitter.setSizes(this.player.settings().value("SilverSkin/Splitter"));
+	if (this.player.settings().value("SilverSkin/Splitter"))
+		this.splitter.setSizes(this.player.settings().value("SilverSkin/Splitter"));
 }
 
 Program.prototype.on_playButton_clicked = function()

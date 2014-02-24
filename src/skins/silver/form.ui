@@ -691,12 +691,6 @@ QScrollBar::sub-page {
             <bool>false</bool>
            </property>
            <widget class="QWidget" name="backgroundWidget" native="true">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <property name="margin">
               <number>0</number>
@@ -971,24 +965,6 @@ QScrollBar::sub-page {
                   </item>
                   <item>
                    <widget class="NWaveformSlider" name="waveformSlider" native="true">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>60</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
                     <property name="styleSheet">
                      <string notr="true">#waveformSlider {
 	background: black;
@@ -1410,7 +1386,7 @@ QScrollBar::sub-page {
            </widget>
            <widget class="QWidget" name="widget_4" native="true">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>1</verstretch>
              </sizepolicy>
@@ -1446,12 +1422,6 @@ QScrollBar::sub-page {
              </item>
              <item>
               <widget class="NPlaylistWidget" name="playlistWidget">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="focusPolicy">
                 <enum>Qt::ClickFocus</enum>
                </property>
@@ -1517,6 +1487,11 @@ QScrollBar::sub-page {
    <header>playlistWidget.h</header>
   </customwidget>
   <customwidget>
+   <class>NCoverWidget</class>
+   <extends>QLabel</extends>
+   <header>coverWidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>NLabel</class>
    <extends>QLabel</extends>
    <header>label.h</header>
@@ -1526,11 +1501,6 @@ QScrollBar::sub-page {
    <extends>QWidget</extends>
    <header>qsizegrip.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>NCoverWidget</class>
-   <extends>QLabel</extends>
-   <header>coverWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

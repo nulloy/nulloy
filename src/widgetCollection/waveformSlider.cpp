@@ -76,6 +76,11 @@ void NWaveformSlider::init()
 	setMinimumWidth(150);
 }
 
+QSize NWaveformSlider::sizeHint() const
+{
+	return QSize(200, 80);
+}
+
 NWaveformSlider::~NWaveformSlider() {}
 
 void NWaveformSlider::checkForUpdate()

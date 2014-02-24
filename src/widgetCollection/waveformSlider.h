@@ -53,6 +53,7 @@ private:
 public:
 	NWaveformSlider(QWidget *parent = 0);
 	~NWaveformSlider();
+	QSize sizeHint() const;
 
 public slots:
 	void drawFile(const QString &file);

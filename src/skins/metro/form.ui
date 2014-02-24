@@ -859,24 +859,6 @@ QScrollBar::sub-page {
                </item>
                <item>
                 <widget class="NWaveformSlider" name="waveformSlider" native="true">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>150</width>
-                   <height>50</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
                  <property name="styleSheet">
                   <string notr="true">#waveformSlider {
 	qproperty-radius: 0;
@@ -1360,6 +1342,11 @@ margin: 2px 17px;
    <header>playlistWidget.h</header>
   </customwidget>
   <customwidget>
+   <class>NCoverWidget</class>
+   <extends>QLabel</extends>
+   <header>coverWidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>NLabel</class>
    <extends>QLabel</extends>
    <header>label.h</header>
@@ -1369,11 +1356,6 @@ margin: 2px 17px;
    <extends>QWidget</extends>
    <header>qsizegrip.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>NCoverWidget</class>
-   <extends>QLabel</extends>
-   <header>coverWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

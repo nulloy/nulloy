@@ -113,7 +113,8 @@ function Program(player)
 
 Program.prototype.afterShow = function()
 {
-	this.splitter.setSizes(this.player.settings().value("NativeSkin/Splitter"));
+	if (this.player.settings().value("NativeSkin/Splitter"))
+		this.splitter.setSizes(this.player.settings().value("NativeSkin/Splitter"));
 }
 
 Program.prototype.on_splitterMoved = function(pos, index)
