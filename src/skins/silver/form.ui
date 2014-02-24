@@ -121,7 +121,8 @@ QScrollBar::sub-page {
 	border-image: url(icon.png);
 }
 
-#segmentWrapper {
+#segmentWrapper,
+#repeatShuffleWrapper {
 	border-radius: 2px;
 	border:  1px solid #DEDEDE;
 }
@@ -160,7 +161,10 @@ QScrollBar::sub-page {
 	padding-top: 2px;
 }
 #repeatCheckBox:checked, #shuffleCheckBox:checked {
-	padding-top: 0px;
+	padding-top: 0;
+}
+#repeatCheckBox:checked:pressed, #shuffleCheckBox:checked:pressed {
+	padding-top: 2px;
 }
 #repeatCheckBox {
 	qproperty-icon: url(repeat.png);
@@ -1149,7 +1153,7 @@ QScrollBar::sub-page {
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QWidget" name="segmentWrapper_3" native="true">
+                    <widget class="QWidget" name="repeatShuffleWrapper" native="true">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
