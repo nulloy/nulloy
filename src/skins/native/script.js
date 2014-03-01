@@ -68,7 +68,7 @@ function Program(player)
 		this.playbackEngine["volumeChanged(qreal)"].connect(this, "volumeSlider_setValue");
 
 		this.waveformSlider["sliderMoved(int)"].connect(this, "on_waveformSlider_sliderMoved");
-		this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlide_setValue");
+		this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlider_setValue");
 
 		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["playFiles(const QStringList &)"]);
 		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
@@ -161,7 +161,7 @@ Program.prototype.on_waveformSlider_sliderMoved = function(value)
 	this.playbackEngine.setPosition(value / this.waveformSlider.maximum);
 }
 
-Program.prototype.waveformSlide_setValue = function(value)
+Program.prototype.waveformSlider_setValue = function(value)
 {
 	this.waveformSlider.value = Math.round(value * this.waveformSlider.maximum);
 }
