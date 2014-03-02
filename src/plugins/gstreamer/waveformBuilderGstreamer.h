@@ -52,7 +52,7 @@ public:
 
 	void init();
 	QString interface() { return NWaveformBuilderInterface::interface(); }
-	N::PluginElementType type() { return N::WaveformBuilderType; }
+	N::PluginType type() { return N::WaveformBuilderType; }
 
 	void start(const QString &file);
 	void stop();

@@ -47,7 +47,7 @@ namespace NPluginLoader
 	static NCoverReaderInterface *_coverReader = NULL;
 
 	void _loadPlugins();
-	QObject* _findPlugin(N::PluginElementType type, QObjectList &objects, QMap<QString, bool> &usedFlags);
+	QObject* _findPlugin(N::PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags);
 	static QMap<QString, QPluginLoader *> _loaders;
 }
 
@@ -60,7 +60,7 @@ void NPluginLoader::deinit()
 	}
 }
 
-QObject* NPluginLoader::_findPlugin(N::PluginElementType type, QObjectList &objects, QMap<QString, bool> &usedFlags)
+QObject* NPluginLoader::_findPlugin(N::PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags)
 {
 	QString base_interface;
 	QString type_str;
@@ -192,7 +192,7 @@ void NPluginLoader::_loadPlugins()
 				foreach (QObject *obj, elements) {
 					NPlugin *el = qobject_cast<NPlugin *>(obj);
 					QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
-					                     ((el->type() == N::OtherElementType) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
+					                     ((el->type() == N::OtherPluginType) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
 					_identifiers << identifier;
 					_loaders[identifier] = loader;
 					usedFlags[identifier] = FALSE;

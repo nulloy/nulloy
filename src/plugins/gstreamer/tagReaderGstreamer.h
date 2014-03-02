@@ -40,7 +40,7 @@ public:
 
 	void init();
 	QString interface() { return NTagReaderInterface::interface(); }
-	N::PluginElementType type() { return N::TagReaderType; }
+	N::PluginType type() { return N::TagReaderType; }
 
 	void setSource(const QString &file);
 	QString toString(const QString &format);

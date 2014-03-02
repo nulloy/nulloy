@@ -176,7 +176,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	textBrowser->setMinimumHeight(textSize.height());
 }
 
-QGroupBox* NPreferencesDialog::generatePluginsGroup(N::PluginElementType type, const QStringList &identifiers, const QString &def)
+QGroupBox* NPreferencesDialog::generatePluginsGroup(N::PluginType type, const QStringList &identifiers, const QString &def)
 {
 	QString type_str;
 	if (type == N::PlaybackEngineType)
@@ -221,7 +221,7 @@ void NPreferencesDialog::on_skinComboBox_activated(int index)
 	ui.skinRestartLabel->setVisible(TRUE);
 }
 
-QString NPreferencesDialog::selectedPluginsGroup(N::PluginElementType type)
+QString NPreferencesDialog::selectedPluginsGroup(N::PluginType type)
 {
 	QString str;
 
