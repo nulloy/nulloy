@@ -8,7 +8,7 @@ win32:TARGET = Nulloy
 DESTDIR = ..
 
 DEPENDPATH += . ux/
-INCLUDEPATH += . ux/
+INCLUDEPATH += . ux/ interfaces/
 
 HEADERS += *.h ux/*.h
 SOURCES += *.cpp ux/*.cpp
