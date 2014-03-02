@@ -25,11 +25,11 @@ NPluginVlc::NPluginVlc(QObject *parent) : QObject(parent)
 
 NPluginVlc::~NPluginVlc()
 {
-	foreach (QObject *obj, m_plugins)
-		delete obj;
+	foreach (NPlugin *plugin, m_plugins)
+		delete plugin;
 }
 
-QObjectList NPluginVlc::plugins()
+QList<NPlugin *> NPluginVlc::plugins()
 {
 	return m_plugins;
 }

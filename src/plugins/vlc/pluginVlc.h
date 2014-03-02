@@ -24,12 +24,12 @@ class NPluginVlc : public QObject, public NPluginContainer
 	Q_INTERFACES(NPluginContainer)
 
 private:
-	QObjectList m_plugins;
+	QList<NPlugin *> m_plugins;
 
 public:
 	NPluginVlc(QObject *parent = NULL);
 	~NPluginVlc();
-	QObjectList plugins();
+	QList<NPlugin *> plugins();
 	QString name() { return "VLC"; }
 	QString version() { return "0.5"; }
 };

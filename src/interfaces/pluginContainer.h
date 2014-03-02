@@ -18,12 +18,14 @@
 
 #include <QtCore>
 
+class NPlugin;
+
 class NPluginContainer
 {
 public:
 	NPluginContainer() {}
 	virtual ~NPluginContainer() {}
-	virtual QObjectList plugins() = 0;
+	virtual QList<NPlugin *> plugins() = 0;
 	virtual QString name() = 0;
 	virtual QString version() = 0;
 };

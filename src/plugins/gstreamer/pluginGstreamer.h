@@ -24,12 +24,12 @@ class NPluginGstreamer : public QObject, public NPluginContainer
 	Q_INTERFACES(NPluginContainer)
 
 private:
-	QObjectList m_plugins;
+	QList<NPlugin *> m_plugins;
 
 public:
 	NPluginGstreamer(QObject *parent = NULL);
 	~NPluginGstreamer();
-	QObjectList plugins();
+	QList<NPlugin *> plugins();
 	QString name() { return "GStreamer"; }
 	QString version() { return "0.5.1"; }
 };

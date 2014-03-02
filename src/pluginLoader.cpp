@@ -47,7 +47,7 @@ namespace NPluginLoader
 	static NCoverReaderInterface *_coverReader = NULL;
 
 	void _loadPlugins();
-	QObject* _findPlugin(N::PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags);
+	NPlugin* _findPlugin(N::PluginType type, QList<NPlugin *> &plugins, QMap<QString, bool> &usedFlags);
 	static QMap<QString, QPluginLoader *> _loaders;
 }
 
@@ -60,7 +60,7 @@ void NPluginLoader::deinit()
 	}
 }
 
-QObject* NPluginLoader::_findPlugin(N::PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags)
+NPlugin* NPluginLoader::_findPlugin(N::PluginType type, QList<NPlugin *> &plugins, QMap<QString, bool> &usedFlags)
 {
 	QString typeString = ENUM_NAME(N, PluginType, type);
 	QString savedContainerName = NSettings::instance()->value("Plugins/" + typeString).toString();
@@ -72,7 +72,7 @@ QObject* NPluginLoader::_findPlugin(N::PluginType type, QObjectList &objects, QM
 	if (index == -1)
 		index = _identifiers.indexOf(QRegExp(typeString + "/.*"));
 	if (index != -1) {
-		NPlugin *plugin = qobject_cast<NPlugin *>(objects.at(index));
+		NPlugin *plugin = plugins.at(index);
 
 		QString identifier = _identifiers.at(index);
 
@@ -83,7 +83,7 @@ QObject* NPluginLoader::_findPlugin(N::PluginType type, QObjectList &objects, QM
 
 		plugin->init();
 
-		return objects.at(index);
+		return plugins.at(index);
 	} else {
 		return NULL;
 	}
@@ -95,21 +95,20 @@ void NPluginLoader::_loadPlugins()
 		return;
 	_init = TRUE;
 
-	QObjectList objects;
+	QList<NPlugin *> plugins;
 	QMap<QString, bool> usedFlags;
 
 #if 0
-	QObjectList objectsStatic;
+	QList<NPlugin *> pluginsStatic;
 #ifdef _N_GSTREAMER_PLUGINS_BUILTIN_
-	objectsStatic << new NPlaybackEngineGStreamer() << new NWaveformBuilderGstreamer();
+	pluginsStatic << new NPlaybackEngineGStreamer() << new NWaveformBuilderGstreamer();
 #endif
-	objectsStatic << QPluginLoader::staticInstances();
+	pluginsStatic << QPluginLoader::staticInstances();
 
-	foreach (QObject *obj, objectsStatic) {
-		NPlugin *plugin = qobject_cast<NPlugin *>(obj);
+	foreach (NPlugin *plugin, pluginsStatic) {
 		if (plugin) {
-			objects << obj;
-			qobject_cast<NPlugin *>(obj)->init();
+			plugins << plugin;
+			plugin->init();
 			QString id = plugin->identifier();
 			id.insert(id.lastIndexOf('/'), " (Built-in)");
 			_identifiers << id;
@@ -160,10 +159,9 @@ void NPluginLoader::_loadPlugins()
 			QObject *instance = loader->instance();
 			NPluginContainer *container = qobject_cast<NPluginContainer *>(instance);
 			if (container) {
-				QObjectList plugins = container->plugins();
-				objects << plugins;
-				foreach (QObject *obj, plugins) {
-					NPlugin *plugin = qobject_cast<NPlugin *>(obj);
+				QList<NPlugin *> _plugins = container->plugins();
+				plugins << _plugins;
+				foreach (NPlugin *plugin, _plugins) {
 					QString typeString = ENUM_NAME(N, PluginType, plugin->type());
 					QString identifier = typeString + "/" + container->name() + "/" + fileFullPath.replace("/", "\\");
 					_identifiers << identifier;
@@ -179,10 +177,10 @@ void NPluginLoader::_loadPlugins()
 		}
 	}
 
-	_playback = qobject_cast<NPlaybackEngineInterface *>(_findPlugin(N::PlaybackEngineType, objects, usedFlags));
-	_waveform = qobject_cast<NWaveformBuilderInterface *>(_findPlugin(N::WaveformBuilderType, objects, usedFlags));
-	_tagReader = qobject_cast<NTagReaderInterface *>(_findPlugin(N::TagReaderType, objects, usedFlags));
-	_coverReader = qobject_cast<NCoverReaderInterface *>(_findPlugin(N::CoverReaderType, objects, usedFlags));
+	_playback = dynamic_cast<NPlaybackEngineInterface *>(_findPlugin(N::PlaybackEngineType, plugins, usedFlags));
+	_waveform = dynamic_cast<NWaveformBuilderInterface *>(_findPlugin(N::WaveformBuilderType, plugins, usedFlags));
+	_tagReader = dynamic_cast<NTagReaderInterface *>(_findPlugin(N::TagReaderType, plugins, usedFlags));
+	_coverReader = dynamic_cast<NCoverReaderInterface *>(_findPlugin(N::CoverReaderType, plugins, usedFlags));
 
 	// remove not used plugins
 	foreach (QString identifier, usedFlags.keys(FALSE)) {

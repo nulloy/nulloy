@@ -38,11 +38,11 @@ NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
 
 NPluginGstreamer::~NPluginGstreamer()
 {
-	foreach (QObject *obj, m_plugins)
-		delete obj;
+	foreach (NPlugin *plugin, m_plugins)
+		delete plugin;
 }
 
-QObjectList NPluginGstreamer::plugins()
+QList<NPlugin *> NPluginGstreamer::plugins()
 {
 	return m_plugins;
 }

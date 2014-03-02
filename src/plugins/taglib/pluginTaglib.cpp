@@ -25,11 +25,11 @@ NPluginTaglib::NPluginTaglib(QObject *parent) : QObject(parent)
 
 NPluginTaglib::~NPluginTaglib()
 {
-	foreach (QObject *obj, m_plugins)
-		delete obj;
+	foreach (NPlugin *plugin, m_plugins)
+		delete plugin;
 }
 
-QObjectList NPluginTaglib::plugins()
+QList<NPlugin *> NPluginTaglib::plugins()
 {
 	return m_plugins;
 }

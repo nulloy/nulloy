@@ -25,11 +25,11 @@ NPluginPhonon::NPluginPhonon(QObject *parent) : QObject(parent)
 
 NPluginPhonon::~NPluginPhonon()
 {
-	foreach (QObject *obj, m_plugins)
-		delete obj;
+	foreach (NPlugin *plugin, m_plugins)
+		delete plugin;
 }
 
-QObjectList NPluginPhonon::plugins()
+QList<NPlugin *> NPluginPhonon::plugins()
 {
 	return m_plugins;
 }

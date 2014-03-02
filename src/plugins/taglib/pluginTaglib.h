@@ -24,12 +24,12 @@ class NPluginTaglib : public QObject, public NPluginContainer
 	Q_INTERFACES(NPluginContainer)
 
 private:
-	QObjectList m_plugins;
+	QList<NPlugin *> m_plugins;
 
 public:
 	NPluginTaglib(QObject *parent = NULL);
 	~NPluginTaglib();
-	QObjectList plugins();
+	QList<NPlugin *> plugins();
 	QString name() { return "TagLib"; }
 	QString version() { return "0.5"; }
 };
