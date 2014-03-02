@@ -17,14 +17,14 @@
 #define N_TAG_READER_GSTREAMER_H
 
 #include "global.h"
-#include "pluginElementInterface.h"
+#include "plugin.h"
 #include "tagReaderInterface.h"
 #include <gst/gst.h>
 
-class NTagReaderGstreamer : public NTagReaderInterface, public NPluginElementInterface
+class NTagReaderGstreamer : public NTagReaderInterface, public NPlugin
 {
 	Q_OBJECT
-	Q_INTERFACES(NTagReaderInterface NPluginElementInterface)
+	Q_INTERFACES(NTagReaderInterface NPlugin)
 
 private:
 	QString m_path;

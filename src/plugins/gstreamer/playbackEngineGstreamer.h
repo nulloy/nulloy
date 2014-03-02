@@ -17,17 +17,17 @@
 #define N_PLAYBACK_ENGINE_GSTREAMER_H
 
 #include "global.h"
-#include "pluginElementInterface.h"
+#include "plugin.h"
 #include "playbackEngineInterface.h"
 
 #include <gst/gst.h>
 
 class QTimer;
 
-class NPlaybackEngineGStreamer : public NPlaybackEngineInterface, public NPluginElementInterface
+class NPlaybackEngineGStreamer : public NPlaybackEngineInterface, public NPlugin
 {
 	Q_OBJECT
-	Q_INTERFACES(NPlaybackEngineInterface NPluginElementInterface)
+	Q_INTERFACES(NPlaybackEngineInterface NPlugin)
 
 private:
 	GstElement *m_playbin;

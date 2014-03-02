@@ -13,20 +13,20 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_ELEMENT_INTERFACE_H
-#define N_PLUGIN_ELEMENT_INTERFACE_H
+#ifndef N_PLUGIN_H
+#define N_PLUGIN_H
 
 #include "global.h"
 #include <QtCore>
 
-class NPluginElementInterface
+class NPlugin
 {
 protected:
 	bool m_init;
 
 public:
-	NPluginElementInterface() { m_init = FALSE; }
-	virtual ~NPluginElementInterface() {}
+	NPlugin() { m_init = FALSE; }
+	virtual ~NPlugin() {}
 	virtual QString name()
 	{
 		QObject *obj = dynamic_cast<QObject *>(this);
@@ -40,7 +40,7 @@ public:
 	virtual void init() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/NPluginElementInterface/0.5")
+Q_DECLARE_INTERFACE(NPlugin, "Nulloy/NPlugin/0.5")
 
 #endif
 

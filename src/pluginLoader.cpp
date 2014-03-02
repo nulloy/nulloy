@@ -87,7 +87,7 @@ QObject* NPluginLoader::_findPlugin(N::PluginElementType type, QObjectList &obje
 	if (index == -1)
 		index = _identifiers.indexOf(QRegExp(type_num + "/.*"));
 	if (index != -1) {
-		NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(objects.at(index));
+		NPlugin *el = qobject_cast<NPlugin *>(objects.at(index));
 
 		QString identifier = _identifiers.at(index);
 		QString plug_name = identifier.section('/', 1, 1);
@@ -133,10 +133,10 @@ void NPluginLoader::_loadPlugins()
 	objectsStatic << QPluginLoader::staticInstances();
 
 	foreach (QObject *obj, objectsStatic) {
-		NPluginElementInterface *plugin = qobject_cast<NPluginElementInterface *>(obj);
+		NPlugin *plugin = qobject_cast<NPlugin *>(obj);
 		if (plugin) {
 			objects << obj;
-			qobject_cast<NPluginElementInterface *>(obj)->init();
+			qobject_cast<NPlugin *>(obj)->init();
 			QString id = plugin->identifier();
 			id.insert(id.lastIndexOf('/'), " (Built-in)");
 			_identifiers << id;
@@ -190,7 +190,7 @@ void NPluginLoader::_loadPlugins()
 				QObjectList elements = plugin->elements();
 				objects << elements;
 				foreach (QObject *obj, elements) {
-					NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(obj);
+					NPlugin *el = qobject_cast<NPlugin *>(obj);
 					QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
 					                     ((el->type() == N::OtherElementType) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
 					_identifiers << identifier;

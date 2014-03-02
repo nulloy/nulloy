@@ -43,7 +43,7 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_waveBuilder = NPluginLoader::waveformPlugin();
 #else
 	NWaveformBuilderInterface *builder = dynamic_cast<NWaveformBuilderInterface *>(new NWaveformBuilderGstreamer());
-	dynamic_cast<NPluginElementInterface *>(builder)->init();
+	dynamic_cast<NPlugin *>(builder)->init();
 	m_waveBuilder = builder;
 #endif
 

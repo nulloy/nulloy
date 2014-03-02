@@ -16,7 +16,7 @@
 #ifndef N_TAG_READER_TAGLIB_H
 #define N_TAG_READER_TAGLIB_H
 
-#include "pluginElementInterface.h"
+#include "plugin.h"
 #include "tagReaderInterface.h"
 
 #include <taglib/tag.h>
@@ -24,10 +24,10 @@
 
 class QString;
 
-class NTagReaderTaglib : public NTagReaderInterface, public NPluginElementInterface
+class NTagReaderTaglib : public NTagReaderInterface, public NPlugin
 {
 	Q_OBJECT
-	Q_INTERFACES(NTagReaderInterface NPluginElementInterface)
+	Q_INTERFACES(NTagReaderInterface NPlugin)
 
 private:
 	QString m_path;

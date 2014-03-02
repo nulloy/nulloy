@@ -18,7 +18,7 @@
 #include "settings.h"
 #include "player.h"
 #include "skinFileSystem.h"
-#include "pluginElementInterface.h"
+#include "plugin.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"

@@ -66,7 +66,7 @@ NPlayer::NPlayer()
 	m_playbackEngine = NPluginLoader::playbackPlugin();
 #else
 	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(new NPlaybackEngineGStreamer());
-	dynamic_cast<NPluginElementInterface *>(m_playbackEngine)->init();
+	dynamic_cast<NPlugin *>(m_playbackEngine)->init();
 #endif
 	m_playbackEngine->setParent(this);
 	connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), this, SLOT(on_playbackEngine_mediaChanged(const QString &)));
