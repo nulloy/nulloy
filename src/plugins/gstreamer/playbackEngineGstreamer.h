@@ -36,8 +36,9 @@ private:
 	qreal m_oldVolume;
 	qreal m_oldPosition;
 	N::PlaybackState m_oldState;
-	qreal m_savedPosition;
+	qreal m_posponedPosition;
 	QString m_currentMedia;
+	gint64 m_durationNsec;
 
 	N::PlaybackState fromGstState(GstState state);
 
@@ -54,6 +55,7 @@ public:
 
 	Q_INVOKABLE qreal volume();
 	Q_INVOKABLE qreal position();
+	Q_INVOKABLE qint64 durationMsec();
 
 public slots:
 	Q_INVOKABLE void setMedia(const QString &file);

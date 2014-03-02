@@ -34,6 +34,7 @@ public:
 
 	Q_INVOKABLE virtual qreal volume() = 0;
 	Q_INVOKABLE virtual qreal position() = 0;
+	Q_INVOKABLE virtual qint64 durationMsec() = 0;
 
 	static QString interface() { return PLAYBACK_INTERFACE; }
 
