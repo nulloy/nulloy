@@ -29,22 +29,22 @@ NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
 	putenv( QString("GST_PLUGIN_PATH=" + executable_path.absolutePath() + "/plugins/GStreamer/plugins" + ":" + getenv("GST_PLUGIN_PATH")).toUtf8().data());
 #endif
 
-	m_elements << new NPlaybackEngineGStreamer()
+	m_plugins << new NPlaybackEngineGStreamer()
 #ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
-	           << new NTagReaderGstreamer()
+	          << new NTagReaderGstreamer()
 #endif
-	           << new NWaveformBuilderGstreamer();
+	          << new NWaveformBuilderGstreamer();
 }
 
 NPluginGstreamer::~NPluginGstreamer()
 {
-	foreach (QObject *obj, m_elements)
+	foreach (QObject *obj, m_plugins)
 		delete obj;
 }
 
-QObjectList NPluginGstreamer::elements()
+QObjectList NPluginGstreamer::plugins()
 {
-	return m_elements;
+	return m_plugins;
 }
 
 #if !defined _N_GSTREAMER_PLUGINS_BUILTIN_ && !defined _N_NO_PLUGINS_

@@ -23,7 +23,7 @@ class NPluginContainer
 public:
 	NPluginContainer() {}
 	virtual ~NPluginContainer() {}
-	virtual QObjectList elements() = 0;
+	virtual QObjectList plugins() = 0;
 	virtual QString name() = 0;
 	virtual QString version() = 0;
 };

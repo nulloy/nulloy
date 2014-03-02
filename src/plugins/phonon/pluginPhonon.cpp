@@ -19,19 +19,19 @@
 
 NPluginPhonon::NPluginPhonon(QObject *parent) : QObject(parent)
 {
-	m_elements << new NPlaybackEnginePhonon()
-	           << new NWaveformBuilderPhonon();
+	m_plugins << new NPlaybackEnginePhonon()
+	          << new NWaveformBuilderPhonon();
 }
 
 NPluginPhonon::~NPluginPhonon()
 {
-	foreach (QObject *obj, m_elements)
+	foreach (QObject *obj, m_plugins)
 		delete obj;
 }
 
-QObjectList NPluginPhonon::elements()
+QObjectList NPluginPhonon::plugins()
 {
-	return m_elements;
+	return m_plugins;
 }
 
 Q_EXPORT_PLUGIN2(plugin_phonon, NPluginPhonon)

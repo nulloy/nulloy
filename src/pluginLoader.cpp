@@ -160,7 +160,7 @@ void NPluginLoader::_loadPlugins()
 			QObject *instance = loader->instance();
 			NPluginContainer *container = qobject_cast<NPluginContainer *>(instance);
 			if (container) {
-				QObjectList plugins = container->elements();
+				QObjectList plugins = container->plugins();
 				objects << plugins;
 				foreach (QObject *obj, plugins) {
 					NPlugin *plugin = qobject_cast<NPlugin *>(obj);

@@ -19,19 +19,19 @@
 
 NPluginTaglib::NPluginTaglib(QObject *parent) : QObject(parent)
 {
-	m_elements << new NTagReaderTaglib()
-	           << new NCoverReaderTaglib();
+	m_plugins << new NTagReaderTaglib()
+	          << new NCoverReaderTaglib();
 }
 
 NPluginTaglib::~NPluginTaglib()
 {
-	foreach (QObject *obj, m_elements)
+	foreach (QObject *obj, m_plugins)
 		delete obj;
 }
 
-QObjectList NPluginTaglib::elements()
+QObjectList NPluginTaglib::plugins()
 {
-	return m_elements;
+	return m_plugins;
 }
 
 Q_EXPORT_PLUGIN2(plugin_taglib, NPluginTaglib)

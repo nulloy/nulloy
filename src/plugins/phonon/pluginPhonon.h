@@ -24,12 +24,12 @@ class NPluginPhonon : public QObject, public NPluginContainer
 	Q_INTERFACES(NPluginContainer)
 
 private:
-	QObjectList m_elements;
+	QObjectList m_plugins;
 
 public:
 	NPluginPhonon(QObject *parent = NULL);
 	~NPluginPhonon();
-	QObjectList elements();
+	QObjectList plugins();
 	QString name() { return "Phonon"; }
 	QString version() { return "0.5"; }
 };
