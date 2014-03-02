@@ -19,8 +19,8 @@
 #include "common.h"
 #include "settings.h"
 
-#include "pluginInterface.h"
-#include "pluginElementInterface.h"
+#include "pluginContainer.h"
+#include "plugin.h"
 
 #include "waveformBuilderInterface.h"
 #include "playbackEngineInterface.h"
@@ -185,7 +185,7 @@ void NPluginLoader::_loadPlugins()
 				continue;
 			QPluginLoader *loader = new QPluginLoader(fileFullPath);
 			QObject *instance = loader->instance();
-			NPluginInterface *plugin = qobject_cast<NPluginInterface *>(instance);
+			NPluginContainer *plugin = qobject_cast<NPluginContainer *>(instance);
 			if (plugin) {
 				QObjectList elements = plugin->elements();
 				objects << elements;

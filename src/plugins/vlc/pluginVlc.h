@@ -16,12 +16,12 @@
 #ifndef N_PLUGIN_VLC_H
 #define N_PLUGIN_VLC_H
 
-#include "pluginInterface.h"
+#include "pluginContainer.h"
 
-class NPluginVlc : public QObject, public NPluginInterface
+class NPluginVlc : public QObject, public NPluginContainer
 {
 	Q_OBJECT
-	Q_INTERFACES(NPluginInterface)
+	Q_INTERFACES(NPluginContainer)
 
 private:
 	QObjectList m_elements;

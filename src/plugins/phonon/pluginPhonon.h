@@ -16,12 +16,12 @@
 #ifndef N_PLUGIN_PHONON_H
 #define N_PLUGIN_PHONON_H
 
-#include "pluginInterface.h"
+#include "pluginContainer.h"
 
-class NPluginPhonon : public QObject, public NPluginInterface
+class NPluginPhonon : public QObject, public NPluginContainer
 {
 	Q_OBJECT
-	Q_INTERFACES(NPluginInterface)
+	Q_INTERFACES(NPluginContainer)
 
 private:
 	QObjectList m_elements;

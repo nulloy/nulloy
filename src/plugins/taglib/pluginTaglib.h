@@ -16,12 +16,12 @@
 #ifndef N_PLUGIN_TAGLIB_H
 #define N_PLUGIN_TAGLIB_H
 
-#include "pluginInterface.h"
+#include "pluginContainer.h"
 
-class NPluginTaglib : public QObject, public NPluginInterface
+class NPluginTaglib : public QObject, public NPluginContainer
 {
 	Q_OBJECT
-	Q_INTERFACES(NPluginInterface)
+	Q_INTERFACES(NPluginContainer)
 
 private:
 	QObjectList m_elements;

@@ -13,22 +13,22 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_INTERFACE_H
-#define N_PLUGIN_INTERFACE_H
+#ifndef N_PLUGIN_CONTAINER_H
+#define N_PLUGIN_CONTAINER_H
 
 #include <QtCore>
 
-class NPluginInterface
+class NPluginContainer
 {
 public:
-	NPluginInterface() {}
-	virtual ~NPluginInterface() {}
+	NPluginContainer() {}
+	virtual ~NPluginContainer() {}
 	virtual QObjectList elements() = 0;
 	virtual QString name() = 0;
 	virtual QString version() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/NPluginInterface/0.5")
+Q_DECLARE_INTERFACE(NPluginContainer, "Nulloy/NPluginContainer/0.5")
 
 #endif
 
