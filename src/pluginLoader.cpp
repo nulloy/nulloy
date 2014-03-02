@@ -62,53 +62,26 @@ void NPluginLoader::deinit()
 
 QObject* NPluginLoader::_findPlugin(N::PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags)
 {
-	QString base_interface;
-	QString type_str;
-	if (type == N::PlaybackEngineType) {
-		base_interface = NPlaybackEngineInterface::interface();
-		type_str = "Playback";
-	} else if (type == N::WaveformBuilderType) {
-		base_interface = NWaveformBuilderInterface::interface();
-		type_str = "Waveform";
-	} else if (type == N::TagReaderType) {
-		base_interface = NTagReaderInterface::interface();
-		type_str = "TagReader";
-	} else if (type == N::CoverReaderType) {
-		base_interface = NCoverReaderInterface::interface();
-		type_str = "CoverReader";
-	}
+	QString type_str = ENUM_NAME(N, PluginType, type);
+	QString name_version = NSettings::instance()->value("Plugins/" + type_str).toString();
 
 	int index;
-	QString type_num = QString::number(type);
-	QString str = NSettings::instance()->value(type_str).toString();
-	index = _identifiers.indexOf(QRegExp(type_num + "/" + str + "/.*"));
+	index = _identifiers.indexOf(QRegExp(type_str + "/" + name_version + "/.*"));
 	if (index == -1)
-		index = _identifiers.indexOf(QRegExp(type_num + "/GStreamer/.*"));
+		index = _identifiers.indexOf(QRegExp(type_str + "/GStreamer/.*"));
 	if (index == -1)
-		index = _identifiers.indexOf(QRegExp(type_num + "/.*"));
+		index = _identifiers.indexOf(QRegExp(type_str + "/.*"));
 	if (index != -1) {
 		NPlugin *el = qobject_cast<NPlugin *>(objects.at(index));
 
 		QString identifier = _identifiers.at(index);
-		QString plug_name = identifier.section('/', 1, 1);
-		QString plug_ver = identifier.section('/', 2, 2);
-		QString el_interface_ver = el->interface().section('/', 2, 2);
 
-		QString base_interface_name = base_interface.section('/', 1, 1);
-		QString base_interface_ver = base_interface.section('/', 2, 2);
-
-		if (el_interface_ver != base_interface_ver) {
-			QMessageBox::warning(NULL, QObject::tr("Plugin Interface Mismatch"),
-			                     plug_name + " " + plug_ver + " plugin has a different version of " + base_interface_name +".\n" +
-			                     "Internal version: " + base_interface_ver + "\n" +
-			                     "Plugin version: " + el_interface_ver,
-			                     QMessageBox::Close);
-		}
-
-		el->init();
 		usedFlags[identifier] = TRUE;
 
-		NSettings::instance()->setValue(type_str, plug_name + "/" + plug_ver);
+		name_version = identifier.section('/', 1, 2);
+		NSettings::instance()->setValue(QString() + "Plugins/" + type_str, name_version);
+
+		el->init();
 
 		return objects.at(index);
 	} else {
@@ -191,8 +164,8 @@ void NPluginLoader::_loadPlugins()
 				objects << elements;
 				foreach (QObject *obj, elements) {
 					NPlugin *el = qobject_cast<NPlugin *>(obj);
-					QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
-					                     ((el->type() == N::OtherPluginType) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
+					QString type_str = ENUM_NAME(N, PluginType, el->type());
+					QString identifier = type_str + "/" + plugin->name() + "/" + plugin->version() + "/" + fileFullPath.replace("/", "\\");
 					_identifiers << identifier;
 					_loaders[identifier] = loader;
 					usedFlags[identifier] = FALSE;
