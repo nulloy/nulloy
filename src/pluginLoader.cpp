@@ -62,26 +62,26 @@ void NPluginLoader::deinit()
 
 QObject* NPluginLoader::_findPlugin(N::PluginType type, QObjectList &objects, QMap<QString, bool> &usedFlags)
 {
-	QString type_str = ENUM_NAME(N, PluginType, type);
-	QString name_version = NSettings::instance()->value("Plugins/" + type_str).toString();
+	QString typeString = ENUM_NAME(N, PluginType, type);
+	QString savedContainerName = NSettings::instance()->value("Plugins/" + typeString).toString();
 
 	int index;
-	index = _identifiers.indexOf(QRegExp(type_str + "/" + name_version + "/.*"));
+	index = _identifiers.indexOf(QRegExp(typeString + "/" + savedContainerName + "/.*"));
 	if (index == -1)
-		index = _identifiers.indexOf(QRegExp(type_str + "/GStreamer/.*"));
+		index = _identifiers.indexOf(QRegExp(typeString + "/GStreamer/.*"));
 	if (index == -1)
-		index = _identifiers.indexOf(QRegExp(type_str + "/.*"));
+		index = _identifiers.indexOf(QRegExp(typeString + "/.*"));
 	if (index != -1) {
-		NPlugin *el = qobject_cast<NPlugin *>(objects.at(index));
+		NPlugin *plugin = qobject_cast<NPlugin *>(objects.at(index));
 
 		QString identifier = _identifiers.at(index);
 
 		usedFlags[identifier] = TRUE;
 
-		name_version = identifier.section('/', 1, 2);
-		NSettings::instance()->setValue(QString() + "Plugins/" + type_str, name_version);
+		QString containerName = identifier.section('/', 1, 1);
+		NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);
 
-		el->init();
+		plugin->init();
 
 		return objects.at(index);
 	} else {
@@ -158,14 +158,14 @@ void NPluginLoader::_loadPlugins()
 				continue;
 			QPluginLoader *loader = new QPluginLoader(fileFullPath);
 			QObject *instance = loader->instance();
-			NPluginContainer *plugin = qobject_cast<NPluginContainer *>(instance);
-			if (plugin) {
-				QObjectList elements = plugin->elements();
-				objects << elements;
-				foreach (QObject *obj, elements) {
-					NPlugin *el = qobject_cast<NPlugin *>(obj);
-					QString type_str = ENUM_NAME(N, PluginType, el->type());
-					QString identifier = type_str + "/" + plugin->name() + "/" + plugin->version() + "/" + fileFullPath.replace("/", "\\");
+			NPluginContainer *container = qobject_cast<NPluginContainer *>(instance);
+			if (container) {
+				QObjectList plugins = container->elements();
+				objects << plugins;
+				foreach (QObject *obj, plugins) {
+					NPlugin *plugin = qobject_cast<NPlugin *>(obj);
+					QString typeString = ENUM_NAME(N, PluginType, plugin->type());
+					QString identifier = typeString + "/" + container->name() + "/" + fileFullPath.replace("/", "\\");
 					_identifiers << identifier;
 					_loaders[identifier] = loader;
 					usedFlags[identifier] = FALSE;

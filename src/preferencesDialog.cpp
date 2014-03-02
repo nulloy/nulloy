@@ -65,7 +65,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	NFlagIterator<N::PluginType> iter(N::MaxPluginType);
 	while (iter.hasNext()) {
 		iter.next();
-		QGroupBox *box = generatePluginsGroup(iter.value(), identifiers);
+		QGroupBox *box = generatePluginsGroupBox(iter.value(), identifiers);
 		if (box) {
 			scrollLayout->addWidget(box);
 			hasMultiple = TRUE;
@@ -171,25 +171,26 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	textBrowser->setMinimumHeight(textSize.height());
 }
 
-QGroupBox* NPreferencesDialog::generatePluginsGroup(N::PluginType type, const QStringList &identifiers)
+QGroupBox* NPreferencesDialog::generatePluginsGroupBox(N::PluginType type, const QStringList &identifiers)
 {
-	QString type_str = ENUM_NAME(N, PluginType, type);
-	QString name_version = NSettings::instance()->value("Plugins/" + type_str).toString();
+	QString typeString = ENUM_NAME(N, PluginType, type);
+	QString savedContainerName = NSettings::instance()->value("Plugins/" + typeString).toString();
 
-	QStringList groupedIds = identifiers.filter(QRegExp("^" + type_str + "/.*"));
-	if (groupedIds.count() > 1) {
-		QGroupBox *groupBox = new QGroupBox(type_str);
+	QStringList filteredIds = identifiers.filter(QRegExp("^" + typeString + "/.*"));
+	if (filteredIds.count() > 1) {
+		QGroupBox *groupBox = new QGroupBox(typeString);
 		QGridLayout *groupLayout = new QGridLayout;
 		groupLayout->setContentsMargins(0, 5, 5, 0);
 		groupLayout->setSpacing(0);
 		groupBox->setLayout(groupLayout);
 
-		for (int i = 0; i < groupedIds.count(); ++i) {
-			QRadioButton *radioButton = new QRadioButton(groupedIds.at(i).section('/', 1, 2).replace('/', ' '));
+		for (int i = 0; i < filteredIds.count(); ++i) {
+			QString containerName = filteredIds.at(i).section('/', 1, 1);
+			QRadioButton *radioButton = new QRadioButton(containerName);
 			connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(pluginsChanged()));
-			if (groupedIds.at(i).contains(name_version))
+			if (filteredIds.at(i).contains(savedContainerName))
 				radioButton->setChecked(TRUE);
-			m_pluginButtonsMap[groupedIds.at(i)] = radioButton;
+			m_pluginButtonsMap[filteredIds.at(i)] = radioButton;
 			groupLayout->addWidget(radioButton, i, 0);
 		}
 		return groupBox;
@@ -209,22 +210,22 @@ void NPreferencesDialog::on_skinComboBox_activated(int index)
 	ui.skinRestartLabel->setVisible(TRUE);
 }
 
-QString NPreferencesDialog::selectedPluginsGroup(N::PluginType type)
+QString NPreferencesDialog::selectedContainer(N::PluginType type)
 {
-	QString type_str = ENUM_NAME(N, PluginType, type);
+	QString typeString = ENUM_NAME(N, PluginType, type);
 
 	QStringList identifiers = m_pluginButtonsMap.keys();
-	QStringList groupedIds = identifiers.filter(QRegExp("^" + type_str + "/.*"));
+	QStringList filteredIds = identifiers.filter(QRegExp("^" + typeString + "/.*"));
 
-	QString str;
-	for (int i = 0; i < groupedIds.count(); ++i) {
-		QRadioButton *radioButton = m_pluginButtonsMap[groupedIds.at(i)];
+	QString containerName;
+	for (int i = 0; i < filteredIds.count(); ++i) {
+		QRadioButton *radioButton = m_pluginButtonsMap[filteredIds.at(i)];
 		if (radioButton->isChecked()) {
-			str = radioButton->text();
+			containerName = radioButton->text();
 			break;
 		}
 	}
-	return str.replace(' ', '/');
+	return containerName;
 }
 
 void NPreferencesDialog::loadSettings()
@@ -299,10 +300,10 @@ void NPreferencesDialog::saveSettings()
 	NFlagIterator<N::PluginType> iter(N::MaxPluginType);
 	while (iter.hasNext()) {
 		iter.next();
-		QString type_str = ENUM_NAME(N, PluginType, iter.value());
-		QString name_version = selectedPluginsGroup(iter.value());
-		if (!name_version.isEmpty())
-			NSettings::instance()->setValue(QString() + "Plugins/" + type_str, name_version);
+		QString typeString = ENUM_NAME(N, PluginType, iter.value());
+		QString containerName = selectedContainer(iter.value());
+		if (!containerName.isEmpty())
+			NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);
 	}
 #endif
 

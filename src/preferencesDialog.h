@@ -30,8 +30,8 @@ class NPreferencesDialog : public QDialog
 private:
 	Ui::PreferencesDialog ui;
 	void showEvent(QShowEvent *event);
-	QGroupBox* generatePluginsGroup(N::PluginType type, const QStringList &identifiers);
-	QString selectedPluginsGroup(N::PluginType type);
+	QGroupBox* generatePluginsGroupBox(N::PluginType type, const QStringList &identifiers);
+	QString selectedContainer(N::PluginType type);
 	QMap<QString, QRadioButton *> m_pluginButtonsMap;
 
 public:
