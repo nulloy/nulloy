@@ -13,12 +13,12 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_VLC_H
-#define N_PLUGIN_VLC_H
+#ifndef N_CONTAINER_VLC_H
+#define N_CONTAINER_VLC_H
 
 #include "pluginContainer.h"
 
-class NPluginVlc : public QObject, public NPluginContainer
+class NContainerVlc : public QObject, public NPluginContainer
 {
 	Q_OBJECT
 	Q_INTERFACES(NPluginContainer)
@@ -27,8 +27,8 @@ private:
 	QList<NPlugin *> m_plugins;
 
 public:
-	NPluginVlc(QObject *parent = NULL);
-	~NPluginVlc();
+	NContainerVlc(QObject *parent = NULL);
+	~NContainerVlc();
 	QList<NPlugin *> plugins();
 	QString name() { return "VLC"; }
 	QString version() { return "0.5"; }

@@ -13,26 +13,25 @@
 **
 *********************************************************************/
 
-#include "pluginVlc.h"
-#include "playbackEngineVlc.h"
-#include "waveformBuilderVlc.h"
+#ifndef N_CONTAINER_PHONON_H
+#define N_CONTAINER_PHONON_H
 
-NPluginVlc::NPluginVlc(QObject *parent) : QObject(parent)
+#include "pluginContainer.h"
+
+class NContainerPhonon : public QObject, public NPluginContainer
 {
-	m_plugins << new NPlaybackEngineVlc()
-	          << new NWaveformBuilderVlc();
-}
+	Q_OBJECT
+	Q_INTERFACES(NPluginContainer)
 
-NPluginVlc::~NPluginVlc()
-{
-	foreach (NPlugin *plugin, m_plugins)
-		delete plugin;
-}
+private:
+	QList<NPlugin *> m_plugins;
 
-QList<NPlugin *> NPluginVlc::plugins()
-{
-	return m_plugins;
-}
+public:
+	NContainerPhonon(QObject *parent = NULL);
+	~NContainerPhonon();
+	QList<NPlugin *> plugins();
+	QString name() { return "Phonon"; }
+	QString version() { return "0.5"; }
+};
 
-Q_EXPORT_PLUGIN2(plugin_vlc, NPluginVlc)
-
+#endif

@@ -13,26 +13,26 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_TAGLIB_H
-#define N_PLUGIN_TAGLIB_H
+#include "containerTaglib.h"
+#include "tagReaderTaglib.h"
+#include "coverReaderTaglib.h"
 
-#include "pluginContainer.h"
-
-class NPluginTaglib : public QObject, public NPluginContainer
+NContainerTaglib::NContainerTaglib(QObject *parent) : QObject(parent)
 {
-	Q_OBJECT
-	Q_INTERFACES(NPluginContainer)
+	m_plugins << new NTagReaderTaglib()
+	          << new NCoverReaderTaglib();
+}
 
-private:
-	QList<NPlugin *> m_plugins;
+NContainerTaglib::~NContainerTaglib()
+{
+	foreach (NPlugin *plugin, m_plugins)
+		delete plugin;
+}
 
-public:
-	NPluginTaglib(QObject *parent = NULL);
-	~NPluginTaglib();
-	QList<NPlugin *> plugins();
-	QString name() { return "TagLib"; }
-	QString version() { return "0.5"; }
-};
+QList<NPlugin *> NContainerTaglib::plugins()
+{
+	return m_plugins;
+}
 
-#endif
+Q_EXPORT_PLUGIN2(plugin_taglib, NContainerTaglib)
 

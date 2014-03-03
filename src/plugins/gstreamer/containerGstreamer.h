@@ -13,26 +13,26 @@
 **
 *********************************************************************/
 
-#include "pluginPhonon.h"
-#include "playbackEnginePhonon.h"
-#include "waveformBuilderPhonon.h"
+#ifndef N_CONTAINER_GSTREAMER_H
+#define N_CONTAINER_GSTREAMER_H
 
-NPluginPhonon::NPluginPhonon(QObject *parent) : QObject(parent)
+#include "pluginContainer.h"
+
+class NContainerGstreamer : public QObject, public NPluginContainer
 {
-	m_plugins << new NPlaybackEnginePhonon()
-	          << new NWaveformBuilderPhonon();
-}
+	Q_OBJECT
+	Q_INTERFACES(NPluginContainer)
 
-NPluginPhonon::~NPluginPhonon()
-{
-	foreach (NPlugin *plugin, m_plugins)
-		delete plugin;
-}
+private:
+	QList<NPlugin *> m_plugins;
 
-QList<NPlugin *> NPluginPhonon::plugins()
-{
-	return m_plugins;
-}
+public:
+	NContainerGstreamer(QObject *parent = NULL);
+	~NContainerGstreamer();
+	QList<NPlugin *> plugins();
+	QString name() { return "GStreamer"; }
+	QString version() { return "0.5.1"; }
+};
 
-Q_EXPORT_PLUGIN2(plugin_phonon, NPluginPhonon)
+#endif
 

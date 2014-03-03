@@ -13,14 +13,14 @@
 **
 *********************************************************************/
 
-#include "pluginGstreamer.h"
+#include "containerGstreamer.h"
 #include "playbackEngineGstreamer.h"
 #include "waveformBuilderGstreamer.h"
 #ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
 #include "tagReaderGstreamer.h"
 #endif
 
-NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
+NContainerGstreamer::NContainerGstreamer(QObject *parent) : QObject(parent)
 {
 	QDir executable_path(QCoreApplication::applicationDirPath());
 #ifdef Q_WS_WIN
@@ -36,18 +36,18 @@ NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
 	          << new NWaveformBuilderGstreamer();
 }
 
-NPluginGstreamer::~NPluginGstreamer()
+NContainerGstreamer::~NContainerGstreamer()
 {
 	foreach (NPlugin *plugin, m_plugins)
 		delete plugin;
 }
 
-QList<NPlugin *> NPluginGstreamer::plugins()
+QList<NPlugin *> NContainerGstreamer::plugins()
 {
 	return m_plugins;
 }
 
 #if !defined _N_GSTREAMER_PLUGINS_BUILTIN_ && !defined _N_NO_PLUGINS_
-Q_EXPORT_PLUGIN2(plugin_gstreamer, NPluginGstreamer)
+Q_EXPORT_PLUGIN2(plugin_gstreamer, NContainerGstreamer)
 #endif
 
