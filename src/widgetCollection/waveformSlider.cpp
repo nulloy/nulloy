@@ -40,7 +40,7 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	setMouseTracking(TRUE);
 
 #ifndef _N_NO_PLUGINS_
-	m_waveBuilder = NPluginLoader::waveformPlugin();
+	m_waveBuilder = dynamic_cast<NWaveformBuilderInterface *>(NPluginLoader::getPlugin(N::WaveformBuilder));
 #else
 	NWaveformBuilderInterface *builder = dynamic_cast<NWaveformBuilderInterface *>(new NWaveformBuilderGstreamer());
 	dynamic_cast<NPlugin *>(builder)->init();
@@ -147,6 +147,7 @@ void NWaveformSlider::mouseMoveEvent(QMouseEvent *event)
 
 void NWaveformSlider::leaveEvent(QEvent *event)
 {
+	Q_UNUSED(event);
 	emit mouseMoved(-1, -1);
 }
 

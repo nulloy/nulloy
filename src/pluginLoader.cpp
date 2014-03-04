@@ -15,12 +15,10 @@
 
 #include "pluginLoader.h"
 
-#include "global.h"
 #include "common.h"
 #include "settings.h"
 
 #include "pluginContainer.h"
-#include "plugin.h"
 
 #include "waveformBuilderInterface.h"
 #include "playbackEngineInterface.h"
@@ -216,28 +214,10 @@ void NPluginLoader::_loadPlugins()
 	}
 }
 
-NPlaybackEngineInterface* NPluginLoader::playbackPlugin()
+NPlugin* NPluginLoader::getPlugin(N::PluginType type)
 {
 	_loadPlugins();
-	return dynamic_cast<NPlaybackEngineInterface *>(_usedPlugins[N::PlaybackEngine]);
-}
-
-NWaveformBuilderInterface* NPluginLoader::waveformPlugin()
-{
-	_loadPlugins();
-	return dynamic_cast<NWaveformBuilderInterface *>(_usedPlugins[N::WaveformBuilder]);
-}
-
-NTagReaderInterface* NPluginLoader::tagReaderPlugin()
-{
-	_loadPlugins();
-	return dynamic_cast<NTagReaderInterface *>(_usedPlugins[N::TagReader]);
-}
-
-NCoverReaderInterface* NPluginLoader::coverReaderPlugin()
-{
-	_loadPlugins();
-	return dynamic_cast<NCoverReaderInterface *>(_usedPlugins[N::CoverReader]);
+	return _usedPlugins[type];
 }
 
 QList<NPluginLoader::Descriptor> NPluginLoader::descriptors()
