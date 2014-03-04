@@ -24,10 +24,6 @@
 #include "skinLoader.h"
 #endif
 
-#ifndef _N_NO_PLUGINS_
-#include "pluginLoader.h"
-#endif
-
 #include <QGroupBox>
 #include <QMessageBox>
 #include <QPushButton>
@@ -35,6 +31,8 @@
 #include <QSpacerItem>
 #include <QTextBrowser>
 #include <QVBoxLayout>
+
+using namespace NPluginLoader;
 
 NPreferencesDialog::~NPreferencesDialog() {}
 
@@ -57,22 +55,19 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 #ifdef _N_NO_PLUGINS_
 	ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 #else
-	QStringList identifiers = NPluginLoader::pluginIdentifiers();
 	QVBoxLayout *scrollLayout = new QVBoxLayout;
 	ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
 
-	bool hasMultiple = FALSE;
 	NFlagIterator<N::PluginType> iter(N::MaxPluginType);
 	while (iter.hasNext()) {
 		iter.next();
-		QGroupBox *box = generatePluginsGroupBox(iter.value(), identifiers);
-		if (box) {
-			scrollLayout->addWidget(box);
-			hasMultiple = TRUE;
-		}
+		N::PluginType type = iter.value();
+		QGroupBox *groupBox = createGroupBox(type);
+		if (groupBox)
+			scrollLayout->addWidget(groupBox);
 	}
 
-	if (hasMultiple)
+	if (scrollLayout->count() > 0)
 		scrollLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	else
 		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
@@ -171,32 +166,39 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	textBrowser->setMinimumHeight(textSize.height());
 }
 
-QGroupBox* NPreferencesDialog::generatePluginsGroupBox(N::PluginType type, const QStringList &identifiers)
+QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
 {
+	QList<Descriptor> descriptors = NPluginLoader::descriptors();
+
 	QString typeString = ENUM_NAME(N, PluginType, type);
-	QString savedContainerName = NSettings::instance()->value("Plugins/" + typeString).toString();
+	QString settingsContainer = NSettings::instance()->value("Plugins/" + typeString).toString();
 
-	QStringList filteredIds = identifiers.filter(QRegExp("^" + typeString + "/.*"));
-	if (filteredIds.count() > 1) {
-		QGroupBox *groupBox = new QGroupBox(typeString);
-		QGridLayout *groupLayout = new QGridLayout;
-		groupLayout->setContentsMargins(0, 5, 5, 0);
-		groupLayout->setSpacing(0);
-		groupBox->setLayout(groupLayout);
-
-		for (int i = 0; i < filteredIds.count(); ++i) {
-			QString containerName = filteredIds.at(i).section('/', 1, 1);
-			QRadioButton *radioButton = new QRadioButton(containerName);
-			connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(pluginsChanged()));
-			if (filteredIds.at(i).contains(savedContainerName))
-				radioButton->setChecked(TRUE);
-			m_pluginButtonsMap[filteredIds.at(i)] = radioButton;
-			groupLayout->addWidget(radioButton, i, 0);
-		}
-		return groupBox;
+	QList<int> indexesFilteredByType;
+	for (int i = 0; i < descriptors.count(); ++i) {
+		if (descriptors.at(i)[TypeRole] == type)
+			indexesFilteredByType << i;
 	}
 
-	return NULL;
+	if (indexesFilteredByType.count() < 2) // need at least two plugins to choose from
+		return NULL;
+
+	QGroupBox *groupBox = new QGroupBox(typeString);
+	QVBoxLayout *layout = new QVBoxLayout;
+	layout->setContentsMargins(0, 5, 5, 0);
+	layout->setSpacing(0);
+	groupBox->setLayout(layout);
+
+	foreach (int i, indexesFilteredByType) {
+		QString containerName = descriptors.at(i)[ContainerNameRole].toString();
+		QRadioButton *button = new QRadioButton(containerName);
+		connect(button, SIGNAL(toggled(bool)), this, SLOT(pluginsChanged()));
+		if (containerName == settingsContainer)
+			button->setChecked(TRUE);
+		m_radioButtons[button] = descriptors.at(i);
+		layout->addWidget(button);
+	}
+
+	return groupBox;
 }
 
 void NPreferencesDialog::pluginsChanged()
@@ -212,19 +214,22 @@ void NPreferencesDialog::on_skinComboBox_activated(int index)
 
 QString NPreferencesDialog::selectedContainer(N::PluginType type)
 {
-	QString typeString = ENUM_NAME(N, PluginType, type);
-
-	QStringList identifiers = m_pluginButtonsMap.keys();
-	QStringList filteredIds = identifiers.filter(QRegExp("^" + typeString + "/.*"));
+	QList<Descriptor> descriptors = NPluginLoader::descriptors();
+	QList<int> indexesFilteredByType;
+	for (int i = 0; i < descriptors.count(); ++i) {
+		if (descriptors.at(i)[TypeRole] == type)
+			indexesFilteredByType << i;
+	}
 
 	QString containerName;
-	for (int i = 0; i < filteredIds.count(); ++i) {
-		QRadioButton *radioButton = m_pluginButtonsMap[filteredIds.at(i)];
-		if (radioButton->isChecked()) {
-			containerName = radioButton->text();
+	foreach (int i, indexesFilteredByType) {
+		QRadioButton *button = m_radioButtons.key(descriptors.at(i));
+		if (button && button->isChecked()) {
+			containerName = descriptors.at(i)[ContainerNameRole].toString();
 			break;
 		}
 	}
+
 	return containerName;
 }
 
@@ -300,8 +305,9 @@ void NPreferencesDialog::saveSettings()
 	NFlagIterator<N::PluginType> iter(N::MaxPluginType);
 	while (iter.hasNext()) {
 		iter.next();
-		QString typeString = ENUM_NAME(N, PluginType, iter.value());
-		QString containerName = selectedContainer(iter.value());
+		N::PluginType type = iter.value();
+		QString typeString = ENUM_NAME(N, PluginType, type);
+		QString containerName = selectedContainer(type);
 		if (!containerName.isEmpty())
 			NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);
 	}
