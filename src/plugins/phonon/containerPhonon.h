@@ -13,26 +13,25 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_VLC_H
-#define N_PLUGIN_VLC_H
+#ifndef N_CONTAINER_PHONON_H
+#define N_CONTAINER_PHONON_H
 
-#include "pluginInterface.h"
+#include "pluginContainer.h"
 
-class NPluginVlc : public QObject, public NPluginInterface
+class NContainerPhonon : public QObject, public NPluginContainer
 {
 	Q_OBJECT
-	Q_INTERFACES(NPluginInterface)
+	Q_INTERFACES(NPluginContainer)
 
 private:
-	QObjectList m_elements;
+	QList<NPlugin *> m_plugins;
 
 public:
-	NPluginVlc(QObject *parent = NULL);
-	~NPluginVlc();
-	QObjectList elements();
-	QString name() { return "VLC"; }
+	NContainerPhonon(QObject *parent = NULL);
+	~NContainerPhonon();
+	QList<NPlugin *> plugins();
+	QString name() { return "Phonon"; }
 	QString version() { return "0.5"; }
 };
 
 #endif
-

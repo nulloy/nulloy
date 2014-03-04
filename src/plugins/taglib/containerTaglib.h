@@ -13,34 +13,26 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_ELEMENT_INTERFACE_H
-#define N_PLUGIN_ELEMENT_INTERFACE_H
+#ifndef N_CONTAINER_TAGLIB_H
+#define N_CONTAINER_TAGLIB_H
 
-#include "global.h"
-#include <QtCore>
+#include "pluginContainer.h"
 
-class NPluginElementInterface
+class NContainerTaglib : public QObject, public NPluginContainer
 {
-protected:
-	bool m_init;
+	Q_OBJECT
+	Q_INTERFACES(NPluginContainer)
+
+private:
+	QList<NPlugin *> m_plugins;
 
 public:
-	NPluginElementInterface() { m_init = FALSE; }
-	virtual ~NPluginElementInterface() {}
-	virtual QString name()
-	{
-		QObject *obj = dynamic_cast<QObject *>(this);
-		if (obj)
-			return obj->metaObject()->className();
-		else
-			return "";
-	}
-	virtual QString interface() = 0;
-	virtual N::PluginElementType type() { return N::OtherElementType; }
-	virtual void init() = 0;
+	NContainerTaglib(QObject *parent = NULL);
+	~NContainerTaglib();
+	QList<NPlugin *> plugins();
+	QString name() { return "TagLib"; }
+	QString version() { return "0.5"; }
 };
-
-Q_DECLARE_INTERFACE(NPluginElementInterface, "Nulloy/NPluginElementInterface/0.5")
 
 #endif
 

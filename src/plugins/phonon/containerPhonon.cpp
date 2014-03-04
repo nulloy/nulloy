@@ -13,26 +13,26 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_TAGLIB_H
-#define N_PLUGIN_TAGLIB_H
+#include "containerPhonon.h"
+#include "playbackEnginePhonon.h"
+#include "waveformBuilderPhonon.h"
 
-#include "pluginInterface.h"
-
-class NPluginTaglib : public QObject, public NPluginInterface
+NContainerPhonon::NContainerPhonon(QObject *parent) : QObject(parent)
 {
-	Q_OBJECT
-	Q_INTERFACES(NPluginInterface)
+	m_plugins << new NPlaybackEnginePhonon()
+	          << new NWaveformBuilderPhonon();
+}
 
-private:
-	QObjectList m_elements;
+NContainerPhonon::~NContainerPhonon()
+{
+	foreach (NPlugin *plugin, m_plugins)
+		delete plugin;
+}
 
-public:
-	NPluginTaglib(QObject *parent = NULL);
-	~NPluginTaglib();
-	QObjectList elements();
-	QString name() { return "TagLib"; }
-	QString version() { return "0.5"; }
-};
+QList<NPlugin *> NContainerPhonon::plugins()
+{
+	return m_plugins;
+}
 
-#endif
+Q_EXPORT_PLUGIN2(plugin_phonon, NContainerPhonon)
 

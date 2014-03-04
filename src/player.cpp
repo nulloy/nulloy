@@ -63,10 +63,10 @@ NPlayer::NPlayer()
 
 	// construct playbackEngine
 #ifndef _N_NO_PLUGINS_
-	m_playbackEngine = NPluginLoader::playbackPlugin();
+	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
 #else
 	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(new NPlaybackEngineGStreamer());
-	dynamic_cast<NPluginElementInterface *>(m_playbackEngine)->init();
+	dynamic_cast<NPlugin *>(m_playbackEngine)->init();
 #endif
 	m_playbackEngine->setParent(this);
 	connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), this, SLOT(on_playbackEngine_mediaChanged(const QString &)));
@@ -111,7 +111,8 @@ NPlayer::NPlayer()
 
 	m_trackInfoWidget = new NTrackInfoWidget();
 	m_trackInfoWidget->setStyleSheet(m_trackInfoWidget->styleSheet() + m_mainWindow->styleSheet());
-	m_trackInfoWidget->setTagReader(NPluginLoader::tagReaderPlugin());
+	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+	m_trackInfoWidget->setTagReader(tagReader);
 	QVBoxLayout *trackInfoLayout = new QVBoxLayout;
 	trackInfoLayout->setContentsMargins(0, 0, 0, 0);
 	trackInfoLayout->addWidget(m_trackInfoWidget);
@@ -277,7 +278,7 @@ NPlayer::NPlayer()
 	playlistSubMenu->addAction(loadNextDateUpAction);
 	m_contextMenu->addMenu(playlistSubMenu);
 
-	if (NPluginLoader::coverReaderPlugin())
+	if (NPluginLoader::getPlugin(N::CoverReader))
 		m_contextMenu->addAction(showCoverAction);
 	m_contextMenu->addAction(preferencesAction);
 	m_contextMenu->addSeparator();
@@ -595,7 +596,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	QString title;
 	QString app_title_version = QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion();
 	if (QFile(path).exists()) {
-		NTagReaderInterface *tagReader = NPluginLoader::tagReaderPlugin();
+		NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
 		QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
 		if (!format.isEmpty() && tagReader->isValid())
 			title = tagReader->toString(format);

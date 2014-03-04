@@ -17,7 +17,7 @@
 #define N_WAVEFORM_BUILDER_GSTREAMER_H
 
 #include "global.h"
-#include "pluginElementInterface.h"
+#include "plugin.h"
 #include "waveformBuilderInterface.h"
 #include "abstractWaveformBuilder.h"
 
@@ -28,11 +28,11 @@ class QTimer;
 #endif
 
 class NWaveformBuilderGstreamer : public NWaveformBuilderInterface,
-                                  public NPluginElementInterface,
+                                  public NPlugin,
                                   public NAbstractWaveformBuilder
 {
 	Q_OBJECT
-	Q_INTERFACES(NWaveformBuilderInterface NPluginElementInterface)
+	Q_INTERFACES(NWaveformBuilderInterface NPlugin)
 
 private:
 	GstElement *m_playbin;
@@ -52,7 +52,7 @@ public:
 
 	void init();
 	QString interface() { return NWaveformBuilderInterface::interface(); }
-	N::PluginElementType type() { return N::WaveformBuilderType; }
+	N::PluginType type() { return N::WaveformBuilder; }
 
 	void start(const QString &file);
 	void stop();

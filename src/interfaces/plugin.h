@@ -13,22 +13,34 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_INTERFACE_H
-#define N_PLUGIN_INTERFACE_H
+#ifndef N_PLUGIN_H
+#define N_PLUGIN_H
 
+#include "global.h"
 #include <QtCore>
 
-class NPluginInterface
+class NPlugin
 {
+protected:
+	bool m_init;
+
 public:
-	NPluginInterface() {}
-	virtual ~NPluginInterface() {}
-	virtual QObjectList elements() = 0;
-	virtual QString name() = 0;
-	virtual QString version() = 0;
+	NPlugin() { m_init = FALSE; }
+	virtual ~NPlugin() {}
+	virtual QString name()
+	{
+		QObject *obj = dynamic_cast<QObject *>(this);
+		if (obj)
+			return obj->metaObject()->className();
+		else
+			return "";
+	}
+	virtual QString interface() = 0;
+	virtual N::PluginType type() { return N::OtherPlugin; }
+	virtual void init() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginInterface, "Nulloy/NPluginInterface/0.5")
+Q_DECLARE_INTERFACE(NPlugin, "Nulloy/NPlugin/0.5")
 
 #endif
 

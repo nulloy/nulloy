@@ -16,20 +16,23 @@
 #ifndef N_PLUGIN_LOADER_H
 #define N_PLUGIN_LOADER_H
 
-class NPlaybackEngineInterface;
-class NTagReaderInterface;
-class NWaveformBuilderInterface;
-class NCoverReaderInterface;
-class QStringList;
+#include "plugin.h"
+#include <QMap>
+#include <QVariant>
 
 namespace NPluginLoader
 {
-	NPlaybackEngineInterface* playbackPlugin();
-	NWaveformBuilderInterface* waveformPlugin();
-	NTagReaderInterface* tagReaderPlugin();
-	NCoverReaderInterface* coverReaderPlugin();
+	enum DescriptorRole {
+		TypeRole = 0,
+		ContainerNameRole,
+		PluginObjectRole,
+		LoaderObjectRole
+	};
+	typedef QMap<DescriptorRole, QVariant> Descriptor;
+	QList<Descriptor> descriptors();
 
-	QStringList pluginIdentifiers();
+	NPlugin* getPlugin(N::PluginType type);
+
 	void deinit();
 }
 

@@ -36,8 +36,8 @@
 
 NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 {
-	m_tagReader = NPluginLoader::tagReaderPlugin();
-	m_playbackEngine = NPluginLoader::playbackPlugin();
+	m_tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
 
 	connect(this, SIGNAL(itemActivated(QListWidgetItem *)), this, SLOT(on_itemActivated(QListWidgetItem *)));
 	setItemDelegate(new NPlaylistWidgetItemDelegate(this));

@@ -16,7 +16,7 @@
 #ifndef N_WAVEFORM_BUILDER_VLC_H
 #define N_WAVEFORM_BUILDER_VLC_H
 
-#include "pluginElementInterface.h"
+#include "plugin.h"
 #include "waveformBuilderInterface.h"
 #include "abstractWaveformBuilder.h"
 
@@ -24,11 +24,11 @@
 #include <QTimer>
 
 class NWaveformBuilderVlc : public NWaveformBuilderInterface,
-                            public NPluginElementInterface,
+                            public NPlugin,
                             public NAbstractWaveformBuilder
 {
 	Q_OBJECT
-	Q_INTERFACES(NWaveformBuilderInterface NPluginElementInterface)
+	Q_INTERFACES(NWaveformBuilderInterface NPlugin)
 
 private:
 	libvlc_instance_t *m_vlcInstance;

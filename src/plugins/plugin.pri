@@ -10,5 +10,5 @@ win32:DESTDIR = ../../../Plugins
 OBJECTS_DIR = $$TMP_DIR
 MOC_DIR = $$TMP_DIR
 
-INCLUDEPATH += ../..
+INCLUDEPATH += ../.. ../../interfaces
 

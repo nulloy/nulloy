@@ -13,26 +13,26 @@
 **
 *********************************************************************/
 
-#include "pluginTaglib.h"
-#include "tagReaderTaglib.h"
-#include "coverReaderTaglib.h"
+#ifndef N_CONTAINER_VLC_H
+#define N_CONTAINER_VLC_H
 
-NPluginTaglib::NPluginTaglib(QObject *parent) : QObject(parent)
+#include "pluginContainer.h"
+
+class NContainerVlc : public QObject, public NPluginContainer
 {
-	m_elements << new NTagReaderTaglib()
-	           << new NCoverReaderTaglib();
-}
+	Q_OBJECT
+	Q_INTERFACES(NPluginContainer)
 
-NPluginTaglib::~NPluginTaglib()
-{
-	foreach (QObject *obj, m_elements)
-		delete obj;
-}
+private:
+	QList<NPlugin *> m_plugins;
 
-QObjectList NPluginTaglib::elements()
-{
-	return m_elements;
-}
+public:
+	NContainerVlc(QObject *parent = NULL);
+	~NContainerVlc();
+	QList<NPlugin *> plugins();
+	QString name() { return "VLC"; }
+	QString version() { return "0.5"; }
+};
 
-Q_EXPORT_PLUGIN2(plugin_taglib, NPluginTaglib)
+#endif
 

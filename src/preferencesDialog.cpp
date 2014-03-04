@@ -18,14 +18,10 @@
 #include "settings.h"
 #include "player.h"
 #include "skinFileSystem.h"
-#include "pluginElementInterface.h"
+#include "plugin.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
-#endif
-
-#ifndef _N_NO_PLUGINS_
-#include "pluginLoader.h"
 #endif
 
 #include <QGroupBox>
@@ -35,6 +31,8 @@
 #include <QSpacerItem>
 #include <QTextBrowser>
 #include <QVBoxLayout>
+
+using namespace NPluginLoader;
 
 NPreferencesDialog::~NPreferencesDialog() {}
 
@@ -57,27 +55,19 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 #ifdef _N_NO_PLUGINS_
 	ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 #else
-	QStringList identifiers = NPluginLoader::pluginIdentifiers();
 	QVBoxLayout *scrollLayout = new QVBoxLayout;
 	ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
 
-	QGroupBox *playbackBox = generatePluginsGroup(N::PlaybackEngineType, identifiers, NSettings::instance()->value("Playback").toString());
-	if (playbackBox)
-		scrollLayout->addWidget(playbackBox);
+	NFlagIterator<N::PluginType> iter(N::MaxPlugin);
+	while (iter.hasNext()) {
+		iter.next();
+		N::PluginType type = iter.value();
+		QGroupBox *groupBox = createGroupBox(type);
+		if (groupBox)
+			scrollLayout->addWidget(groupBox);
+	}
 
-	QGroupBox *wavefowmBox = generatePluginsGroup(N::WaveformBuilderType, identifiers, NSettings::instance()->value("Waveform").toString());
-	if (wavefowmBox)
-		scrollLayout->addWidget(wavefowmBox);
-
-	QGroupBox *tagReaderBox = generatePluginsGroup(N::TagReaderType, identifiers, NSettings::instance()->value("TagReader").toString());
-	if (tagReaderBox)
-		scrollLayout->addWidget(tagReaderBox);
-
-	QGroupBox *coverReaderBox = generatePluginsGroup(N::CoverReaderType, identifiers, NSettings::instance()->value("CoverReader").toString());
-	if (coverReaderBox)
-		scrollLayout->addWidget(coverReaderBox);
-
-	if (playbackBox || wavefowmBox || tagReaderBox || coverReaderBox)
+	if (scrollLayout->count() > 0)
 		scrollLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	else
 		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
@@ -176,38 +166,39 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	textBrowser->setMinimumHeight(textSize.height());
 }
 
-QGroupBox* NPreferencesDialog::generatePluginsGroup(N::PluginElementType type, const QStringList &identifiers, const QString &def)
+QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
 {
-	QString type_str;
-	if (type == N::PlaybackEngineType)
-		type_str = "Playback";
-	else if (type == N::WaveformBuilderType)
-		type_str = "Waveform";
-	else if (type == N::TagReaderType)
-		type_str = "TagReader";
-	else if (type == N::CoverReaderType)
-		type_str = "CoverReader";
+	QList<Descriptor> descriptors = NPluginLoader::descriptors();
 
-	QStringList groupedIds = identifiers.filter(QRegExp("^" + QString::number(type) + "/.*"));
-	if (groupedIds.count() > 1) {
-		QGroupBox *groupBox = new QGroupBox(type_str);
-		QGridLayout *groupLayout = new QGridLayout;
-		groupLayout->setContentsMargins(0, 5, 5, 0);
-		groupLayout->setSpacing(0);
-		groupBox->setLayout(groupLayout);
+	QString typeString = ENUM_NAME(N, PluginType, type);
+	QString settingsContainer = NSettings::instance()->value("Plugins/" + typeString).toString();
 
-		for (int i = 0; i < groupedIds.count(); ++i) {
-			QRadioButton *radioButton = new QRadioButton(groupedIds.at(i).section('/', 1, 2).replace('/', ' '));
-			connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(pluginsChanged()));
-			if (groupedIds.at(i).contains(def))
-				radioButton->setChecked(TRUE);
-			m_pluginButtonsMap[groupedIds.at(i)] = radioButton;
-			groupLayout->addWidget(radioButton, i, 0);
-		}
-		return groupBox;
+	QList<int> indexesFilteredByType;
+	for (int i = 0; i < descriptors.count(); ++i) {
+		if (descriptors.at(i)[TypeRole] == type)
+			indexesFilteredByType << i;
 	}
 
-	return NULL;
+	if (indexesFilteredByType.count() < 2) // need at least two plugins to choose from
+		return NULL;
+
+	QGroupBox *groupBox = new QGroupBox(typeString);
+	QVBoxLayout *layout = new QVBoxLayout;
+	layout->setContentsMargins(0, 5, 5, 0);
+	layout->setSpacing(0);
+	groupBox->setLayout(layout);
+
+	foreach (int i, indexesFilteredByType) {
+		QString containerName = descriptors.at(i)[ContainerNameRole].toString();
+		QRadioButton *button = new QRadioButton(containerName);
+		connect(button, SIGNAL(toggled(bool)), this, SLOT(pluginsChanged()));
+		if (containerName == settingsContainer)
+			button->setChecked(TRUE);
+		m_radioButtons[button] = descriptors.at(i);
+		layout->addWidget(button);
+	}
+
+	return groupBox;
 }
 
 void NPreferencesDialog::pluginsChanged()
@@ -221,22 +212,25 @@ void NPreferencesDialog::on_skinComboBox_activated(int index)
 	ui.skinRestartLabel->setVisible(TRUE);
 }
 
-QString NPreferencesDialog::selectedPluginsGroup(N::PluginElementType type)
+QString NPreferencesDialog::selectedContainer(N::PluginType type)
 {
-	QString str;
+	QList<Descriptor> descriptors = NPluginLoader::descriptors();
+	QList<int> indexesFilteredByType;
+	for (int i = 0; i < descriptors.count(); ++i) {
+		if (descriptors.at(i)[TypeRole] == type)
+			indexesFilteredByType << i;
+	}
 
-	QStringList identifiers = m_pluginButtonsMap.keys();
-	QStringList groupedIds = identifiers.filter(QRegExp("^" + QString::number(type) + "/.*"));
-
-	for (int i = 0; i < groupedIds.count(); ++i) {
-		QRadioButton *radioButton = m_pluginButtonsMap[groupedIds.at(i)];
-		if (radioButton->isChecked()) {
-			str = radioButton->text();
+	QString containerName;
+	foreach (int i, indexesFilteredByType) {
+		QRadioButton *button = m_radioButtons.key(descriptors.at(i));
+		if (button && button->isChecked()) {
+			containerName = descriptors.at(i)[ContainerNameRole].toString();
 			break;
 		}
 	}
 
-	return str.replace(' ', '/');
+	return containerName;
 }
 
 void NPreferencesDialog::loadSettings()
@@ -308,15 +302,15 @@ void NPreferencesDialog::saveSettings()
 
 #ifndef _N_NO_PLUGINS_
 	// plugins
-	QVariant playbackVariant(selectedPluginsGroup(N::PlaybackEngineType));
-	QVariant waveformVariant(selectedPluginsGroup(N::WaveformBuilderType));
-	QVariant tagReaderVariant(selectedPluginsGroup(N::TagReaderType));
-	QVariant coverReaderVariant(selectedPluginsGroup(N::CoverReaderType));
-
-	NSettings::instance()->setValue("Playback", playbackVariant);
-	NSettings::instance()->setValue("Waveform", waveformVariant);
-	NSettings::instance()->setValue("TagReader", tagReaderVariant);
-	NSettings::instance()->setValue("CoverReader", coverReaderVariant);
+	NFlagIterator<N::PluginType> iter(N::MaxPlugin);
+	while (iter.hasNext()) {
+		iter.next();
+		N::PluginType type = iter.value();
+		QString typeString = ENUM_NAME(N, PluginType, type);
+		QString containerName = selectedContainer(type);
+		if (!containerName.isEmpty())
+			NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);
+	}
 #endif
 
 #ifndef _N_NO_SKINS_

@@ -32,7 +32,7 @@ public:
 
 NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 {
-	m_coverReader = NPluginLoader::coverReaderPlugin();
+	m_coverReader = dynamic_cast<NCoverReaderInterface *>(NPluginLoader::getPlugin(N::CoverReader));
 
 	if (m_coverReader) {
 		m_popup = new NCoverWidgetPopup(this);

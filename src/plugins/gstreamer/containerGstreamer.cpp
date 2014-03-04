@@ -13,14 +13,14 @@
 **
 *********************************************************************/
 
-#include "pluginGstreamer.h"
+#include "containerGstreamer.h"
 #include "playbackEngineGstreamer.h"
 #include "waveformBuilderGstreamer.h"
 #ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
 #include "tagReaderGstreamer.h"
 #endif
 
-NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
+NContainerGstreamer::NContainerGstreamer(QObject *parent) : QObject(parent)
 {
 	QDir executable_path(QCoreApplication::applicationDirPath());
 #ifdef Q_WS_WIN
@@ -29,25 +29,25 @@ NPluginGstreamer::NPluginGstreamer(QObject *parent) : QObject(parent)
 	putenv( QString("GST_PLUGIN_PATH=" + executable_path.absolutePath() + "/plugins/GStreamer/plugins" + ":" + getenv("GST_PLUGIN_PATH")).toUtf8().data());
 #endif
 
-	m_elements << new NPlaybackEngineGStreamer()
+	m_plugins << new NPlaybackEngineGStreamer()
 #ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
-	           << new NTagReaderGstreamer()
+	          << new NTagReaderGstreamer()
 #endif
-	           << new NWaveformBuilderGstreamer();
+	          << new NWaveformBuilderGstreamer();
 }
 
-NPluginGstreamer::~NPluginGstreamer()
+NContainerGstreamer::~NContainerGstreamer()
 {
-	foreach (QObject *obj, m_elements)
-		delete obj;
+	foreach (NPlugin *plugin, m_plugins)
+		delete plugin;
 }
 
-QObjectList NPluginGstreamer::elements()
+QList<NPlugin *> NContainerGstreamer::plugins()
 {
-	return m_elements;
+	return m_plugins;
 }
 
 #if !defined _N_GSTREAMER_PLUGINS_BUILTIN_ && !defined _N_NO_PLUGINS_
-Q_EXPORT_PLUGIN2(plugin_gstreamer, NPluginGstreamer)
+Q_EXPORT_PLUGIN2(plugin_gstreamer, NContainerGstreamer)
 #endif
 

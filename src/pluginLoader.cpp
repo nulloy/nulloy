@@ -15,12 +15,10 @@
 
 #include "pluginLoader.h"
 
-#include "global.h"
 #include "common.h"
 #include "settings.h"
 
-#include "pluginInterface.h"
-#include "pluginElementInterface.h"
+#include "pluginContainer.h"
 
 #include "waveformBuilderInterface.h"
 #include "playbackEngineInterface.h"
@@ -37,83 +35,68 @@
 #include "waveformBuilderGstreamer.h"
 #endif
 
+Q_DECLARE_METATYPE(NPlugin *)
+Q_DECLARE_METATYPE(QPluginLoader *)
+
 namespace NPluginLoader
 {
 	static bool _init = FALSE;
-	static QStringList _identifiers;
-	static NPlaybackEngineInterface *_playback = NULL;
-	static NWaveformBuilderInterface *_waveform = NULL;
-	static NTagReaderInterface *_tagReader = NULL;
-	static NCoverReaderInterface *_coverReader = NULL;
+	static QList<Descriptor> _descriptors;
+	static QMap<N::PluginType, NPlugin *> _usedPlugins;
+	static QMap<QPluginLoader *, bool> _usedLoaders;
+	QString _containerPrefer = "GStreamer";
 
 	void _loadPlugins();
-	QObject* _findPlugin(N::PluginElementType type, QObjectList &objects, QMap<QString, bool> &usedFlags);
-	static QMap<QString, QPluginLoader *> _loaders;
+	NPlugin* _findPlugin(N::PluginType type);
 }
 
 void NPluginLoader::deinit()
 {
-	foreach (QString key, _loaders.keys()) {
-		if (_loaders[key])
-			_loaders[key]->unload();
-		_loaders.remove(key);
+	foreach(QPluginLoader *loader, _usedLoaders.keys()) {
+		if (loader->isLoaded())
+			loader->unload();
 	}
 }
 
-QObject* NPluginLoader::_findPlugin(N::PluginElementType type, QObjectList &objects, QMap<QString, bool> &usedFlags)
+NPlugin* NPluginLoader::_findPlugin(N::PluginType type)
 {
-	QString base_interface;
-	QString type_str;
-	if (type == N::PlaybackEngineType) {
-		base_interface = NPlaybackEngineInterface::interface();
-		type_str = "Playback";
-	} else if (type == N::WaveformBuilderType) {
-		base_interface = NWaveformBuilderInterface::interface();
-		type_str = "Waveform";
-	} else if (type == N::TagReaderType) {
-		base_interface = NTagReaderInterface::interface();
-		type_str = "TagReader";
-	} else if (type == N::CoverReaderType) {
-		base_interface = NCoverReaderInterface::interface();
-		type_str = "CoverReader";
+	QString typeString = ENUM_NAME(N, PluginType, type);
+	QString settingsContainer = NSettings::instance()->value("Plugins/" + typeString).toString();
+
+	QList<int> indexesFilteredByType;
+	for (int i = 0; i < _descriptors.count(); ++i) {
+		if (_descriptors.at(i)[TypeRole] == type)
+			indexesFilteredByType << i;
 	}
 
-	int index;
-	QString type_num = QString::number(type);
-	QString str = NSettings::instance()->value(type_str).toString();
-	index = _identifiers.indexOf(QRegExp(type_num + "/" + str + "/.*"));
-	if (index == -1)
-		index = _identifiers.indexOf(QRegExp(type_num + "/GStreamer/.*"));
-	if (index == -1)
-		index = _identifiers.indexOf(QRegExp(type_num + "/.*"));
-	if (index != -1) {
-		NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(objects.at(index));
-
-		QString identifier = _identifiers.at(index);
-		QString plug_name = identifier.section('/', 1, 1);
-		QString plug_ver = identifier.section('/', 2, 2);
-		QString el_interface_ver = el->interface().section('/', 2, 2);
-
-		QString base_interface_name = base_interface.section('/', 1, 1);
-		QString base_interface_ver = base_interface.section('/', 2, 2);
-
-		if (el_interface_ver != base_interface_ver) {
-			QMessageBox::warning(NULL, QObject::tr("Plugin Interface Mismatch"),
-			                     plug_name + " " + plug_ver + " plugin has a different version of " + base_interface_name +".\n" +
-			                     "Internal version: " + base_interface_ver + "\n" +
-			                     "Plugin version: " + el_interface_ver,
-			                     QMessageBox::Close);
-		}
-
-		el->init();
-		usedFlags[identifier] = TRUE;
-
-		NSettings::instance()->setValue(type_str, plug_name + "/" + plug_ver);
-
-		return objects.at(index);
-	} else {
+	if (indexesFilteredByType.isEmpty())
 		return NULL;
+
+	int index = -1;
+	foreach (QString container, QStringList () << settingsContainer << _containerPrefer) {
+		foreach (int i, indexesFilteredByType) {
+			if (_descriptors.at(i)[ContainerNameRole] == container) {
+				index = i;
+				break;
+			}
+		}
+		if (index != -1)
+			break;
 	}
+
+	if (index == -1)
+		index = 0;
+
+	NPlugin *plugin = _descriptors.at(index)[PluginObjectRole].value<NPlugin *>();
+	plugin->init();
+
+	QPluginLoader *loader = _descriptors.at(index)[LoaderObjectRole].value<QPluginLoader *>();
+	_usedLoaders[loader] = TRUE;
+
+	QString containerName = _descriptors.at(index)[ContainerNameRole].toString();
+	NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);
+
+	return plugin;
 }
 
 void NPluginLoader::_loadPlugins()
@@ -122,21 +105,19 @@ void NPluginLoader::_loadPlugins()
 		return;
 	_init = TRUE;
 
-	QObjectList objects;
-	QMap<QString, bool> usedFlags;
-
 #if 0
-	QObjectList objectsStatic;
+	QMap<QString, bool> usedFlags;
+	QList<NPlugin *> plugins;
+	QList<NPlugin *> pluginsStatic;
 #ifdef _N_GSTREAMER_PLUGINS_BUILTIN_
-	objectsStatic << new NPlaybackEngineGStreamer() << new NWaveformBuilderGstreamer();
+	pluginsStatic << new NPlaybackEngineGStreamer() << new NWaveformBuilderGstreamer();
 #endif
-	objectsStatic << QPluginLoader::staticInstances();
+	pluginsStatic << QPluginLoader::staticInstances();
 
-	foreach (QObject *obj, objectsStatic) {
-		NPluginElementInterface *plugin = qobject_cast<NPluginElementInterface *>(obj);
+	foreach (NPlugin *plugin, pluginsStatic) {
 		if (plugin) {
-			objects << obj;
-			qobject_cast<NPluginElementInterface *>(obj)->init();
+			plugins << plugin;
+			plugin->init();
 			QString id = plugin->identifier();
 			id.insert(id.lastIndexOf('/'), " (Built-in)");
 			_identifiers << id;
@@ -184,89 +165,64 @@ void NPluginLoader::_loadPlugins()
 			if (!QLibrary::isLibrary(fileFullPath))
 				continue;
 			QPluginLoader *loader = new QPluginLoader(fileFullPath);
+			_usedLoaders[loader] = FALSE;
 			QObject *instance = loader->instance();
-			NPluginInterface *plugin = qobject_cast<NPluginInterface *>(instance);
-			if (plugin) {
-				QObjectList elements = plugin->elements();
-				objects << elements;
-				foreach (QObject *obj, elements) {
-					NPluginElementInterface *el = qobject_cast<NPluginElementInterface *>(obj);
-					QString identifier = QString::number(el->type()) + "/" + plugin->name() + "/" + plugin->version() +
-					                     ((el->type() == N::OtherElementType) ? "" : "/" + el->name()) + "/" + fileFullPath.replace("/", "\\");
-					_identifiers << identifier;
-					_loaders[identifier] = loader;
-					usedFlags[identifier] = FALSE;
+			NPluginContainer *container = qobject_cast<NPluginContainer *>(instance);
+			if (container) {
+				QList<NPlugin *> _plugins = container->plugins();
+				foreach (NPlugin *plugin, _plugins) {
+					Descriptor d;
+					d[TypeRole] = plugin->type();
+					d[ContainerNameRole] = container->name();
+					d[PluginObjectRole] = QVariant::fromValue<NPlugin *>(plugin);
+					d[LoaderObjectRole] = QVariant::fromValue<QPluginLoader *>(loader);
+					_descriptors << d;
 				}
 			} else {
-				QMessageBox box(QMessageBox::Warning, QObject::tr("Plugin loading error"), QObject::tr("Failed to load plugin: ") +
-				                fileFullPath + "\n\n" + loader->errorString(), QMessageBox::Close);
-				box.exec();
+				QMessageBox::warning(NULL, QObject::tr("Plugin loading error"),
+				                     QObject::tr("Failed to load plugin: ") +
+				                     fileFullPath + "\n\n" + loader->errorString(), QMessageBox::Close);
 				delete loader;
 			}
 		}
 	}
 
-	_playback = qobject_cast<NPlaybackEngineInterface *>(_findPlugin(N::PlaybackEngineType, objects, usedFlags));
-	_waveform = qobject_cast<NWaveformBuilderInterface *>(_findPlugin(N::WaveformBuilderType, objects, usedFlags));
-	_tagReader = qobject_cast<NTagReaderInterface *>(_findPlugin(N::TagReaderType, objects, usedFlags));
-	_coverReader = qobject_cast<NCoverReaderInterface *>(_findPlugin(N::CoverReaderType, objects, usedFlags));
-
-	// remove not used plugins
-	foreach (QString identifier, usedFlags.keys(FALSE)) {
-		QStringList boundIdentifiers = _loaders.keys(_loaders[identifier]);
-		bool safeToUnload = TRUE;
-		foreach (QString boundIdentifier, boundIdentifiers) {
-			if (usedFlags[boundIdentifier] == TRUE) {
-				safeToUnload = FALSE;
-				break;
-			}
-		}
-		if (safeToUnload) {
-			_loaders[identifier]->unload();
-			_loaders.remove(identifier);
-		}
+	NFlagIterator<N::PluginType> iter(N::MaxPlugin);
+	while (iter.hasNext()) {
+		iter.next();
+		N::PluginType type = iter.value();
+		_usedPlugins[type] = _findPlugin(type);
 	}
 
-	if (!_waveform || !_playback || !_tagReader) {
+	// unload non-used
+	foreach(QPluginLoader *loader, _usedLoaders.keys(FALSE))
+		loader->unload();
+
+	if (!_usedPlugins[N::WaveformBuilder] ||
+	    !_usedPlugins[N::PlaybackEngine] ||
+	    !_usedPlugins[N::TagReader])
+	{
 		QStringList message;
-		if (!_waveform)
+		if (!_usedPlugins[N::WaveformBuilder])
 			message << QObject::tr("No Waveform plugin found.");
-		if (!_playback)
+		if (!_usedPlugins[N::PlaybackEngine])
 			message << QObject::tr("No Playback plugin found.");
-		if (!_tagReader)
+		if (!_usedPlugins[N::TagReader])
 			message << QObject::tr("No TagReader plugin found.");
 		QMessageBox::critical(NULL, QObject::tr("Plugin loading error"), message.join("\n"), QMessageBox::Close);
 		exit(1);
 	}
 }
 
-NPlaybackEngineInterface* NPluginLoader::playbackPlugin()
+NPlugin* NPluginLoader::getPlugin(N::PluginType type)
 {
 	_loadPlugins();
-	return _playback;
+	return _usedPlugins[type];
 }
 
-NWaveformBuilderInterface* NPluginLoader::waveformPlugin()
+QList<NPluginLoader::Descriptor> NPluginLoader::descriptors()
 {
 	_loadPlugins();
-	return _waveform;
-}
-
-NTagReaderInterface* NPluginLoader::tagReaderPlugin()
-{
-	_loadPlugins();
-	return _tagReader;
-}
-
-NCoverReaderInterface* NPluginLoader::coverReaderPlugin()
-{
-	_loadPlugins();
-	return _coverReader;
-}
-
-QStringList NPluginLoader::pluginIdentifiers()
-{
-	_loadPlugins();
-	return _identifiers;
+	return _descriptors;
 }
 

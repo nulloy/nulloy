@@ -20,6 +20,10 @@
 #include "ui_preferencesDialog.h"
 #include "global.h"
 
+#ifndef _N_NO_PLUGINS_
+#include "pluginLoader.h"
+#endif
+
 class QGroupBox;
 class QRadioButton;
 
@@ -30,9 +34,9 @@ class NPreferencesDialog : public QDialog
 private:
 	Ui::PreferencesDialog ui;
 	void showEvent(QShowEvent *event);
-	QGroupBox* generatePluginsGroup(N::PluginElementType type, const QStringList &identifiers, const QString &def = QString());
-	QString selectedPluginsGroup(N::PluginElementType type);
-	QMap<QString, QRadioButton *> m_pluginButtonsMap;
+	QGroupBox* createGroupBox(N::PluginType type);
+	QString selectedContainer(N::PluginType type);
+	QMap<QRadioButton *, NPluginLoader::Descriptor> m_radioButtons;
 
 public:
 	NPreferencesDialog(QWidget *parent = 0);

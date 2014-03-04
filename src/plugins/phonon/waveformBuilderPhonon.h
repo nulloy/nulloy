@@ -16,7 +16,7 @@
 #ifndef N_WAVEFORM_BUILDER_PHONON_H
 #define N_WAVEFORM_BUILDER_PHONON_H
 
-#include "pluginElementInterface.h"
+#include "plugin.h"
 #include "waveformBuilderInterface.h"
 #include "abstractWaveformBuilder.h"
 
@@ -26,11 +26,11 @@
 #include <QTimer>
 
 class NWaveformBuilderPhonon : public NWaveformBuilderInterface,
-                               public NPluginElementInterface,
+                               public NPlugin,
                                public NAbstractWaveformBuilder
 {
 	Q_OBJECT
-	Q_INTERFACES(NWaveformBuilderInterface NPluginElementInterface)
+	Q_INTERFACES(NWaveformBuilderInterface NPlugin)
 
 private:
 	Phonon::MediaObject *m_mediaObject;

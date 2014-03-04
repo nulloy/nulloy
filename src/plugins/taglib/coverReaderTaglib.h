@@ -16,7 +16,7 @@
 #ifndef N_COVER_READER_TAGLIB_H
 #define N_COVER_READER_TAGLIB_H
 
-#include "pluginElementInterface.h"
+#include "plugin.h"
 #include "coverReaderInterface.h"
 
 #include <taglib/apefile.h>
@@ -31,10 +31,10 @@
 #include <taglib/vorbisfile.h>
 #include <taglib/wavpackfile.h>
 
-class NCoverReaderTaglib : public NCoverReaderInterface, public NPluginElementInterface
+class NCoverReaderTaglib : public NCoverReaderInterface, public NPlugin
 {
 	Q_OBJECT
-	Q_INTERFACES(NCoverReaderInterface NPluginElementInterface)
+	Q_INTERFACES(NCoverReaderInterface NPlugin)
 
 private:
 	TagLib::FileRef *m_tagRef;
@@ -52,7 +52,7 @@ public:
 
 	void init();
 	QString interface() { return NCoverReaderInterface::interface(); }
-	N::PluginElementType type() { return N::CoverReaderType; }
+	N::PluginType type() { return N::CoverReader; }
 
 	void setSource(const QString &file);
 	QImage getImage();

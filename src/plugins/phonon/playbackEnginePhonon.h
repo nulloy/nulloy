@@ -16,16 +16,16 @@
 #ifndef N_PLAYBACK_ENGINE_PHONON_H
 #define N_PLAYBACK_ENGINE_PHONON_H
 
-#include "pluginElementInterface.h"
+#include "plugin.h"
 #include "playbackEngineInterface.h"
 #include <QTimer>
 #include <phonon/audiooutput.h>
 #include <phonon/mediaobject.h>
 
-class NPlaybackEnginePhonon : public NPlaybackEngineInterface, public NPluginElementInterface
+class NPlaybackEnginePhonon : public NPlaybackEngineInterface, public NPlugin
 {
 	Q_OBJECT
-	Q_INTERFACES(NPlaybackEngineInterface NPluginElementInterface)
+	Q_INTERFACES(NPlaybackEngineInterface NPlugin)
 
 private:
 	Phonon::MediaObject *m_mediaObject;

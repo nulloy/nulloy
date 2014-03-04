@@ -13,26 +13,24 @@
 **
 *********************************************************************/
 
-#ifndef N_PLUGIN_GSTREAMER_H
-#define N_PLUGIN_GSTREAMER_H
+#ifndef N_PLUGIN_CONTAINER_H
+#define N_PLUGIN_CONTAINER_H
 
-#include "pluginInterface.h"
+#include <QtCore>
 
-class NPluginGstreamer : public QObject, public NPluginInterface
+class NPlugin;
+
+class NPluginContainer
 {
-	Q_OBJECT
-	Q_INTERFACES(NPluginInterface)
-
-private:
-	QObjectList m_elements;
-
 public:
-	NPluginGstreamer(QObject *parent = NULL);
-	~NPluginGstreamer();
-	QObjectList elements();
-	QString name() { return "GStreamer"; }
-	QString version() { return "0.5.1"; }
+	NPluginContainer() {}
+	virtual ~NPluginContainer() {}
+	virtual QList<NPlugin *> plugins() = 0;
+	virtual QString name() = 0;
+	virtual QString version() = 0;
 };
+
+Q_DECLARE_INTERFACE(NPluginContainer, "Nulloy/NPluginContainer/0.5")
 
 #endif
 

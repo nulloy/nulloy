@@ -13,26 +13,26 @@
 **
 *********************************************************************/
 
-#include "pluginVlc.h"
-#include "playbackEngineVlc.h"
-#include "waveformBuilderVlc.h"
+#include "containerTaglib.h"
+#include "tagReaderTaglib.h"
+#include "coverReaderTaglib.h"
 
-NPluginVlc::NPluginVlc(QObject *parent) : QObject(parent)
+NContainerTaglib::NContainerTaglib(QObject *parent) : QObject(parent)
 {
-	m_elements << new NPlaybackEngineVlc()
-	           << new NWaveformBuilderVlc();
+	m_plugins << new NTagReaderTaglib()
+	          << new NCoverReaderTaglib();
 }
 
-NPluginVlc::~NPluginVlc()
+NContainerTaglib::~NContainerTaglib()
 {
-	foreach (QObject *obj, m_elements)
-		delete obj;
+	foreach (NPlugin *plugin, m_plugins)
+		delete plugin;
 }
 
-QObjectList NPluginVlc::elements()
+QList<NPlugin *> NContainerTaglib::plugins()
 {
-	return m_elements;
+	return m_plugins;
 }
 
-Q_EXPORT_PLUGIN2(plugin_vlc, NPluginVlc)
+Q_EXPORT_PLUGIN2(plugin_taglib, NContainerTaglib)
 

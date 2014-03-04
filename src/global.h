@@ -18,6 +18,23 @@
 
 #include <QtCore>
 
+template <typename T>
+class NFlagIterator
+{
+public:
+	NFlagIterator(unsigned flags) : mFlags(flags), mFlag(0) {}
+	inline T value() { return static_cast<T>(mFlag); }
+	inline bool hasNext() { return mFlags > mFlag; }
+	void next() { if (mFlag == 0) mFlag = 1; else mFlag <<= 1;
+	              while ((mFlags & mFlag) == 0) mFlag <<= 1;
+	              mFlags &= ~mFlag; }
+private:
+	unsigned mFlags;
+	unsigned mFlag;
+};
+
+#define ENUM_NAME(c,e,v) (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).valueToKey((v)))
+
 #ifndef Q_MOC_RUN
 namespace N
 #else
@@ -27,6 +44,7 @@ class N
 #if defined(Q_MOC_RUN)
 	Q_GADGET
 	Q_ENUMS(PlaybackState)
+	Q_ENUMS(PluginType)
 public:
 #endif
 
@@ -44,16 +62,17 @@ public:
 		PlaybackPaused
 	};
 
-	enum PluginElementType {
-		OtherElementType = 0x0,
-		PlaybackEngineType = 0x1,
-		WaveformBuilderType = 0x2,
-		TagReaderType = 0x3,
-		CoverReaderType = 0x4
+	enum PluginType {
+		OtherPlugin     = 0,
+		PlaybackEngine  = (1<<0),
+		WaveformBuilder = (1<<1),
+		TagReader       = (1<<2),
+		CoverReader     = (1<<3),
+		MaxPlugin       = (1<<4) - 1
 	};
 
-	Q_DECLARE_FLAGS(PluginElementFlags, PluginElementType)
-	Q_DECLARE_OPERATORS_FOR_FLAGS(PluginElementFlags)
+	Q_DECLARE_FLAGS(PluginTypeFlags, PluginType)
+	Q_DECLARE_OPERATORS_FOR_FLAGS(PluginTypeFlags)
 
 	extern const QMetaObject staticMetaObject;
 };

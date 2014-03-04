@@ -301,7 +301,8 @@ void NMainWindow::waveformSliderToolTip(int x, int y)
 {
 	if (x != -1 && y != -1) {
 		float pos = (float)x / m_waveformSlider->width();
-		int duration = NPluginLoader::tagReaderPlugin()->toString("%D").toInt();
+		NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+		int duration = tagReader->toString("%D").toInt();
 		int res = duration * pos;
 
 		int hours = res / 60 / 60;
