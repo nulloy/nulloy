@@ -36,7 +36,7 @@ public:
 			return "";
 	}
 	virtual QString interface() = 0;
-	virtual N::PluginType type() { return N::OtherPluginType; }
+	virtual N::PluginType type() { return N::OtherPlugin; }
 	virtual void init() = 0;
 };
 

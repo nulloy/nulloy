@@ -63,12 +63,12 @@ public:
 	};
 
 	enum PluginType {
-		OtherPluginType     = 0,
-		PlaybackEngineType  = (1<<0),
-		WaveformBuilderType = (1<<1),
-		TagReaderType       = (1<<2),
-		CoverReaderType     = (1<<3),
-		MaxPluginType       = (1<<4) - 1
+		OtherPlugin     = 0,
+		PlaybackEngine  = (1<<0),
+		WaveformBuilder = (1<<1),
+		TagReader       = (1<<2),
+		CoverReader     = (1<<3),
+		MaxPlugin       = (1<<4) - 1
 	};
 
 	Q_DECLARE_FLAGS(PluginTypeFlags, PluginType)

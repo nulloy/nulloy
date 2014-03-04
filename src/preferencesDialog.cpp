@@ -58,7 +58,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	QVBoxLayout *scrollLayout = new QVBoxLayout;
 	ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
 
-	NFlagIterator<N::PluginType> iter(N::MaxPluginType);
+	NFlagIterator<N::PluginType> iter(N::MaxPlugin);
 	while (iter.hasNext()) {
 		iter.next();
 		N::PluginType type = iter.value();
@@ -302,7 +302,7 @@ void NPreferencesDialog::saveSettings()
 
 #ifndef _N_NO_PLUGINS_
 	// plugins
-	NFlagIterator<N::PluginType> iter(N::MaxPluginType);
+	NFlagIterator<N::PluginType> iter(N::MaxPlugin);
 	while (iter.hasNext()) {
 		iter.next();
 		N::PluginType type = iter.value();

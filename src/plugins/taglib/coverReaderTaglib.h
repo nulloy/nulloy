@@ -52,7 +52,7 @@ public:
 
 	void init();
 	QString interface() { return NCoverReaderInterface::interface(); }
-	N::PluginType type() { return N::CoverReaderType; }
+	N::PluginType type() { return N::CoverReader; }
 
 	void setSource(const QString &file);
 	QImage getImage();

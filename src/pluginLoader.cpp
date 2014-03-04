@@ -189,7 +189,7 @@ void NPluginLoader::_loadPlugins()
 		}
 	}
 
-	NFlagIterator<N::PluginType> iter(N::MaxPluginType);
+	NFlagIterator<N::PluginType> iter(N::MaxPlugin);
 	while (iter.hasNext()) {
 		iter.next();
 		N::PluginType type = iter.value();
@@ -200,16 +200,16 @@ void NPluginLoader::_loadPlugins()
 	foreach(QPluginLoader *loader, _usedLoaders.keys(FALSE))
 		loader->unload();
 
-	if (!_usedPlugins[N::WaveformBuilderType] ||
-	    !_usedPlugins[N::PlaybackEngineType] ||
-	    !_usedPlugins[N::TagReaderType])
+	if (!_usedPlugins[N::WaveformBuilder] ||
+	    !_usedPlugins[N::PlaybackEngine] ||
+	    !_usedPlugins[N::TagReader])
 	{
 		QStringList message;
-		if (!_usedPlugins[N::WaveformBuilderType])
+		if (!_usedPlugins[N::WaveformBuilder])
 			message << QObject::tr("No Waveform plugin found.");
-		if (!_usedPlugins[N::PlaybackEngineType])
+		if (!_usedPlugins[N::PlaybackEngine])
 			message << QObject::tr("No Playback plugin found.");
-		if (!_usedPlugins[N::TagReaderType])
+		if (!_usedPlugins[N::TagReader])
 			message << QObject::tr("No TagReader plugin found.");
 		QMessageBox::critical(NULL, QObject::tr("Plugin loading error"), message.join("\n"), QMessageBox::Close);
 		exit(1);
@@ -219,25 +219,25 @@ void NPluginLoader::_loadPlugins()
 NPlaybackEngineInterface* NPluginLoader::playbackPlugin()
 {
 	_loadPlugins();
-	return dynamic_cast<NPlaybackEngineInterface *>(_usedPlugins[N::PlaybackEngineType]);
+	return dynamic_cast<NPlaybackEngineInterface *>(_usedPlugins[N::PlaybackEngine]);
 }
 
 NWaveformBuilderInterface* NPluginLoader::waveformPlugin()
 {
 	_loadPlugins();
-	return dynamic_cast<NWaveformBuilderInterface *>(_usedPlugins[N::WaveformBuilderType]);
+	return dynamic_cast<NWaveformBuilderInterface *>(_usedPlugins[N::WaveformBuilder]);
 }
 
 NTagReaderInterface* NPluginLoader::tagReaderPlugin()
 {
 	_loadPlugins();
-	return dynamic_cast<NTagReaderInterface *>(_usedPlugins[N::TagReaderType]);
+	return dynamic_cast<NTagReaderInterface *>(_usedPlugins[N::TagReader]);
 }
 
 NCoverReaderInterface* NPluginLoader::coverReaderPlugin()
 {
 	_loadPlugins();
-	return dynamic_cast<NCoverReaderInterface *>(_usedPlugins[N::CoverReaderType]);
+	return dynamic_cast<NCoverReaderInterface *>(_usedPlugins[N::CoverReader]);
 }
 
 QList<NPluginLoader::Descriptor> NPluginLoader::descriptors()
