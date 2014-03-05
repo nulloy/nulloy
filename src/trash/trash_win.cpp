@@ -13,6 +13,7 @@
 **
 *********************************************************************/
 
+#include <QString>
 #include <windows.h>
 #include <shellapi.h>
 

@@ -13,6 +13,7 @@
 **
 *********************************************************************/
 
+#include <QString>
 #import "Cocoa/Cocoa.h"
 #import "Foundation/Foundation.h"
 
