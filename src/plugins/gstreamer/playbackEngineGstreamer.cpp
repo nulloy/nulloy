@@ -234,7 +234,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 		m_oldState = state;
 	}
 
-	if (state == N::PlaybackPlaying) {
+	if (state == N::PlaybackPlaying || state == N::PlaybackPaused) {
 		// duration may change for some reason
 		// TODO use DURATION_CHANGED in gstreamer1.0
 		GstFormat format = GST_FORMAT_TIME;

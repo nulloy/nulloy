@@ -404,11 +404,13 @@ void NPlayer::loadDefaultPlaylist()
 	QStringList playlistRowValues = m_settings->value("PlaylistRow").toStringList();
 	if (!playlistRowValues.isEmpty()) {
 		m_playlistWidget->playRow(playlistRowValues.at(0).toInt());
+
 		qreal pos = playlistRowValues.at(1).toFloat();
-		if (m_settings->value("RestorePlayback").toBool() && pos != 0 && pos != 1) {
-			m_playbackEngine->play();
+		if (pos != 0 && pos != 1)
 			m_playbackEngine->setPosition(pos);
-		}
+
+		if (!m_settings->value("RestorePlayback").toBool())
+			m_playbackEngine->pause();
 	}
 
 	m_playlistWidget->setShuffleMode(NSettings::instance()->value("Shuffle").toBool());
