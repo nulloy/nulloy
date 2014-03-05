@@ -17,6 +17,7 @@
 #define N_PLAYLIST_STORAGE_H
 
 #include "playlistDataItem.h"
+#include "global.h"
 #include <QList>
 #include <QString>
 
@@ -25,7 +26,7 @@ namespace NPlaylistStorage
 	QList<NPlaylistDataItem> readPlaylist(const QString &file);
 	QList<NPlaylistDataItem> readM3u(const QString &file);
 
-	void writeM3u(const QString &file, QList<NPlaylistDataItem> items);
+	void writeM3u(const QString &file, QList<NPlaylistDataItem> items, N::M3uExtention ext);
 };
 
 #endif

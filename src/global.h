@@ -62,6 +62,12 @@ public:
 		PlaybackPaused
 	};
 
+	enum M3uExtention {
+		MinimalM3u = 0,
+		ExtM3u     = 1,
+		NulloyM3u  = 2
+	};
+
 	enum PluginType {
 		OtherPlugin     = 0,
 		PlaybackEngine  = (1<<0),

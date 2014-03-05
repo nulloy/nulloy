@@ -416,7 +416,7 @@ void NPlayer::loadDefaultPlaylist()
 	m_playlistWidget->setShuffleMode(NSettings::instance()->value("Shuffle").toBool());
 }
 
-void NPlayer::writePlaylist(const QString &file)
+void NPlayer::writePlaylist(const QString &file, N::M3uExtention ext)
 {
 	QList<NPlaylistDataItem> dataItemsList;
 	for (int i = 0; i < m_playlistWidget->count(); ++i) {
@@ -424,12 +424,12 @@ void NPlayer::writePlaylist(const QString &file)
 		dataItem.title = m_playlistWidget->item(i)->text();
 		dataItemsList << dataItem;
 	}
-	NPlaylistStorage::writeM3u(file, dataItemsList);
+	NPlaylistStorage::writeM3u(file, dataItemsList, ext);
 }
 
 void NPlayer::saveDefaultPlaylist()
 {
-	writePlaylist(NCore::defaultPlaylistPath());
+	writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u);
 
 	int row = m_playlistWidget->currentRow();
 	qreal pos = m_playbackEngine->position();
@@ -736,10 +736,13 @@ void NPlayer::showOpenDirDialog()
 
 void NPlayer::showSavePlaylistDialog()
 {
+	QString selectedFilter;
 	QString file = QFileDialog::getSaveFileName(
 		m_mainWindow, qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
 		m_settings->value("LastDirectory").toString(),
-		"M3U Playlist (*.m3u)"
+		"M3U Playlist (*.m3u);;"
+		"Extended M3U Playlist (*.m3u)",
+		&selectedFilter
 	);
 
 	if (file.isEmpty())
@@ -751,7 +754,10 @@ void NPlayer::showSavePlaylistDialog()
 	if (!file.endsWith(".m3u"))
 		file.append(".m3u");
 
-	writePlaylist(file);
+	if (selectedFilter.startsWith("Extended"))
+		writePlaylist(file, N::ExtM3u);
+	else
+		writePlaylist(file, N::MinimalM3u);
 }
 
 void NPlayer::showContextMenu(QPoint pos)

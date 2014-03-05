@@ -56,7 +56,7 @@ private:
 	bool m_trayIconDoubleClickCheck;
 
 	bool eventFilter(QObject *obj, QEvent *event);
-	void writePlaylist(const QString &file);
+	void writePlaylist(const QString &file, N::M3uExtention ext);
 
 public:
 	NPlayer();
