@@ -10,8 +10,8 @@ unix {
 	PKGCONFIG += taglib
 }
 win32 {
-	INCLUDEPATH += $(TAGLIB_DIR) $(TAGLIB_DIR)/include
-	LIBS += -L$(TAGLIB_DIR)/taglib/ -ltag
+	INCLUDEPATH += $(TAGLIB_DIR)/include
+	LIBS += -L$(TAGLIB_DIR)/lib -ltag
 }
 
 INCLUDEPATH += ..
