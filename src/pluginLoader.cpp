@@ -85,7 +85,7 @@ NPlugin* NPluginLoader::_findPlugin(N::PluginType type)
 	}
 
 	if (index == -1)
-		index = 0;
+		index = indexesFilteredByType.first();
 
 	NPlugin *plugin = _descriptors.at(index)[PluginObjectRole].value<NPlugin *>();
 	plugin->init();
