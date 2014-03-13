@@ -35,7 +35,7 @@ public:
 		else
 			return "";
 	}
-	virtual QString interface() = 0;
+	virtual QString interfaceString() = 0;
 	virtual N::PluginType type() { return N::OtherPlugin; }
 	virtual void init() = 0;
 };

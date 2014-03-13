@@ -51,7 +51,7 @@ public:
 	~NCoverReaderTaglib();
 
 	void init();
-	QString interface() { return NCoverReaderInterface::interface(); }
+	QString interfaceString() { return NCoverReaderInterface::interfaceString(); }
 	N::PluginType type() { return N::CoverReader; }
 
 	void setSource(const QString &file);

@@ -45,7 +45,7 @@ public:
 	NWaveformBuilderPhonon(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
 	~NWaveformBuilderPhonon();
 	void init();
-	QString interface() { return NWaveformBuilderInterface::interface(); }
+	QString interfaceString() { return NWaveformBuilderInterface::interfaceString(); }
 	PluginType type() { return WaveformBuilder; }
 
 	void start(const QString &file);

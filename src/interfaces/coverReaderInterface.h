@@ -28,7 +28,7 @@ public:
 	NCoverReaderInterface(QObject *parent = 0) : QObject(parent) {}
 	virtual ~NCoverReaderInterface() {}
 
-	static QString interface() { return COVERREADER_INTERFACE; }
+	static QString interfaceString() { return COVERREADER_INTERFACE; }
 
 	virtual void setSource(const QString &file) = 0;
 	virtual QImage getImage() = 0;

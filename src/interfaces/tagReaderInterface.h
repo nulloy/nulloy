@@ -28,7 +28,7 @@ public:
 	NTagReaderInterface(QObject *parent = 0) : QObject(parent) {}
 	virtual ~NTagReaderInterface() {}
 
-	static QString interface() { return TAGREADER_INTERFACE; }
+	static QString interfaceString() { return TAGREADER_INTERFACE; }
 
 	virtual void setSource(const QString &file) = 0;
 	virtual QString toString(const QString &format) = 0;

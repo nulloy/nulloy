@@ -39,7 +39,7 @@ public:
 	~NTagReaderTaglib();
 
 	void init();
-	QString interface() { return NTagReaderInterface::interface(); }
+	QString interfaceString() { return NTagReaderInterface::interfaceString(); }
 	N::PluginType type() { return N::TagReader; }
 
 	void setSource(const QString &file);

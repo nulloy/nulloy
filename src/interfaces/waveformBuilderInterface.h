@@ -32,7 +32,7 @@ public:
 	virtual void positionAndIndex(float &pos, int &index) = 0;
 	virtual NWaveformPeaks* peaks() = 0;
 
-	static QString interface() { return WAVEFORM_INTERFACE; }
+	static QString interfaceString() { return WAVEFORM_INTERFACE; }
 };
 
 Q_DECLARE_INTERFACE(NWaveformBuilderInterface, WAVEFORM_INTERFACE)

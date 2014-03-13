@@ -51,7 +51,7 @@ public:
 	~NWaveformBuilderGstreamer();
 
 	void init();
-	QString interface() { return NWaveformBuilderInterface::interface(); }
+	QString interfaceString() { return NWaveformBuilderInterface::interfaceString(); }
 	N::PluginType type() { return N::WaveformBuilder; }
 
 	void start(const QString &file);

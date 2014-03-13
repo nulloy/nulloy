@@ -43,7 +43,7 @@ public:
 	NWaveformBuilderVlc(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
 	~NWaveformBuilderVlc();
 	void init();
-	QString interface() { return NWaveformBuilderInterface::interface(); }
+	QString interfaceString() { return NWaveformBuilderInterface::interfaceString(); }
 	PluginType type() { return WaveformBuilder; }
 
 	void start(const QString &file);

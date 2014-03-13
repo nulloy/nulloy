@@ -46,7 +46,7 @@ public:
 	NPlaybackEngineGStreamer(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
 	~NPlaybackEngineGStreamer();
 	void init();
-	QString interface() { return NPlaybackEngineInterface::interface(); }
+	QString interfaceString() { return NPlaybackEngineInterface::interfaceString(); }
 	N::PluginType type() { return N::PlaybackEngine; }
 
 	Q_INVOKABLE bool hasMedia();
