@@ -95,7 +95,7 @@ void NWidgetPrototype::resize(int w, int h)
 
 void NWidgetPrototype::setStandardIcon(QString name, QString fallback)
 {
-	QPushButton *button = qscriptvalue_cast<QPushButton *>(thisObject());
+	QAbstractButton *button = qscriptvalue_cast<QAbstractButton *>(thisObject());
 	if (button)
 		button->setIcon(QIcon::fromTheme(name, QIcon(fallback)));
 }
