@@ -25,6 +25,10 @@
 #include <QPushButton>
 #include <QFile>
 
+#ifdef Q_WS_MAC
+#include <QBitmap>
+#endif
+
 NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 {
 	QString aboutHtml = QString() +
