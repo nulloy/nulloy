@@ -58,6 +58,7 @@ QList<NPlaylistDataItem> NPlaylistStorage::readM3u(const QString &file)
 
 	NPlaylistDataItem dataItem;
 	QTextStream in(&playlist);
+	in.setCodec("UTF-8");
 	while (!in.atEnd()) {
 		line = in.readLine();
 		if (line.trimmed().isEmpty())
@@ -119,13 +120,13 @@ void NPlaylistStorage::writeM3u(const QString &file, QList<NPlaylistDataItem> it
 			out << "#NULLOY:" << failed << "," << items.at(i).count << "," << items.at(i).position << "\n";
 
 		if (ext >= N::ExtM3u)
-			out << "#EXTINF:" << items.at(i).duration << "," << items.at(i).title << "\n";
+			out << "#EXTINF:" << items.at(i).duration << "," << items.at(i).title.toUtf8() << "\n";
 
 		if (QFileInfo(items.at(i).path).exists()) {
 			if (playlistPath == QFileInfo(items.at(i).path).absolutePath()) // same directory
-				out << QFileInfo(items.at(i).path).fileName() << "\n";
+				out << QFileInfo(items.at(i).path).fileName().toUtf8() << "\n";
 			else
-				out << QFileInfo(items.at(i).path).absoluteFilePath() << "\n";
+				out << QFileInfo(items.at(i).path).absoluteFilePath().toUtf8() << "\n";
 		} else { // keep as is
 			out << items.at(i).path << "\n";
 		}
