@@ -15,6 +15,9 @@ SOURCES += *.cpp ux/*.cpp
 
 FORMS += *.ui
 
+isEmpty(TMP_DIR){
+	TMP_DIR = $$PWD/.tmp
+}
 OBJECTS_DIR	= $$TMP_DIR
 MOC_DIR     = $$TMP_DIR
 RCC_DIR     = $$TMP_DIR
@@ -41,32 +44,34 @@ win32 {
 	PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
 	RESOURCES += native-skin-embedded.qrc
 
-	unix {
-		SRC_DIR=$$PWD
-		silver_skin.target = ../skins/silver.nzs
-		silver_skin.depends = skins/silver/*
-		silver_skin.commands = [ -d $$SRC_DIR/../skins ] || mkdir $$SRC_DIR/../skins && \
-		                       cd $$TMP_DIR && cp -r $$SRC_DIR/skins/silver . && \
-		                       cd silver && \
-		                       rm design.svg && \
-		                       zip $$SRC_DIR/../skins/silver.nzs *
-		QMAKE_EXTRA_TARGETS += silver_skin
-		PRE_TARGETDEPS += $$silver_skin.target
-		#dirty hack for install
-		system($$silver_skin.commands)
 
-		metro_skin.target = ../skins/metro.nzs
-		metro_skin.depends = skins/metro/*
-		metro_skin.commands =	[ -d $$SRC_DIR/../skins ] || mkdir $$SRC_DIR/../skins && \
-		cd $$TMP_DIR && cp -r $$SRC_DIR/skins/metro . && \
-		cd metro && \
-		rm design.svg && \
-		zip $$SRC_DIR/../skins/metro.nzs *
-		QMAKE_EXTRA_TARGETS += metro_skin
-		PRE_TARGETDEPS += $$metro_skin.target
-		#dirty hack for install
-		system($$metro_skin.commands)
+	SRC_DIR = $$PWD
+	SKIN_DEST_DIR = $$SRC_DIR/../skins
+	!exists($$SKIN_DEST_DIR) {
+		win32:SKIN_DEST_DIR ~= s,/,\\,g
+		system(mkdir $$SKIN_DEST_DIR)
 	}
+
+	silver_skin.target = $$SKIN_DEST_DIR/silver.nzs
+	metro_skin.target = $$SKIN_DEST_DIR/metro.nzs
+
+	unix {
+		ZIP_ADD_CMD=zip -j
+		ZIP_DEL_CMD=zip -d
+	}
+	win32 {
+		ZIP_ADD_CMD=7z a -tzip
+		ZIP_DEL_CMD=7z d -tzip
+	}
+	metro_skin.commands =  $$ZIP_ADD_CMD $$metro_skin.target $$SRC_DIR/skins/metro/* && \
+	                       $$ZIP_DEL_CMD $$metro_skin.target design.svg
+	silver_skin.commands = $$ZIP_ADD_CMD $$silver_skin.target $$SRC_DIR/skins/silver/* && \
+	                       $$ZIP_DEL_CMD $$silver_skin.target design.svg
+
+	QMAKE_EXTRA_TARGETS += silver_skin metro_skin
+	PRE_TARGETDEPS += $$silver_skin.target $$metro_skin.target
+	system($$silver_skin.commands)
+	system($$metro_skin.commands)
 } else {
 	DEFINES += _N_NO_SKINS_
 
@@ -183,4 +188,3 @@ mac {
 		INSTALLS += plugins
 	}
 }
-
