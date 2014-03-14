@@ -12,6 +12,7 @@ unix {
 win32 {
 	INCLUDEPATH += $(TAGLIB_DIR)/include
 	LIBS += -L$(TAGLIB_DIR)/lib -ltag
+	DEFINES += TAGLIB_STATIC
 }
 
 INCLUDEPATH += ..

@@ -34,6 +34,7 @@
 #ifdef Q_WS_WIN
 #include "w7TaskBar.h"
 #include <windows.h>
+#include <dwmapi.h>
 #endif
 
 #include <QEvent>

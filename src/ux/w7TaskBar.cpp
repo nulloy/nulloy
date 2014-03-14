@@ -21,6 +21,12 @@
 #include <shlobj.h>
 #include <QIcon>
 
+#if defined(__GNUC__)
+// mingw fails to define this
+const GUID CLSID_TaskbarList={0x56fdf344,0xfd6d,0x11d0,{0x95,0x8a,0x00,0x60,0x97,0xc9,0xa0,0x90}};
+const GUID IID_ITaskbarList3={0xea1afb91,0x9e28,0x4b86,{0x90,0xe9,0x9e,0x9f,0x8a,0x5e,0xef,0xaf}};
+#endif
+
 static WId _winId;
 static ITaskbarList3 *_taskBar = NULL;
 static UINT _messageId;
@@ -125,7 +131,11 @@ void NW7TaskBar::setOverlayIcon(const QIcon &icon, const QString &text)
 	if (!icon.isNull())
 		hIcon = icon.pixmap(icon.availableSizes().first().width()).toWinHICON();
 
-	_taskBar->SetOverlayIcon(_winId, hIcon, text.utf16());
+	wchar_t *wText = 0;
+	wText = new wchar_t[text.length() + 1];
+	wText[text.toWCharArray(wText)] = 0;
+
+	_taskBar->SetOverlayIcon(_winId, hIcon, wText);
 
 	if (hIcon)
 		DestroyIcon(hIcon);

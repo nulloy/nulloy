@@ -20,6 +20,7 @@ MOC_DIR     = $$TMP_DIR
 RCC_DIR     = $$TMP_DIR
 UI_DIR      = $$TMP_DIR
 
+# zlib
 unix {
 	CONFIG += link_pkgconfig
 	# zlib
@@ -27,14 +28,17 @@ unix {
 	# X11
 	!mac:PKGCONFIG += x11
 }
+win32 {
+	LIBS += -L$(ZLIB_DIR)/lib -lzdll
+}
+
 
 # qmake -config no-skins
 !no-skins {
 	CONFIG += uitools
 	INCLUDEPATH += widgetCollection
 	LIBS += -LwidgetCollection -lwidget_collection
-	unix:PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
-	win32:PRE_TARGETDEPS += widgetCollection/widget_collection.lib
+	PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
 	RESOURCES += native-skin-embedded.qrc
 
 	unix {

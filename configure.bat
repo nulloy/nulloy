@@ -137,7 +137,7 @@ echo Running qmake...
 
 %QMAKE%
 
-echo Nulloy has been configured. Now run `nmake'.
+echo Nulloy has been configured. Now run `make'.
 echo.
 
 :end

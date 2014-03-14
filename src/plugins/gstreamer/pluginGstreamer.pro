@@ -20,6 +20,8 @@ win32 {
 	                -liconv \
 	                -lxml2 \
 	                -lgobject-2.0
+
+	DEFINES += LIBXML_STATIC
 }
 
 INCLUDEPATH += ..
