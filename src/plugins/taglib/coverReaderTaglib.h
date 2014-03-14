@@ -37,7 +37,6 @@ class NCoverReaderTaglib : public NCoverReaderInterface, public NPlugin
 	Q_INTERFACES(NCoverReaderInterface NPlugin)
 
 private:
-	TagLib::FileRef *m_tagRef;
 	QImage fromTagBytes(const TagLib::ByteVector &data);
 	QImage fromApe(TagLib::APE::Tag *tag);
 	QImage fromAsf(TagLib::ASF::Tag *tag);

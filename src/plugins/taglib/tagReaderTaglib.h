@@ -31,7 +31,6 @@ class NTagReaderTaglib : public NTagReaderInterface, public NPlugin
 
 private:
 	QString m_path;
-	TagLib::FileRef *m_tagRef;
 	QString parse(const QString &format, bool *success, bool stopOnFail = FALSE);
 
 public:

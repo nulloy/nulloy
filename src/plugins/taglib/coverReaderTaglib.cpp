@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "coverReaderTaglib.h"
+#include "tagLibFileRef.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>
@@ -26,12 +27,22 @@ void NCoverReaderTaglib::init()
 		return;
 
 	m_init = TRUE;
-	m_tagRef = NULL;
+	NTaglib::_tagRef = NULL;
 }
 
 void NCoverReaderTaglib::setSource(const QString &file)
 {
-	m_tagRef = new TagLib::FileRef(file.toUtf8().data());
+	if (NTaglib::_filePath == file)
+		return;
+	NTaglib::_filePath = file;
+
+	if (NTaglib::_tagRef)
+		delete NTaglib::_tagRef;
+#ifdef WIN32
+	NTaglib::_tagRef = new TagLib::FileRef(reinterpret_cast<const wchar_t *>(file.constData()));
+#else
+	NTaglib::_tagRef = new TagLib::FileRef(file.toUtf8().data());
+#endif
 }
 
 NCoverReaderTaglib::~NCoverReaderTaglib()
@@ -39,13 +50,15 @@ NCoverReaderTaglib::~NCoverReaderTaglib()
 	if (!m_init)
 		return;
 
-	if (m_tagRef)
-		delete m_tagRef;
+	if (NTaglib::_tagRef) {
+		delete NTaglib::_tagRef;
+		NTaglib::_tagRef = NULL;
+	}
 }
 
 bool NCoverReaderTaglib::isValid()
 {
-	return (m_tagRef && m_tagRef->file() && m_tagRef->file()->isValid());
+	return (NTaglib::_tagRef && NTaglib::_tagRef->file() && NTaglib::_tagRef->file()->isValid());
 }
 
 QImage NCoverReaderTaglib::fromTagBytes(const TagLib::ByteVector &data)
@@ -149,7 +162,7 @@ QImage NCoverReaderTaglib::getImage()
 	if (!isValid())
 		return image;
 
-	TagLib::File *tagFile = m_tagRef->file();
+	TagLib::File *tagFile = NTaglib::_tagRef->file();
 
 	if (auto *file = dynamic_cast<TagLib::APE::File *>(tagFile)) {
 		if (file->APETag())

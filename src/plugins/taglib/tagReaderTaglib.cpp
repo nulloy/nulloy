@@ -14,10 +14,14 @@
 *********************************************************************/
 
 #include "tagReaderTaglib.h"
+#include "tagLibFileRef.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QString>
+
+TagLib::FileRef *NTaglib::_tagRef;
+QString NTaglib::_filePath;
 
 void NTagReaderTaglib::init()
 {
@@ -25,13 +29,22 @@ void NTagReaderTaglib::init()
 		return;
 
 	m_init = TRUE;
-	m_tagRef = NULL;
+	NTaglib::_tagRef = NULL;
 }
 
 void NTagReaderTaglib::setSource(const QString &file)
 {
-	m_path = file;
-	m_tagRef = new TagLib::FileRef(file.toUtf8().data());
+	if (NTaglib::_filePath == file)
+		return;
+	NTaglib::_filePath = file;
+
+	if (NTaglib::_tagRef)
+		delete NTaglib::_tagRef;
+#ifdef WIN32
+	NTaglib::_tagRef = new TagLib::FileRef(reinterpret_cast<const wchar_t *>(file.constData()));
+#else
+	NTaglib::_tagRef = new TagLib::FileRef(file.toUtf8().data());
+#endif
 }
 
 NTagReaderTaglib::~NTagReaderTaglib()
@@ -39,8 +52,10 @@ NTagReaderTaglib::~NTagReaderTaglib()
 	if (!m_init)
 		return;
 
-	if (m_tagRef)
-		delete m_tagRef;
+	if (NTaglib::_tagRef) {
+		delete NTaglib::_tagRef;
+		NTaglib::_tagRef = NULL;
+	}
 }
 
 QString NTagReaderTaglib::toString(const QString &format)
@@ -56,11 +71,11 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 
 	*success = TRUE;
 
-	if (!m_tagRef->file()->isValid())
+	if (!NTaglib::_tagRef->file()->isValid())
 		return "NTagReaderTaglib::InvalidFile";
 
-	TagLib::Tag *tag = m_tagRef->tag();
-	TagLib::AudioProperties *prop = m_tagRef->audioProperties();
+	TagLib::Tag *tag = NTaglib::_tagRef->tag();
+	TagLib::AudioProperties *prop = NTaglib::_tagRef->audioProperties();
 
 	int seconds_total = prop->length();
 
@@ -155,11 +170,11 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 				}
 				res += str;
 			} else if (ch == 'f') {
-				res += QFileInfo(m_path).baseName();
+				res += QFileInfo(NTaglib::_filePath).baseName();
 			} else if (ch == 'F') {
-				res += QFileInfo(m_path).fileName();
+				res += QFileInfo(NTaglib::_filePath).fileName();
 			} else if (ch == 'p') {
-				res += QFileInfo(m_path).absoluteFilePath();
+				res += QFileInfo(NTaglib::_filePath).absoluteFilePath();
 			} else if (ch == 'v') {
 				res += QCoreApplication::applicationVersion();
 			} else {
@@ -209,6 +224,6 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 
 bool NTagReaderTaglib::isValid()
 {
-	return (m_tagRef && m_tagRef->file() && m_tagRef->file()->isValid());
+	return (NTaglib::_tagRef && NTaglib::_tagRef->file() && NTaglib::_tagRef->file()->isValid());
 }
 
