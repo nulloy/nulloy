@@ -149,7 +149,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 				}
 				res += duration;
 			} else if (ch == 'B') {
-				QString str = QString::number(prop->bitrate() / 1000);
+				QString str = QString::number(prop->bitrate());
 				if (str == "0") {
 					str = "<Unknown bitrate>";
 					*success = FALSE;
