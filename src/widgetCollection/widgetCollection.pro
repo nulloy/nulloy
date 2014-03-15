@@ -5,7 +5,7 @@ DESTDIR = $$PWD
 CONFIG += designer plugin static
 
 include(widgetCollection.pri)
-include(../trash/trash.pri)
+INCLUDEPATH += ../trash/
 
 OBJECTS_DIR = $$TMP_DIR
 MOC_DIR = $$TMP_DIR
