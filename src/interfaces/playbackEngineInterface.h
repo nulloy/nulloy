@@ -20,7 +20,7 @@
 
 #include <QMessageBox>
 
-#define PLAYBACK_INTERFACE "Nulloy/NPlaybackEngineInterface/0.5"
+#define PLAYBACK_INTERFACE "Nulloy/NPlaybackEngineInterface/0.7"
 
 class NPlaybackEngineInterface : public QObject
 {

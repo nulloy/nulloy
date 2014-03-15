@@ -31,7 +31,7 @@ public:
 	~NContainerTaglib();
 	QList<NPlugin *> plugins();
 	QString name() { return "TagLib"; }
-	QString version() { return "0.5"; }
+	QString version() { return "0.7"; }
 };
 
 #endif

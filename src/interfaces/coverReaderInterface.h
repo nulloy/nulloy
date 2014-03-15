@@ -20,7 +20,7 @@
 
 class QString;
 
-#define COVERREADER_INTERFACE "Nulloy/NCoverReaderInterface/0.5"
+#define COVERREADER_INTERFACE "Nulloy/NCoverReaderInterface/0.7"
 
 class NCoverReaderInterface : public QObject
 {

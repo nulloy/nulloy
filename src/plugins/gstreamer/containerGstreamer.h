@@ -31,7 +31,7 @@ public:
 	~NContainerGstreamer();
 	QList<NPlugin *> plugins();
 	QString name() { return "GStreamer"; }
-	QString version() { return "0.5.1"; }
+	QString version() { return "0.7"; }
 };
 
 #endif

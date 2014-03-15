@@ -20,7 +20,7 @@
 
 class QString;
 
-#define TAGREADER_INTERFACE "Nulloy/NTagReaderInterface/0.5"
+#define TAGREADER_INTERFACE "Nulloy/NTagReaderInterface/0.7"
 
 class NTagReaderInterface : public QObject
 {

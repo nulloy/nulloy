@@ -40,7 +40,7 @@ public:
 	virtual void init() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPlugin, "Nulloy/NPlugin/0.5")
+Q_DECLARE_INTERFACE(NPlugin, "Nulloy/NPlugin/0.7")
 
 #endif
 

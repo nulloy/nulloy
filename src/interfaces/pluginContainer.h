@@ -30,7 +30,7 @@ public:
 	virtual QString version() = 0;
 };
 
-Q_DECLARE_INTERFACE(NPluginContainer, "Nulloy/NPluginContainer/0.5")
+Q_DECLARE_INTERFACE(NPluginContainer, "Nulloy/NPluginContainer/0.7")
 
 #endif
 
