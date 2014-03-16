@@ -10,7 +10,7 @@ BuildRequires: qt-devel gcc-c++
 %else
 BuildRequires: libqt-devel
 %endif
-BuildRequires: gstreamer-devel gstreamer-plugins-base-devel zip libX11-devel
+BuildRequires: gstreamer-devel gstreamer-plugins-base-devel zip libX11-devel taglib-devel
 BuildRoot:     %{_topdir}/%{name}-%{version}-root
 
 %description
@@ -25,8 +25,8 @@ Music player with a waveform progress bar.
 %else
 %define QMAKE qmake
 %endif
-QMAKE=%{QMAKE} ./configure --prefix=%{buildroot}%{_prefix}
-make -j`grep processor /proc/cpuinfo | wc -l`
+QMAKE=%{QMAKE} ./configure --taglib --prefix=%{buildroot}%{_prefix}
+make
 
 %install
 %makeinstall
@@ -46,6 +46,15 @@ GStreamer backend for Nulloy.
 %files gstreamer
 %defattr(-,root,root)
 %{_libdir}/%{name}/plugins/libplugin_gstreamer.so
+
+%package  taglib
+Summary:  TagLib backend for Nulloy
+Requires: nulloy
+%description taglib
+TagLib backend for Nulloy.
+%files taglib
+%defattr(-,root,root)
+%{_libdir}/%{name}/plugins/libplugin_taglib.so
 
 %changelog
 
