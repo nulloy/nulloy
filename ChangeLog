@@ -1,3 +1,6 @@
+* 0.7.0.1, Thu Mar 20 2014
+- Fix: Not showing JPEG Cover Art
+
 * 0.7, Sat Mar 15 2014
 - Cover Art support
 - Repeat and shuffle buttons

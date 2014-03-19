@@ -42,6 +42,11 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationVersion(QString(_N_VERSION_) + " Alpha");
 	QCoreApplication::setOrganizationDomain("nulloy.com");
 
+	// for Qt core plugins
+#ifdef Q_WS_WIN
+	QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/Plugins/");
+#endif
+
 #ifndef _N_NO_SKINS_
 	NSkinFileSystem::init();
 #endif
