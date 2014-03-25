@@ -69,7 +69,6 @@ public slots:
 private slots:
 	void loadSettings();
 	void saveSettings();
-	void waveformSliderToolTip(int x, int y);
 
 signals:
 	void closed();

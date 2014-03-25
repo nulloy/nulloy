@@ -24,13 +24,6 @@
 #include <QUiLoader>
 #endif
 
-#ifndef _N_NO_PLUGINS_
-#include "pluginLoader.h"
-#include "tagReaderInterface.h"
-#else
-#include "tagReaderGstreamer.h"
-#endif
-
 #ifdef Q_WS_WIN
 #include "w7TaskBar.h"
 #include <windows.h>
@@ -41,7 +34,6 @@
 #include <QIcon>
 #include <QLayout>
 #include <QWindowStateChangeEvent>
-#include <QToolTip>
 #include <QTime>
 
 NMainWindow::NMainWindow(QWidget *parent) : QDialog(parent)
@@ -77,9 +69,6 @@ void NMainWindow::init(const QString &uiFile)
 
 	m_oldPos = QPoint(-1, -1);
 	m_oldSize = QSize(-1, -1);
-
-	m_waveformSlider = qFindChild<QWidget *>(this, "waveformSlider");
-	connect(m_waveformSlider, SIGNAL(mouseMoved(int, int)), this, SLOT(waveformSliderToolTip(int, int)));
 
 	// enabling dragging window from any point
 	QList<QWidget *> widgets = findChildren<QWidget *>();
@@ -296,25 +285,5 @@ void NMainWindow::setOnTop(bool onTop)
 #ifdef Q_WS_WIN
 	NW7TaskBar::setWindow(this);
 #endif
-}
-
-void NMainWindow::waveformSliderToolTip(int x, int y)
-{
-	if (x != -1 && y != -1) {
-		float pos = (float)x / m_waveformSlider->width();
-		NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-		int duration = tagReader->toString("%D").toInt();
-		int res = duration * pos;
-
-		int hours = res / 60 / 60;
-		QTime time = QTime().addSecs(res);
-		QString timeStr;
-		if (hours > 0)
-			timeStr = time.toString("h:mm:ss");
-		else
-			timeStr = time.toString("m:ss");
-
-		QToolTip::showText(m_waveformSlider->mapToGlobal(QPoint(x, y)), timeStr);
-	}
 }
 

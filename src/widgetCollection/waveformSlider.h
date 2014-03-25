@@ -65,6 +65,7 @@ signals:
 
 private slots:
 	void checkForUpdate();
+	void showToolTip(int x, int y);
 
 // STYLESHEET PROPERTIES
 private:
