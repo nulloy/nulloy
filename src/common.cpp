@@ -102,12 +102,14 @@ QStringList NCore::dirListRecursive(const QString &path)
 	return _processPath(path);
 }
 
-bool NCore::revealInFileManager(const QString &file)
+bool NCore::revealInFileManager(const QString &file, QString *error)
 {
 	QFileInfo fileInfo(file);
 
-	if (!fileInfo.exists())
+	if (!fileInfo.exists()) {
+		*error = QString(QObject::tr("File doesn't exist: <b>%1</b>")).arg(QFileInfo(file).fileName());
 		return FALSE;
+	}
 
 	QString fileManagerCommand;
 	QStringList arguments;
@@ -123,6 +125,10 @@ bool NCore::revealInFileManager(const QString &file)
 	xdg.waitForFinished();
 
 	fileManagerCommand = QString::fromUtf8(xdg.readAll()).simplified().remove(".desktop");
+	if (QProcess::execute("which " + fileManagerCommand) != 0) {
+		*error = QString(QObject::tr("Default file manager is set to <b>%1</b> but it's not available.")).arg(fileManagerCommand);
+		return FALSE;
+	}
 
 	if (fileManagerCommand == "dolphin") {
 		arguments << "--select";

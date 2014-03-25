@@ -120,8 +120,9 @@ void NPlaylistWidget::on_removeAction_triggered()
 
 void NPlaylistWidget::on_revealAction_triggered()
 {
-	if (!NCore::revealInFileManager(selectedItems().first()->data(N::PathRole).toString()))
-		QMessageBox::warning(this, "File Manager Error", "File doesn't exist: " + selectedItems().first()->text());
+	QString error;
+	if (!NCore::revealInFileManager(selectedItems().first()->data(N::PathRole).toString(), &error))
+		QMessageBox::warning(this, QObject::tr("Reveal in File Manager Error"), error, QMessageBox::Close);
 }
 
 NPlaylistWidget::~NPlaylistWidget() {}
