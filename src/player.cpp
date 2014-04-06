@@ -452,6 +452,8 @@ void NPlayer::loadSettings()
 	bool showCover = m_settings->value("ShowCoverArt").toBool();
 	NAction *showCoverAction = qFindChild<NAction *>(this, "showCoverAction");
 	showCoverAction->setChecked(showCover);
+	QWidget *coverWidget = qFindChild<QWidget *>(m_mainWindow, "coverWidget");
+	coverWidget->setEnabled(showCover);
 
 	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
 	if (whilePlaying) {
