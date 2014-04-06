@@ -688,7 +688,7 @@ QScrollBar::sub-page {
             <number>5</number>
            </property>
            <property name="childrenCollapsible">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <widget class="QWidget" name="backgroundWidget" native="true">
             <layout class="QVBoxLayout" name="verticalLayout_3">

@@ -65,7 +65,7 @@
          <number>5</number>
         </property>
         <property name="childrenCollapsible">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <widget class="NDropArea" name="dropArea" native="true">
          <property name="sizePolicy">
