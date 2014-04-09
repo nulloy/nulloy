@@ -32,19 +32,21 @@ NAbstractWaveformBuilder::~NAbstractWaveformBuilder() {}
 void NAbstractWaveformBuilder::cacheLoad()
 {
 	QFile cache(m_cacheFile);
-	if (!m_cacheLoaded && cache.exists()) {
-		QByteArray compressed;
-		cache.open(QIODevice::ReadOnly);
-		QDataStream inFile(&cache);
-		inFile >> compressed;
-		cache.close();
 
-		QByteArray buffer = qUncompress(compressed);
-		QDataStream inBuffer(&buffer, QIODevice::ReadOnly);
-		inBuffer >> m_peaksCache >> m_dateHash;
+	if (m_cacheLoaded || !cache.exists())
+		return;
 
-		m_cacheLoaded = TRUE;
-	}
+	QByteArray compressed;
+	cache.open(QIODevice::ReadOnly);
+	QDataStream inFile(&cache);
+	inFile >> compressed;
+	cache.close();
+
+	QByteArray buffer = qUncompress(compressed);
+	QDataStream inBuffer(&buffer, QIODevice::ReadOnly);
+	inBuffer >> m_peaksCache >> m_dateHash;
+
+	m_cacheLoaded = TRUE;
 }
 
 void NAbstractWaveformBuilder::cacheSave()
@@ -67,8 +69,8 @@ bool NAbstractWaveformBuilder::peaksFindFromCache(const QString &file)
 	if (!m_cacheLoaded)
 		return FALSE;
 
-	QDir dir(QFileInfo(m_cacheFile).canonicalPath());
-	QString path = dir.relativeFilePath(QFileInfo(file).canonicalFilePath());
+	QDir dir(QFileInfo(m_cacheFile).absolutePath());
+	QString path = dir.relativeFilePath(QFileInfo(file).absoluteFilePath());
 
 	QByteArray pathHash = QCryptographicHash::hash(path.toUtf8(), QCryptographicHash::Sha1);
 	QString modifDate = m_dateHash.value(pathHash);
@@ -96,8 +98,8 @@ void NAbstractWaveformBuilder::peaksAppendToCache(const QString &file)
 	if (!m_peaks.isCompleted())
 		return;
 
-	QDir dir(QFileInfo(m_cacheFile).canonicalPath());
-	QString path = dir.relativeFilePath(QFileInfo(file).canonicalFilePath());
+	QDir dir(QFileInfo(m_cacheFile).absolutePath());
+	QString path = dir.relativeFilePath(QFileInfo(file).absoluteFilePath());
 
 	QByteArray pathHash = QCryptographicHash::hash(path.toUtf8(), QCryptographicHash::Sha1);
 	m_peaksCache.insert(pathHash, &m_peaks);
