@@ -192,7 +192,7 @@ template <class Key, class T> bool NCache<Key, T>::insert(const Key &akey, T *ao
 	}
 	trim(mx - acost);
 	Node sn(aobject, acost);
-	typename QHash<Key, Node>::iterator i = hash.insert(akey, sn);
+	hash.insert(akey, sn);
 	total += acost;
 	list.prepend(akey);
 	return true;
