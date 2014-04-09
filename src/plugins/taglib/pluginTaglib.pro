@@ -15,8 +15,6 @@ win32 {
 	DEFINES += TAGLIB_STATIC
 }
 
-INCLUDEPATH += ..
-
 HEADERS += *.h
 SOURCES += *.cpp
 

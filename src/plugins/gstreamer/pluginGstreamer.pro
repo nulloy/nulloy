@@ -24,10 +24,10 @@ win32 {
 	DEFINES += LIBXML_STATIC
 }
 
-INCLUDEPATH += ..
+
 
 HEADERS += $$files(*.h)
-SOURCES += $$files(*.cpp) ../abstractWaveformBuilder.cpp ../../waveformPeaks.cpp
+SOURCES += $$files(*.cpp)
 
 gstreamer-tagreader {
 	unix:PKGCONFIG += gstreamer-pbutils-0.10

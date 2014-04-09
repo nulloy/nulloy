@@ -6,8 +6,6 @@ include(../plugin.pri)
 CONFIG += link_pkgconfig
 PKGCONFIG += libvlc vlc-plugin
 
-INCLUDEPATH += ..
-
 HEADERS += *.h
-SOURCES += *.cpp ../abstractWaveformBuilder.cpp ../../waveformPeaks.cpp
+SOURCES += *.cpp
 

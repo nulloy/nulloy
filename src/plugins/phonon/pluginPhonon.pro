@@ -5,8 +5,6 @@ include(../plugin.pri)
 
 QT += phonon
 
-INCLUDEPATH += ..
-
 HEADERS += *.h
-SOURCES += *.cpp ../abstractWaveformBuilder.cpp ../../waveformPeaks.cpp
+SOURCES += *.cpp
 
