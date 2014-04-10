@@ -46,17 +46,20 @@ win32 {
 
 
 	SRC_DIR = $$PWD
-	SKIN_DEST_DIR = $$SRC_DIR/../skins
+	unix:SKIN_DEST_DIR = $$SRC_DIR/../skins
+	win32:SKIN_DEST_DIR = $$SRC_DIR/../Skins
 	!exists($$SKIN_DEST_DIR) {
 		win32:SKIN_DEST_DIR ~= s,/,\\,g
 		system(mkdir $$SKIN_DEST_DIR)
 	}
 
 	metro_skin.depends = $$SRC_DIR/skins/metro/
-	metro_skin.target = $$SKIN_DEST_DIR/metro.nzs
+	unix:metro_skin.target = $$SKIN_DEST_DIR/metro.nzs
+	win32:metro_skin.target = $$SKIN_DEST_DIR/Metro.nzs
 
 	silver_skin.depends = $$SRC_DIR/skins/silver/
-	silver_skin.target = $$SKIN_DEST_DIR/silver.nzs
+	unix:silver_skin.target = $$SKIN_DEST_DIR/silver.nzs
+	win32:silver_skin.target = $$SKIN_DEST_DIR/Silver.nzs
 
 	unix {
 		ZIP_ADD_CMD=zip -j
