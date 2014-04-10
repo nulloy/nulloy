@@ -52,10 +52,10 @@ win32 {
 		system(mkdir $$SKIN_DEST_DIR)
 	}
 
-	metro_skin.depends = $$SRC_DIR/skins/metro/*
+	metro_skin.depends = $$SRC_DIR/skins/metro/
 	metro_skin.target = $$SKIN_DEST_DIR/metro.nzs
 
-	silver_skin.depends = $$SRC_DIR/skins/silver/*
+	silver_skin.depends = $$SRC_DIR/skins/silver/
 	silver_skin.target = $$SKIN_DEST_DIR/silver.nzs
 
 	unix {
@@ -66,9 +66,9 @@ win32 {
 		ZIP_ADD_CMD=7z a -tzip
 		ZIP_DEL_CMD=7z d -tzip
 	}
-	metro_skin.commands =  $$ZIP_ADD_CMD $$metro_skin.target $$metro_skin.depends && \
+	metro_skin.commands =  $$ZIP_ADD_CMD $$metro_skin.target $$metro_skin.depends/* && \
 	                       $$ZIP_DEL_CMD $$metro_skin.target design.svg
-	silver_skin.commands = $$ZIP_ADD_CMD $$silver_skin.target $$silver_skin.depends && \
+	silver_skin.commands = $$ZIP_ADD_CMD $$silver_skin.target $$silver_skin.depends/* && \
 	                       $$ZIP_DEL_CMD $$silver_skin.target design.svg
 
 	QMAKE_EXTRA_TARGETS += silver_skin metro_skin
