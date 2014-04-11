@@ -265,6 +265,7 @@ void NMainWindow::toggleMaximize()
 		showMaximized();
 
 	emit fullScreenEnabled(FALSE);
+	emit maximizeEnabled(isMaximized());
 }
 
 void NMainWindow::showFullScreen()

@@ -32,6 +32,7 @@ function Program(player)
 		this.titleLabel = this.mainWindow.findChild("titleLabel");
 		this.coverWidget = this.mainWindow.findChild("coverWidget");
 		this.controlsContainer = this.mainWindow.findChild("controlsContainer");
+		this.borderWidget = this.mainWindow.findChild("borderWidget");
 
 		this.repeatCheckBox = this.mainWindow.findChild("repeatCheckBox");
 		this.repeatCheckBox["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
@@ -80,6 +81,7 @@ function Program(player)
 
 		this.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
 		this.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
+		this.mainWindow["maximizeEnabled(bool)"].connect(this, "on_maximizeEnabled");
 		this.mainWindow.resized.connect(this, "on_resized");
 
 		this.splitter = this.mainWindow.findChild("splitter");
@@ -91,12 +93,10 @@ function Program(player)
 			var playlistWidget = this.mainWindow.findChild("playlistWidget");
 			playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
 
-			var borderWidget = this.mainWindow.findChild("borderWidget");
-
 			var titleLabel = this.mainWindow.findChild("titleLabel");
 			titleLabel.setFontSize(12);
 
-			this.sizeGrip.setParent(borderWidget);
+			this.sizeGrip.setParent(this.borderWidget);
 		} else {
 			this.sizeGrip.hide();
 			this.mainWindow.setSizeGripEnabled(true);
@@ -189,5 +189,20 @@ Program.prototype.on_fullScreenEnabled = function(enabled)
 	this.controlsContainer.setVisible(!enabled);
 	this.titleWidget.setVisible(!enabled);
 	this.playlistWidget.setVisible(!enabled);
+
+	this.setBorderVisible(!enabled);
+}
+
+Program.prototype.on_maximizeEnabled = function(enabled)
+{
+	this.setBorderVisible(!enabled);
+}
+
+Program.prototype.setBorderVisible = function(enabled)
+{
+	if (enabled)
+		this.borderWidget.layout().setContentsMargins(1, 1, 1, 1);
+	else
+		this.borderWidget.layout().setContentsMargins(0, 0, 0, 0);
 }
 

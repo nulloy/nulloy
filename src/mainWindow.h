@@ -77,6 +77,7 @@ signals:
 	void resized();
 	void newTitle(const QString &title);
 	void fullScreenEnabled(bool enabled);
+	void maximizeEnabled(bool enabled);
 };
 
 #endif
