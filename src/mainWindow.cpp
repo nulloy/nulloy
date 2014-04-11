@@ -263,6 +263,20 @@ void NMainWindow::toggleMaximize()
 		showNormal();
 	else
 		showMaximized();
+
+	emit fullScreenEnabled(FALSE);
+}
+
+void NMainWindow::showFullScreen()
+{
+	emit fullScreenEnabled(TRUE);
+	QDialog::showFullScreen();
+}
+
+void NMainWindow::showNormal()
+{
+	emit fullScreenEnabled(FALSE);
+	QDialog::showNormal();
 }
 
 void NMainWindow::setOnTop(bool onTop)

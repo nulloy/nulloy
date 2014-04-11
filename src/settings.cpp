@@ -48,6 +48,8 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("Shortcuts/prevAction", "Z");
 	initValue("Shortcuts/nextAction", "B");
 
+	initValue("Shortcuts/fullScreenAction", "F11");
+
 	initValue("PlaylistTrackInfo", "%F (%d)");
 	initValue("WindowTitleTrackInfo","\"{%a - %t|%F}\" - " + QCoreApplication::applicationName() + " %v");
 

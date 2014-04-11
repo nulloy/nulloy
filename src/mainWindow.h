@@ -64,6 +64,8 @@ public slots:
 	void setTitle(QString title);
 	void toggleMaximize();
 	void toggleVisibility();
+	void showNormal();
+	void showFullScreen();
 	void setOnTop(bool onTop);
 
 private slots:
@@ -74,6 +76,7 @@ signals:
 	void closed();
 	void resized();
 	void newTitle(const QString &title);
+	void fullScreenEnabled(bool enabled);
 };
 
 #endif

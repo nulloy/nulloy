@@ -998,7 +998,7 @@ QScrollBar::sub-page {
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QWidget" name="widget" native="true">
+                 <widget class="QWidget" name="controlsContainer" native="true">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                     <horstretch>0</horstretch>
@@ -1218,39 +1218,6 @@ QScrollBar::sub-page {
                     </widget>
                    </item>
                    <item>
-                    <widget class="QToolButton" name="playlistToggleButton">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>60</width>
-                       <height>11</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>60</width>
-                       <height>11</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>8</pointsize>
-                      </font>
-                     </property>
-                     <property name="focusPolicy">
-                      <enum>Qt::NoFocus</enum>
-                     </property>
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
                     <widget class="QSizeGrip" name="sizeGrip" native="true">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1384,7 +1351,7 @@ QScrollBar::sub-page {
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="widget_4" native="true">
+           <widget class="QWidget" name="playlistContainer" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>

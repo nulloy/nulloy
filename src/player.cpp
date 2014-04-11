@@ -196,6 +196,13 @@ NPlayer::NPlayer()
 	alwaysOnTopAction->setCheckable(TRUE);
 	alwaysOnTopAction->setObjectName("alwaysOnTopAction");
 	connect(alwaysOnTopAction, SIGNAL(toggled(bool)), this, SLOT(on_alwaysOnTopAction_toggled(bool)));
+
+	NAction *fullScreenAction = new NAction(tr("Fullscreen Mode"), this);
+	fullScreenAction->setStatusTip(tr("Hide all controll except waveform"));
+	fullScreenAction->setCheckable(TRUE);
+	fullScreenAction->setObjectName("fullScreenAction");
+	fullScreenAction->setCustomizable(TRUE);
+	connect(fullScreenAction, SIGNAL(toggled(bool)), this, SLOT(on_fullScreenAction_toggled(bool)));
 	//
 
 
@@ -268,6 +275,7 @@ NPlayer::NPlayer()
 	QMenu *windowSubMenu = new QMenu("Window", m_mainWindow);
 	windowSubMenu->addAction(whilePlayingOnTopAction);
 	windowSubMenu->addAction(alwaysOnTopAction);
+	windowSubMenu->addAction(fullScreenAction);
 	m_contextMenu->addMenu(windowSubMenu);
 
 	QMenu *playlistSubMenu = new QMenu("Playlist", m_mainWindow);
@@ -643,6 +651,15 @@ void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
 	if (!whilePlaying || m_playbackEngine->state() != N::PlaybackPlaying)
 		m_mainWindow->setOnTop(checked);
+}
+
+void NPlayer::on_fullScreenAction_toggled(bool checked)
+{
+	if (checked) {
+		m_mainWindow->showFullScreen();
+	} else {
+		m_mainWindow->showNormal();
+	}
 }
 
 void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)

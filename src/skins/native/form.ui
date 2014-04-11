@@ -78,6 +78,9 @@
           <bool>true</bool>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <property name="bottomMargin">
            <number>3</number>
           </property>
@@ -114,7 +117,23 @@
            </layout>
           </item>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>6</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QWidget" name="controlsContainer" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -126,13 +145,13 @@
               <number>6</number>
              </property>
              <property name="leftMargin">
-              <number>1</number>
+              <number>0</number>
              </property>
              <property name="topMargin">
               <number>3</number>
              </property>
              <property name="rightMargin">
-              <number>1</number>
+              <number>0</number>
              </property>
              <property name="bottomMargin">
               <number>1</number>
@@ -158,7 +177,9 @@
                 <string>Previous</string>
                </property>
                <property name="icon">
-                <iconset theme="media-skip-backward"/>
+                <iconset theme="media-skip-backward">
+                 <normaloff/>
+                </iconset>
                </property>
               </widget>
              </item>
@@ -189,7 +210,9 @@
                 <string>Play / Pause</string>
                </property>
                <property name="icon">
-                <iconset theme="media-playback-start"/>
+                <iconset theme="media-playback-start">
+                 <normaloff/>
+                </iconset>
                </property>
               </widget>
              </item>
@@ -220,7 +243,9 @@
                 <string>Stop</string>
                </property>
                <property name="icon">
-                <iconset theme="media-playback-stop"/>
+                <iconset theme="media-playback-stop">
+                 <normaloff/>
+                </iconset>
                </property>
               </widget>
              </item>
@@ -245,7 +270,9 @@
                 <string>Next</string>
                </property>
                <property name="icon">
-                <iconset theme="media-skip-forward"/>
+                <iconset theme="media-skip-forward">
+                 <normaloff/>
+                </iconset>
                </property>
               </widget>
              </item>
@@ -286,7 +313,9 @@
                 <string>Repeat</string>
                </property>
                <property name="icon">
-                <iconset theme="media-playlist-repeat"/>
+                <iconset theme="media-playlist-repeat">
+                 <normaloff/>
+                </iconset>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -314,7 +343,9 @@
                 <string>Shuffle</string>
                </property>
                <property name="icon">
-                <iconset theme="media-playlist-shuffle"/>
+                <iconset theme="media-playlist-shuffle">
+                 <normaloff/>
+                </iconset>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -389,7 +420,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="widget" native="true">
+        <widget class="QWidget" name="playlistContainer" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>

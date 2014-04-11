@@ -31,6 +31,7 @@ function Program(player)
 		this.minimizeButton = this.mainWindow.findChild("minimizeButton");
 		this.titleLabel = this.mainWindow.findChild("titleLabel");
 		this.coverWidget = this.mainWindow.findChild("coverWidget");
+		this.controlsContainer = this.mainWindow.findChild("controlsContainer");
 
 		this.repeatCheckBox = this.mainWindow.findChild("repeatCheckBox");
 		this.repeatCheckBox["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
@@ -78,6 +79,7 @@ function Program(player)
 		this.minimizeButton.clicked.connect(this.mainWindow.showMinimized);
 
 		this.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
+		this.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
 		this.mainWindow.resized.connect(this, "on_resized");
 
 		this.splitter = this.mainWindow.findChild("splitter");
@@ -99,9 +101,6 @@ function Program(player)
 			this.sizeGrip.hide();
 			this.mainWindow.setSizeGripEnabled(true);
 		}
-
-		/*if (Q_WS == "win")
-			this.mainWindow.setFramelessShadow(true);*/
 
 		if (WS_BUTTOS_SIDE == "left") {
 			var titleBarlLayout = this.mainWindow.findChild("titleBarlLayout");
@@ -183,5 +182,12 @@ Program.prototype.setTitle = function(title)
 {
 	this.titleLabel.text = title;
 	this.titleLabel.toolTip = title;
+}
+
+Program.prototype.on_fullScreenEnabled = function(enabled)
+{
+	this.controlsContainer.setVisible(!enabled);
+	this.titleWidget.setVisible(!enabled);
+	this.playlistWidget.setVisible(!enabled);
 }
 

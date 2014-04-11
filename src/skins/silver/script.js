@@ -33,6 +33,8 @@ function Program(player)
 		this.minimizeButton = this.mainWindow.findChild("minimizeButton");
 		this.titleLabel = this.mainWindow.findChild("titleLabel");
 		this.coverWidget = this.mainWindow.findChild("coverWidget");
+		this.playlistContainer = this.mainWindow.findChild("playlistContainer");
+		this.controlsContainer = this.mainWindow.findChild("controlsContainer");
 
 		this.repeatCheckBox = this.mainWindow.findChild("repeatCheckBox");
 		this.repeatCheckBox["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
@@ -79,12 +81,8 @@ function Program(player)
 		this.minimizeButton.clicked.connect(this.mainWindow.showMinimized);
 
 		this.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
+		this.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
 		this.mainWindow.resized.connect(this, "on_resized");
-
-		this.playlistToggleButton.hide();
-		this.playlistToggleButton.clicked.connect(this, "on_playlistToggleButtonClicked");
-		this.playlistToggleButton.setParent(this.playlistWidget);
-		this.playlistToggleButton.setParent(this.dropArea);
 
 		this.shadowWidget.setParent(this.dropArea);
 		this.shadowWidget.setParent(this.playlistWidget);
@@ -113,9 +111,6 @@ function Program(player)
 			this.sizeGrip.hide();
 			this.mainWindow.setSizeGripEnabled(true);
 		}
-
-		/*if (Q_WS == "win")
-			this.mainWindow.setFramelessShadow(true);*/
 
 		if (WS_BUTTOS_SIDE == "left") {
 			var titleBarlLayout = this.mainWindow.findChild("titleBarlLayout");
@@ -167,11 +162,6 @@ Program.prototype.on_failed = function()
 
 Program.prototype.on_resized = function()
 {
-	this.playlistToggleButton.move(this.playlistToggleButton.parentWidget().width -
-	                               this.playlistToggleButton.width - 40,
-	                               this.playlistToggleButton.parentWidget().height -
-	                               this.playlistToggleButton.height);
-
 	if (Q_WS == "mac") {
 		this.sizeGrip.move(this.sizeGrip.parentWidget().width -
 		                   this.sizeGrip.width - 5,
@@ -180,23 +170,6 @@ Program.prototype.on_resized = function()
 	}
 
 	this.shadowWidget.resize(this.playlistWidget.width, this.shadowWidget.height);
-}
-
-Program.prototype.on_playlistToggleButtonClicked = function()
-{
-	this.player.settings().setValue("SilverSkin/PlaylistVisible", !this.playlistWidget.visible);
-	if (this.playlistWidget.visible) {
-		this.player.settings().setValue("SilverSkin/OldHeight", this.mainWindow.height);
-		this.playlistWidget.hide();
-		this.mainWindow.minimumHeight = this.mainWindow.maximumHeight = this.maximumHeight;
-		this.mainWindow.resize(this.mainWindow.width, this.mainWindow.minimumHeigh);
-	} else {
-		var oldHeight = this.player.settings().value("SilverSkin/OldHeight", 250);
-		this.playlistWidget.show();
-		this.mainWindow.maximumHeight = 0xFFFFFF;
-		this.mainWindow.minimumHeight = 200;
-		this.mainWindow.resize(this.mainWindow.width, oldHeight);
-	}
 }
 
 Program.prototype.on_volumeSlider_sliderMoved = function(value)
@@ -228,5 +201,12 @@ Program.prototype.setTitle = function(title)
 {
 	this.titleLabel.text = title;
 	this.titleLabel.toolTip = title;
+}
+
+Program.prototype.on_fullScreenEnabled = function(enabled)
+{
+	this.playlistContainer.setVisible(!enabled);
+	this.controlsContainer.setVisible(!enabled);
+	this.titleWidget.setVisible(!enabled);
 }
 

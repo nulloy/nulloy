@@ -28,6 +28,8 @@ function Program(player)
 		this.volumeSlider = this.mainWindow.findChild("volumeSlider");
 		this.waveformSlider = this.mainWindow.findChild("waveformSlider");
 		this.coverWidget = this.mainWindow.findChild("coverWidget");
+		this.controlsContainer = this.mainWindow.findChild("controlsContainer");
+		this.playlistContainer = this.mainWindow.findChild("playlistContainer");
 
 		this.repeatCheckBox = this.mainWindow.findChild("repeatCheckBox");
 		this.repeatCheckBox["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
@@ -71,6 +73,7 @@ function Program(player)
 		this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlider_setValue");
 
 		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["playFiles(const QStringList &)"]);
+		this.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
 		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
 
 		this.splitter = this.mainWindow.findChild("splitter");
@@ -164,5 +167,12 @@ Program.prototype.on_waveformSlider_sliderMoved = function(value)
 Program.prototype.waveformSlider_setValue = function(value)
 {
 	this.waveformSlider.value = Math.round(value * this.waveformSlider.maximum);
+}
+
+Program.prototype.on_fullScreenEnabled = function(enabled)
+{
+	this.controlsContainer.setVisible(!enabled);
+	this.playlistContainer.setVisible(!enabled);
+	this.titleWidget.setVisible(!enabled);
 }
 

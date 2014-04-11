@@ -19,6 +19,7 @@
 #include <QAction>
 #include <QHeaderView>
 #include <QKeyEvent>
+#include <QDebug>
 
 NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(parent)
 {
@@ -83,6 +84,7 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 	int height = horizontalHeader()->height();
 	for (int i = 0; i < rowCount(); ++i)
 		height += rowHeight(i);
+	setMinimumHeight(height);
 	setMaximumHeight(height);
 
 	m_init = TRUE;
