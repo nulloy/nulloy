@@ -52,6 +52,7 @@ private:
 	NTrackInfoWidget *m_trackInfoWidget;
 	NLogDialog *m_logDialog;
 	QNetworkAccessManager *m_versionDownloader;
+	QSystemTrayIcon *m_systemTray;
 	QTimer *m_trayClickTimer;
 	bool m_trayIconDoubleClickCheck;
 

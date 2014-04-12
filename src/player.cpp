@@ -27,7 +27,6 @@
 #include "preferencesDialog.h"
 #include "scriptEngine.h"
 #include "settings.h"
-#include "systemTray.h"
 #include "tagReaderInterface.h"
 #include "trackInfoWidget.h"
 
@@ -54,6 +53,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QResizeEvent>
+#include <QSystemTrayIcon>
 
 NPlayer::NPlayer()
 {
@@ -251,12 +251,13 @@ NPlayer::NPlayer()
 	trayIconMenu->addSeparator();
 	trayIconMenu->addAction(preferencesAction);
 	trayIconMenu->addAction(exitAction);
-	NSystemTray::init(this);
-	NSystemTray::setContextMenu(trayIconMenu);
+	m_systemTray = new QSystemTrayIcon(this);
+	m_systemTray->setContextMenu(trayIconMenu);
+	connect(m_systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_trayIcon_activated(QSystemTrayIcon::ActivationReason)));
 #ifdef Q_WS_MAC
-	NSystemTray::setIcon(QIcon(":mac-systray.png"));
+	m_systemTray->setIcon(QIcon(":mac-systray.png"));
 #else
-	NSystemTray::setIcon(m_mainWindow->windowIcon());
+	m_systemTray->setIcon(m_mainWindow->windowIcon());
 #endif
 	m_trayClickTimer = new QTimer(this);
 	m_trayClickTimer->setSingleShot(TRUE);
@@ -446,7 +447,7 @@ void NPlayer::saveDefaultPlaylist()
 
 void NPlayer::loadSettings()
 {
-	NSystemTray::setEnabled(m_settings->value("TrayIcon").toBool());
+	m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
 
 	if (m_settings->value("AutoCheckUpdates").toBool())
 		downloadVersion();
@@ -498,7 +499,7 @@ void NPlayer::saveSettings()
 
 void NPlayer::on_preferencesDialog_settingsChanged()
 {
-	NSystemTray::setEnabled(m_settings->value("TrayIcon").toBool());
+	m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
 	m_trackInfoWidget->readSettings();
 	m_trackInfoWidget->updateInfo();
 }
@@ -542,7 +543,7 @@ void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
 void NPlayer::on_mainWindow_closed()
 {
 	if (m_settings->value("MinimizeToTray").toBool()) {
-		NSystemTray::setEnabled(TRUE);
+		m_systemTray->setVisible(TRUE);
 	} else {
 		quit();
 	}
@@ -573,7 +574,7 @@ void NPlayer::toggleWindowVisibility()
 		m_mainWindow->raise();
 	} else if (m_settings->value("MinimizeToTray").toBool()) {
 		m_mainWindow->setVisible(FALSE);
-		NSystemTray::setEnabled(TRUE);
+		m_systemTray->setVisible(TRUE);
 	} else {
 		m_mainWindow->showMinimized();
 	}
@@ -589,7 +590,7 @@ void NPlayer::trayIconCountClicks(int clicks)
 		toggleWindowVisibility();
 	}
 	if (!m_settings->value("TrayIcon").toBool())
-		NSystemTray::setEnabled(!m_mainWindow->isVisible());
+		m_systemTray->setVisible(!m_mainWindow->isVisible());
 }
 
 void NPlayer::quit()
@@ -619,7 +620,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 	}
 	m_mainWindow->setTitle(title);
 	m_trackInfoWidget->updateInfo();
-	NSystemTray::setToolTip(title);
+	m_systemTray->setToolTip(title);
 }
 
 void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
