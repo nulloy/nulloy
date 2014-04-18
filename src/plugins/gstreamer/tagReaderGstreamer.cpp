@@ -200,6 +200,10 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 				res += QFileInfo(m_path).fileName();
 			} else if (ch == 'p') {
 				res += QFileInfo(m_path).absoluteFilePath();
+			} else if (ch == 'e') {
+				res += QFileInfo(m_path).suffix();
+			} else if (ch == 'E') {
+				res += QFileInfo(m_path).suffix().toUpper();
 			} else if (ch == 'v') {
 				res += QCoreApplication::applicationVersion();
 			} else {

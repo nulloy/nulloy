@@ -133,6 +133,8 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	                       "<tr><td><b>%f</b></td><td>File name without extension</td></tr>"
 	                       "<tr><td><b>%F</b></td><td>File name</td></tr>"
 	                       "<tr><td><b>%p</b></td><td>File name including absolute path</td></tr>"
+	                       "<tr><td><b>%e</b></td><td>File name extension</td></tr>"
+	                       "<tr><td><b>%E</b></td><td>File name extension, uppercased</td></tr>"
 	                       "<tr><td><b>%v</b></td><td>" + QCoreApplication::applicationName() + " version</td></tr>"
 	                       "<tr><td><b>%%</b></td><td>\'%\' character</td></tr>"
 	                       "<tr><td></td><td></td></tr>"

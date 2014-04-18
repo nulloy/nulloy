@@ -175,6 +175,10 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 				res += QFileInfo(NTaglib::_filePath).fileName();
 			} else if (ch == 'p') {
 				res += QFileInfo(NTaglib::_filePath).absoluteFilePath();
+			} else if (ch == 'e') {
+				res += QFileInfo(NTaglib::_filePath).suffix();
+			} else if (ch == 'E') {
+				res += QFileInfo(NTaglib::_filePath).suffix().toUpper();
 			} else if (ch == 'v') {
 				res += QCoreApplication::applicationVersion();
 			} else {
