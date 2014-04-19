@@ -369,7 +369,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="NSlider" name="volumeSlider">
+              <widget class="NVolumeSlider" name="volumeSlider">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
                  <horstretch>0</horstretch>
@@ -495,11 +495,6 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>NSlider</class>
-   <extends>QSlider</extends>
-   <header>slider.h</header>
-  </customwidget>
-  <customwidget>
    <class>NDropArea</class>
    <extends>QWidget</extends>
    <header>dropArea.h</header>
@@ -514,6 +509,11 @@
    <class>NCoverWidget</class>
    <extends>QLabel</extends>
    <header>coverWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>NVolumeSlider</class>
+   <extends>QSlider</extends>
+   <header>volumeSlider.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

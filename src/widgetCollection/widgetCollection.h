@@ -20,6 +20,7 @@ class NDropArea;
 class NLabel;
 class NPlaylistWidget;
 class NSlider;
+class NVolumeSlider;
 class NWaveformSlider;
 class NCoverWidget;
 class QSizeGrip;
@@ -84,6 +85,15 @@ class NSliderPlugin : public QObject, public NWidgetPlugin
 
 public:
 	NSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
+	virtual QWidget* createWidget(QWidget *parent);
+};
+
+class NVolumeSliderPlugin : public QObject, public NWidgetPlugin
+{
+	Q_OBJECT
+
+public:
+	NVolumeSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
 	virtual QWidget* createWidget(QWidget *parent);
 };
 

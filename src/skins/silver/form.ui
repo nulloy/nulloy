@@ -1301,7 +1301,7 @@ QScrollBar::sub-page {
                        <number>1</number>
                       </property>
                       <item>
-                       <widget class="NSlider" name="volumeSlider">
+                       <widget class="NVolumeSlider" name="volumeSlider">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -1438,11 +1438,6 @@ QScrollBar::sub-page {
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>NSlider</class>
-   <extends>QSlider</extends>
-   <header>slider.h</header>
-  </customwidget>
-  <customwidget>
    <class>NDropArea</class>
    <extends>QWidget</extends>
    <header>dropArea.h</header>
@@ -1468,6 +1463,11 @@ QScrollBar::sub-page {
    <extends>QWidget</extends>
    <header>qsizegrip.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>NVolumeSlider</class>
+   <extends>QSlider</extends>
+   <header>volumeSlider.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
