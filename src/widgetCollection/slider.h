@@ -24,10 +24,21 @@ class NSlider : public QSlider
 
 public:
 	NSlider(QWidget *parent);
+	qreal valueAtX(int x);
 
-private:
-	void mousePressEvent(QMouseEvent *event);
-	void wheelEvent(QWheelEvent *e);
+protected:
+	virtual void mousePressEvent(QMouseEvent *event);
+	virtual void mouseMoveEvent(QMouseEvent *event);
+	virtual void wheelEvent(QWheelEvent *event);
+
+private slots:
+	void setValue(int value);
+
+public slots:
+	void setValue(qreal value);
+
+signals:
+	void sliderMoved(qreal value);
 };
 
 #endif

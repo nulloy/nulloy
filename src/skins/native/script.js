@@ -66,8 +66,8 @@ function Program(player)
 		this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
 		this.playlistWidget["currentActivated()"].connect(this.playbackEngine.play);
 
-		this.volumeSlider["sliderMoved(int)"].connect(this, "on_volumeSlider_sliderMoved");
-		this.playbackEngine["volumeChanged(qreal)"].connect(this, "volumeSlider_setValue");
+		this.volumeSlider["sliderMoved(qreal)"].connect(this.playbackEngine["setVolume(qreal)"]);
+		this.playbackEngine["volumeChanged(qreal)"].connect(this.volumeSlider["setValue(qreal)"]);
 
 		this.waveformSlider["sliderMoved(qreal)"].connect(this.playbackEngine["setPosition(qreal)"]);
 		this.playbackEngine["positionChanged(qreal)"].connect(this.waveformSlider["setValue(qreal)"]);
@@ -147,16 +147,6 @@ Program.prototype.on_failed = function()
 {
 	this.playlistWidget.currentFailed();
 	this.playlistWidget.playNextRow();
-}
-
-Program.prototype.on_volumeSlider_sliderMoved = function(value)
-{
-	this.playbackEngine.setVolume(value / this.volumeSlider.maximum);
-}
-
-Program.prototype.volumeSlider_setValue = function(value)
-{
-	this.volumeSlider.value = Math.round(value * this.volumeSlider.maximum);
 }
 
 Program.prototype.on_fullScreenEnabled = function(enabled)
