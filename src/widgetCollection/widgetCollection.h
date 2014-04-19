@@ -13,17 +13,11 @@
 **
 *********************************************************************/
 
+#ifndef N_WIDGET_COLLECTION_H
+#define N_WIDGET_COLLECTION_H
+
 #include <QDesignerCustomWidgetCollectionInterface>
 #include <QDesignerCustomWidgetInterface>
-
-class NDropArea;
-class NLabel;
-class NPlaylistWidget;
-class NSlider;
-class NVolumeSlider;
-class NWaveformSlider;
-class NCoverWidget;
-class QSizeGrip;
 
 class NWidgetPlugin : public QDesignerCustomWidgetInterface
 {
@@ -42,7 +36,6 @@ public:
 	QString name() const { return m_className; }
 	void initialize(QDesignerFormEditorInterface *core);
 	bool isInitialized() const { return m_initialized; }
-	virtual bool isContainer() const { return FALSE; }
 	virtual QIcon icon() const { return QIcon(); }
 	virtual QString whatsThis() const { return QString(); }
 	virtual QString toolTip() const { return QString(); }
@@ -51,80 +44,7 @@ public:
 	virtual QString includeFile() const { return m_header; }
 };
 
-class NLabelPlugin : public QObject, public NWidgetPlugin
-{
-	Q_OBJECT
-
-public:
-	NLabelPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget *createWidget(QWidget *parent);
-};
-
-class NDropAreaPlugin : public QObject, public NWidgetPlugin
-{
-	Q_OBJECT
-
-public:
-	NDropAreaPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual bool isContainer() const { return TRUE; }
-	virtual QWidget* createWidget(QWidget *parent);
-};
-
-class NPlaylistWidgetPlugin : public QObject, public NWidgetPlugin
-{
-	Q_OBJECT
-
-public:
-	NPlaylistWidgetPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget* createWidget(QWidget *parent);
-};
-
-class NSliderPlugin : public QObject, public NWidgetPlugin
-{
-	Q_OBJECT
-
-public:
-	NSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget* createWidget(QWidget *parent);
-};
-
-class NVolumeSliderPlugin : public QObject, public NWidgetPlugin
-{
-	Q_OBJECT
-
-public:
-	NVolumeSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget* createWidget(QWidget *parent);
-};
-
-class NWaveformSliderPlugin : public QObject, public NWidgetPlugin
-{
-	Q_OBJECT
-
-public:
-	NWaveformSliderPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget* createWidget(QWidget *parent);
-};
-
-class NCoverWidgetPlugin : public QObject, public NWidgetPlugin
-{
-	Q_OBJECT
-
-public:
-	NCoverWidgetPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget* createWidget(QWidget *parent);
-};
-
-class QSizeGripPlugin : public QObject, public NWidgetPlugin
-{
-	Q_OBJECT
-
-public:
-	QSizeGripPlugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(this->metaObject()->className()) {}
-	virtual QWidget* createWidget(QWidget *parent);
-};
-
-class NWidgetCollection: public QObject, public QDesignerCustomWidgetCollectionInterface
+class NWidgetCollection : public QObject, public QDesignerCustomWidgetCollectionInterface
 {
 	Q_OBJECT
 	Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
@@ -136,4 +56,6 @@ public:
 private:
 	QList<QDesignerCustomWidgetInterface *> m_plugins;
 };
+
+#endif
 
