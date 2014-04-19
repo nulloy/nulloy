@@ -45,7 +45,6 @@ private:
 
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
-	void leaveEvent(QEvent *event);
 	void wheelEvent(QWheelEvent *event);
 	void paintEvent(QPaintEvent *event);
 	void init();
@@ -57,15 +56,16 @@ public:
 
 public slots:
 	void drawFile(const QString &file);
-	void setValue(int value);
 	void setPausedState(bool);
-
-signals:
-	void mouseMoved(int x, int y);
+	void setValue(qreal value);
 
 private slots:
 	void checkForUpdate();
 	void showToolTip(int x, int y);
+	void setValue(int value);
+
+signals:
+	void sliderMoved(qreal value);
 
 // STYLESHEET PROPERTIES
 private:

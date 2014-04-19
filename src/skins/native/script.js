@@ -69,8 +69,8 @@ function Program(player)
 		this.volumeSlider["sliderMoved(int)"].connect(this, "on_volumeSlider_sliderMoved");
 		this.playbackEngine["volumeChanged(qreal)"].connect(this, "volumeSlider_setValue");
 
-		this.waveformSlider["sliderMoved(int)"].connect(this, "on_waveformSlider_sliderMoved");
-		this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlider_setValue");
+		this.waveformSlider["sliderMoved(qreal)"].connect(this.playbackEngine["setPosition(qreal)"]);
+		this.playbackEngine["positionChanged(qreal)"].connect(this.waveformSlider["setValue(qreal)"]);
 
 		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["playFiles(const QStringList &)"]);
 		this.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
@@ -157,16 +157,6 @@ Program.prototype.on_volumeSlider_sliderMoved = function(value)
 Program.prototype.volumeSlider_setValue = function(value)
 {
 	this.volumeSlider.value = Math.round(value * this.volumeSlider.maximum);
-}
-
-Program.prototype.on_waveformSlider_sliderMoved = function(value)
-{
-	this.playbackEngine.setPosition(value / this.waveformSlider.maximum);
-}
-
-Program.prototype.waveformSlider_setValue = function(value)
-{
-	this.waveformSlider.value = Math.round(value * this.waveformSlider.maximum);
 }
 
 Program.prototype.on_fullScreenEnabled = function(enabled)

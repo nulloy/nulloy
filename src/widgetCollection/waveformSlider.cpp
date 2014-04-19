@@ -50,8 +50,6 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_waveBuilder = builder;
 #endif
 
-	connect(this, SIGNAL(mouseMoved(int, int)), this, SLOT(showToolTip(int, int)));
-
 	m_bufImage.resize(7);
 
 	m_timer = new QTimer(this);
@@ -147,46 +145,43 @@ void NWaveformSlider::checkForUpdate()
 
 void NWaveformSlider::mouseMoveEvent(QMouseEvent *event)
 {
-	emit mouseMoved(event->x(), event->y());
-}
+	showToolTip(event->x(), event->y());
 
-void NWaveformSlider::leaveEvent(QEvent *event)
-{
-	Q_UNUSED(event);
-	emit mouseMoved(-1, -1);
+	QAbstractSlider::mouseMoveEvent(event);
 }
 
 void NWaveformSlider::showToolTip(int x, int y)
 {
-	if (x != -1 && y != -1) {
-		NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-		int durationSec = tagReader->toString("%D").toInt();
+	if (x == -1 || y == -1)
+		return;
 
-		float posAtX = (float)x / width();
-		int secAtX = durationSec * posAtX;
-		QTime timeAtX = QTime().addSecs(secAtX);
-		QString strAtPos;
-		if (secAtX > 60 * 60) // has hours
-			strAtPos = timeAtX.toString("h:mm:ss");
-		else
-			strAtPos = timeAtX.toString("m:ss");
+	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+	int durationSec = tagReader->toString("%D").toInt();
 
-		float posCur = (qreal)m_oldValue / maximum();
-		int secCur = durationSec * posCur;
-		int secDiff = secAtX - secCur;
-		QTime timeDiff = QTime().addSecs(qAbs(secDiff));
-		QString diffStr;
-		if (qAbs(secDiff) > 60 * 60) // has hours
-			diffStr = timeDiff.toString("h:mm:ss");
-		else
-			diffStr = timeDiff.toString("m:ss");
+	float posAtX = (float)x / width();
+	int secAtX = durationSec * posAtX;
+	QTime timeAtX = QTime().addSecs(secAtX);
+	QString strAtPos;
+	if (secAtX > 60 * 60) // has hours
+		strAtPos = timeAtX.toString("h:mm:ss");
+	else
+		strAtPos = timeAtX.toString("m:ss");
 
-		QString resStr = QString("%1 (%2%3)").arg(strAtPos)
-		                                     .arg(secDiff < 0 ? "-" : "+")
-		                                     .arg(diffStr);
+	float posCur = (qreal)m_oldValue / maximum();
+	int secCur = durationSec * posCur;
+	int secDiff = secAtX - secCur;
+	QTime timeDiff = QTime().addSecs(qAbs(secDiff));
+	QString diffStr;
+	if (qAbs(secDiff) > 60 * 60) // has hours
+		diffStr = timeDiff.toString("h:mm:ss");
+	else
+		diffStr = timeDiff.toString("m:ss");
 
-		QToolTip::showText(mapToGlobal(QPoint(x, y)), resStr);
-	}
+	QString resStr = QString("%1 (%2%3)").arg(strAtPos)
+										 .arg(secDiff < 0 ? "-" : "+")
+										 .arg(diffStr);
+
+	QToolTip::showText(mapToGlobal(QPoint(x, y)), resStr);
 }
 
 void NWaveformSlider::paintEvent(QPaintEvent *event)
@@ -289,10 +284,9 @@ void NWaveformSlider::mousePressEvent(QMouseEvent *event)
 	if (event->button() == Qt::RightButton)
 		return;
 
-	int value = qreal(event->x()) / width() * maximum();
+	qreal value = (qreal)event->x() / width();
 
 	emit sliderMoved(value);
-//	emit valueChanged(value);
 	setValue(value);
 }
 
@@ -301,12 +295,12 @@ void NWaveformSlider::wheelEvent(QWheelEvent *event)
 	event->accept();
 }
 
-void NWaveformSlider::setValue(int value)
+void NWaveformSlider::setValue(qreal value)
 {
-	QAbstractSlider::setValue(value);
-
-//	update();
+	QAbstractSlider::setValue(value * maximum());
 }
+
+void NWaveformSlider::setValue(int value) {}
 
 void NWaveformSlider::drawFile(const QString &file)
 {

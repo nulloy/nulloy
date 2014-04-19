@@ -70,8 +70,8 @@ function Program(player)
 		this.volumeSlider["sliderMoved(int)"].connect(this, "on_volumeSlider_sliderMoved");
 		this.playbackEngine["volumeChanged(qreal)"].connect(this, "volumeSlider_setValue");
 
-		this.waveformSlider["sliderMoved(int)"].connect(this, "on_waveformSlider_sliderMoved");
-		this.playbackEngine["positionChanged(qreal)"].connect(this, "waveformSlider_setValue");
+		this.waveformSlider["sliderMoved(qreal)"].connect(this.playbackEngine["setPosition(qreal)"]);
+		this.playbackEngine["positionChanged(qreal)"].connect(this.waveformSlider["setValue(qreal)"]);
 
 		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["playFiles(const QStringList &)"]);
 		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.FramelessWindowHint | Qt.WindowCloseButtonHint) ^ (Qt.WindowTitleHint | Qt.Dialog);
@@ -166,16 +166,6 @@ Program.prototype.volumeSlider_setValue = function(value)
 Program.prototype.on_splitterMoved = function(pos, index)
 {
 	this.player.settings().setValue("MetroSkin/Splitter", this.splitter.sizes());
-}
-
-Program.prototype.on_waveformSlider_sliderMoved = function(value)
-{
-	this.playbackEngine.setPosition(value / this.waveformSlider.maximum);
-}
-
-Program.prototype.waveformSlider_setValue = function(value)
-{
-	this.waveformSlider.value = Math.round(value * this.waveformSlider.maximum);
 }
 
 Program.prototype.setTitle = function(title)
