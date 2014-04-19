@@ -70,6 +70,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("ShowCoverArt", TRUE);
 	initValue("LoadNextSort", QDir::Name);
 	initValue("Volume", 0.8);
+	initValue("ShowDecibelsVolume", FALSE);
 
 	initValue("TrackInfo/TopLeft", "{%B kbps/%s kHz|}");
 	initValue("TrackInfo/MiddleCenter", "{%a - %t|%F}");

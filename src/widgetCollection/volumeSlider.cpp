@@ -14,8 +14,12 @@
 *********************************************************************/
 
 #include "volumeSlider.h"
+#include "settings.h"
 #include <QToolTip>
 #include <QMouseEvent>
+#include <math.h>
+
+static const qreal log10over20 = qreal(0.1151292546497022842); // ln(10) / 20
 
 NVolumeSlider::NVolumeSlider(QWidget *parent) : NSlider(parent)
 {
@@ -47,7 +51,14 @@ void NVolumeSlider::wheelEvent(QWheelEvent *event)
 
 QString NVolumeSlider::toolTipText(int value)
 {
-	return QString("%1 %3\%").arg(tr("Volume")).arg(QString::number(value));
+	if (NSettings::instance()->value("ShowDecibelsVolume").toBool()) {
+		qreal decibel = 0.67 * log((qreal)value / maximum()) / log10over20;
+		QString decibelStr;
+		decibelStr.setNum(decibel, 'g', 2);
+		return QString("%1 %2 dB").arg(tr("Volume")).arg(decibelStr);
+	} else {
+		return QString("%1 %2\%").arg(tr("Volume")).arg(QString::number(value));
+	}
 }
 
 void NVolumeSlider::showToolTip(int x, int y)
