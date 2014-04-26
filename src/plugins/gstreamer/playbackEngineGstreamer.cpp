@@ -139,7 +139,6 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 void NPlaybackEngineGStreamer::setVolume(qreal volume)
 {
 	g_object_set(m_playbin, "volume", qBound(0.0, volume, 1.0), NULL);
-	m_oldVolume = this->volume();
 }
 
 qreal NPlaybackEngineGStreamer::volume()
@@ -276,7 +275,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 #endif
 
 	qreal vol = volume();
-	if (m_oldVolume != vol) {
+	if (qAbs(m_oldVolume - vol) > 0.0001) {
 		m_oldVolume = vol;
 		emit volumeChanged(vol);
 	}
