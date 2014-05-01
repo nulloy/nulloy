@@ -72,7 +72,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("Volume", 0.8);
 	initValue("ShowDecibelsVolume", FALSE);
 
-	initValue("TrackInfo/TopLeft", "{%B kbps/%s kHz|}");
+	initValue("TrackInfo/TopLeft", "{%B kbps/|}{%s kHz|}");
 	initValue("TrackInfo/MiddleCenter", "{%a - %t|%F}");
 	initValue("TrackInfo/BottomRight", "%T/%d");
 }
