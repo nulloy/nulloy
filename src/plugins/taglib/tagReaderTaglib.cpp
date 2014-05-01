@@ -196,7 +196,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 				}
 				res += str;
 			} else if (ch == 's') {
-				QString str = QString::number(ap->sampleRate());
+				QString str = QString::number(ap->sampleRate() / (float)1000);
 				if (str == "0") {
 					str = "<Unknown sample rate>";
 					*success = FALSE;
