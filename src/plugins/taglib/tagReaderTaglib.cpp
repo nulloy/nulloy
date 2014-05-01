@@ -16,6 +16,14 @@
 #include "tagReaderTaglib.h"
 #include "tagLibFileRef.h"
 
+#include <taglib/apeproperties.h>
+#include <taglib/flacproperties.h>
+#include <taglib/mp4properties.h>
+#include <taglib/wavpackproperties.h>
+#include <taglib/trueaudioproperties.h>
+#include <taglib/aiffproperties.h>
+#include <taglib/wavproperties.h>
+
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QString>
@@ -75,9 +83,9 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 		return "NTagReaderTaglib::InvalidFile";
 
 	TagLib::Tag *tag = NTaglib::_tagRef->tag();
-	TagLib::AudioProperties *prop = NTaglib::_tagRef->audioProperties();
+	TagLib::AudioProperties *ap = NTaglib::_tagRef->audioProperties();
 
-	int seconds_total = prop->length();
+	int seconds_total = ap->length();
 
 	QString res;
 	for (int i = 0; i < format.size(); ++i) {
@@ -123,6 +131,38 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 					*success = FALSE;
 				}
 				res += str;
+			} else if (ch == 'b') {
+				if (auto *prop = dynamic_cast<TagLib::APE::Properties *>(ap)) {
+					res += QString::number(prop->bitsPerSample());
+				}
+				else
+				if (auto *prop = dynamic_cast<TagLib::FLAC::Properties *>(ap)) {
+					res += QString::number(prop->sampleWidth());
+				}
+				else
+				if (auto *prop = dynamic_cast<TagLib::MP4::Properties *>(ap)) {
+					res += QString::number(prop->bitsPerSample());
+				}
+				else
+				if (auto *prop = dynamic_cast<TagLib::RIFF::AIFF::Properties *>(ap)) {
+					res += QString::number(prop->sampleWidth());
+				}
+				else
+				if (auto *prop = dynamic_cast<TagLib::RIFF::WAV::Properties *>(ap)) {
+					res += QString::number(prop->sampleWidth());
+				}
+				else
+				if (auto *prop = dynamic_cast<TagLib::TrueAudio::Properties *>(ap)) {
+					res += QString::number(prop->bitsPerSample());
+				}
+				else
+				if (auto *prop = dynamic_cast<TagLib::WavPack::Properties *>(ap)) {
+					res += QString::number(prop->bitsPerSample());
+				}
+				else {
+					res += "<Unknown bit depth>";
+					*success = FALSE;
+				}
 			} else if (ch == 'd') {
 				QString duration;
 				if (seconds_total > 0) {
@@ -149,21 +189,21 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 				}
 				res += duration;
 			} else if (ch == 'B') {
-				QString str = QString::number(prop->bitrate());
+				QString str = QString::number(ap->bitrate());
 				if (str == "0") {
 					str = "<Unknown bitrate>";
 					*success = FALSE;
 				}
 				res += str;
 			} else if (ch == 's') {
-				QString str = QString::number(prop->sampleRate());
+				QString str = QString::number(ap->sampleRate());
 				if (str == "0") {
 					str = "<Unknown sample rate>";
 					*success = FALSE;
 				}
 				res += str;
 			} else if (ch == 'C') {
-				QString str = QString::number(prop->channels());
+				QString str = QString::number(ap->channels());
 				if (str == "0") {
 					str = "<Unknown channels number>";
 					*success = FALSE;

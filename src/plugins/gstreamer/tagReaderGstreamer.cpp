@@ -67,6 +67,7 @@ void NTagReaderGstreamer::setSource(const QString &file)
 	}
 
 	m_sampleRate = gst_discoverer_audio_info_get_sample_rate((GstDiscovererAudioInfo *)audioInfo->data) / (float)1000;
+	m_bitDepth = gst_discoverer_audio_info_get_depth((GstDiscovererAudioInfo *)audioInfo->data);
 	gst_discoverer_stream_info_list_free(audioInfo);
 
 	m_nanosecs = gst_discoverer_info_get_duration(info);
@@ -156,6 +157,8 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 				else
 					str = "<Unknown track number>";
 				res += str;
+			} else if (ch == 'b') {
+				res += QString::number(m_bitDepth);
 			} else if (ch == 'd') {
 				QString duration;
 				if (seconds_total > 0) {
