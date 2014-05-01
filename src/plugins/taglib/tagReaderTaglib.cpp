@@ -79,7 +79,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 
 	*success = TRUE;
 
-	if (!NTaglib::_tagRef->file()->isValid())
+	if (!isValid())
 		return "NTagReaderTaglib::InvalidFile";
 
 	TagLib::Tag *tag = NTaglib::_tagRef->tag();
