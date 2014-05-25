@@ -250,6 +250,7 @@ void NPreferencesDialog::loadSettings()
 	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("MinimizeToTray").toBool());
 	ui.restorePlaybackCheckBox->setChecked(NSettings::instance()->value("RestorePlayback").toBool());
 	ui.singleInstanceCheckBox->setChecked(NSettings::instance()->value("SingleInstance").toBool());
+	ui.enqueFilesCheckBox->setChecked(NSettings::instance()->value("EnqueFiles").toBool());
 	ui.trayIconCheckBox->setChecked(NSettings::instance()->value("TrayIcon").toBool());
 	ui.versionCheckBox->setChecked(NSettings::instance()->value("AutoCheckUpdates").toBool());
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
@@ -298,6 +299,7 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
 	NSettings::instance()->setValue("RestorePlayback", ui.restorePlaybackCheckBox->isChecked());
 	NSettings::instance()->setValue("SingleInstance", ui.singleInstanceCheckBox->isChecked());
+	NSettings::instance()->setValue("EnqueFiles", ui.enqueFilesCheckBox->isChecked());
 	NSettings::instance()->setValue("TrayIcon", ui.trayIconCheckBox->isChecked());
 	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());

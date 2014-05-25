@@ -63,6 +63,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("WhilePlayingOnTop", FALSE);
 	initValue("RestorePlayback", TRUE);
 	initValue("SingleInstance", TRUE);
+	initValue("EnqueFiles", TRUE);
 	initValue("AutoCheckUpdates", TRUE);
 	initValue("DisplayLogDialog", TRUE);
 	initValue("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation));

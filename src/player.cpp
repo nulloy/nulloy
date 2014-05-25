@@ -396,8 +396,12 @@ void NPlayer::readMessage(const QString &str)
 			m_playbackEngine->play();
 	}
 
-	if (!files.isEmpty())
-		m_playlistWidget->playFiles(files);
+	if (!files.isEmpty()) {
+		if (NSettings::instance()->value("EnqueFiles").toBool())
+			m_playlistWidget->addFiles(files);
+		else
+			m_playlistWidget->playFiles(files);
+	}
 
 	m_playlistWidget->setShuffleMode(NSettings::instance()->value("Shuffle").toBool());
 }
