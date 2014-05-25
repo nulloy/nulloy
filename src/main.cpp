@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	}
 
 	// try to send it to an already running instrance
-	if (!msg.isEmpty() && instance.sendMessage(msg))
+	if (instance.sendMessage(msg))
 		return 0; // return if delivered
 
 	QApplication::setQuitOnLastWindowClosed(FALSE);
@@ -53,11 +53,11 @@ int main(int argc, char *argv[])
 
 	NPlayer p;
 	QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
-	                 &p, SLOT(message(const QString &)));
+	                 &p, SLOT(readMessage(const QString &)));
 
 	// manually read the message
 	if (!msg.isEmpty())
-		p.message(msg);
+		p.readMessage(msg);
 
 	// try to load default playlist (will fail if msg contained files)
 	p.loadDefaultPlaylist();

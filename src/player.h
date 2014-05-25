@@ -94,7 +94,7 @@ public slots:
 	void showOpenDirDialog();
 	void showSavePlaylistDialog();
 	void showContextMenu(QPoint pos);
-	void message(const QString &str);
+	void readMessage(const QString &str);
 	void loadDefaultPlaylist();
 	void saveDefaultPlaylist();
 };

@@ -366,7 +366,7 @@ bool NPlayer::eventFilter(QObject *obj, QEvent *event)
 	return QObject::eventFilter(obj, event);
 }
 
-void NPlayer::message(const QString &str)
+void NPlayer::readMessage(const QString &str)
 {
 	if (str.isEmpty()) {
 		m_mainWindow->showNormal();
