@@ -129,7 +129,7 @@ build_pass:CONFIG(static, static|shared) {
 
 
 include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
-include(../3rdParty/qtsingleapplication-2.6.1/src/qtsingleapplication.pri)
+include(../3rdParty/qtsingleapplication-8fd81b2/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 include(trash/trash.pri)
 
