@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "player.h"
+#include "settings.h"
 #include <qtsingleapplication.h>
 
 #ifndef _N_NO_SKINS_
@@ -33,9 +34,11 @@ int main(int argc, char *argv[])
 		msg = argList.join("<|>");
 	}
 
-	// try to send it to an already running instrance
-	if (instance.sendMessage(msg))
-		return 0; // return if delivered
+	if (NSettings::instance()->value("SingleInstance").toBool()) {
+		// try to send it to an already running instrance
+		if (instance.sendMessage(msg))
+			return 0; // return if delivered
+	}
 
 	QApplication::setQuitOnLastWindowClosed(FALSE);
 	QCoreApplication::setApplicationName("Nulloy");

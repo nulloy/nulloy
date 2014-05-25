@@ -249,7 +249,7 @@ void NPreferencesDialog::loadSettings()
 	ui.windowTrackInfoLineEdit->setText(NSettings::instance()->value("WindowTitleTrackInfo").toString());
 	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("MinimizeToTray").toBool());
 	ui.restorePlaybackCheckBox->setChecked(NSettings::instance()->value("RestorePlayback").toBool());
-	ui.multipleInstansesCheckBox->setChecked(!NSettings::instance()->value("SingleInstanse").toBool());
+	ui.singleInstanceCheckBox->setChecked(NSettings::instance()->value("SingleInstance").toBool());
 	ui.trayIconCheckBox->setChecked(NSettings::instance()->value("TrayIcon").toBool());
 	ui.versionCheckBox->setChecked(NSettings::instance()->value("AutoCheckUpdates").toBool());
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
@@ -297,7 +297,7 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("WindowTitleTrackInfo", ui.windowTrackInfoLineEdit->text());
 	NSettings::instance()->setValue("MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
 	NSettings::instance()->setValue("RestorePlayback", ui.restorePlaybackCheckBox->isChecked());
-	NSettings::instance()->setValue("SingleInstanse", !ui.multipleInstansesCheckBox->isChecked());
+	NSettings::instance()->setValue("SingleInstance", ui.singleInstanceCheckBox->isChecked());
 	NSettings::instance()->setValue("TrayIcon", ui.trayIconCheckBox->isChecked());
 	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());

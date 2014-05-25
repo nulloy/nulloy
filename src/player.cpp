@@ -58,7 +58,7 @@
 NPlayer::NPlayer()
 {
 	qsrand((uint)QTime::currentTime().msec());
-	m_settings = new NSettings(this);
+	m_settings = NSettings::instance();
 
 
 	// construct playbackEngine
@@ -335,6 +335,7 @@ NPlayer::~NPlayer()
 {
 	NPluginLoader::deinit();
 	delete m_mainWindow;
+	delete m_settings;
 }
 
 NMainWindow* NPlayer::mainWindow()

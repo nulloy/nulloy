@@ -189,12 +189,9 @@ padding: 5px;</string>
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="multipleInstansesCheckBox">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
+        <widget class="QCheckBox" name="singleInstanceCheckBox">
          <property name="text">
-          <string>Allow multiple instances</string>
+          <string>Allow only one instance</string>
          </property>
         </widget>
        </item>
@@ -393,8 +390,8 @@ padding: 5px;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>502</width>
-            <height>252</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
          </widget>

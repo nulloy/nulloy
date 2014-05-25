@@ -62,7 +62,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("AlwaysOnTop", FALSE);
 	initValue("WhilePlayingOnTop", FALSE);
 	initValue("RestorePlayback", TRUE);
-	initValue("SingleInstanse", TRUE);
+	initValue("SingleInstance", TRUE);
 	initValue("AutoCheckUpdates", TRUE);
 	initValue("DisplayLogDialog", TRUE);
 	initValue("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
@@ -84,7 +84,9 @@ NSettings::~NSettings()
 
 NSettings* NSettings::instance()
 {
-	Q_ASSERT_X(m_instance, "NSettings", "NSettings instance has not been created yet.");
+	if (!m_instance)
+		m_instance = new NSettings();
+
 	return m_instance;
 }
 
