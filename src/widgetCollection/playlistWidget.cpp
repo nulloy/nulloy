@@ -398,7 +398,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
 {
 	Q_UNUSED(action);
 	foreach (QUrl url, data->urls()) {
-		foreach (QString file, NCore::dirListRecursive(url.toLocalFile())) {
+		foreach (QString file, NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toStringList())) {
 			insertItem(index, new NPlaylistWidgetItem(QFileInfo(file)));
 			++index;
 		}

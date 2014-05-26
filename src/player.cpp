@@ -710,19 +710,11 @@ void NPlayer::showAboutMessageBox()
 
 void NPlayer::showOpenFileDialog()
 {
-	QString music = "*.mp3 *.ogg *.mp4 *.wma "
-	                "*.flac *.ape *.wav *.wv *.tta "
-	                "*.mpc *.spx *.opus "
-	                "*.m4a *.aac *.aiff "
-	                "*.xm *.s3m *.it *.mod";
-	QString playlist = "*.m3u *.m3u8";
-
+	QString filters = NSettings::instance()->value("FileFilters").toStringList().join(" ");
 	QStringList files = QFileDialog::getOpenFileNames(
 		m_mainWindow, qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
 		m_settings->value("LastDirectory").toString(),
-		"All supported (" + music + " " + playlist + ");;"
-		"Music files (" + music + ");;"
-		"Playlist files (" + playlist + ");;"
+		"All supported (" + filters + ");;"
 		"All files (*)"
 	);
 
@@ -754,7 +746,7 @@ void NPlayer::showOpenDirDialog()
 	m_settings->setValue("LastDirectory", lastDir);
 
 	bool isEmpty = (m_playlistWidget->count() == 0);
-	m_playlistWidget->addFiles(NCore::dirListRecursive(dir));
+	m_playlistWidget->addFiles(NCore::dirListRecursive(dir, NSettings::instance()->value("FileFilters").toStringList()));
 	if (isEmpty)
 		m_playlistWidget->playRow(0);
 }

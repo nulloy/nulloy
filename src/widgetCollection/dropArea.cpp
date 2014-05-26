@@ -15,6 +15,7 @@
 
 #include "dropArea.h"
 
+#include "settings.h"
 #include "common.h"
 
 #include <QUrl>
@@ -49,7 +50,7 @@ void NDropArea::dropEvent(QDropEvent *event)
 	if (data->hasUrls()) {
 		QStringList files;
 		foreach (QUrl url, data->urls())
-			files << NCore::dirListRecursive(url.toLocalFile());
+			files << NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toStringList());
 		emit filesDropped(files);
 	}
 

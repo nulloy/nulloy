@@ -73,6 +73,13 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("Volume", 0.8);
 	initValue("ShowDecibelsVolume", FALSE);
 
+	initValue("FileFilters", QStringList() << "*.m3u" << "*.m3u8"
+	                         << "*.mp3"  << "*.ogg" << "*.mp4" << "*.wma"
+	                         << "*.flac" << "*.ape" << "*.wav" << "*.wv" << "*.tta"
+	                         << "*.mpc"  << "*.spx" << "*.opus"
+	                         << "*.m4a"  << "*.aac" << "*.aiff"
+	                         << "*.xm"   << "*.s3m" << "*.it" << "*.mod");
+
 	initValue("TrackInfo/TopLeft", "{%B kbps/|}{%s kHz|}");
 	initValue("TrackInfo/MiddleCenter", "{%a - %t|%F}");
 	initValue("TrackInfo/BottomRight", "%T/%d");

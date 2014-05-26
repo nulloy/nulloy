@@ -255,6 +255,7 @@ void NPreferencesDialog::loadSettings()
 	ui.versionCheckBox->setChecked(NSettings::instance()->value("AutoCheckUpdates").toBool());
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
 	ui.showDecibelsVolumeCheckBox->setChecked(NSettings::instance()->value("ShowDecibelsVolume").toBool());
+	ui.fileFiltersTextEdit->setPlainText(NSettings::instance()->value("FileFilters").toStringList().join(" "));
 
 	for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
 		for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {
@@ -304,6 +305,7 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 	NSettings::instance()->setValue("ShowDecibelsVolume", ui.showDecibelsVolumeCheckBox->isChecked());
+	NSettings::instance()->setValue("FileFilters", ui.fileFiltersTextEdit->toPlainText().split(" "));
 
 	for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
 		for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {

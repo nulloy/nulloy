@@ -17,7 +17,6 @@
 
 #include <QtCore>
 #include <QCoreApplication>
-#include <QStringList>
 #include <QDir>
 #include <QFileInfo>
 
@@ -30,7 +29,7 @@ namespace NCore
 	static bool _rcDir_init = FALSE;
 	static QString _rcDir = "./";
 
-	static QStringList _processPath(const QString &path);
+	static QStringList _processPath(const QString &path, const QStringList &nameFilters);
 }
 
 void NCore::cArgs(int *argc, const char ***argv)
@@ -84,22 +83,27 @@ QString NCore::rcDir()
 }
 
 
-QStringList NCore::_processPath(const QString &path)
+QStringList NCore::_processPath(const QString &path, const QStringList &nameFilters)
 {
 	QStringList list;
 	if (QFileInfo(path).isDir()) {
-		QStringList entryList = QDir(path).entryList(QDir::AllEntries | QDir::NoDotAndDotDot);
+		QStringList entryList;
+		if (!nameFilters.isEmpty())
+			entryList = QDir(path).entryList(nameFilters, QDir::AllEntries | QDir::NoDotAndDotDot);
+		else
+			entryList = QDir(path).entryList(QDir::AllEntries | QDir::NoDotAndDotDot);
+
 		foreach (QString f, entryList)
-			list << _processPath(path + "/" + f);
+			list << _processPath(path + "/" + f, nameFilters);
 	} else {
 		list << path;
 	}
 	return list;
 }
 
-QStringList NCore::dirListRecursive(const QString &path)
+QStringList NCore::dirListRecursive(const QString &path, const QStringList &nameFilters)
 {
-	return _processPath(path);
+	return _processPath(path, nameFilters);
 }
 
 bool NCore::revealInFileManager(const QString &file, QString *error)
