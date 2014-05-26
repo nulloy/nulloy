@@ -294,7 +294,7 @@ void NPlaylistWidget::playNextRow()
 			QDir::SortFlag flag = (QDir::SortFlag)NSettings::instance()->value("LoadNextSort").toInt();
 			QString file = m_currentItem->data(N::PathRole).toString();
 			QString path = QFileInfo(file).path();
-			QStringList entryList = QDir(path).entryList(QDir::Files | QDir::NoDotAndDotDot, flag);
+			QStringList entryList = QDir(path).entryList(NSettings::instance()->value("FileFilters").toStringList(), QDir::Files | QDir::NoDotAndDotDot, flag);
 			int index = entryList.indexOf(QFileInfo(file).fileName());
 			if (index != -1 && entryList.size() > index + 1) {
 				addItem(new NPlaylistWidgetItem(QFileInfo(path + "/" + entryList.at(index + 1))));
