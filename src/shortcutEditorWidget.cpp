@@ -123,6 +123,7 @@ QString NShortcutEditorWidget::keyEventToString(QKeyEvent *e)
 	if (seqStr.isEmpty() ||
 	    keyInt == Qt::Key_Control ||
 	    keyInt == Qt::Key_Alt || keyInt == Qt::Key_AltGr ||
+	    keyInt == Qt::Key_Meta ||
 	    keyInt == Qt::Key_Shift)
 	{
 		return "";
@@ -135,6 +136,8 @@ QString NShortcutEditorWidget::keyEventToString(QKeyEvent *e)
 		strSequence << "Alt";
 	if (e->modifiers() & Qt::ShiftModifier)
 		strSequence << "Shift";
+	if (e->modifiers() & Qt::MetaModifier)
+		strSequence << "Meta";
 
 	return strSequence.join("+") + (strSequence.isEmpty() ? "" : "+") + seqStr;
 }
@@ -145,7 +148,7 @@ void NShortcutEditorWidget::keyPressEvent(QKeyEvent *e)
 	QString text = currentItem->text();
 
 	int keyInt = e->key();
-	bool modifiers = e->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier | Qt::AltModifier);
+	bool modifiers = e->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier | Qt::AltModifier | Qt::MetaModifier);
 
 	if (!modifiers && (keyInt == Qt::Key_Delete || keyInt == Qt::Key_Backspace)) {
 		currentItem->setText("");
