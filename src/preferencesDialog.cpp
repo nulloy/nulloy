@@ -45,6 +45,8 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	connect(ui.buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(saveSettings()));
 	connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
 
+	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.enqueFilesCheckBox, SLOT(setEnabled(bool)));
+
 	setWindowTitle(QCoreApplication::applicationName() + " Preferences");
 
 #ifdef _N_NO_SKINS_
@@ -251,6 +253,7 @@ void NPreferencesDialog::loadSettings()
 	ui.restorePlaybackCheckBox->setChecked(NSettings::instance()->value("RestorePlayback").toBool());
 	ui.singleInstanceCheckBox->setChecked(NSettings::instance()->value("SingleInstance").toBool());
 	ui.enqueFilesCheckBox->setChecked(NSettings::instance()->value("EnqueFiles").toBool());
+	ui.enqueFilesCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool());
 	ui.trayIconCheckBox->setChecked(NSettings::instance()->value("TrayIcon").toBool());
 	ui.versionCheckBox->setChecked(NSettings::instance()->value("AutoCheckUpdates").toBool());
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());

@@ -189,18 +189,22 @@ padding: 5px;</string>
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="singleInstanceCheckBox">
-         <property name="text">
-          <string>Allow only one instance</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="enqueFilesCheckBox">
-         <property name="text">
-          <string>Enque files when in one instance </string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QCheckBox" name="singleInstanceCheckBox">
+           <property name="text">
+            <string>Allow only one instance</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="enqueFilesCheckBox">
+           <property name="text">
+            <string>Enque files when in one instance </string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
