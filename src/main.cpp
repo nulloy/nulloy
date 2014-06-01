@@ -62,8 +62,10 @@ int main(int argc, char *argv[])
 	if (!msg.isEmpty())
 		p.readMessage(msg);
 
-	// try to load default playlist (will fail if msg contained files)
-	p.loadDefaultPlaylist();
+	if (!NSettings::instance()->value("DiscardPlaylist").toBool()) {
+		// try to load default playlist (will fail if msg contained files)
+		p.loadDefaultPlaylist();
+	}
 
 	instance.installEventFilter(&p);
 

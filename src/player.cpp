@@ -423,7 +423,7 @@ void NPlayer::loadDefaultPlaylist()
 		if (pos != 0 && pos != 1)
 			m_playbackEngine->setPosition(pos);
 
-		if (!m_settings->value("RestorePlayback").toBool())
+		if (m_settings->value("StartPaused").toBool())
 			m_playbackEngine->pause();
 	}
 

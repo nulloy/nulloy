@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>524</width>
-    <height>439</height>
+    <height>428</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -106,11 +106,22 @@ padding: 5px;</string>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="restorePlaybackCheckBox">
-         <property name="text">
-          <string>Restore playback after restart</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QCheckBox" name="discardPlaylistCheckBox">
+           <property name="text">
+            <string>Discard playlist after restart</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="startPausedCheckBox">
+           <property name="text">
+            <string>Start in paused state</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QCheckBox" name="displayLogDialogCheckBox">
@@ -433,7 +444,7 @@ padding: 5px;</string>
             <x>0</x>
             <y>0</y>
             <width>502</width>
-            <height>331</height>
+            <height>320</height>
            </rect>
           </property>
          </widget>

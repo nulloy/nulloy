@@ -61,7 +61,8 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("TrayIcon", FALSE);
 	initValue("AlwaysOnTop", FALSE);
 	initValue("WhilePlayingOnTop", FALSE);
-	initValue("RestorePlayback", TRUE);
+	initValue("StartPaused", FALSE);
+	initValue("DiscardPlaylist", FALSE);
 	initValue("SingleInstance", TRUE);
 	initValue("EnqueFiles", TRUE);
 	initValue("AutoCheckUpdates", TRUE);
