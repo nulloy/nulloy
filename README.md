@@ -8,7 +8,7 @@
 
 ## Windows Build Instructions
 
-### Downloads
+### Prerequisites
 * Qt 4.x MinGW libraries for Windows http://qt-project.org/downloads
 * MinGW http://sourceforge.net/projects/mingw-w64/
 * GStreamer Build & SDK http://code.google.com/p/ossbuild/
@@ -17,7 +17,7 @@
 * Zlib precompiled dlls http://zlib.net/
 * 7zip http://www.7-zip.org/
 
-### Environment setup
+### Environment Setup
 
 Extract and/or install the downloads. Create ```vars.bat``` file with:
 
@@ -30,7 +30,7 @@ set PATH=%QTDIR%\bin;C:\mingw-dir\bin;C:\Program Files\7-Zip;%ZLIB_DIR%;%PATH%
 
 Create a shortcut from ```vars.bat``` and set target as ```%COMSPEC% /k "C:\vars.bat"```. Open the shortcut.
 
-### Building TagLib
+### Build TagLib
 
 ```bat
 cd %TAGLIB_DIR%
@@ -52,27 +52,24 @@ Nulloy.exe
 
 ## OSX Build Instructions
 
-### Downloads
+### Prerequisites
 * Xcode
 * MacPorts Installer http://www.macports.org/
-* Qt 4.x libraries for Mac http://qt-project.org/downloads
 
-### Environment setup
+### Environment Setup
 
-Extract Qt libraries. Install Xcode and then install Xcode Command Line Tools. Install MacPorts and open a terminal.
+Install Xcode and then install Xcode Command Line Tools. Install MacPorts and open a terminal.
 
 ```sh
 . ~/.profile
-export QTDIR=$HOME/qt-libs-dir
-export PATH=$QTDIR/bin:$PATH
-sudo port install pkgconfig taglib{,-devel} zlib gstreamer010{,-gst-plugins-base}
+sudo port install pkgconfig qt4-mac gstreamer010{,-gst-plugins-base} zlib taglib
 ```
 
 ### Build & Run Nulloy
 
 ```sh
 cd nulloy.git
-./configure --taglib --no-gstreamer-tagreader --no-app-bundle --force-version 1-testing
+./configure --taglib --no-app-bundle --force-version 1-testing
 make
 ./nulloy
 ```
