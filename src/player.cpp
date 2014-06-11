@@ -53,7 +53,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QResizeEvent>
-#include <QSystemTrayIcon>
+#include <QMenuBar>
 
 NPlayer::NPlayer()
 {
@@ -159,14 +159,17 @@ NPlayer::NPlayer()
 	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
 	                                         style()->standardIcon(QStyle::SP_MessageBoxInformation)),
 	                                         tr("Preferences..."), this);
+	preferencesAction->setShortcuts(QKeySequence::Preferences);
 	connect(preferencesAction, SIGNAL(triggered()), m_preferencesDialog, SLOT(exec()));
 
 	NAction *exitAction = new NAction(QIcon::fromTheme("exit",
 	                                  style()->standardIcon(QStyle::SP_DialogCloseButton)),
 	                                  tr("Exit"), this);
+	exitAction->setShortcuts(QKeySequence::Quit);
 	connect(exitAction, SIGNAL(triggered()), this, SLOT(quit()));
 
 	NAction *openFileDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Add Files..."), this);
+	openFileDialogAction->setShortcuts(QKeySequence::Open);
 	connect(openFileDialogAction, SIGNAL(triggered()), this, SLOT(showOpenFileDialog()));
 	connect(m_playlistWidget, SIGNAL(activateEmptyFail()), openFileDialogAction, SLOT(trigger()));
 
@@ -174,6 +177,7 @@ NPlayer::NPlayer()
 	connect(openDirDialogAction, SIGNAL(triggered()), this, SLOT(showOpenDirDialog()));
 
 	NAction *savePlaylistDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save Playlist..."), this);
+	savePlaylistDialogAction->setShortcuts(QKeySequence::Save);
 	connect(savePlaylistDialogAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
 
 	NAction *showCoverAction = new NAction(tr("Show Cover Art"), this);
@@ -301,6 +305,33 @@ NPlayer::NPlayer()
 	QList<NAction *> actions = findChildren<NAction *>();
 	for (int i = 0; i < actions.size(); ++i)
 		actions.at(i)->setIcon(QIcon());
+
+
+	// global menu
+	QMenuBar *menuBar = new QMenuBar(m_mainWindow);
+
+	QMenu *fileMenu = menuBar->addMenu(tr("File"));
+	fileMenu->addAction(openFileDialogAction);
+	fileMenu->addAction(openDirDialogAction);
+	fileMenu->addAction(savePlaylistDialogAction);
+	fileMenu->addAction(aboutAction);
+	fileMenu->addAction(exitAction);
+	fileMenu->addAction(preferencesAction);
+
+	QMenu *controlsMenu = menuBar->addMenu(tr("Controls"));
+	controlsMenu->addAction(playAction);
+	controlsMenu->addAction(stopAction);
+	controlsMenu->addAction(prevAction);
+	controlsMenu->addAction(nextAction);
+	controlsMenu->addSeparator();
+	controlsMenu->addMenu(playlistSubMenu);
+
+	QMenu *windowMenu = menuBar->addMenu(tr("Window"));
+	windowMenu->addAction(showCoverAction);
+	windowMenu->addAction(whilePlayingOnTopAction);
+	windowMenu->addAction(alwaysOnTopAction);
+	windowMenu->addAction(fullScreenAction);
+	//
 #endif
 
 #ifdef Q_WS_WIN

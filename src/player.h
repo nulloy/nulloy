@@ -33,7 +33,6 @@ class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QString;
-class QSystemTrayIcon;
 class QTimer;
 
 class NPlayer : public QWidget
