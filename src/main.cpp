@@ -58,14 +58,14 @@ int main(int argc, char *argv[])
 	QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
 	                 &p, SLOT(readMessage(const QString &)));
 
-	// manually read the message
-	if (!msg.isEmpty())
-		p.readMessage(msg);
-
 	if (!NSettings::instance()->value("DiscardPlaylist").toBool()) {
 		// try to load default playlist (will fail if msg contained files)
 		p.loadDefaultPlaylist();
 	}
+
+	// manually read the message
+	if (!msg.isEmpty())
+		p.readMessage(msg);
 
 	instance.installEventFilter(&p);
 
