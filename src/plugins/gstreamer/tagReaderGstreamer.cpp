@@ -124,7 +124,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 				if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_TITLE, &gstr)))
 					res += "<Unknown title>";
 				else
-					res += gstr;
+					res += QString::fromUtf8(gstr);
 			} else if (ch == 'A') {
 				if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_ALBUM, &gstr)))
 					res += "<Unknown album>";
