@@ -64,7 +64,8 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("StartPaused", FALSE);
 	initValue("DiscardPlaylist", FALSE);
 	initValue("SingleInstance", TRUE);
-	initValue("EnqueFiles", TRUE);
+	initValue("EnqueueFiles", TRUE);
+	initValue("PlayEnqueued", TRUE);
 	initValue("AutoCheckUpdates", TRUE);
 	initValue("DisplayLogDialog", TRUE);
 	initValue("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation));

@@ -45,7 +45,9 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	connect(ui.buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(saveSettings()));
 	connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
 
-	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.enqueFilesCheckBox, SLOT(setEnabled(bool)));
+	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.enqueueFilesCheckBox, SLOT(setEnabled(bool)));
+	connect(ui.enqueueFilesCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
+	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.discardPlaylistCheckBox, SIGNAL(toggled(bool)), ui.startPausedCheckBox, SLOT(setDisabled(bool)));
 
 	setWindowTitle(QCoreApplication::applicationName() + " Preferences");
@@ -255,8 +257,10 @@ void NPreferencesDialog::loadSettings()
 	ui.startPausedCheckBox->setChecked(NSettings::instance()->value("StartPaused").toBool());
 	ui.startPausedCheckBox->setEnabled(!NSettings::instance()->value("DiscardPlaylist").toBool());
 	ui.singleInstanceCheckBox->setChecked(NSettings::instance()->value("SingleInstance").toBool());
-	ui.enqueFilesCheckBox->setChecked(NSettings::instance()->value("EnqueFiles").toBool());
-	ui.enqueFilesCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool());
+	ui.enqueueFilesCheckBox->setChecked(NSettings::instance()->value("EnqueueFiles").toBool());
+	ui.enqueueFilesCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool());
+	ui.playEnqueuedCheckBox->setChecked(NSettings::instance()->value("PlayEnqueued").toBool());
+	ui.playEnqueuedCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool() && NSettings::instance()->value("EnqueueFiles").toBool());
 	ui.trayIconCheckBox->setChecked(NSettings::instance()->value("TrayIcon").toBool());
 	ui.versionCheckBox->setChecked(NSettings::instance()->value("AutoCheckUpdates").toBool());
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
@@ -307,7 +311,8 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("StartPaused", ui.startPausedCheckBox->isChecked());
 	NSettings::instance()->setValue("DiscardPlaylist", ui.discardPlaylistCheckBox->isChecked());
 	NSettings::instance()->setValue("SingleInstance", ui.singleInstanceCheckBox->isChecked());
-	NSettings::instance()->setValue("EnqueFiles", ui.enqueFilesCheckBox->isChecked());
+	NSettings::instance()->setValue("EnqueueFiles", ui.enqueueFilesCheckBox->isChecked());
+	NSettings::instance()->setValue("PlayEnqueued", ui.playEnqueuedCheckBox->isChecked());
 	NSettings::instance()->setValue("TrayIcon", ui.trayIconCheckBox->isChecked());
 	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
