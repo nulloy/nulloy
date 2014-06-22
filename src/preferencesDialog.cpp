@@ -19,6 +19,7 @@
 #include "player.h"
 #include "skinFileSystem.h"
 #include "plugin.h"
+#include "i18nLoader.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -40,17 +41,18 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 {
 	ui.setupUi(this);
 
-	setObjectName("preferencesDialog");
-
 	connect(ui.buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(saveSettings()));
 	connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
+	ui.buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
+	ui.buttonBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancel"));
+	ui.buttonBox->button(QDialogButtonBox::Apply)->setText(tr("Apply"));
 
 	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.enqueueFilesCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.enqueueFilesCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.discardPlaylistCheckBox, SIGNAL(toggled(bool)), ui.startPausedCheckBox, SLOT(setDisabled(bool)));
 
-	setWindowTitle(QCoreApplication::applicationName() + " Preferences");
+	setWindowTitle(QCoreApplication::applicationName() + tr(" Preferences"));
 
 #ifdef _N_NO_SKINS_
 	ui.skinLabel->hide();
@@ -77,6 +79,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	else
 		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 
+	ui.languageRestartLabel->setVisible(FALSE);
 	ui.skinRestartLabel->setVisible(FALSE);
 	ui.pluginsRestartLabel->setVisible(FALSE);
 
@@ -87,6 +90,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	NSkinFileSystem::addFile("warning.png", byteArray);
 	QString url = "<img src=\"skin:warning.png\"/>";
 
+	ui.languageRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.languageRestartLabel->text());
 	ui.skinRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.skinRestartLabel->text());
 	ui.pluginsRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.pluginsRestartLabel->text());
 #endif
@@ -121,42 +125,43 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	dialog->setLayout(layout);
 
 	QTextBrowser *textBrowser = new QTextBrowser(this);
-	textBrowser->setHtml("<table width=\"100%\">"
-	                       "<tr><td><b>%a</b></td><td>Artist</td></tr>"
-	                       "<tr><td><b>%t</b></td><td>Title</td></tr>"
-	                       "<tr><td><b>%A</b></td><td>Album</td></tr>"
-	                       "<tr><td><b>%c</b></td><td>Comment</td></tr>"
-	                       "<tr><td><b>%g</b></td><td>Genre</td></tr>"
-	                       "<tr><td><b>%y</b></td><td>Year</td></tr>"
-	                       "<tr><td><b>%n</b></td><td>Track number</td></tr>"
-	                       "<tr><td></td><td></td></tr>"
-	                       "<tr><td><b>%T</b></td><td>Current time position (Waveform only)</td></tr>"
-	                       "<tr><td><b>%r</b></td><td>Remaining time (Waveform only)</td></tr>"
-	                       "<tr><td></td><td></td></tr>"
-	                       "<tr><td><b>%d</b></td><td>Duration in format hh:mm:ss</td></tr>"
-	                       "<tr><td><b>%d</b></td><td>Duration in seconds</td></tr>"
-	                       "<tr><td><b>%b</b></td><td>Bit depth</td></tr>"
-	                       "<tr><td><b>%B</b></td><td>Bitrate in Kbps</td></tr>"
-	                       "<tr><td><b>%s</b></td><td>Sample rate in kHz</td></tr>"
-	                       "<tr><td><b>%c</b></td><td>Number of channels</td></tr>"
-	                       "<tr><td></td><td></td></tr>"
-	                       "<tr><td><b>%f</b></td><td>File name without extension</td></tr>"
-	                       "<tr><td><b>%F</b></td><td>File name</td></tr>"
-	                       "<tr><td><b>%p</b></td><td>File name including absolute path</td></tr>"
-	                       "<tr><td><b>%e</b></td><td>File name extension</td></tr>"
-	                       "<tr><td><b>%E</b></td><td>File name extension, uppercased</td></tr>"
-	                       "<tr><td></td><td></td></tr>"
-	                       "<tr><td><b>%v</b></td><td>Version number</td></tr>"
-	                       "<tr><td><b>%%</b></td><td>\'%\' character</td></tr>"
-	                       "<tr><td></td><td></td></tr>"
-	                       "<tr><td>Conditions:</td><td></td></tr>"
-	                       "<tr><td><b>{</b><i>true</i><b>|</b><i>false</i><b>}</b></td><td>If / Else: evaluate for <i>true</i> or <i>false</i> case. Note: nesting conditions is not supported yet.</td></tr>"
-	                       "<tr><td></td><td></td></tr>"
-	                       "<tr><td>Examples:</td><td></td></tr>"
-	                       "<tr><td><b>{%a - %t|%F}&nbsp;&nbsp;</b></td><td>Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.</td></tr>"
-	                       "<tr><td></td><td></td></tr>"
-	                       "<tr><td><b>{%g|}</b></td><td>Print Genre. If not available, print nothing.</td></tr>"
-	                     "</table><br>");
+	textBrowser->setHtml(
+		"<table width=\"100%\">"
+			"<tr><td><b>%a</b></td><td>" + tr("Artist") + "</td></tr>"
+			"<tr><td><b>%t</b></td><td>" + tr("Title") + "</td></tr>"
+			"<tr><td><b>%A</b></td><td>" + tr("Album") + "</td></tr>"
+			"<tr><td><b>%c</b></td><td>" + tr("Comment") + "</td></tr>"
+			"<tr><td><b>%g</b></td><td>" + tr("Genre") + "</td></tr>"
+			"<tr><td><b>%y</b></td><td>" + tr("Year") + "</td></tr>"
+			"<tr><td><b>%n</b></td><td>" + tr("Track number") + "</td></tr>"
+			"<tr><td></td><td></td></tr>"
+			"<tr><td><b>%T</b></td><td>" + tr("Current time position (Waveform only)") + "</td></tr>"
+			"<tr><td><b>%r</b></td><td>" + tr("Remaining time (Waveform only)") + "</td></tr>"
+			"<tr><td></td><td></td></tr>"
+			"<tr><td><b>%d</b></td><td>" + tr("Duration in format hh:mm:ss") + "</td></tr>"
+			"<tr><td><b>%d</b></td><td>" + tr("Duration in seconds") + "</td></tr>"
+			"<tr><td><b>%b</b></td><td>" + tr("Bit depth") + "</td></tr>"
+			"<tr><td><b>%B</b></td><td>" + tr("Bitrate in Kbps") + "</td></tr>"
+			"<tr><td><b>%s</b></td><td>" + tr("Sample rate in kHz") + "</td></tr>"
+			"<tr><td><b>%c</b></td><td>" + tr("Number of channels") + "</td></tr>"
+			"<tr><td></td><td></td></tr>"
+			"<tr><td><b>%f</b></td><td>" + tr("File name without extension") + "</td></tr>"
+			"<tr><td><b>%F</b></td><td>" + tr("File name") + "</td></tr>"
+			"<tr><td><b>%p</b></td><td>" + tr("File name including absolute path") + "</td></tr>"
+			"<tr><td><b>%e</b></td><td>" + tr("File name extension") + "</td></tr>"
+			"<tr><td><b>%E</b></td><td>" + tr("File name extension, uppercased") + "</td></tr>"
+			"<tr><td></td><td></td></tr>"
+			"<tr><td><b>%v</b></td><td>" + tr("Version number") + "</td></tr>"
+			"<tr><td><b>%%</b></td><td>" + tr("\'%\' character") + "</td></tr>"
+			"<tr><td></td><td></td></tr>"
+			"<tr><td>" + tr("Conditions:") + "</td><td></td></tr>"
+			"<tr><td><b>{</b><i>" + tr("true") + "</i><b>|</b><i>" + tr("false") + "</i><b>}</b></td><td>" + tr("if...else: evaluate for <i>true</i> or <i>false</i> case. Note: nesting conditions is not supported yet.") + "</td></tr>"
+			"<tr><td></td><td></td></tr>"
+			"<tr><td>" + tr("Examples:") + "</td><td></td></tr>"
+			"<tr><td><b>{%a - %t|%F}&nbsp;&nbsp;</b></td><td>" + tr("Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.") + "</td></tr>"
+			"<tr><td></td><td></td></tr>"
+			"<tr><td><b>{%g|}</b></td><td>" + tr("Print Genre. If not available, print nothing.") + "</td></tr>"
+		"</table><br>");
 	textBrowser->setStyleSheet("background: transparent");
 	textBrowser->setFrameShape(QFrame::NoFrame);
 	textBrowser->setMinimumWidth(400);
@@ -164,7 +169,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 
 	layout->addWidget(textBrowser);
 
-	QPushButton *closeButton = new QPushButton("Close");
+	QPushButton *closeButton = new QPushButton(tr("Close"));
 	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept()));
 	QHBoxLayout *buttonLayout = new QHBoxLayout();
 	buttonLayout->addStretch();
@@ -225,6 +230,15 @@ void NPreferencesDialog::on_skinComboBox_activated(int index)
 	ui.skinRestartLabel->setVisible(TRUE);
 }
 
+void NPreferencesDialog::on_languageComboBox_activated(int index)
+{
+	ui.languageRestartLabel->setVisible(TRUE);
+
+	QLocale locale = ui.languageComboBox->itemData(index).toLocale();
+	NI18NLoader::loadTranslation(locale.language());
+    ui.languageRestartLabel->setText(QCoreApplication::translate("PreferencesDialog", "Switching languages requires restart", 0, QApplication::UnicodeUTF8));
+}
+
 QString NPreferencesDialog::selectedContainer(N::PluginType type)
 {
 	QList<Descriptor> descriptors = NPluginLoader::descriptors();
@@ -248,8 +262,7 @@ QString NPreferencesDialog::selectedContainer(N::PluginType type)
 
 void NPreferencesDialog::loadSettings()
 {
-	ui.versionLabel->setText("");
-
+	// general >>
 	ui.playlistTrackInfoLineEdit->setText(NSettings::instance()->value("PlaylistTrackInfo").toString());
 	ui.windowTrackInfoLineEdit->setText(NSettings::instance()->value("WindowTitleTrackInfo").toString());
 	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("MinimizeToTray").toBool());
@@ -266,7 +279,11 @@ void NPreferencesDialog::loadSettings()
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
 	ui.showDecibelsVolumeCheckBox->setChecked(NSettings::instance()->value("ShowDecibelsVolume").toBool());
 	ui.fileFiltersTextEdit->setPlainText(NSettings::instance()->value("FileFilters").toStringList().join(" "));
+	ui.versionLabel->setText("");
+	// << general
 
+
+	// track info overlay >>
 	for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
 		for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {
 			QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() + ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
@@ -281,10 +298,12 @@ void NPreferencesDialog::loadSettings()
 		height += ui.waveformTrackInfoTable->rowHeight(i);
 	height += 2; // frame
 	ui.waveformTrackInfoTable->setMaximumHeight(height);
+	// << track info overlay
 
-	int index;
 
+	// skins >>
 #ifndef _N_NO_SKINS_
+	int skinIndex;
 	ui.skinComboBox->clear();
 	foreach (QString str, NSkinLoader::skinIdentifiers()) {
 		QString id = str.section('/', 2);
@@ -294,17 +313,37 @@ void NPreferencesDialog::loadSettings()
 	if (ui.skinComboBox->count() == 1)
 		ui.skinComboBox->setEnabled(FALSE);
 
-	index = ui.skinComboBox->findData(NSettings::instance()->value("Skin"));
-	if (index != -1)
-		ui.skinComboBox->setCurrentIndex(index);
+	skinIndex = ui.skinComboBox->findData(NSettings::instance()->value("Skin"));
+	if (skinIndex != -1)
+		ui.skinComboBox->setCurrentIndex(skinIndex);
 #endif
+	// << skins
 
+
+	// translations >>
+	int localeIndex;
+	ui.languageComboBox->clear();
+	foreach (QLocale::Language language, NI18NLoader::translations())
+		ui.languageComboBox->addItem(QLocale::languageToString(language), QLocale(language));
+
+	if (ui.languageComboBox->count() == 1)
+		ui.languageComboBox->setEnabled(FALSE);
+
+	localeIndex = ui.languageComboBox->findData(QLocale(NSettings::instance()->value("Language").toString()));
+	if (localeIndex != -1)
+		ui.languageComboBox->setCurrentIndex(localeIndex);
+	// << translations
+
+
+	// shortcuts >>
 	NSettings::instance()->loadShortcuts();
 	ui.shortcutEditorWidget->init(NSettings::instance()->shortcuts());
+	// << shortcuts
 }
 
 void NPreferencesDialog::saveSettings()
 {
+	// general >>
 	NSettings::instance()->setValue("PlaylistTrackInfo", ui.playlistTrackInfoLineEdit->text());
 	NSettings::instance()->setValue("WindowTitleTrackInfo", ui.windowTrackInfoLineEdit->text());
 	NSettings::instance()->setValue("MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
@@ -318,16 +357,21 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 	NSettings::instance()->setValue("ShowDecibelsVolume", ui.showDecibelsVolumeCheckBox->isChecked());
 	NSettings::instance()->setValue("FileFilters", ui.fileFiltersTextEdit->toPlainText().split(" "));
+	// << general
 
+
+	// track info overlay >>
 	for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
 		for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {
 			QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() + ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
 			NSettings::instance()->setValue("TrackInfo/" + objecName, ui.waveformTrackInfoTable->item(i, j)->text());
 		}
 	}
+	// << track info overlay
 
+
+	// plugins >>
 #ifndef _N_NO_PLUGINS_
-	// plugins
 	NFlagIterator<N::PluginType> iter(N::MaxPlugin);
 	while (iter.hasNext()) {
 		iter.next();
@@ -338,20 +382,35 @@ void NPreferencesDialog::saveSettings()
 			NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);
 	}
 #endif
+	// << plugins
 
+
+	// skins >>
 #ifndef _N_NO_SKINS_
-	// skins
 	QVariant skinVariant = ui.skinComboBox->itemData(ui.skinComboBox->currentIndex());
 	NSettings::instance()->setValue("Skin", skinVariant);
-
 	ui.skinRestartLabel->setVisible(NSettings::instance()->value("Skin").isValid() && skinVariant != NSettings::instance()->value("Skin"));
 #endif
+	// << skins
 
+
+	// translations >>
+	QLocale locale = ui.languageComboBox->itemData(ui.languageComboBox->currentIndex()).toLocale();
+	NSettings::instance()->setValue("Language", locale.bcp47Name().split('-').first());
+	ui.languageRestartLabel->setVisible(NSettings::instance()->value("Language").isValid() && locale != NSettings::instance()->value("Language").toLocale());
+	// << translations
+
+
+	// shortcuts >>
 	ui.shortcutEditorWidget->applyShortcuts();
 	NSettings::instance()->saveShortcuts();
 	emit settingsChanged();
+	// << shortcuts
 
+
+	// systray check >>
 	if (ui.trayIconCheckBox->isChecked() && !QSystemTrayIcon::isSystemTrayAvailable())
 		QMessageBox::warning(this, "Systray Error", QObject::tr("System Tray (Notification Area) is not available on your system."));
+	// << systray check
 }
 

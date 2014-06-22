@@ -21,16 +21,13 @@
 
 #include <QBuffer>
 #include <QCoreApplication>
-#include <QDir>
 #include <QMessageBox>
-#include <QString>
-#include <QStringList>
 
 #include <qtiocompressor.h>
 
 namespace NSkinLoader
 {
-	bool _init = FALSE;
+	bool __init = FALSE;
 	QMap<int, QString> _identifiers;
 	QString _uiFormFile;
 	QString _scriptFile;
@@ -38,7 +35,7 @@ namespace NSkinLoader
 	QString _skinSuffix = "nzs";
 
 	bool _nextFile(QFile &zipFile, QString &fileName, QByteArray &data);
-	void _loadSkins();
+	void _init();
 }
 
 bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
@@ -78,11 +75,11 @@ bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
 	return TRUE;
 }
 
-void NSkinLoader::_loadSkins()
+void NSkinLoader::_init()
 {
-	if (_init)
+	if (__init)
 		return;
-	_init = TRUE;
+	__init = TRUE;
 
 	QStringList skinsDirList;
 	skinsDirList << ":skins" << QCoreApplication::applicationDirPath() + "/skins";
@@ -144,7 +141,7 @@ void NSkinLoader::_loadSkins()
 			}
 		}
 		if (skinContainer.absoluteFilePath().startsWith(":skins"))
-			id.insert(id.lastIndexOf('/'), " (Built-in)");
+			id.insert(id.lastIndexOf('/'), QObject::tr(" (Built-in)"));
 		_identifiers.insert(i, id);
 	}
 
@@ -158,7 +155,7 @@ void NSkinLoader::_loadSkins()
 		index = 0;
 
 	if (_identifiers.count() == 0) {
-		QMessageBox box(QMessageBox::Critical, "Skin loading error", "No skins found.", QMessageBox::Close);
+		QMessageBox box(QMessageBox::Critical, QObject::tr("Skin loading error"), QObject::tr("No skins found."), QMessageBox::Close);
 		box.exec();
 		return;
 	}
@@ -211,19 +208,19 @@ void NSkinLoader::_loadSkins()
 
 QStringList NSkinLoader::skinIdentifiers()
 {
-	_loadSkins();
+	_init();
 	return _identifiers.values();
 }
 
 QString NSkinLoader::skinUiFormFile()
 {
-	_loadSkins();
+	_init();
 	return _uiFormFile;
 }
 
 QString NSkinLoader::skinScriptFile()
 {
-	_loadSkins();
+	_init();
 	return _scriptFile;
 }
 

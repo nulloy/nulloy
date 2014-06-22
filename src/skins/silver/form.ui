@@ -857,6 +857,9 @@ QScrollBar::sub-page {
                              <verstretch>0</verstretch>
                             </sizepolicy>
                            </property>
+                           <property name="toolTip">
+                            <string>Minimize</string>
+                           </property>
                            <property name="text">
                             <string/>
                            </property>
@@ -908,6 +911,9 @@ QScrollBar::sub-page {
                              <horstretch>0</horstretch>
                              <verstretch>0</verstretch>
                             </sizepolicy>
+                           </property>
+                           <property name="toolTip">
+                            <string>Close</string>
                            </property>
                            <property name="text">
                             <string/>

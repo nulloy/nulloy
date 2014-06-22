@@ -47,8 +47,8 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 #else
 		"<span style=\"font-size:8pt;\">" +
 #endif
-			"Version: " + QCoreApplication::applicationVersion() + "<br>" +
-			              (QString(_N_TIME_STAMP_).isEmpty() ? "" : "Build: " + QString(_N_TIME_STAMP_)) +
+			tr("Version: ") + QCoreApplication::applicationVersion() + "<br>" +
+			              (QString(_N_TIME_STAMP_).isEmpty() ? "" : tr("Build: ") + QString(_N_TIME_STAMP_)) +
 			"<br><br>" +
 			"Copyright (C) 2010-2014  Sergey Vlasov &lt;sergey@vlasov.me&gt;"
 		"</span>";
@@ -64,7 +64,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 
 	// about tab
 	QWidget *aboutTab = new QWidget;
-	tabWidget->addTab(aboutTab, tr("About"));
+	tabWidget->addTab(aboutTab, tr("Common"));
 	QVBoxLayout *aboutTabLayout = new QVBoxLayout;
 	aboutTab->setLayout(aboutTabLayout);
 
@@ -154,7 +154,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 	licenseTabLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	//
 
-	QPushButton *closeButton = new QPushButton("Close");
+	QPushButton *closeButton = new QPushButton(tr("Close"));
 	connect(closeButton, SIGNAL(clicked()), this, SLOT(accept()));
 	QHBoxLayout *buttonLayout = new QHBoxLayout();
 	buttonLayout->addStretch();

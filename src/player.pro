@@ -16,12 +16,14 @@ SOURCES += *.cpp ux/*.cpp
 FORMS += *.ui
 
 isEmpty(TMP_DIR){
-	TMP_DIR = $$PWD/.tmp
+	TMP_DIR = $$PWD/../.tmp
 }
 OBJECTS_DIR	= $$TMP_DIR
 MOC_DIR     = $$TMP_DIR
 RCC_DIR     = $$TMP_DIR
 UI_DIR      = $$TMP_DIR
+
+SRC_DIR = $$PWD
 
 # zlib
 unix {
@@ -35,6 +37,17 @@ win32 {
 	LIBS += -L$(ZLIB_DIR)/lib -lzdll
 }
 
+# translations compile
+TR_DEST_DIR = $$SRC_DIR/../i18n
+!exists($$TR_DEST_DIR) {
+	system(mkdir $$TR_DEST_DIR)
+}
+tr_release.depends = $$SRC_DIR/i18n/*.ts
+tr_release.target = $$TR_DEST_DIR/*.qm
+tr_release.commands = lrelease $$tr_release.depends && mv $$SRC_DIR/i18n/*.qm $$TR_DEST_DIR
+QMAKE_EXTRA_TARGETS += tr_release
+PRE_TARGETDEPS += $$tr_release.target
+system($$tr_release.commands)
 
 # qmake -config no-skins
 !no-skins {
@@ -45,7 +58,6 @@ win32 {
 	RESOURCES += native-skin-embedded.qrc
 
 
-	SRC_DIR = $$PWD
 	unix:SKIN_DEST_DIR = $$SRC_DIR/../skins
 	win32:SKIN_DEST_DIR = $$SRC_DIR/../Skins
 	!exists($$SKIN_DEST_DIR) {
@@ -177,6 +189,10 @@ unix:!mac {
 		plugins.path = $$prefix.path/lib/nulloy/plugins
 		INSTALLS += plugins
 	}
+
+	translations.files = ../i18n/*.qm
+	translations.path = $$prefix.path/share/nulloy/i18n
+	INSTALLS += translations
 }
 
 
@@ -194,4 +210,8 @@ mac {
 		plugins.path = $$prefix.path/Contents/MacOS/plugins
 		INSTALLS += plugins
 	}
+
+	translations.files = ../i18n/*.qm
+	translations.path = $$prefix.path/Contents/MacOS/i18n
+	INSTALLS += translations
 }

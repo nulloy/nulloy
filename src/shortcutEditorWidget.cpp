@@ -25,7 +25,7 @@ NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(par
 {
 	setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	setColumnCount(4);
-	setHorizontalHeaderLabels(QStringList() << "Action" << "Description" << "Shortcut" << "Global Shortcut");
+	setHorizontalHeaderLabels(QStringList() << tr("Action") << tr("Description") << tr("Shortcut") << tr("Global Shortcut"));
 
 	verticalHeader()->setVisible(FALSE);
 
@@ -43,6 +43,7 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 {
 	if (m_init)
 		return;
+	m_init = TRUE;
 
 	m_actionList = actionList;
 	setRowCount(m_actionList.size());
@@ -86,8 +87,6 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 		height += rowHeight(i);
 	setMinimumHeight(height);
 	setMaximumHeight(height);
-
-	m_init = TRUE;
 }
 
 void NShortcutEditorWidget::applyShortcuts()

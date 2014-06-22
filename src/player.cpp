@@ -29,6 +29,7 @@
 #include "settings.h"
 #include "tagReaderInterface.h"
 #include "trackInfoWidget.h"
+#include "i18nLoader.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -60,8 +61,9 @@ NPlayer::NPlayer()
 	qsrand((uint)QTime::currentTime().msec());
 	m_settings = NSettings::instance();
 
+	NI18NLoader::loadTranslation();
 
-	// construct playbackEngine
+	// construct playbackEngine >>
 #ifndef _N_NO_PLUGINS_
 	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
 #else
@@ -71,10 +73,10 @@ NPlayer::NPlayer()
 	m_playbackEngine->setParent(this);
 	connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), this, SLOT(on_playbackEngine_mediaChanged(const QString &)));
 	connect(m_playbackEngine, SIGNAL(stateChanged(N::PlaybackState)), this, SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));
-	//
+	// << construct playbackEngine
 
 
-	// construct mainWindow
+	// construct mainWindow >>
 	m_mainWindow = new NMainWindow();
 	connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
 #ifndef _N_NO_SKINS_
@@ -82,10 +84,10 @@ NPlayer::NPlayer()
 #else
 	m_mainWindow->init(QString());
 #endif
-	//
+	// << construct mainWindow >>
 
 
-	// loading skin script
+	// loading skin script >>
 	m_scriptEngine = new NScriptEngine(this);
 #ifndef _N_NO_SKINS_
 	QString scriptFileName(NSkinLoader::skinScriptFile());
@@ -100,7 +102,7 @@ NPlayer::NPlayer()
 	QScriptValue constructor = m_scriptEngine->evaluate("Program");
 	QScriptValue playerEngineObject = m_scriptEngine->newQObject(this, QScriptEngine::QtOwnership);
 	QScriptValue skinProgram = constructor.construct(QScriptValueList() << playerEngineObject);
-	//
+	// << loading skin script
 
 
 	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
@@ -120,7 +122,7 @@ NPlayer::NPlayer()
 	waveformSlider->setLayout(trackInfoLayout);
 	connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
 
-	// actions
+	// actions >>
 	NAction *showHideAction = new NAction(QIcon::fromTheme("preferences-system-windows", QIcon(":/trolltech/styles/commonstyle/images/dockdock-16.png")), tr("Show / Hide"), this);
 	showHideAction->setObjectName("showHideAction");
 	showHideAction->setStatusTip(tr("Toggle window visibility"));
@@ -207,10 +209,10 @@ NPlayer::NPlayer()
 	fullScreenAction->setObjectName("fullScreenAction");
 	fullScreenAction->setCustomizable(TRUE);
 	connect(fullScreenAction, SIGNAL(toggled(bool)), this, SLOT(on_fullScreenAction_toggled(bool)));
-	//
+	// << actions
 
 
-	// playlist actions
+	// playlist actions >>
 	NAction *loadNextAction = new NAction(tr("Load next file in directory when finished"), this);
 	loadNextAction->setCheckable(TRUE);
 	loadNextAction->setObjectName("loadNextAction");
@@ -241,10 +243,10 @@ NPlayer::NPlayer()
 	loadNextNameUpAction->setActionGroup(group);
 	loadNextDateDownAction->setActionGroup(group);
 	loadNextDateUpAction->setActionGroup(group);
-	//
+	// << playlist actions
 
 
-	// tray icon
+	// tray icon >>
 	QMenu *trayIconMenu = new QMenu(this);
 	trayIconMenu->addAction(showHideAction);
 	trayIconMenu->addSeparator();
@@ -266,10 +268,10 @@ NPlayer::NPlayer()
 	m_trayClickTimer = new QTimer(this);
 	m_trayClickTimer->setSingleShot(TRUE);
 	connect(m_trayClickTimer, SIGNAL(timeout()), this, SLOT(on_trayClickTimer_timeout()));
-	//
+	// << tray icon
 
 
-	// context menu
+	// context menu >>
 	m_contextMenu = new QMenu(m_mainWindow);
 	m_mainWindow->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
@@ -277,13 +279,13 @@ NPlayer::NPlayer()
 	m_contextMenu->addAction(openDirDialogAction);
 	m_contextMenu->addAction(savePlaylistDialogAction);
 
-	QMenu *windowSubMenu = new QMenu("Window", m_mainWindow);
+	QMenu *windowSubMenu = new QMenu(tr("Window"), m_mainWindow);
 	windowSubMenu->addAction(whilePlayingOnTopAction);
 	windowSubMenu->addAction(alwaysOnTopAction);
 	windowSubMenu->addAction(fullScreenAction);
 	m_contextMenu->addMenu(windowSubMenu);
 
-	QMenu *playlistSubMenu = new QMenu("Playlist", m_mainWindow);
+	QMenu *playlistSubMenu = new QMenu(tr("Playlist"), m_mainWindow);
 	playlistSubMenu->addAction(loadNextAction);
 	playlistSubMenu->addAction(loadNextNameDownAction);
 	playlistSubMenu->addAction(loadNextNameUpAction);
@@ -298,7 +300,7 @@ NPlayer::NPlayer()
 	m_contextMenu->addAction(aboutAction);
 	m_contextMenu->addSeparator();
 	m_contextMenu->addAction(exitAction);
-	//
+	// << context menu
 
 #ifdef Q_WS_MAC
 	// removing icons from context menu
@@ -307,7 +309,7 @@ NPlayer::NPlayer()
 		actions.at(i)->setIcon(QIcon());
 
 
-	// global menu
+	// global menu >>
 	QMenuBar *menuBar = new QMenuBar(m_mainWindow);
 
 	QMenu *fileMenu = menuBar->addMenu(tr("File"));
@@ -331,7 +333,7 @@ NPlayer::NPlayer()
 	windowMenu->addAction(whilePlayingOnTopAction);
 	windowMenu->addAction(alwaysOnTopAction);
 	windowMenu->addAction(fullScreenAction);
-	//
+	// << global menu
 #endif
 
 #ifdef Q_WS_WIN
@@ -565,12 +567,12 @@ void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
 		QString versionOnline = reply->readAll().simplified();
 
 		if (m_preferencesDialog->isVisible())
-			m_preferencesDialog->setVersionLabel("Latest: " + versionOnline);
+			m_preferencesDialog->setVersionLabel(tr("Latest: ") + versionOnline);
 
 		if (QCoreApplication::applicationVersion() < versionOnline) {
 			QMessageBox::information(m_mainWindow,
-			                         QCoreApplication::applicationName() + " Update",
-			                         "A newer version is available: " + versionOnline + "<br><br>" +
+			                         QCoreApplication::applicationName() + tr(" Update"),
+			                         tr("A newer version is available: ") + versionOnline + "<br><br>" +
 			                         "<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
 			                         QCoreApplication::organizationDomain() + "/download</a>");
 		}
@@ -748,8 +750,8 @@ void NPlayer::showOpenFileDialog()
 	QStringList files = QFileDialog::getOpenFileNames(
 		m_mainWindow, qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
 		m_settings->value("LastDirectory").toString(),
-		"All supported (" + filters + ");;"
-		"All files (*)"
+		tr("All supported") + " (" + filters + ");;" +
+		tr("All files") + " (*)"
 	);
 
 	if (files.isEmpty())
@@ -791,8 +793,8 @@ void NPlayer::showSavePlaylistDialog()
 	QString file = QFileDialog::getSaveFileName(
 		m_mainWindow, qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
 		m_settings->value("LastDirectory").toString(),
-		"M3U Playlist (*.m3u);;"
-		"Extended M3U Playlist (*.m3u)",
+		tr("M3U Playlist") + " (*.m3u);;" +
+		tr("Extended M3U Playlist") + " (*.m3u)",
 		&selectedFilter
 	);
 

@@ -13,38 +13,16 @@
 **
 *********************************************************************/
 
-#ifndef N_SHORTCUT_EDITOR_WIDGET_H
-#define N_SHORTCUT_EDITOR_WIDGET_H
+#ifndef N_I18N_LOADER_H
+#define N_I18N_LOADER_H
 
-#include <QTableWidget>
-#include <QList>
+#include <QLocale>
 
-class NAction;
-class QKeyEvent;
-class QString;
-
-class NShortcutEditorWidget : public QTableWidget
+namespace NI18NLoader
 {
-	Q_OBJECT
-
-private:
-	bool m_init;
-	QList<NAction *> m_actionList;
-	static QString keyEventToString(QKeyEvent *e);
-	void keyPressEvent(QKeyEvent *e);
-	enum Columns {
-		Name = 0,
-		Description = 1,
-		Shortcut = 2,
-		GlobalShortcut = 3,
-	};
-
-public:
-	NShortcutEditorWidget(QWidget *parent = 0);
-	~NShortcutEditorWidget(void);
-	void applyShortcuts();
-	void init(const QList<NAction *> &actionList);
-};
+	QList<QLocale::Language> translations();
+	void loadTranslation(QLocale::Language language = QLocale::AnyLanguage);
+}
 
 #endif
 

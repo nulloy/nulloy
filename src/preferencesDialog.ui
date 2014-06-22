@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>666</width>
-    <height>414</height>
+    <width>590</width>
+    <height>528</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,17 +26,77 @@
       <attribute name="title">
        <string>General</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout_10">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="languageLabel">
+           <property name="text">
+            <string>Language:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="languageComboBox">
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="languageRestartLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: black;
+background: qlineargradient(spread: repeat, x1:0, y1:0, x2:0.3, y2:0.04,
+                            stop:0 #FEF8C0,
+                            stop:0.49 #FEF8D6,
+                            stop:0.50 #FFFFEB,
+                            stop:1 #FFFFE5
+);
+border-radius: 5px;
+padding: 5px;</string>
+           </property>
+           <property name="text">
+            <string>Switching languages requires restart</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="0">
           <widget class="QLabel" name="skinLabel">
            <property name="text">
             <string>Skin:</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="1" column="1">
           <widget class="QComboBox" name="skinComboBox">
            <property name="minimumSize">
             <size>
@@ -46,7 +106,7 @@
            </property>
           </widget>
          </item>
-         <item>
+         <item row="1" column="2">
           <widget class="QLabel" name="skinRestartLabel">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -76,8 +136,8 @@ padding: 5px;</string>
            </property>
           </widget>
          </item>
-         <item>
-          <spacer name="horizontalSpacer">
+         <item row="1" column="3">
+          <spacer name="horizontalSpacer_6">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -106,55 +166,119 @@ padding: 5px;</string>
         </widget>
        </item>
        <item>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <item>
           <widget class="QCheckBox" name="discardPlaylistCheckBox">
            <property name="text">
             <string>Discard playlist after restart</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QCheckBox" name="startPausedCheckBox">
-           <property name="text">
-            <string>Start in paused state</string>
-           </property>
-          </widget>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>17</width>
+               <height>17</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="startPausedCheckBox">
+             <property name="text">
+              <string>Start in paused state</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
-         <item row="1" column="0">
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
           <widget class="QCheckBox" name="singleInstanceCheckBox">
            <property name="text">
             <string>Allow only one instance</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QCheckBox" name="enqueueFilesCheckBox">
-           <property name="text">
-            <string>Enqueue files when in one instance</string>
-           </property>
-          </widget>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="enqueueFilesCheckBox">
+             <property name="text">
+              <string>Enqueue files when in one instance</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
-         <item row="1" column="2">
-          <widget class="QCheckBox" name="playEnqueuedCheckBox">
-           <property name="text">
-            <string>Play enqueued files immidiately</string>
-           </property>
-          </widget>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="playEnqueuedCheckBox">
+             <property name="text">
+              <string>Play enqueued files immidiately</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="displayLogDialogCheckBox">
-         <property name="text">
-          <string>Display log dialog in case of errors</string>
-         </property>
-        </widget>
        </item>
        <item>
         <widget class="QCheckBox" name="showDecibelsVolumeCheckBox">
          <property name="text">
           <string>Show volume in decibels (using Stevens' law)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="displayLogDialogCheckBox">
+         <property name="text">
+          <string>Display log dialog in case of errors</string>
          </property>
         </widget>
        </item>
@@ -239,7 +363,7 @@ padding: 5px;</string>
              <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
-               <height>40</height>
+               <height>20</height>
               </size>
              </property>
             </spacer>
@@ -250,19 +374,6 @@ padding: 5px;</string>
           <widget class="QPlainTextEdit" name="fileFiltersTextEdit"/>
          </item>
         </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -446,8 +557,8 @@ padding: 5px;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>644</width>
-            <height>306</height>
+            <width>568</width>
+            <height>420</height>
            </rect>
           </property>
          </widget>
