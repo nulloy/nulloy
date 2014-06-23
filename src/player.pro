@@ -40,6 +40,7 @@ win32 {
 # translations compile
 TR_DEST_DIR = $$SRC_DIR/../i18n
 !exists($$TR_DEST_DIR) {
+	win32:TR_DEST_DIR ~= s,/,\\,g
 	system(mkdir $$TR_DEST_DIR)
 }
 tr_release.depends = $$SRC_DIR/i18n/*.ts
