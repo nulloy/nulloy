@@ -1,4 +1,5 @@
 debian/tmp/usr/bin/nulloy
 debian/tmp/usr/share/nulloy/skins/*
+debian/tmp/usr/share/nulloy/i18n/*
 debian/tmp/usr/share/icons/*
 debian/tmp/usr/share/applications/nulloy.desktop

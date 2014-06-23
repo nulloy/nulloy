@@ -191,7 +191,7 @@ unix:!mac {
 		INSTALLS += plugins
 	}
 
-	translations.files = ../i18n/*.qm
+	translations.files = ../i18n/*
 	translations.path = $$prefix.path/share/nulloy/i18n
 	INSTALLS += translations
 }
@@ -212,7 +212,7 @@ mac {
 		INSTALLS += plugins
 	}
 
-	translations.files = ../i18n/*.qm
+	translations.files = ../i18n/*
 	translations.path = $$prefix.path/Contents/MacOS/i18n
 	INSTALLS += translations
 }

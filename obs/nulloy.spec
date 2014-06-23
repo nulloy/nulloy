@@ -35,6 +35,7 @@ make
 %defattr(-,root,root)
 %{_bindir}/%{name}
 %{_datadir}/%{name}/skins/*
+%{_datadir}/%{name}/i18n/*
 %{_datadir}/icons/*
 %{_datadir}/applications/%{name}.desktop
 
