@@ -20,6 +20,10 @@
 #include <QDir>
 #include <QFileInfo>
 
+#ifdef Q_WS_WIN
+#include <QSettings>
+#endif
+
 namespace NCore
 {
 	static QList<QByteArray> _argList;
@@ -71,7 +75,22 @@ QString NCore::rcDir()
 		else
 			_rcDir = QCoreApplication::applicationDirPath();
 #else
-		_rcDir = QCoreApplication::applicationDirPath();
+		QDir parentDir(QCoreApplication::applicationDirPath());
+		parentDir.cdUp();
+
+		QSettings registryMachine("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion", QSettings::NativeFormat);
+		QDir programFilesDir(registryMachine.value("ProgramFilesDir", "C:/Program Files").toString());
+		QDir programFilesDirX86(registryMachine.value("ProgramFilesDir (x86)", "C:/Program Files (x86)").toString());
+
+		if (parentDir == programFilesDir || parentDir == programFilesDirX86) {
+			QString appData = QProcessEnvironment::systemEnvironment ().value("AppData");
+			if (appData != "")
+				_rcDir = appData + "/Nulloy";
+			else
+				_rcDir = QCoreApplication::applicationDirPath();
+		} else {
+			_rcDir = QCoreApplication::applicationDirPath();
+		}
 #endif
 		QDir dir(_rcDir);
 		if (!dir.exists())
