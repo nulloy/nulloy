@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>590</width>
-    <height>528</height>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -272,6 +272,13 @@ padding: 5px;</string>
         <widget class="QCheckBox" name="showDecibelsVolumeCheckBox">
          <property name="text">
           <string>Show volume in decibels (using Stevens' law)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="taskbarProgressCheckBox">
+         <property name="text">
+          <string>Show progress on taskbar (Windows 7+ only)</string>
          </property>
         </widget>
        </item>
@@ -557,8 +564,8 @@ padding: 5px;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>568</width>
-            <height>420</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
          </widget>

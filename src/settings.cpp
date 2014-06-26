@@ -75,6 +75,10 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("Volume", 0.8);
 	initValue("ShowDecibelsVolume", FALSE);
 
+#ifdef Q_WS_WIN
+	initValue("TaskbarProgress", TRUE);
+#endif
+
 	initValue("FileFilters", QStringList() << "*.m3u" << "*.m3u8"
 	                         << "*.mp3"  << "*.ogg" << "*.mp4" << "*.wma"
 	                         << "*.flac" << "*.ape" << "*.wav" << "*.wv" << "*.tta"

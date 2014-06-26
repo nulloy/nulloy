@@ -27,44 +27,45 @@ const GUID CLSID_TaskbarList={0x56fdf344,0xfd6d,0x11d0,{0x95,0x8a,0x00,0x60,0x97
 const GUID IID_ITaskbarList3={0xea1afb91,0x9e28,0x4b86,{0x90,0xe9,0x9e,0x9f,0x8a,0x5e,0xef,0xaf}};
 #endif
 
+static NW7TaskBar *_instance = NULL;
 static WId _winId;
 static ITaskbarList3 *_taskBar = NULL;
 static UINT _messageId;
-NW7TaskBar *NW7TaskBar::m_instance = NULL;
-
-NW7TaskBar::NW7TaskBar(QObject *parent) : QObject(parent)
-{
-	Q_ASSERT_X(!m_instance, "NW7TaskBar", "NW7TaskBar instance already exists.");
-	_messageId = RegisterWindowMessage(L"TaskbarButtonCreated");
-}
-
-NW7TaskBar::~NW7TaskBar()
-{
-	m_instance = NULL;
-}
+static bool _enabled = TRUE;
 
 NW7TaskBar* NW7TaskBar::instance()
 {
-	Q_ASSERT_X(m_instance, "NW7TaskBar", "NW7TaskBar instance has not been created yet.");
-	return m_instance;
-}
+	if (!_instance) {
+		_instance = new NW7TaskBar();
+		_messageId = RegisterWindowMessage(L"TaskbarButtonCreated");
+	}
 
-void NW7TaskBar::init(QObject *parent)
-{
-	if (!m_instance)
-		m_instance = new NW7TaskBar(parent);
+	return _instance;
 }
 
 void NW7TaskBar::setWindow(QWidget *window)
 {
-	Q_ASSERT_X(m_instance, "NW7TaskBar", "NW7TaskBar instance has not been created yet.");
 	_winId = window->winId();
+}
+
+void NW7TaskBar::setEnabled(bool enable)
+{
+	if (!enable) {
+		setProgress(0);
+		setState(NoProgress);
+		setOverlayIcon(QIcon(), QString());
+	}
+
+	_enabled = enable;
+}
+
+bool NW7TaskBar::isEnabled()
+{
+	return _enabled;
 }
 
 bool NW7TaskBar::winEvent(MSG *message, long *result)
 {
-	Q_ASSERT_X(m_instance, "NW7TaskBar", "NW7TaskBar instance has not been created yet.");
-
 	if (message->message == _messageId) {
 		HRESULT hr = CoCreateInstance(CLSID_TaskbarList, NULL,
 		                              CLSCTX_INPROC_SERVER,
@@ -86,7 +87,7 @@ bool NW7TaskBar::winEvent(MSG *message, long *result)
 
 void NW7TaskBar::setProgress(qreal val)
 {
-	if (!_taskBar)
+	if (!_taskBar || !_enabled)
 		return;
 
 	_taskBar->SetProgressValue(_winId, qRound(val * 100), 100);
@@ -97,7 +98,7 @@ void NW7TaskBar::setProgress(qreal val)
 
 void NW7TaskBar::setState(State state)
 {
-	if (!_taskBar)
+	if (!_taskBar || !_enabled)
 		return;
 
 	TBPFLAG flag;
@@ -122,9 +123,7 @@ void NW7TaskBar::setState(State state)
 
 void NW7TaskBar::setOverlayIcon(const QIcon &icon, const QString &text)
 {
-	Q_ASSERT_X(m_instance, "NW7TaskBar", "NW7TaskBar instance has not been created yet.");
-
-	if (!_taskBar)
+	if (!_taskBar || !_enabled)
 		return;
 
 	HICON hIcon = NULL;

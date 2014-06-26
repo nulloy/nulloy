@@ -252,7 +252,7 @@ bool NMainWindow::winEvent(MSG *message, long *result)
 		updateFramelessShadow();
 		return true;
 	} else {
-		return NW7TaskBar::winEvent(message, result);
+		return NW7TaskBar::instance()->winEvent(message, result);
 	}
 }
 #endif
@@ -298,7 +298,7 @@ void NMainWindow::setOnTop(bool onTop)
 #endif
 
 #ifdef Q_WS_WIN
-	NW7TaskBar::setWindow(this);
+	NW7TaskBar::instance()->setWindow(this);
 #endif
 }
 

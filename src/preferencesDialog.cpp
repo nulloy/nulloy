@@ -20,6 +20,7 @@
 #include "skinFileSystem.h"
 #include "plugin.h"
 #include "i18nLoader.h"
+#include "w7TaskBar.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
@@ -93,6 +94,10 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	ui.languageRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.languageRestartLabel->text());
 	ui.skinRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.skinRestartLabel->text());
 	ui.pluginsRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.pluginsRestartLabel->text());
+#endif
+
+#ifndef Q_WS_WIN
+	ui.taskbarProgressCheckBox->hide();
 #endif
 
 	ui.waveformTrackInfoTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
@@ -279,6 +284,9 @@ void NPreferencesDialog::loadSettings()
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
 	ui.showDecibelsVolumeCheckBox->setChecked(NSettings::instance()->value("ShowDecibelsVolume").toBool());
 	ui.fileFiltersTextEdit->setPlainText(NSettings::instance()->value("FileFilters").toStringList().join(" "));
+#ifdef Q_WS_WIN
+	ui.taskbarProgressCheckBox->setChecked(NSettings::instance()->value("TaskbarProgress").toBool());
+#endif
 	ui.versionLabel->setText("");
 	// << general
 
@@ -357,6 +365,10 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 	NSettings::instance()->setValue("ShowDecibelsVolume", ui.showDecibelsVolumeCheckBox->isChecked());
 	NSettings::instance()->setValue("FileFilters", ui.fileFiltersTextEdit->toPlainText().split(" "));
+#ifdef Q_WS_WIN
+	NSettings::instance()->setValue("TaskbarProgress", ui.taskbarProgressCheckBox->isChecked());
+	NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
+#endif
 	// << general
 
 

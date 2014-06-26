@@ -25,10 +25,10 @@ class NW7TaskBar : public QObject
 	Q_OBJECT
 
 private:
-	static NW7TaskBar *m_instance;
-
-	NW7TaskBar(QObject *parent = 0);
-	~NW7TaskBar();
+	NW7TaskBar() {}
+	~NW7TaskBar() {}
+	NW7TaskBar(NW7TaskBar const &copy);
+    NW7TaskBar operator=(NW7TaskBar const &copy);
 
 public:
 	enum State {
@@ -40,14 +40,15 @@ public:
 	};
 
 	static NW7TaskBar* instance();
-	static void init(QObject *parent);
-	static void setWindow(QWidget *window);
-	static bool winEvent(MSG *message, long *result);
-	static void setOverlayIcon(const QIcon &icon, const QString &text);
+	void setWindow(QWidget *window);
+	bool winEvent(MSG *message, long *result);
+	bool isEnabled();
 
 public slots:
+	void setEnabled(bool enable);
 	void setProgress(qreal val);
 	void setState(State state);
+	void setOverlayIcon(const QIcon &icon, const QString &text = QString());
 };
 
 #endif // WIN32

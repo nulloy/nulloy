@@ -108,7 +108,7 @@ NPlayer::NPlayer()
 	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
 	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(on_preferencesDialog_settingsChanged()));
 	connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
-	
+
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
 
 	m_trackInfoWidget = new NTrackInfoWidget();
@@ -337,8 +337,8 @@ NPlayer::NPlayer()
 #endif
 
 #ifdef Q_WS_WIN
-	NW7TaskBar::init(this);
-	NW7TaskBar::setWindow(m_mainWindow);
+	NW7TaskBar::instance()->setWindow(m_mainWindow);
+	NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
 	connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
 #endif
 
@@ -671,16 +671,14 @@ void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
 	if (!alwaysOnTop)
 		m_mainWindow->setOnTop(whilePlaying && state == N::PlaybackPlaying);
 #ifdef Q_WS_WIN
-	if (state == N::PlaybackPlaying) {
-		NW7TaskBar::instance()->setState(NW7TaskBar::Normal);
-		NW7TaskBar::setOverlayIcon(QIcon(":/trolltech/styles/commonstyle/images/media-play-32.png"), "Playing");
-	} else {
-		if (m_playbackEngine->position() != 0) {
-			NW7TaskBar::instance()->setState(NW7TaskBar::Paused);
-			NW7TaskBar::setOverlayIcon(QIcon(":/trolltech/styles/commonstyle/images/media-pause-32.png"), "Paused");
+	if (NW7TaskBar::instance()->isEnabled()) {
+		if (state == N::PlaybackPlaying) {
+			NW7TaskBar::instance()->setState(NW7TaskBar::Normal);
 		} else {
-			NW7TaskBar::instance()->setState(NW7TaskBar::NoProgress);
-			NW7TaskBar::setOverlayIcon(QIcon(), "Stopped");
+			if (m_playbackEngine->position() != 0)
+				NW7TaskBar::instance()->setState(NW7TaskBar::Paused);
+			else
+				NW7TaskBar::instance()->setState(NW7TaskBar::NoProgress);
 		}
 	}
 #endif
