@@ -1,11 +1,6 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-# translations update
-tr_update.commands = lupdate src -ts src/i18n/*.ts
-tr_update.target = tr_update
-QMAKE_EXTRA_TARGETS += tr_update
-
 isEmpty(N_CONFIG_SUCCESS) {
 	error(Please run `configure\')
 }
