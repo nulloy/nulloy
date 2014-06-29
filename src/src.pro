@@ -43,45 +43,12 @@ include(i18n/i18n.pri)
 
 # qmake -config no-skins
 !no-skins {
+	include(skins/skins.pri)
 	CONFIG += uitools
 	INCLUDEPATH += widgetCollection
 	LIBS += -LwidgetCollection -lwidget_collection
 	PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
 	RESOURCES += native-skin-embedded.qrc
-
-
-	unix:SKIN_DEST_DIR = $$SRC_DIR/../skins
-	win32:SKIN_DEST_DIR = $$SRC_DIR/../Skins
-	!exists($$SKIN_DEST_DIR) {
-		win32:SKIN_DEST_DIR ~= s,/,\\,g
-		system(mkdir $$SKIN_DEST_DIR)
-	}
-
-	metro_skin.depends = $$SRC_DIR/skins/metro/
-	unix:metro_skin.target = $$SKIN_DEST_DIR/metro.nzs
-	win32:metro_skin.target = $$SKIN_DEST_DIR/Metro.nzs
-
-	silver_skin.depends = $$SRC_DIR/skins/silver/
-	unix:silver_skin.target = $$SKIN_DEST_DIR/silver.nzs
-	win32:silver_skin.target = $$SKIN_DEST_DIR/Silver.nzs
-
-	unix {
-		ZIP_ADD_CMD=zip -j
-		ZIP_DEL_CMD=zip -d
-	}
-	win32 {
-		ZIP_ADD_CMD=7z a -tzip
-		ZIP_DEL_CMD=7z d -tzip
-	}
-	metro_skin.commands =  $$ZIP_ADD_CMD $$metro_skin.target $$metro_skin.depends/* && \
-	                       $$ZIP_DEL_CMD $$metro_skin.target design.svg
-	silver_skin.commands = $$ZIP_ADD_CMD $$silver_skin.target $$silver_skin.depends/* && \
-	                       $$ZIP_DEL_CMD $$silver_skin.target design.svg
-
-	QMAKE_EXTRA_TARGETS += silver_skin metro_skin
-	PRE_TARGETDEPS += $$silver_skin.target $$metro_skin.target
-	system($$silver_skin.commands)
-	system($$metro_skin.commands)
 } else {
 	DEFINES += _N_NO_SKINS_
 
@@ -170,28 +137,14 @@ unix:!mac {
 
 	INSTALLS += target icons desktop
 
-	!no-skins {
-		skins.files = ../skins/*
-		skins.path = $$prefix.path/share/nulloy/skins
-		INSTALLS += skins
-	}
-
 	!no-plugins {
 		plugins.files = ../plugins/*
 		plugins.path = $$prefix.path/lib/nulloy/plugins
 		INSTALLS += plugins
 	}
 }
-
-
 mac {
 	prefix.path = ../$${TARGET}.app
-
-	!no-skins {
-		skins.files = ../skins/*
-		skins.path = $$prefix.path/Contents/MacOS/skins
-		INSTALLS += skins
-	}
 
 	!no-plugins {
 		plugins.files = ../plugins/*
