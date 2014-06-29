@@ -7,11 +7,10 @@ unix:TARGET = nulloy
 win32:TARGET = Nulloy
 DESTDIR = ..
 
-DEPENDPATH += . ux/
-INCLUDEPATH += . ux/ interfaces/
+INCLUDEPATH += . interfaces/
 
-HEADERS += *.h ux/*.h
-SOURCES += *.cpp ux/*.cpp
+HEADERS += *.h
+SOURCES += *.cpp
 
 FORMS += *.ui
 
@@ -26,6 +25,12 @@ UI_DIR      = $$TMP_DIR
 SRC_DIR = $$PWD
 
 include(func.pri)
+include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
+include(../3rdParty/qtsingleapplication-8fd81b2/src/qtsingleapplication.pri)
+include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
+include(i18n/i18n.pri)
+include(trash/trash.pri)
+win32:include(ux/w7TaskBar.pri)
 
 # zlib
 unix {
@@ -39,7 +44,6 @@ win32 {
 	LIBS += -L$(ZLIB_DIR)/lib -lzdll
 }
 
-include(i18n/i18n.pri)
 
 # qmake -config no-skins
 !no-skins {
@@ -74,15 +78,6 @@ include(i18n/i18n.pri)
 	FORMS += skins/native/form.ui
 }
 
-
-# win7 taskbar
-win32 {
-	LIBS += -lole32 -luser32
-} else {
-	HEADERS -= ux/w7TaskBar.h
-	SOURCES -= ux/w7TaskBar.cpp
-}
-
 RESOURCES += icons/icons.qrc
 win32:RC_FILE = icons/icon.rc
 mac:ICON = icons/icon.icns
@@ -98,11 +93,6 @@ build_pass:CONFIG(static, static|shared) {
 	DEFINES += _N_SHARED_BUILD_
 }
 
-
-include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
-include(../3rdParty/qtsingleapplication-8fd81b2/src/qtsingleapplication.pri)
-include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
-include(trash/trash.pri)
 
 # qmake -config no-plugins
 !no-plugins {

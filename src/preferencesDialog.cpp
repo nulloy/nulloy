@@ -20,7 +20,10 @@
 #include "skinFileSystem.h"
 #include "plugin.h"
 #include "i18nLoader.h"
+
+#ifdef Q_WS_WIN
 #include "w7TaskBar.h"
+#endif
 
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
