@@ -46,6 +46,5 @@ plugins-all {
 	SUBDIRS += plugins
 }
 
-src.file = src/player.pro
 SUBDIRS += src
 
