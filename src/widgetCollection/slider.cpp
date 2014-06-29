@@ -75,5 +75,3 @@ void NSlider::setValue(qreal value)
 	QSlider::setValue(qRound(value * maximum()));
 }
 
-void NSlider::setValue(int value) {}
-

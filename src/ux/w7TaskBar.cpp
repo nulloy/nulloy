@@ -103,6 +103,7 @@ void NW7TaskBar::setState(State state)
 
 	TBPFLAG flag;
 	switch (state) {
+		default:
 		case NoProgress:
 			flag = TBPF_NOPROGRESS;
 			break;

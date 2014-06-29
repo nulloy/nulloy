@@ -300,8 +300,6 @@ void NWaveformSlider::setValue(qreal value)
 	QAbstractSlider::setValue(value * maximum());
 }
 
-void NWaveformSlider::setValue(int value) {}
-
 void NWaveformSlider::drawFile(const QString &file)
 {
 	init();

@@ -19,11 +19,12 @@
 
 int _trash(const QString &path, QString *error)
 {
+	Q_UNUSED(error);
 	QString new_path = path;
 	new_path.append("00");
-	new_path[new_path.size() - 2] = 0;
-	new_path[new_path.size() - 1] = 0;
-	SHFILEOPSTRUCT shfo = {0};
+	new_path[path.size()] = 0;
+	new_path[path.size() + 1] = 0;
+	SHFILEOPSTRUCT shfo = SHFILEOPSTRUCT();
 	shfo.wFunc = FO_DELETE;
 	shfo.pFrom = (wchar_t *)(new_path.utf16());
 	shfo.fFlags = FOF_NOCONFIRMATION | FOF_SIMPLEPROGRESS | FOF_NOERRORUI | FOF_ALLOWUNDO;

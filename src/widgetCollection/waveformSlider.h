@@ -62,7 +62,7 @@ public slots:
 private slots:
 	void checkForUpdate();
 	void showToolTip(int x, int y);
-	void setValue(int value);
+	void setValue(int) {};
 
 signals:
 	void sliderMoved(qreal value);

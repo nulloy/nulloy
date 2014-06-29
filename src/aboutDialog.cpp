@@ -50,7 +50,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 			tr("Version: ") + QCoreApplication::applicationVersion() + "<br>" +
 			              (QString(_N_TIME_STAMP_).isEmpty() ? "" : tr("Build: ") + QString(_N_TIME_STAMP_)) +
 			"<br><br>" +
-			"Copyright (C) 2010-2014  Sergey Vlasov &lt;sergey@vlasov.me&gt;"
+			"Copyright (C) 2010-2014  Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
 		"</span>";
 
 	setWindowTitle(QObject::tr("About ") + QCoreApplication::applicationName());
@@ -137,7 +137,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 			"<br>"
 			"You should have received a copy of the GNU General Public License "
 			"along with this program. If not, see "
-			"<a href='http://www.gnu.org/licenses/gpl-3.0.html'>http://www.gnu.org/licenses/gpl-3.0.html</a>.";
+			"<a href='http://www.gnu.org/licenses/gpl-3.0.html'>http://www.gnu.org/licenses/gpl-3.0.html</a>."
 		"</span>";
 
 	QTextBrowser *licenseTextBrowser = new QTextBrowser;

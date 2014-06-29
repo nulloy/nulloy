@@ -67,6 +67,7 @@ void NTrackInfoWidget::setStyleSheet(const QString &stylesheet)
 
 bool NTrackInfoWidget::eventFilter(QObject *object, QEvent *event)
 {
+	Q_UNUSED(object);
 	if (event->type() == QEvent::DragEnter || event->type() == QEvent::Leave)
 		QApplication::sendEvent(parent(), event);
 
