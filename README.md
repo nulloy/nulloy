@@ -62,7 +62,7 @@ Install Xcode and then install Xcode Command Line Tools. Install MacPorts and op
 
 ```sh
 . ~/.profile
-sudo port install pkgconfig qt4-mac gstreamer010{,-gst-plugins-base} zlib taglib
+sudo port install pkgconfig getopt qt4-mac gstreamer010{,-gst-plugins-base} zlib taglib
 ```
 
 ### Build & Run Nulloy
