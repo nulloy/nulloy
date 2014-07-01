@@ -79,15 +79,17 @@
 #playlistWidget QScrollBar::handle {
 	background: #434346;
 	margin-left: 5;
+	min-height: 30px;
 }
 #playlistWidget QScrollBar::handle:hover {
 	background: #6798F2;
 }
 #playlistWidget QScrollBar::add-line,
-QScrollBar::sub-line,
-QScrollBar::add-page,
-QScrollBar::sub-page {
-	background: none;
+#playlistWidget QScrollBar::sub-line,
+#playlistWidget QScrollBar::add-page,
+#playlistWidget QScrollBar::sub-page {
+	height: 0px;
+	background: transparent;
 }
 #playlistWidget QSlider::sub-page:horizontal {
 	background: #757575;

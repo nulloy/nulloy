@@ -83,15 +83,17 @@
 	background: qlineargradient(spread:pad, x1:0.1, y1:0, x2:0.9, y2:0, stop:0 #AAAAAA, stop:1 #919191);
 	margin-left: 5;
 	border: 5;
+	min-height: 30px;
 }
 #playlistWidget QScrollBar::handle:hover {
 	background: qlineargradient(spread:pad, x1:0.1, y1:0, x2:0.9, y2:0, stop:0 #919191, stop:1 #828282);
 }
 #playlistWidget QScrollBar::add-line,
-QScrollBar::sub-line,
-QScrollBar::add-page,
-QScrollBar::sub-page {
-	background: none;
+#playlistWidget QScrollBar::sub-line,
+#playlistWidget QScrollBar::add-page,
+#playlistWidget QScrollBar::sub-page {
+	height: 0px;
+	background: transparent;
 }
 
 #playlistToggleButton {
