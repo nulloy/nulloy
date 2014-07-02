@@ -3,6 +3,7 @@
 # exit in case of errors
 set -e
 
+export LC_ALL=C
 _PWD=`pwd`
 cd `dirname $0`
 ROOT=`pwd`
