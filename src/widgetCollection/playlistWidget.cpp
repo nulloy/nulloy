@@ -81,6 +81,7 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	m_repeatMode = NSettings::instance()->value("Repeat").toBool();
 	m_shuffleMode = FALSE;
 	m_currentShuffledIndex = 0;
+	setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 }
 
 void NPlaylistWidget::contextMenuEvent(QContextMenuEvent *event)
@@ -102,8 +103,7 @@ void NPlaylistWidget::on_trashAction_triggered()
 		if (undeleted.contains(QFileInfo(item->data(N::PathRole).toString()).canonicalFilePath()))
 			continue;
 
-		QListWidgetItem *takenItem = takeItem(row(item));
-		delete takenItem;
+		delete takeItem(row(item));
 	}
 
 	viewport()->update();
@@ -111,10 +111,9 @@ void NPlaylistWidget::on_trashAction_triggered()
 
 void NPlaylistWidget::on_removeAction_triggered()
 {
-	foreach (QListWidgetItem *item, selectedItems()) {
-		QListWidgetItem *takenItem = takeItem(row(item));
-		delete takenItem;
-	}
+	foreach (QListWidgetItem *item, selectedItems())
+		delete takeItem(row(item));
+
 	viewport()->update();
 }
 
@@ -143,8 +142,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 		int index = row(item);
 		int index_bkp = index;
 
-		QListWidgetItem *takenItem = takeItem(row(item));
-		delete takenItem;
+		delete takeItem(row(item));
 
 		foreach (NPlaylistDataItem dataItem, dataItemsList) {
 			insertItem(index, new NPlaylistWidgetItem(dataItem));
@@ -346,24 +344,30 @@ void NPlaylistWidget::rowsInserted(const QModelIndex &parent, int start, int end
 
 void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end)
 {
-	NPlaylistWidgetItem *nextItem = m_currentItem;
+	bool currentRemoved = FALSE;
 	for (int i = start; i < end + 1; ++i) {
-		if (item(i) == nextItem) {
-			if (i < count() - 1)
-				nextItem = item(i + 1);
-			else
-				nextItem = NULL;
-		}
-
+		if (item(i) == m_currentItem)
+			currentRemoved = TRUE;
 		m_shuffledItems.removeAll(item(i));
 	}
 
-	if (nextItem != m_currentItem) {
+	NPlaylistWidgetItem *nextItem = NULL;
+	if (end < count() - 1)
+		nextItem = item(end + 1);
+
+	// set cursor focus
+	if (nextItem)
+		QListWidget::setCurrentItem(nextItem);
+	else
+		QListWidget::setCurrentItem(item(start - 1));
+
+	if (currentRemoved) {
 		if (nextItem && m_playbackEngine->state() != N::PlaybackStopped)
 			activateItem(nextItem);
 		else
 			setCurrentItem(nextItem);
 	}
+
 	QListWidget::rowsAboutToBeRemoved(parent, start, end);
 }
 
