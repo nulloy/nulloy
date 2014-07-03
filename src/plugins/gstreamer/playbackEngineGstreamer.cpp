@@ -113,8 +113,11 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 
 	stop();
 
-	if (file.isEmpty())
+	if (file.isEmpty()) {
+		m_currentMedia = "";
+		emit mediaChanged("");
 		return;
+	}
 
 	if (!QFile(file).exists()) {
 		emit message(QMessageBox::Warning, file, "No such file or directory");

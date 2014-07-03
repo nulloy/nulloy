@@ -96,7 +96,7 @@ void NPlaylistWidget::on_trashAction_triggered()
 	QStringList files;
 	foreach (QListWidgetItem *item, selectedItems())
 		files << QFileInfo(item->data(N::PathRole).toString()).canonicalFilePath();
-		
+
 	QStringList undeleted = NTrash::moveToTrash(files);
 	foreach (QListWidgetItem *item, selectedItems()) {
 		if (undeleted.contains(QFileInfo(item->data(N::PathRole).toString()).canonicalFilePath()))
@@ -105,7 +105,7 @@ void NPlaylistWidget::on_trashAction_triggered()
 		QListWidgetItem *takenItem = takeItem(row(item));
 		delete takenItem;
 	}
-	
+
 	viewport()->update();
 }
 
@@ -129,6 +129,13 @@ NPlaylistWidget::~NPlaylistWidget() {}
 
 void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 {
+	if (!item) {
+		m_currentItem = NULL;
+		m_tagReader->setSource("");
+		emit mediaSet("");
+		return;
+	}
+
 	QString file = item->data(N::PathRole).toString();
 	// check if it's a playlist file:
 	QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readPlaylist(file);
@@ -339,11 +346,23 @@ void NPlaylistWidget::rowsInserted(const QModelIndex &parent, int start, int end
 
 void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end)
 {
+	NPlaylistWidgetItem *nextItem = m_currentItem;
 	for (int i = start; i < end + 1; ++i) {
-		if (item(i) == m_currentItem)
-			m_currentItem = NULL;
+		if (item(i) == nextItem) {
+			if (i < count() - 1)
+				nextItem = item(i + 1);
+			else
+				nextItem = NULL;
+		}
 
 		m_shuffledItems.removeAll(item(i));
+	}
+
+	if (nextItem != m_currentItem) {
+		if (nextItem && m_playbackEngine->state() != N::PlaybackStopped)
+			activateItem(nextItem);
+		else
+			setCurrentItem(nextItem);
 	}
 	QListWidget::rowsAboutToBeRemoved(parent, start, end);
 }

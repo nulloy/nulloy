@@ -43,10 +43,15 @@ void NTagReaderGstreamer::init()
 
 void NTagReaderGstreamer::setSource(const QString &file)
 {
-	if (m_taglist)
+	if (m_taglist) {
 		gst_tag_list_free(m_taglist);
+		m_taglist = NULL;
+	}
 
 	m_isValid = FALSE;
+
+	if (file.isEmpty())
+		return;
 
 	m_path = file;
 	gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL, NULL);

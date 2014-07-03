@@ -644,9 +644,6 @@ void NPlayer::quit()
 
 void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 {
-	if (path.isEmpty())
-		return;
-
 	QString title;
 	QString app_title_version = QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion();
 	if (QFile(path).exists()) {
@@ -660,8 +657,8 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
 		title = app_title_version;
 	}
 	m_mainWindow->setTitle(title);
-	m_trackInfoWidget->updateInfo();
 	m_systemTray->setToolTip(title);
+	m_trackInfoWidget->updateInfo();
 }
 
 void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
