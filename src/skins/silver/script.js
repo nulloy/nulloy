@@ -12,181 +12,146 @@
 **
 *********************************************************************/
 
-function Program(player)
+function Main()
 {
 	try {
-		this.player = player;
-		this.mainWindow = player.mainWindow();
-		this.playbackEngine = player.playbackEngine();
-		this.playlistWidget = this.mainWindow.findChild("playlistWidget");
-		this.dropArea = this.mainWindow.findChild("dropArea");
-		this.playButton = this.mainWindow.findChild("playButton");
-		this.stopButton = this.mainWindow.findChild("stopButton");
-		this.prevButton = this.mainWindow.findChild("prevButton");
-		this.nextButton = this.mainWindow.findChild("nextButton");
-		this.volumeSlider = this.mainWindow.findChild("volumeSlider");
-		this.waveformSlider = this.mainWindow.findChild("waveformSlider");
-		this.sizeGrip = this.mainWindow.findChild("sizeGrip");
-		this.playlistToggleButton = this.mainWindow.findChild("playlistToggleButton");
-		this.shadowWidget = this.mainWindow.findChild("shadowWidget");
-		this.closeButton = this.mainWindow.findChild("closeButton");
-		this.minimizeButton = this.mainWindow.findChild("minimizeButton");
-		this.titleLabel = this.mainWindow.findChild("titleLabel");
-		this.coverWidget = this.mainWindow.findChild("coverWidget");
-		this.playlistContainer = this.mainWindow.findChild("playlistContainer");
-		this.controlsContainer = this.mainWindow.findChild("controlsContainer");
+		Ui.repeatCheckBox["clicked(bool)"].connect(Ui.playlistWidget["setRepeatMode(bool)"]);
+		Ui.playlistWidget["repeatModeChanged(bool)"].connect(Ui.repeatCheckBox["setChecked(bool)"]);
+		Ui.repeatCheckBox.setChecked(Ui.playlistWidget.repeatMode());
 
-		this.repeatCheckBox = this.mainWindow.findChild("repeatCheckBox");
-		this.repeatCheckBox["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
-		this.playlistWidget["repeatModeChanged(bool)"].connect(this.repeatCheckBox["setChecked(bool)"]);
-		this.repeatCheckBox.setChecked(this.playlistWidget.repeatMode());
+		Ui.shuffleCheckBox["clicked(bool)"].connect(Ui.playlistWidget["setShuffleMode(bool)"]);
+		Ui.playlistWidget["shuffleModeChanged(bool)"].connect(Ui.shuffleCheckBox["setChecked(bool)"]);
 
-		this.shuffleCheckBox = this.mainWindow.findChild("shuffleCheckBox");
-		this.shuffleCheckBox["clicked(bool)"].connect(this.playlistWidget["setShuffleMode(bool)"]);
-		this.playlistWidget["shuffleModeChanged(bool)"].connect(this.shuffleCheckBox["setChecked(bool)"]);
+		Ui.playButton.clicked.connect(this, "on_playButton_clicked");
+		Ui.stopButton.clicked.connect(PlaybackEngine.stop);
+		Ui.prevButton.clicked.connect(Ui.playlistWidget.playPreviousRow);
+		Ui.nextButton.clicked.connect(Ui.playlistWidget.playNextRow);
 
-		this.playButton.clicked.connect(this, "on_playButton_clicked");
-		this.stopButton.clicked.connect(this.playbackEngine.stop);
-		this.prevButton.clicked.connect(this.playlistWidget.playPreviousRow);
-		this.nextButton.clicked.connect(this.playlistWidget.playNextRow);
+		Ui.titleWidget.enableDoubleClick();
+		Ui.titleWidget.doubleClicked.connect(Ui.mainWindow.toggleMaximize);
 
-		this.titleWidget = this.mainWindow.findChild("titleWidget");
-		this.titleWidget.enableDoubleClick();
-		this.titleWidget.doubleClicked.connect(this.mainWindow.toggleMaximize);
+		Ui.volumeSlider.minimum = 0;
+		Ui.volumeSlider.maximum = 100;
 
-		this.volumeSlider.minimum = 0;
-		this.volumeSlider.maximum = 100;
+		Ui.waveformSlider.minimum = 0;
+		Ui.waveformSlider.maximum = 10000;
 
-		this.waveformSlider.minimum = 0;
-		this.waveformSlider.maximum = 10000;
+		PlaybackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
+		PlaybackEngine["mediaChanged(const QString &)"].connect(Ui.waveformSlider["drawFile(const QString &)"]);
+		PlaybackEngine["mediaChanged(const QString &)"].connect(Ui.coverWidget["setSource(const QString &)"]);
+		PlaybackEngine["finished()"].connect(Ui.playlistWidget.currentFinished);
+		PlaybackEngine["failed()"].connect(this, "on_failed");
+		Ui.playlistWidget["mediaSet(const QString &)"].connect(PlaybackEngine["setMedia(const QString &)"]);
+		Ui.playlistWidget["currentActivated()"].connect(PlaybackEngine.play);
 
-		this.playbackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
-		this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
-		this.playbackEngine["mediaChanged(const QString &)"].connect(this.coverWidget["setSource(const QString &)"]);
-		this.playbackEngine["finished()"].connect(this.playlistWidget.currentFinished);
-		this.playbackEngine["failed()"].connect(this, "on_failed");
-		this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
-		this.playlistWidget["currentActivated()"].connect(this.playbackEngine.play);
+		Ui.volumeSlider["sliderMoved(qreal)"].connect(PlaybackEngine["setVolume(qreal)"]);
+		PlaybackEngine["volumeChanged(qreal)"].connect(Ui.volumeSlider["setValue(qreal)"]);
 
-		this.volumeSlider["sliderMoved(qreal)"].connect(this.playbackEngine["setVolume(qreal)"]);
-		this.playbackEngine["volumeChanged(qreal)"].connect(this.volumeSlider["setValue(qreal)"]);
+		Ui.waveformSlider["sliderMoved(qreal)"].connect(PlaybackEngine["setPosition(qreal)"]);
+		PlaybackEngine["positionChanged(qreal)"].connect(Ui.waveformSlider["setValue(qreal)"]);
 
-		this.waveformSlider["sliderMoved(qreal)"].connect(this.playbackEngine["setPosition(qreal)"]);
-		this.playbackEngine["positionChanged(qreal)"].connect(this.waveformSlider["setValue(qreal)"]);
+		Ui.dropArea["filesDropped(const QStringList &)"].connect(Ui.playlistWidget["playFiles(const QStringList &)"]);
+		Ui.mainWindow.windowFlags = (Ui.mainWindow.windowFlags | Qt.FramelessWindowHint | Qt.WindowCloseButtonHint) ^ (Qt.WindowTitleHint | Qt.Dialog);
 
-		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["playFiles(const QStringList &)"]);
-		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.FramelessWindowHint | Qt.WindowCloseButtonHint) ^ (Qt.WindowTitleHint | Qt.Dialog);
+		Ui.closeButton.clicked.connect(Ui.mainWindow.close);
+		Ui.minimizeButton.clicked.connect(Ui.mainWindow.showMinimized);
 
-		this.closeButton.clicked.connect(this.mainWindow.close);
-		this.minimizeButton.clicked.connect(this.mainWindow.showMinimized);
+		Ui.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
+		Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
+		Ui.mainWindow.resized.connect(this, "on_resized");
 
-		this.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
-		this.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
-		this.mainWindow.resized.connect(this, "on_resized");
+		Ui.shadowWidget.setParent(Ui.dropArea);
+		Ui.shadowWidget.setParent(Ui.playlistWidget);
+		Ui.shadowWidget.show();
 
-		this.shadowWidget.setParent(this.dropArea);
-		this.shadowWidget.setParent(this.playlistWidget);
-		this.shadowWidget.show();
-
-		this.splitter = this.mainWindow.findChild("splitter");
-		this.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
+		Ui.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
 
 		if (Q_WS == "mac") {
-			this.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
-
-			var playlistWidget = this.mainWindow.findChild("playlistWidget");
-			playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
-
-			var borderWidget = this.mainWindow.findChild("borderWidget");
-			borderWidget.layout().setContentsMargins(0, 0, 0, 0);
-			borderWidget.styleSheet = "#borderWidget { background: #6e6e6e; }"
-
-			var dropAreaMargins = this.dropArea.layout().contentsMargins();
-
-			var titleLabel = this.mainWindow.findChild("titleLabel");
-			titleLabel.setFontSize(12);
-
-			this.sizeGrip.setParent(borderWidget);
+			Ui.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
+			Ui.playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
+			Ui.borderWidget.layout().setContentsMargins(0, 0, 0, 0);
+			Ui.borderWidget.styleSheet = "#borderWidget { background: #6e6e6e; }"
+			Ui.titleLabel.setFontSize(12);
+			Ui.sizeGrip.setParent(Ui.borderWidget);
 		} else {
-			this.sizeGrip.hide();
-			this.mainWindow.setSizeGripEnabled(true);
+			Ui.sizeGrip.hide();
+			Ui.mainWindow.setSizeGripEnabled(true);
 		}
 
-		if (WS_BUTTOS_SIDE == "left") {
-			var titleBarlLayout = this.mainWindow.findChild("titleBarlLayout");
-			titleBarlLayout.insertWidget(0, this.mainWindow.findChild("closeWrapperOuter"));
-			titleBarlLayout.insertWidget(1, this.mainWindow.findChild("minimizeWrapperOuter"));
-			titleBarlLayout.insertWidget(5, this.mainWindow.findChild("iconLabel"));
+		if (WS_WM_BUTTON_DIRECTION == "left") {
+			Ui.titleWidget.layout().insertWidget(0, Ui.closeWrapperOuter);
+			Ui.titleWidget.layout().insertWidget(1, Ui.minimizeWrapperOuter);
+			Ui.titleWidget.layout().insertWidget(5, Ui.iconLabel);
 		}
 	} catch (err) {
 		print("QtScript: " + err);
 	}
 }
 
-Program.prototype.afterShow = function()
+Main.prototype.afterShow = function()
 {
-	if (this.player.settings().value("SilverSkin/PlaylistVisible", true) == 'false') {
-		this.player.settings().setValue("SilverSkin/PlaylistVisible", false);
-		this.playlistWidget.hide();
-		this.mainWindow.minimumHeight = this.mainWindow.maximumHeight = this.maximumHeight;
-		this.mainWindow.resize(this.mainWindow.width, this.mainWindow.minimumHeigh);
+	if (Settings.value("SilverSkin/PlaylistVisible", true) == 'false') {
+		Settings.setValue("SilverSkin/PlaylistVisible", false);
+		Ui.playlistWidget.hide();
+		Ui.mainWindow.minimumHeight = Ui.mainWindow.maximumHeight = this.maximumHeight;
+		Ui.mainWindow.resize(Ui.mainWindow.width, Ui.mainWindow.minimumHeigh);
 	}
 
-	if (this.player.settings().value("SilverSkin/Splitter"))
-		this.splitter.setSizes(this.player.settings().value("SilverSkin/Splitter"));
+	if (Settings.value("SilverSkin/Splitter"))
+		Ui.splitter.setSizes(Settings.value("SilverSkin/Splitter"));
 }
 
-Program.prototype.on_playButton_clicked = function()
+Main.prototype.on_playButton_clicked = function()
 {
-	if (!this.playlistWidget.hasCurrent())
-		this.playlistWidget.playRow(0);
+	if (!Ui.playlistWidget.hasCurrent())
+		Ui.playlistWidget.playRow(0);
 	else
-		this.playbackEngine.play(); // toggle play/pause
+		PlaybackEngine.play(); // toggle play/pause
 }
 
-Program.prototype.on_stateChanged = function(state)
+Main.prototype.on_stateChanged = function(state)
 {
 	if (state == N.PlaybackPlaying)
-		this.playButton.styleSheet = "qproperty-icon: url(pause.png)";
+		Ui.playButton.styleSheet = "qproperty-icon: url(pause.png)";
 	else
-		this.playButton.styleSheet = "qproperty-icon: url(play.png)";
+		Ui.playButton.styleSheet = "qproperty-icon: url(play.png)";
 
-	this.waveformSlider.setPausedState(state == N.PlaybackPaused);
+	Ui.waveformSlider.setPausedState(state == N.PlaybackPaused);
 }
 
-Program.prototype.on_failed = function()
+Main.prototype.on_failed = function()
 {
-	this.playlistWidget.currentFailed();
-	this.playlistWidget.playNextRow();
+	Ui.playlistWidget.currentFailed();
+	Ui.playlistWidget.playNextRow();
 }
 
-Program.prototype.on_resized = function()
+Main.prototype.on_resized = function()
 {
 	if (Q_WS == "mac") {
-		this.sizeGrip.move(this.sizeGrip.parentWidget().width -
-		                   this.sizeGrip.width - 5,
-		                   this.sizeGrip.parentWidget().height -
-		                   this.sizeGrip.height - 4);
+		Ui.sizeGrip.move(Ui.sizeGrip.parentWidget().width -
+		                 Ui.sizeGrip.width - 5,
+		                 Ui.sizeGrip.parentWidget().height -
+		                 Ui.sizeGrip.height - 4);
 	}
 
-	this.shadowWidget.resize(this.playlistWidget.width, this.shadowWidget.height);
+	Ui.shadowWidget.resize(Ui.playlistWidget.width, Ui.shadowWidget.height);
 }
 
-Program.prototype.on_splitterMoved = function(pos, index)
+Main.prototype.on_splitterMoved = function(pos, index)
 {
-	this.player.settings().setValue("SilverSkin/Splitter", this.splitter.sizes());
+	Settings.setValue("SilverSkin/Splitter", Ui.splitter.sizes());
 }
 
-Program.prototype.setTitle = function(title)
+Main.prototype.setTitle = function(title)
 {
-	this.titleLabel.text = title;
-	this.titleLabel.toolTip = title;
+	Ui.titleLabel.text = title;
+	Ui.titleLabel.toolTip = title;
 }
 
-Program.prototype.on_fullScreenEnabled = function(enabled)
+Main.prototype.on_fullScreenEnabled = function(enabled)
 {
-	this.playlistContainer.setVisible(!enabled);
-	this.controlsContainer.setVisible(!enabled);
-	this.titleWidget.setVisible(!enabled);
+	Ui.playlistContainer.setVisible(!enabled);
+	Ui.controlsContainer.setVisible(!enabled);
+	Ui.titleWidget.setVisible(!enabled);
 }
 

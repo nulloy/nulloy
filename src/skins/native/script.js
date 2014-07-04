@@ -13,146 +13,124 @@
 **
 *********************************************************************/
 
-function Program(player)
+function Main()
 {
 	try {
-		this.player = player;
-		this.mainWindow = player.mainWindow();
-		this.playbackEngine = player.playbackEngine();
-		this.playlistWidget = this.mainWindow.findChild("playlistWidget");
-		this.dropArea = this.mainWindow.findChild("dropArea");
-		this.playButton = this.mainWindow.findChild("playButton");
-		this.stopButton = this.mainWindow.findChild("stopButton");
-		this.prevButton = this.mainWindow.findChild("prevButton");
-		this.nextButton = this.mainWindow.findChild("nextButton");
-		this.volumeSlider = this.mainWindow.findChild("volumeSlider");
-		this.waveformSlider = this.mainWindow.findChild("waveformSlider");
-		this.coverWidget = this.mainWindow.findChild("coverWidget");
-		this.controlsContainer = this.mainWindow.findChild("controlsContainer");
-		this.playlistContainer = this.mainWindow.findChild("playlistContainer");
+		Ui.repeatCheckBox["clicked(bool)"].connect(Ui.playlistWidget["setRepeatMode(bool)"]);
+		Ui.playlistWidget["repeatModeChanged(bool)"].connect(Ui.repeatCheckBox["setChecked(bool)"]);
+		Ui.repeatCheckBox.setChecked(Ui.playlistWidget.repeatMode());
 
-		this.repeatCheckBox = this.mainWindow.findChild("repeatCheckBox");
-		this.repeatCheckBox["clicked(bool)"].connect(this.playlistWidget["setRepeatMode(bool)"]);
-		this.playlistWidget["repeatModeChanged(bool)"].connect(this.repeatCheckBox["setChecked(bool)"]);
-		this.repeatCheckBox.setChecked(this.playlistWidget.repeatMode());
+		Ui.shuffleCheckBox["clicked(bool)"].connect(Ui.playlistWidget["setShuffleMode(bool)"]);
+		Ui.playlistWidget["shuffleModeChanged(bool)"].connect(Ui.shuffleCheckBox["setChecked(bool)"]);
 
-		this.shuffleCheckBox = this.mainWindow.findChild("shuffleCheckBox");
-		this.shuffleCheckBox["clicked(bool)"].connect(this.playlistWidget["setShuffleMode(bool)"]);
-		this.playlistWidget["shuffleModeChanged(bool)"].connect(this.shuffleCheckBox["setChecked(bool)"]);
+		Ui.playButton.clicked.connect(this, "on_playButton_clicked");
+		Ui.stopButton.clicked.connect(PlaybackEngine.stop);
+		Ui.prevButton.clicked.connect(Ui.playlistWidget.playPreviousRow);
+		Ui.nextButton.clicked.connect(Ui.playlistWidget.playNextRow);
 
-		this.playButton.clicked.connect(this, "on_playButton_clicked");
-		this.stopButton.clicked.connect(this.playbackEngine.stop);
-		this.prevButton.clicked.connect(this.playlistWidget.playPreviousRow);
-		this.nextButton.clicked.connect(this.playlistWidget.playNextRow);
+		Ui.playButton.setStandardIcon("media-playback-start", ":play.png");
+		Ui.stopButton.setStandardIcon("media-playback-stop", ":stop.png");
+		Ui.prevButton.setStandardIcon("media-skip-backward", ":prev.png");
+		Ui.nextButton.setStandardIcon("media-skip-forward", ":next.png");
+		Ui.repeatCheckBox.setStandardIcon("media-playlist-repeat", ":repeat.png");
+		Ui.shuffleCheckBox.setStandardIcon("media-playlist-shuffle", ":shuffle.png");
 
-		this.playButton.setStandardIcon("media-playback-start", ":play.png");
-		this.stopButton.setStandardIcon("media-playback-stop", ":stop.png");
-		this.prevButton.setStandardIcon("media-skip-backward", ":prev.png");
-		this.nextButton.setStandardIcon("media-skip-forward", ":next.png");
-		this.repeatCheckBox.setStandardIcon("media-playlist-repeat", ":repeat.png");
-		this.shuffleCheckBox.setStandardIcon("media-playlist-shuffle", ":shuffle.png");
+		Ui.volumeSlider.minimum = 0;
+		Ui.volumeSlider.maximum = 100;
 
-		this.volumeSlider.minimum = 0;
-		this.volumeSlider.maximum = 100;
+		Ui.waveformSlider.minimum = 0;
+		Ui.waveformSlider.maximum = 10000;
 
-		this.waveformSlider.minimum = 0;
-		this.waveformSlider.maximum = 10000;
+		PlaybackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
+		PlaybackEngine["mediaChanged(const QString &)"].connect(Ui.waveformSlider["drawFile(const QString &)"]);
+		PlaybackEngine["mediaChanged(const QString &)"].connect(Ui.coverWidget["setSource(const QString &)"]);
+		PlaybackEngine["finished()"].connect(Ui.playlistWidget.currentFinished);
+		PlaybackEngine["failed()"].connect(this, "on_failed");
+		Ui.playlistWidget["mediaSet(const QString &)"].connect(PlaybackEngine["setMedia(const QString &)"]);
+		Ui.playlistWidget["currentActivated()"].connect(PlaybackEngine.play);
 
-		this.playbackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
-		this.playbackEngine["mediaChanged(const QString &)"].connect(this.waveformSlider["drawFile(const QString &)"]);
-		this.playbackEngine["mediaChanged(const QString &)"].connect(this.coverWidget["setSource(const QString &)"]);
-		this.playbackEngine["finished()"].connect(this.playlistWidget.currentFinished);
-		this.playbackEngine["failed()"].connect(this, "on_failed");
-		this.playlistWidget["mediaSet(const QString &)"].connect(this.playbackEngine["setMedia(const QString &)"]);
-		this.playlistWidget["currentActivated()"].connect(this.playbackEngine.play);
+		Ui.volumeSlider["sliderMoved(qreal)"].connect(PlaybackEngine["setVolume(qreal)"]);
+		PlaybackEngine["volumeChanged(qreal)"].connect(Ui.volumeSlider["setValue(qreal)"]);
 
-		this.volumeSlider["sliderMoved(qreal)"].connect(this.playbackEngine["setVolume(qreal)"]);
-		this.playbackEngine["volumeChanged(qreal)"].connect(this.volumeSlider["setValue(qreal)"]);
+		Ui.waveformSlider["sliderMoved(qreal)"].connect(PlaybackEngine["setPosition(qreal)"]);
+		PlaybackEngine["positionChanged(qreal)"].connect(Ui.waveformSlider["setValue(qreal)"]);
 
-		this.waveformSlider["sliderMoved(qreal)"].connect(this.playbackEngine["setPosition(qreal)"]);
-		this.playbackEngine["positionChanged(qreal)"].connect(this.waveformSlider["setValue(qreal)"]);
+		Ui.dropArea["filesDropped(const QStringList &)"].connect(Ui.playlistWidget["playFiles(const QStringList &)"]);
+		Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
+		Ui.mainWindow.windowFlags = (Ui.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
 
-		this.dropArea["filesDropped(const QStringList &)"].connect(this.playlistWidget["playFiles(const QStringList &)"]);
-		this.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
-		this.mainWindow.windowFlags = (this.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
-
-		this.splitter = this.mainWindow.findChild("splitter");
-		this.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
+		Ui.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
 
 		if (Q_WS == "mac") {
-			this.mainWindow.styleSheet = "";
-			this.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
+			Ui.mainWindow.styleSheet = "";
+			Ui.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
 
-			var playlistWidget = this.mainWindow.findChild("playlistWidget");
-			playlistWidget.styleSheet = "";
-			playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
+			Ui.playlistWidget.styleSheet = "";
+			Ui.playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
 
-			this.dropArea.layout().setContentsMargins(10, 7, 10, 7);
-			this.dropArea.layout().setSpacing(7);
+			Ui.dropArea.layout().setContentsMargins(10, 7, 10, 7);
+			Ui.dropArea.layout().setSpacing(7);
 
-			var buttonsLayout = this.mainWindow.findChild("buttonsLayout");
-			var margins = buttonsLayout.contentsMargins();
+			var margins = Ui.controlsContainer.layout().contentsMargins();
 			margins.right = 7;
-			buttonsLayout.setContentsMargins(margins);
+			Ui.controlsContainer.layout().setContentsMargins(margins);
 
-			var buttons = new Array(this.playButton, this.stopButton, this.prevButton, this.nextButton);
+			var buttons = new Array(Ui.playButton, Ui.stopButton, Ui.prevButton, Ui.nextButton);
 			for (var i = 0; i < buttons.length; ++i) {
 				buttons[i].minimumWidth += 15;
 				buttons[i].minimumHeight = 32;
 			}
 
-			var line = this.mainWindow.findChild("line");
-			line.styleSheet = "QFrame:active { background: #8e8e8e; }";
-			line.maximumHeight = 2;
+			Ui.line.styleSheet = "QFrame:active { background: #8e8e8e; }";
+			Ui.line.maximumHeight = 2;
 
-			this.mainWindow.setSizeGripEnabled(false);
+			Ui.mainWindow.setSizeGripEnabled(false);
 		} else {
-			this.mainWindow.setSizeGripEnabled(true);
+			Ui.mainWindow.setSizeGripEnabled(true);
 		}
 	} catch (err) {
 		print("QtScript: " + err);
 	}
 }
 
-Program.prototype.afterShow = function()
+Main.prototype.afterShow = function()
 {
-	if (this.player.settings().value("NativeSkin/Splitter"))
-		this.splitter.setSizes(this.player.settings().value("NativeSkin/Splitter"));
+	if (Settings.value("NativeSkin/Splitter"))
+		Ui.splitter.setSizes(Settings.value("NativeSkin/Splitter"));
 }
 
-Program.prototype.on_splitterMoved = function(pos, index)
+Main.prototype.on_splitterMoved = function(pos, index)
 {
-	this.player.settings().setValue("NativeSkin/Splitter", this.splitter.sizes());
+	Settings.setValue("NativeSkin/Splitter", Ui.splitter.sizes());
 }
 
-Program.prototype.on_playButton_clicked = function()
+Main.prototype.on_playButton_clicked = function()
 {
-	if (!this.playlistWidget.hasCurrent())
-		this.playlistWidget.playRow(0);
+	if (!Ui.playlistWidget.hasCurrent())
+		Ui.playlistWidget.playRow(0);
 	else
-		this.playbackEngine.play(); // toggle play/pause
+		PlaybackEngine.play(); // toggle play/pause
 }
 
-Program.prototype.on_stateChanged = function(state)
+Main.prototype.on_stateChanged = function(state)
 {
 	if (state == N.PlaybackPlaying)
-		this.playButton.setStandardIcon("media-playback-pause", ":pause.png");
+		Ui.playButton.setStandardIcon("media-playback-pause", ":pause.png");
 	else
-		this.playButton.setStandardIcon("media-playback-start", ":play.png");
+		Ui.playButton.setStandardIcon("media-playback-start", ":play.png");
 
-	this.waveformSlider.setPausedState(state == N.PlaybackPaused);
+	Ui.waveformSlider.setPausedState(state == N.PlaybackPaused);
 }
 
-Program.prototype.on_failed = function()
+Main.prototype.on_failed = function()
 {
-	this.playlistWidget.currentFailed();
-	this.playlistWidget.playNextRow();
+	Ui.playlistWidget.currentFailed();
+	Ui.playlistWidget.playNextRow();
 }
 
-Program.prototype.on_fullScreenEnabled = function(enabled)
+Main.prototype.on_fullScreenEnabled = function(enabled)
 {
-	this.controlsContainer.setVisible(!enabled);
-	this.playlistContainer.setVisible(!enabled);
-	this.titleWidget.setVisible(!enabled);
+	Ui.controlsContainer.setVisible(!enabled);
+	Ui.playlistContainer.setVisible(!enabled);
 }
 

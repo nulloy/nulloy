@@ -72,8 +72,8 @@ void NMainWindow::init(const QString &uiFile)
 
 	// enabling dragging window from any point
 	QList<QWidget *> widgets = findChildren<QWidget *>();
-	for (int i = 0; i < widgets.size(); ++i)
-		widgets.at(i)->installEventFilter(this);
+	foreach (QWidget *widget, widgets)
+		widget->installEventFilter(this);
 
 	QIcon icon;
 #ifdef Q_WS_X11

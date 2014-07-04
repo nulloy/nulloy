@@ -62,9 +62,8 @@ public:
 	NPlayer();
 	~NPlayer();
 
-	Q_INVOKABLE NMainWindow* mainWindow();
-	Q_INVOKABLE NPlaybackEngineInterface* playbackEngine();
-	Q_INVOKABLE NSettings* settings();
+	NMainWindow* mainWindow();
+	NPlaybackEngineInterface* playbackEngine();
 
 private slots:
 	void loadSettings();

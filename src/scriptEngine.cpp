@@ -18,6 +18,7 @@
 #include "global.h"
 #include "scriptQtPrototypes.h"
 
+#include "player.h"
 #include "mainWindow.h"
 #include "playbackEngineInterface.h"
 #include "settings.h"
@@ -63,12 +64,14 @@ void enumFromScriptValue(const QScriptValue &value, T &en)
 	en = (T)value.toInt32();
 }
 
-NScriptEngine::NScriptEngine(QObject *parent) : QScriptEngine(parent)
+NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
 {
-	QScriptValue Qt = newQMetaObject(QtMetaObject::get());
-	globalObject().setProperty("Qt", Qt);
+	QScriptValue global = globalObject();
 
-	globalObject().setProperty("QT_VERSION", QT_VERSION);
+	QScriptValue Qt = newQMetaObject(QtMetaObject::get());
+	global.setProperty("Qt", Qt);
+
+	global.setProperty("QT_VERSION", QT_VERSION);
 
 	QString ws;
 #if defined Q_WS_MAC
@@ -78,20 +81,20 @@ NScriptEngine::NScriptEngine(QObject *parent) : QScriptEngine(parent)
 #elif defined Q_WS_X11
 	ws = "x11";
 #endif
-	globalObject().setProperty("Q_WS", ws);
+	global.setProperty("Q_WS", ws);
 
-	QString buttons_side = "right";
+	QString direction = "right";
 	if (ws == "mac") {
-		buttons_side = "left";
+		direction = "left";
 	} else if (ws == "x11") {
 		QProcess gconftool;
 		gconftool.start("gconftool-2 --get \"/apps/metacity/general/button_layout\"");
 		gconftool.waitForStarted();
 		gconftool.waitForFinished();
 		if (gconftool.readAll().endsWith(":\n"))
-			buttons_side = "left";
+			direction = "left";
 	}
-	globalObject().setProperty("WS_BUTTOS_SIDE", buttons_side);
+	global.setProperty("WS_WM_BUTTON_DIRECTION", direction);
 
 	qScriptRegisterMetaType(this, NMarginsPrototype::toScriptValue, NMarginsPrototype::fromScriptValue);
 	setDefaultPrototype(qMetaTypeId<QWidget *>(), newQObject(&widgetPrototype));
@@ -101,10 +104,21 @@ NScriptEngine::NScriptEngine(QObject *parent) : QScriptEngine(parent)
 
 	qScriptRegisterMetaType<N::PlaybackState>(this, enumToScriptValue, enumFromScriptValue);
 	QScriptValue N = newQMetaObject(&N::staticMetaObject);
-	globalObject().setProperty("N", N);
+	global.setProperty("N", N);
 
 	qScriptRegisterMetaType<NMainWindow *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
+	QScriptValue ui = newObject();
+	global.setProperty("Ui", ui);
+	NMainWindow *mainWindow = player->mainWindow();
+	QList<QWidget *> widgets = mainWindow->findChildren<QWidget *>();
+	foreach (QWidget *widget, widgets)
+		ui.setProperty(widget->objectName(), newQObject(widget));
+	ui.setProperty(mainWindow->objectName(), newQObject(mainWindow));
+
 	qScriptRegisterMetaType<NPlaybackEngineInterface *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
+	global.setProperty("PlaybackEngine", newQObject(player->playbackEngine()));
+
 	qScriptRegisterMetaType<NSettings *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
+	global.setProperty("Settings", newQObject(NSettings::instance()));
 }
 

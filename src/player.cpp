@@ -99,9 +99,7 @@ NPlayer::NPlayer()
 	m_scriptEngine->evaluate(scriptFile.readAll(), scriptFileName);
 	scriptFile.close();
 
-	QScriptValue constructor = m_scriptEngine->evaluate("Program");
-	QScriptValue playerEngineObject = m_scriptEngine->newQObject(this, QScriptEngine::QtOwnership);
-	QScriptValue skinProgram = constructor.construct(QScriptValueList() << playerEngineObject);
+	QScriptValue skinProgram = m_scriptEngine->evaluate("Main").construct();
 	// << loading skin script
 
 
@@ -379,11 +377,6 @@ NMainWindow* NPlayer::mainWindow()
 NPlaybackEngineInterface* NPlayer::playbackEngine()
 {
 	return m_playbackEngine;
-}
-
-NSettings* NPlayer::settings()
-{
-	return NSettings::instance();
 }
 
 bool NPlayer::eventFilter(QObject *obj, QEvent *event)

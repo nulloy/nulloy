@@ -18,12 +18,12 @@
 
 #include <QScriptEngine>
 
-class QObject;
+class NPlayer;
 
 class NScriptEngine : public QScriptEngine
 {
 public:
-	NScriptEngine(QObject *parent);
+	NScriptEngine(NPlayer *player);
 	virtual ~NScriptEngine() {};
 };
 
