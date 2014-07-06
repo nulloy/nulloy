@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
 	                 &p, SLOT(readMessage(const QString &)));
 
-	if (!NSettings::instance()->value("DiscardPlaylist").toBool()) {
+	if (NSettings::instance()->value("RestorePlaylist").toBool()) {
 		// try to load default playlist (will fail if msg contained files)
 		p.loadDefaultPlaylist();
 	}

@@ -54,7 +54,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.enqueueFilesCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.enqueueFilesCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
-	connect(ui.discardPlaylistCheckBox, SIGNAL(toggled(bool)), ui.startPausedCheckBox, SLOT(setDisabled(bool)));
+	connect(ui.restorePlaylistCheckBox, SIGNAL(toggled(bool)), ui.startPausedCheckBox, SLOT(setEnabled(bool)));
 
 	setWindowTitle(QCoreApplication::applicationName() + tr(" Preferences"));
 
@@ -274,9 +274,9 @@ void NPreferencesDialog::loadSettings()
 	ui.playlistTrackInfoLineEdit->setText(NSettings::instance()->value("PlaylistTrackInfo").toString());
 	ui.windowTrackInfoLineEdit->setText(NSettings::instance()->value("WindowTitleTrackInfo").toString());
 	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("MinimizeToTray").toBool());
-	ui.discardPlaylistCheckBox->setChecked(NSettings::instance()->value("DiscardPlaylist").toBool());
+	ui.restorePlaylistCheckBox->setChecked(NSettings::instance()->value("RestorePlaylist").toBool());
 	ui.startPausedCheckBox->setChecked(NSettings::instance()->value("StartPaused").toBool());
-	ui.startPausedCheckBox->setEnabled(!NSettings::instance()->value("DiscardPlaylist").toBool());
+	ui.startPausedCheckBox->setEnabled(NSettings::instance()->value("RestorePlaylist").toBool());
 	ui.singleInstanceCheckBox->setChecked(NSettings::instance()->value("SingleInstance").toBool());
 	ui.enqueueFilesCheckBox->setChecked(NSettings::instance()->value("EnqueueFiles").toBool());
 	ui.enqueueFilesCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool());
@@ -359,7 +359,7 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("WindowTitleTrackInfo", ui.windowTrackInfoLineEdit->text());
 	NSettings::instance()->setValue("MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
 	NSettings::instance()->setValue("StartPaused", ui.startPausedCheckBox->isChecked());
-	NSettings::instance()->setValue("DiscardPlaylist", ui.discardPlaylistCheckBox->isChecked());
+	NSettings::instance()->setValue("RestorePlaylist", ui.restorePlaylistCheckBox->isChecked());
 	NSettings::instance()->setValue("SingleInstance", ui.singleInstanceCheckBox->isChecked());
 	NSettings::instance()->setValue("EnqueueFiles", ui.enqueueFilesCheckBox->isChecked());
 	NSettings::instance()->setValue("PlayEnqueued", ui.playEnqueuedCheckBox->isChecked());

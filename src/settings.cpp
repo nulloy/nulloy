@@ -62,7 +62,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("AlwaysOnTop", FALSE);
 	initValue("WhilePlayingOnTop", FALSE);
 	initValue("StartPaused", FALSE);
-	initValue("DiscardPlaylist", FALSE);
+	initValue("RestorePlaylist", TRUE);
 	initValue("SingleInstance", TRUE);
 	initValue("EnqueueFiles", TRUE);
 	initValue("PlayEnqueued", TRUE);

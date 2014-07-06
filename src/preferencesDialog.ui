@@ -176,9 +176,9 @@ padding: 5px;</string>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_11">
          <item>
-          <widget class="QCheckBox" name="discardPlaylistCheckBox">
+          <widget class="QCheckBox" name="restorePlaylistCheckBox">
            <property name="text">
-            <string>Discard playlist after restart</string>
+            <string>Restore playlist after restart</string>
            </property>
           </widget>
          </item>

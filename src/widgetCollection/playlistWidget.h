@@ -48,7 +48,6 @@ private:
 	bool m_repeatMode;
 
 	void contextMenuEvent(QContextMenuEvent *event);
-	void setCurrentRow(int row);
 	void setCurrentItem(NPlaylistWidgetItem *item);
 	void activateItem(NPlaylistWidgetItem *item);
 
@@ -69,6 +68,7 @@ public:
 	NPlaylistWidgetItem* item(int row);
 
 	int currentRow();
+	void setCurrentRow(int row);
 	Q_INVOKABLE bool hasCurrent();
 	QModelIndex currentIndex() const;
 	QString currentTitle();
