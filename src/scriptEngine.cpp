@@ -64,6 +64,14 @@ void enumFromScriptValue(const QScriptValue &value, T &en)
 	en = (T)value.toInt32();
 }
 
+QScriptValue readFile(QScriptContext *context, QScriptEngine *engine)
+{
+	QString path = context->argument(0).toString();
+	QFile file(path);
+	file.open(QFile::ReadOnly);
+	return QLatin1String(file.readAll());
+}
+
 NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
 {
 	QScriptValue global = globalObject();
@@ -120,5 +128,7 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
 
 	qScriptRegisterMetaType<NSettings *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
 	global.setProperty("Settings", newQObject(NSettings::instance()));
+
+	globalObject().setProperty("readFile", newFunction(readFile));
 }
 

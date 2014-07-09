@@ -1,0 +1,100 @@
+#titleLabel {
+	color : #3D3D3D;
+}
+#borderWidget {
+	background-color: #1FAEFF;
+}
+
+#splitter {
+	background: #E8E8EB; /* also main skin background */
+}
+
+#playlistWidget {
+	color: #4F4F4F;
+	background: #F9F9FC;
+	qproperty-currentTextColor: #3D3D3D;
+	qproperty-failedTextColor: #565659;
+}
+#playlistWidget::item {
+	background: #F9F9FC;
+}
+#playlistWidget::item:alternate {
+	background: #E8E8EB;
+}
+#playlistWidget::item:selected {
+	color: #4F4F4F;
+	background: #D8E6FF;
+	border-color: #1FAEFF;
+}
+#playlistWidget::item:alternate:selected {
+	background: #C5D1E8;
+}
+#playlistWidget::item:hover {
+	border-color: #1FAEFF;
+}
+#playlistWidget::item:selected:hover {
+	background: #BAD3FF;
+}
+#playlistWidget::item:alternate:selected:hover {
+	background: #A7BDE8;
+}
+
+#playlistWidget QScrollBar::handle {
+	background: #D0D1D7;
+}
+#playlistWidget QScrollBar::handle:hover {
+	background: #78A7FF;
+}
+#playlistWidget QSlider::sub-page:horizontal {
+	background: #757575;
+}
+
+#prevButton, #playButton, #stopButton, #nextButton {
+	background: transparent;
+}
+#playButton:hover, #stopButton:hover,
+#nextButton:hover, #prevButton:hover {
+	border-color: #1FAEFF;
+}
+#playButton:pressed, #stopButton:pressed,
+#nextButton:pressed, #prevButton:pressed {
+	background: #D8E6FF;
+}
+
+#volumeSlider::sub-page:horizontal {
+	background: #C8C9CF;
+}
+#volumeSlider::handle:horizontal {
+	background: #8E8E99;
+}
+#volumeSlider::handle:horizontal:hover {
+	background: #78A7FF;
+}
+#volumeSlider::groove:horizontal {
+	background: #D2D3D9;
+}
+
+#minimizeButton:pressed {
+	background: #D8E6FF;
+}
+#minimizeButton:hover {
+	border-color: #1FAEFF;
+}
+#closeButton:pressed {
+	background: #FFB3A1;
+}
+#closeButton:hover {
+	border-color: #FF7B59;
+}
+
+#TrackInfoWidget QLabel {
+	background: argb(37, 37, 38, 150);
+}
+
+#waveformSlider {
+	qproperty-background: #CDCDD4;
+	qproperty-waveBackground: #1FAEFF;
+	qproperty-waveBorderColor: #0080FF;
+	qproperty-progressBackground: #4BD161;
+	qproperty-pausedBackground: #CE8419;
+}

@@ -79,6 +79,8 @@ function Main()
 			Ui.titleWidget.layout().insertWidget(1, Ui.minimizeButton);
 			Ui.titleWidget.layout().insertWidget(5, Ui.iconLabel);
 		}
+
+		Ui.mainWindow.styleSheet += readFile("skin:light.css");
 	} catch (err) {
 		print("QtScript: " + err);
 	}

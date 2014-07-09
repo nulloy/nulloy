@@ -52,7 +52,7 @@
 	border: 1 solid transparent;
 }
 #playlistWidget::item:alternate {
-	background: #2D2D2E;
+	background: #2D2D30;
 }
 #playlistWidget::item:selected {
 	background: #2C3A52;
@@ -198,6 +198,17 @@
 }
 #TrackInfoWidget #middleCenter {
 	padding-bottom: 2;
+}
+
+#waveformSlider {
+	qproperty-radius: 0;
+	background: #252526;
+	background-image: url(grid.png);
+	qproperty-background: #252526;
+	qproperty-waveBackground: #1B58B8;
+	qproperty-waveBorderColor: #1FAEFF;
+	qproperty-progressBackground: #15992A;
+	qproperty-pausedBackground: #CE8419;
 }</string>
   </property>
   <property name="sizeGripEnabled">
@@ -860,21 +871,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="NWaveformSlider" name="waveformSlider" native="true">
-                 <property name="styleSheet">
-                  <string notr="true">#waveformSlider {
-	qproperty-radius: 0;
-	background: #252526;
-	background-image: url(grid.png);
-	qproperty-background: #252526;
-	qproperty-waveBackground: #1B58B8;
-	qproperty-waveBorderColor: #1FAEFF;
-	qproperty-progressBackground: #15992A;
-	qproperty-pausedBackground: #ce8419;
-}
-              </string>
-                 </property>
-                </widget>
+                <widget class="NWaveformSlider" name="waveformSlider" native="true"/>
                </item>
               </layout>
              </item>
@@ -1339,11 +1336,6 @@ margin: 2px 17px;
    <header>playlistWidget.h</header>
   </customwidget>
   <customwidget>
-   <class>NCoverWidget</class>
-   <extends>QLabel</extends>
-   <header>coverWidget.h</header>
-  </customwidget>
-  <customwidget>
    <class>NLabel</class>
    <extends>QLabel</extends>
    <header>label.h</header>
@@ -1353,6 +1345,11 @@ margin: 2px 17px;
    <extends>QWidget</extends>
    <header>qsizegrip.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>NCoverWidget</class>
+   <extends>QLabel</extends>
+   <header>coverWidget.h</header>
   </customwidget>
   <customwidget>
    <class>NVolumeSlider</class>
