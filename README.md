@@ -1,4 +1,4 @@
-# Nulloy Music Player http://nulloy.com
+# ![logo](src/icons/icon-32.png) Nulloy Music Player http://nulloy.com
 
 [![Build Status](https://travis-ci.org/sergey-vlasov/nulloy.svg?branch=devel)](https://travis-ci.org/sergey-vlasov/nulloy)
 
