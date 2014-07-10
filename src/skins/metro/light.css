@@ -74,10 +74,12 @@
 	background: #D2D3D9;
 }
 
-#minimizeButton:pressed {
+#minimizeButton:pressed,
+#themeButton:pressed {
 	background: #D8E6FF;
 }
-#minimizeButton:hover {
+#minimizeButton:hover,
+#themeButton:hover {
 	border-color: #1FAEFF;
 }
 #closeButton:pressed {

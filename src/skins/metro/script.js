@@ -15,6 +15,10 @@
 function Main()
 {
 	try {
+		this.darkTheme = Ui.mainWindow.styleSheet;
+		this.lightTheme = readFile("skin:light.css");
+		Ui.themeButton.clicked.connect(this, "on_themeButton_clicked");
+
 		Ui.repeatCheckBox["clicked(bool)"].connect(Ui.playlistWidget["setRepeatMode(bool)"]);
 		Ui.playlistWidget["repeatModeChanged(bool)"].connect(Ui.repeatCheckBox["setChecked(bool)"]);
 		Ui.repeatCheckBox.setChecked(Ui.playlistWidget.repeatMode());
@@ -75,12 +79,12 @@ function Main()
 		}
 
 		if (WS_WM_BUTTON_DIRECTION == "left") {
+			Ui.titleWidget.layout().insertWidget(0, Ui.minimizeButton);
 			Ui.titleWidget.layout().insertWidget(0, Ui.closeButton);
-			Ui.titleWidget.layout().insertWidget(1, Ui.minimizeButton);
-			Ui.titleWidget.layout().insertWidget(5, Ui.iconLabel);
+			Ui.titleWidget.layout().insertWidget(10, Ui.themeButton);
+			Ui.titleWidget.layout().insertWidget(10, Ui.themeButtonSpacer);
+			Ui.titleWidget.layout().insertWidget(10, Ui.iconLabel);
 		}
-
-		Ui.mainWindow.styleSheet += readFile("skin:light.css");
 	} catch (err) {
 		print("QtScript: " + err);
 	}
@@ -159,3 +163,10 @@ Main.prototype.setBorderVisible = function(enabled)
 		Ui.borderWidget.layout().setContentsMargins(0, 0, 0, 0);
 }
 
+Main.prototype.on_themeButton_clicked = function()
+{
+	if (Ui.themeButton.checked)
+		Ui.mainWindow.styleSheet = this.darkTheme + this.lightTheme;
+	else
+		Ui.mainWindow.styleSheet = this.darkTheme;
+}
