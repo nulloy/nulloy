@@ -47,6 +47,7 @@ private:
 	void mouseMoveEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
 	void paintEvent(QPaintEvent *event);
+	void changeEvent(QEvent *event);
 	void init();
 
 public:
@@ -75,6 +76,7 @@ private:
 	QColor m_waveBorderColor;
 	QBrush m_progressBackground;
 	QBrush m_pausedBackground;
+	bool m_needsUpdate;
 
 public:
 	int getRadius();

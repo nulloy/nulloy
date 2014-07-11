@@ -72,6 +72,7 @@ void NWaveformSlider::init()
 	m_oldIndex = -1;
 	m_oldBuildPos = -1;
 	m_pausedState = FALSE;
+	m_needsUpdate = FALSE;
 	setEnabled(FALSE);
 
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
@@ -91,18 +92,18 @@ void NWaveformSlider::checkForUpdate()
 	if (!m_waveBuilder)
 		return;
 
-	bool needsUpdate = FALSE;
 	if (m_oldValue != value() || m_oldSize != size())
-		needsUpdate = TRUE;
+		m_needsUpdate = TRUE;
 
 	float pos;
 	int index;
 	m_waveBuilder->positionAndIndex(pos, index);
 
-	if (!(pos < 0 || index < 0) &&
-	    !(m_oldBuildPos == pos &&
-	    m_oldIndex == index &&
-	    m_waveImage.size() == size()))
+	if ((!(pos < 0 || index < 0) &&
+	     !(m_oldBuildPos == pos &&
+	     m_oldIndex == index &&
+	     m_waveImage.size() == size())) ||
+	    m_needsUpdate)
 	{
 		m_oldBuildPos = pos;
 		m_oldIndex = index;
@@ -135,12 +136,11 @@ void NWaveformSlider::checkForUpdate()
 		fullPath.connectPath(pathPos.toReversed());
 		fullPath.closeSubpath();
 		painter.drawPath(fullPath);
-
-		needsUpdate = TRUE;
 	}
 
-	if (needsUpdate)
+	if (m_needsUpdate)
 		update();
+	m_needsUpdate = FALSE;
 }
 
 void NWaveformSlider::mouseMoveEvent(QMouseEvent *event)
@@ -293,6 +293,13 @@ void NWaveformSlider::mousePressEvent(QMouseEvent *event)
 void NWaveformSlider::wheelEvent(QWheelEvent *event)
 {
 	event->accept();
+}
+
+void NWaveformSlider::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::StyleChange)
+		m_needsUpdate = TRUE;
+	QWidget::changeEvent(event);
 }
 
 void NWaveformSlider::setValue(qreal value)
