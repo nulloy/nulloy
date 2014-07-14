@@ -82,7 +82,6 @@ function Main()
 			Ui.titleWidget.layout().insertWidget(0, Ui.minimizeButton);
 			Ui.titleWidget.layout().insertWidget(0, Ui.closeButton);
 			Ui.titleWidget.layout().insertWidget(10, Ui.themeButton);
-			Ui.titleWidget.layout().insertWidget(10, Ui.themeButtonSpacer);
 			Ui.titleWidget.layout().insertWidget(10, Ui.iconLabel);
 		}
 	} catch (err) {

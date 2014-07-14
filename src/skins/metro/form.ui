@@ -697,7 +697,7 @@
                </property>
                <layout class="QHBoxLayout" name="titleBarlLayout">
                 <property name="spacing">
-                 <number>0</number>
+                 <number>5</number>
                 </property>
                 <property name="margin">
                  <number>0</number>
@@ -719,32 +719,16 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QWidget" name="themeButtonSpacer" native="true">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>10</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item>
                  <widget class="QToolButton" name="themeButton">
                   <property name="minimumSize">
                    <size>
-                    <width>22</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>40</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
@@ -767,22 +751,6 @@
                    <bool>true</bool>
                   </property>
                  </widget>
-                </item>
-                <item>
-                 <spacer name="titleBarSpacer_4">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>10</width>
-                    <height>25</height>
-                   </size>
-                  </property>
-                 </spacer>
                 </item>
                 <item>
                  <spacer name="titleBarSpacer_2">
@@ -846,32 +814,16 @@
                  </spacer>
                 </item>
                 <item>
-                 <spacer name="titleBarSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>10</width>
-                    <height>25</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
                  <widget class="QToolButton" name="minimizeButton">
                   <property name="minimumSize">
                    <size>
-                    <width>40</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>40</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
@@ -893,13 +845,13 @@
                  <widget class="QToolButton" name="closeButton">
                   <property name="minimumSize">
                    <size>
-                    <width>40</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>40</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
