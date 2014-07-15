@@ -17,111 +17,57 @@
 
 #include "tagReaderInterface.h"
 #include "settings.h"
+#include "pluginLoader.h"
 
-#include <QGraphicsProxyWidget>
-#include <QGraphicsSceneMouseEvent>
-#include <QGraphicsView>
-#include <QPropertyAnimation>
 #include <QTime>
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
 
 NTrackInfoWidget::~NTrackInfoWidget() {}
 
 NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
 {
-	m_container = new QWidget;
-	ui.setupUi(m_container);
+	ui.setupUi(this);
 
-	m_container->setStyleSheet(m_container->styleSheet() + "#TrackInfoWidget { background: transparent }");
-	m_container->layout()->setContentsMargins(2, 2, 2, 2);
-	m_container->installEventFilter(this);
+	setMouseTracking(TRUE);
 
-	m_scene = new QGraphicsScene;
-	m_scene->installEventFilter(this);
-	m_proxy = m_scene->addWidget(m_container);
+	m_effect = new QGraphicsOpacityEffect(this);
+	m_effect->setOpacity(1.0);
+	setGraphicsEffect(m_effect);
 
-	m_view = new QGraphicsView(this);
-	m_view->setStyleSheet("border: 0 solid");
-	m_view->viewport()->setAutoFillBackground(false);
-	m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	m_view->setScene(m_scene);
-
-	m_animation = new QPropertyAnimation(m_proxy, "opacity", this);
+	m_animation = new QPropertyAnimation(m_effect, "opacity", this);
 	m_animation->setDuration(100);
 	m_animation->setEasingCurve(QEasingCurve::OutQuad);
-	m_animation->setStartValue(1);
-	m_animation->setEndValue(0);
+	m_animation->setStartValue(1.0);
+	m_animation->setEndValue(0.0);
 
 	readSettings();
 }
 
-QString NTrackInfoWidget::styleSheet() const
+void NTrackInfoWidget::enterEvent(QEvent *)
 {
-	return m_container->styleSheet();
-}
-
-void NTrackInfoWidget::setStyleSheet(const QString &stylesheet)
-{
-	m_container->setStyleSheet(stylesheet);
-}
-
-bool NTrackInfoWidget::eventFilter(QObject *object, QEvent *event)
-{
-	Q_UNUSED(object);
-	if (event->type() == QEvent::DragEnter || event->type() == QEvent::Leave)
-		QApplication::sendEvent(parent(), event);
-
-	if (event->type() == QEvent::GraphicsSceneMouseMove) {
-		QGraphicsSceneMouseEvent *gfx_event = static_cast<QGraphicsSceneMouseEvent*>(event);
-		QMouseEvent mouse_event(QEvent::MouseMove, gfx_event->scenePos().toPoint(), gfx_event->screenPos(), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
-		QApplication::sendEvent(parent(), &mouse_event);
-	}
-
-	return FALSE;
-}
-
-void NTrackInfoWidget::resizeEvent(QResizeEvent *event)
-{
-	Q_UNUSED(event);
-
-	m_view->resize(size());
-	m_proxy->resize(size());
-	m_scene->setSceneRect(m_proxy->rect());
-}
-
-void NTrackInfoWidget::enterEvent(QEvent *event)
-{
-	Q_UNUSED(event);
-
 	m_animation->setDirection(QAbstractAnimation::Forward);
 	if (m_animation->state() == QAbstractAnimation::Stopped)
 		m_animation->start();
 }
 
-void NTrackInfoWidget::leaveEvent(QEvent *event)
+void NTrackInfoWidget::leaveEvent(QEvent *)
 {
-	Q_UNUSED(event);
-
 	m_animation->setDirection(QAbstractAnimation::Backward);
 	if (m_animation->state() == QAbstractAnimation::Stopped)
 		m_animation->start();
 }
 
-void NTrackInfoWidget::setTagReader(NTagReaderInterface *tagReader)
-{
-	m_tagReader = tagReader;
-	updateInfo();
-}
-
 void NTrackInfoWidget::updateInfo()
 {
-	if (!m_tagReader->isValid()) {
-		QList<QLabel *> labels = m_container->findChildren<QLabel *>();
+	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+	if (!tagReader->isValid()) {
+		QList<QLabel *> labels = findChildren<QLabel *>();
 		foreach (QLabel *label, labels)
 			label->hide();
 	} else {
 		foreach (QLabel *label, m_map.keys()) {
-			QString info = m_tagReader->toString(m_map[label]);
+			QString info = tagReader->toString(m_map[label]);
 			if (!info.isEmpty()) {
 				label->setText(info);
 				label->show();
@@ -134,12 +80,9 @@ void NTrackInfoWidget::updateInfo()
 
 void NTrackInfoWidget::readSettings()
 {
-	QList<QLabel *> labels = m_container->findChildren<QLabel *>();
+	QList<QLabel *> labels = findChildren<QLabel *>();
 	for (int i = 0; i < labels.size(); ++i) {
-		QString objecName = labels.at(i)->objectName();
-		objecName[0] = objecName.at(0).toUpper();
-		QString format = NSettings::instance()->value("TrackInfo/" + objecName).toString();
-
+		QString format = NSettings::instance()->value("TrackInfo/" + labels.at(i)->objectName()).toString();
 		if (!format.isEmpty()) {
 			if (!format.contains("%T") && !format.contains("%r"))
 				m_map[labels.at(i)] = format;
@@ -154,7 +97,8 @@ void NTrackInfoWidget::readSettings()
 
 void NTrackInfoWidget::tick(qint64 msec)
 {
-	int total = m_tagReader->toString("%D").toInt();
+	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+	int total = tagReader->toString("%D").toInt();
 	int hours = total / 60 / 60;
 	QTime current = QTime().addMSecs(msec);
 	QTime remaining = QTime().addMSecs(total * 1000 - msec);
@@ -168,9 +112,8 @@ void NTrackInfoWidget::tick(qint64 msec)
 			text.replace("%r", remaining.toString("m:ss"));
 		}
 		if (text.contains("%"))
-			text = m_tagReader->toString(text);
+			text = tagReader->toString(text);
 		label->setText(text);
 		label->show();
 	}
 }
-

@@ -110,9 +110,6 @@ NPlayer::NPlayer()
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
 
 	m_trackInfoWidget = new NTrackInfoWidget();
-	m_trackInfoWidget->setStyleSheet(m_trackInfoWidget->styleSheet() + m_mainWindow->styleSheet());
-	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-	m_trackInfoWidget->setTagReader(tagReader);
 	QVBoxLayout *trackInfoLayout = new QVBoxLayout;
 	trackInfoLayout->setContentsMargins(0, 0, 0, 0);
 	trackInfoLayout->addWidget(m_trackInfoWidget);
