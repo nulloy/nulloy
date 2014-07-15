@@ -17,6 +17,7 @@
 #define N_GLOBAL_H
 
 #include <QtCore>
+#include <QPainter>
 
 template <typename T>
 class NFlagIterator
@@ -33,7 +34,8 @@ private:
 	unsigned mFlag;
 };
 
-#define ENUM_NAME(c,e,v) (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).valueToKey((v)))
+#define ENUM_TO_STR(c,e,v) (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).valueToKey(v))
+#define STR_TO_ENUM(c,e,k) (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).keyToValue(k))
 
 #ifndef Q_MOC_RUN
 namespace N
@@ -45,6 +47,7 @@ class N
 	Q_GADGET
 	Q_ENUMS(PlaybackState)
 	Q_ENUMS(PluginType)
+	Q_ENUMS(CompositionMode)
 public:
 #endif
 
@@ -79,6 +82,21 @@ public:
 
 	Q_DECLARE_FLAGS(PluginTypeFlags, PluginType)
 	Q_DECLARE_OPERATORS_FOR_FLAGS(PluginTypeFlags)
+
+	enum CompositionMode {
+		Plus       = QPainter::CompositionMode_Plus,
+		Multiply   = QPainter::CompositionMode_Multiply,
+		Screen     = QPainter::CompositionMode_Screen,
+		Overlay    = QPainter::CompositionMode_Overlay,
+		Darken     = QPainter::CompositionMode_Darken,
+		Lighten    = QPainter::CompositionMode_Lighten,
+		ColorDodge = QPainter::CompositionMode_ColorDodge,
+		ColorBurn  = QPainter::CompositionMode_ColorBurn,
+		HardLight  = QPainter::CompositionMode_HardLight,
+		SoftLight  = QPainter::CompositionMode_SoftLight,
+		Difference = QPainter::CompositionMode_Difference,
+		Exclusion  = QPainter::CompositionMode_Exclusion
+	};
 
 	extern const QMetaObject staticMetaObject;
 };

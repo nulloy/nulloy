@@ -211,6 +211,7 @@
 	qproperty-waveBorderColor: #1FAEFF;
 	qproperty-progressBackground: #15992A;
 	qproperty-pausedBackground: #CE8419;
+	qproperty-progressCompositionMode: Overlay;
 }</string>
   </property>
   <property name="sizeGripEnabled">

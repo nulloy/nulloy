@@ -18,6 +18,7 @@
 
 #include <QAbstractSlider>
 #include <QVector>
+#include <QPainter>
 
 class NWaveformBuilderInterface;
 
@@ -30,6 +31,8 @@ class NWaveformSlider : public QAbstractSlider
 	Q_PROPERTY(QColor waveBorderColor READ getWaveBorderColor WRITE setWaveBorderColor DESIGNABLE true)
 	Q_PROPERTY(QBrush progressBackground READ getProgressBackground WRITE setProgressBackground DESIGNABLE true)
 	Q_PROPERTY(QBrush pausedBackground READ getPausedBackground WRITE setPausedBackground DESIGNABLE true)
+	Q_PROPERTY(QString progressCompositionMode READ getProgressCompositionMode WRITE setProgressCompositionMode DESIGNABLE true)
+	Q_PROPERTY(QString pausedCompositionMode READ getPausedCompositionMode WRITE setPausedCompositionMode DESIGNABLE true)
 
 private:
 	NWaveformBuilderInterface *m_waveBuilder;
@@ -76,6 +79,8 @@ private:
 	QColor m_waveBorderColor;
 	QBrush m_progressBackground;
 	QBrush m_pausedBackground;
+	QPainter::CompositionMode m_progressCompositionMode;
+	QPainter::CompositionMode m_pausedCompositionMode;
 	bool m_needsUpdate;
 
 public:
@@ -96,6 +101,12 @@ public:
 
 	QBrush getPausedBackground();
 	void setPausedBackground(QBrush brush);
+
+	QString getProgressCompositionMode();
+	void setProgressCompositionMode(const QString &mode);
+
+	QString getPausedCompositionMode();
+	void setPausedCompositionMode(const QString &mode);
 };
 
 #endif

@@ -58,7 +58,7 @@ void NPluginLoader::deinit()
 
 NPlugin* NPluginLoader::_findPlugin(N::PluginType type)
 {
-	QString typeString = ENUM_NAME(N, PluginType, type);
+	QString typeString = ENUM_TO_STR(N, PluginType, type);
 	QString settingsContainer = NSettings::instance()->value("Plugins/" + typeString).toString();
 
 	QList<int> indexesFilteredByType;

@@ -196,7 +196,7 @@ QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
 {
 	QList<Descriptor> descriptors = NPluginLoader::descriptors();
 
-	QString typeString = ENUM_NAME(N, PluginType, type);
+	QString typeString = ENUM_TO_STR(N, PluginType, type);
 	QString settingsContainer = NSettings::instance()->value("Plugins/" + typeString).toString();
 
 	QList<int> indexesFilteredByType;
@@ -391,7 +391,7 @@ void NPreferencesDialog::saveSettings()
 	while (iter.hasNext()) {
 		iter.next();
 		N::PluginType type = iter.value();
-		QString typeString = ENUM_NAME(N, PluginType, type);
+		QString typeString = ENUM_TO_STR(N, PluginType, type);
 		QString containerName = selectedContainer(type);
 		if (!containerName.isEmpty())
 			NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);

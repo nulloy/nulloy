@@ -84,6 +84,7 @@ function Main()
 			Ui.titleWidget.layout().insertWidget(10, Ui.themeButton);
 			Ui.titleWidget.layout().insertWidget(10, Ui.iconLabel);
 		}
+		Ui.mainWindow.styleSheet = this.darkTheme + this.lightTheme;
 	} catch (err) {
 		print("QtScript: " + err);
 	}

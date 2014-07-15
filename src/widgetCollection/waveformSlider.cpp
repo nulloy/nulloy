@@ -17,7 +17,6 @@
 #include "waveformBuilderInterface.h"
 
 #include <QMouseEvent>
-#include <QPainter>
 #include <QFile>
 #include <QStylePainter>
 #include <QStyleOptionFocusRect>
@@ -39,6 +38,8 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_waveBorderColor = QColor(Qt::green);
 	m_progressBackground = QBrush(Qt::darkCyan);
 	m_pausedBackground = QBrush(Qt::darkGray);
+	m_progressCompositionMode = QPainter::CompositionMode_Overlay;
+	m_pausedCompositionMode = QPainter::CompositionMode_Overlay;
 
 	setMouseTracking(TRUE);
 
@@ -217,10 +218,14 @@ void NWaveformSlider::paintEvent(QPaintEvent *event)
 		painter.begin(&m_bufImage[3]);
 		// progress rectangle
 		painter.setPen(Qt::NoPen);
-		if (!m_pausedState)
+		QPainter::CompositionMode progressCompositionMode;
+		if (!m_pausedState) {
 			painter.setBrush(m_progressBackground);
-		else
+			progressCompositionMode = m_progressCompositionMode;
+		} else {
 			painter.setBrush(m_pausedBackground);
+			progressCompositionMode = m_pausedCompositionMode;
+		}
 		painter.drawRect(rect().adjusted(0, 0, x - width(), 0));
 		painter.end();
 
@@ -252,7 +257,7 @@ void NWaveformSlider::paintEvent(QPaintEvent *event)
 		painter.drawImage(0, 0, m_bufImage[0]);
 		painter.drawImage(0, 0, m_bufImage[1]);
 		painter.drawImage(0, 0, m_bufImage[5]);
-		painter.setCompositionMode(QPainter::CompositionMode_Overlay);
+		painter.setCompositionMode(progressCompositionMode);
 		painter.drawImage(0, 0, m_bufImage[4]);
 
 		// progress line
@@ -380,3 +385,22 @@ void NWaveformSlider::setPausedBackground(QBrush brush)
 	m_pausedBackground = brush;
 }
 
+QString NWaveformSlider::getProgressCompositionMode()
+{
+	return ENUM_TO_STR(N, CompositionMode, m_progressCompositionMode);
+}
+
+void NWaveformSlider::setProgressCompositionMode(const QString &mode)
+{
+	m_progressCompositionMode = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
+}
+
+QString NWaveformSlider::getPausedCompositionMode()
+{
+	return ENUM_TO_STR(N, CompositionMode, m_pausedCompositionMode);
+}
+
+void NWaveformSlider::setPausedCompositionMode(const QString &mode)
+{
+	m_pausedCompositionMode = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
+}

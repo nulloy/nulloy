@@ -98,5 +98,7 @@
 	qproperty-waveBackground: #1FAEFF;
 	qproperty-waveBorderColor: #0080FF;
 	qproperty-progressBackground: #4BD161;
-	qproperty-pausedBackground: #CE8419;
+	qproperty-pausedBackground: #D9941C;
+	qproperty-progressCompositionMode: Darken;
+	qproperty-pausedCompositionMode: Overlay;
 }
