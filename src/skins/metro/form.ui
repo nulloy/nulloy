@@ -123,19 +123,21 @@
 }
 #prevButtonWrapper, #playButtonWrapper,
 #stopButtonWrapper, #nextButtonWrapper {
-	border: 2px solid #fff;
+	border: 2px solid #FFFFFF;
 	border-radius: 15px;
 	margin: 3px 15px;
 }
 #playButton:hover, #stopButton:hover,
 #nextButton:hover, #prevButton:hover,
-#repeatCheckBox:hover, #shuffleCheckBox:hover {
+#repeatCheckBox:hover, #shuffleCheckBox:hover,
+#minimizeButton:hover, #themeButton:hover {
 	border: 1 solid #5882CF;
 }
 
 #playButton:pressed, #stopButton:pressed,
 #nextButton:pressed, #prevButton:pressed,
-#repeatCheckBox:pressed, #shuffleCheckBox:pressed {
+#repeatCheckBox:pressed, #shuffleCheckBox:pressed,
+#minimizeButton:pressed, #themeButton:pressed {
 	background: rgba(55, 99, 179, 80);
 	padding: 0;
 }
@@ -158,6 +160,17 @@
 	qproperty-icon: url(minimize.png);
 }
 
+#minimizeButton, #closeButton, #themeButton {
+	border: 0;
+}
+#closeButton:pressed {
+	background: #781212;
+	padding: 0;
+}
+#closeButton:hover {
+	border: 1 solid #FF2E12;
+}
+
 #volumeSlider::groove:horizontal {
 	background: #434346;
 	height: 10;
@@ -171,26 +184,6 @@
 }
 #volumeSlider::sub-page:horizontal {
 	background: #5D5D61;
-}
-
-#minimizeButton, #closeButton, #themeButton {
-	border: 0;
-}
-#minimizeButton:pressed,
-#themeButton:pressed {
-	background: #2B4169;
-	padding: 0;
-}
-#minimizeButton:hover,
-#themeButton:hover {
-	border: 1 solid #5882CF;
-}
-#closeButton:pressed {
-	background: #B81B1B;
-	padding: 0;
-}
-#closeButton:hover {
-	border: 1 solid #FF2E12;
 }
 
 NTrackInfoWidget QLabel {

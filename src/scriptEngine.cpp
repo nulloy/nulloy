@@ -17,7 +17,7 @@
 
 #include "global.h"
 #include "scriptQtPrototypes.h"
-
+#include "skinFileSystem.h"
 #include "player.h"
 #include "mainWindow.h"
 #include "playbackEngineInterface.h"
@@ -66,10 +66,51 @@ void enumFromScriptValue(const QScriptValue &value, T &en)
 
 QScriptValue readFile(QScriptContext *context, QScriptEngine *engine)
 {
-	QString path = context->argument(0).toString();
-	QFile file(path);
+	if (context->argumentCount() != 1)
+		return QString();
+
+	QString fileName = context->argument(0).toString();
+
+	QFile file(NSkinFileSystem::prefix() + fileName);
 	file.open(QFile::ReadOnly);
 	return QLatin1String(file.readAll());
+}
+
+QScriptValue maskImage(QScriptContext *context, QScriptEngine *engine)
+{
+	if (context->argumentCount() < 2)
+		return QScriptValue();
+
+	QString fileName = context->argument(0).toString();
+	QColor color(context->argument(1).toString());
+
+	qsreal opacity = 1.0;
+	if (context->argumentCount() == 3)
+		opacity = context->argument(2).toNumber();
+
+	QPixmap mask(NSkinFileSystem::prefix() + fileName);
+	QPixmap pixmap(mask.size());
+	color.setAlpha(254);
+	pixmap.fill(color);
+
+	QPainter painter(&pixmap);
+	painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+	painter.drawPixmap(mask.rect(), mask);
+
+	if (opacity != 1.0) {
+		QPixmap copy(pixmap);
+		pixmap.fill(QColor(255, 255, 255, 0));
+		painter.setCompositionMode(QPainter::CompositionMode_Source);
+		painter.setOpacity(opacity);
+		painter.drawPixmap(copy.rect(), copy);
+	}
+
+	QByteArray byteArray;
+	QBuffer buffer(&byteArray);
+	pixmap.save(&buffer, "PNG");
+	NSkinFileSystem::addFile(fileName, byteArray);
+
+	return QScriptValue();
 }
 
 NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
@@ -130,5 +171,6 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
 	global.setProperty("Settings", newQObject(NSettings::instance()));
 
 	globalObject().setProperty("readFile", newFunction(readFile));
+	globalObject().setProperty("maskImage", newFunction(maskImage));
 }
 

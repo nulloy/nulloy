@@ -23,20 +23,20 @@
 }
 #playlistWidget::item:selected {
 	color: #4F4F4F;
-	background: #D8E6FF;
+	background: #F3F7FF;
 	border-color: #1FAEFF;
 }
 #playlistWidget::item:alternate:selected {
-	background: #C5D1E8;
+	background: #DFE6F2;
 }
 #playlistWidget::item:hover {
 	border-color: #1FAEFF;
 }
 #playlistWidget::item:selected:hover {
-	background: #BAD3FF;
+	background: #D8E6FF;
 }
 #playlistWidget::item:alternate:selected:hover {
-	background: #A7BDE8;
+	background: #CEDAF2;
 }
 
 #playlistWidget QScrollBar::handle {
@@ -49,44 +49,48 @@
 	background: #757575;
 }
 
+#repeatCheckBox:checked, #shuffleCheckBox:checked {
+	background: #ABCCFF;
+}
+
+#prevButtonWrapper, #playButtonWrapper,
+#stopButtonWrapper, #nextButtonWrapper {
+	border-color: #3D3D3D;
+}
 #prevButton, #playButton, #stopButton, #nextButton {
 	background: transparent;
 }
 #playButton:hover, #stopButton:hover,
-#nextButton:hover, #prevButton:hover {
+#nextButton:hover, #prevButton:hover,
+#repeatCheckBox:hover, #shuffleCheckBox:hover,
+#minimizeButton:hover, #themeButton:hover {
 	border-color: #1FAEFF;
 }
 #playButton:pressed, #stopButton:pressed,
-#nextButton:pressed, #prevButton:pressed {
-	background: #D8E6FF;
+#nextButton:pressed, #prevButton:pressed,
+#repeatCheckBox:pressed, #shuffleCheckBox:pressed,
+#minimizeButton:pressed, #themeButton:pressed {
+	background: rgba(153, 195, 255, 80);
+}
+
+#closeButton:pressed {
+	background: #FFCBBF;
+}
+#closeButton:hover {
+	border-color: #FF7B59;
 }
 
 #volumeSlider::sub-page:horizontal {
-	background: #C8C9CF;
+	background: #B7B7BF;
 }
 #volumeSlider::handle:horizontal {
-	background: #8E8E99;
+	background: #3D3D3D;
 }
 #volumeSlider::handle:horizontal:hover {
 	background: #78A7FF;
 }
 #volumeSlider::groove:horizontal {
 	background: #D2D3D9;
-}
-
-#minimizeButton:pressed,
-#themeButton:pressed {
-	background: #D8E6FF;
-}
-#minimizeButton:hover,
-#themeButton:hover {
-	border-color: #1FAEFF;
-}
-#closeButton:pressed {
-	background: #FFB3A1;
-}
-#closeButton:hover {
-	border-color: #FF7B59;
 }
 
 NTrackInfoWidget QLabel {

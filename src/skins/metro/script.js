@@ -15,10 +15,6 @@
 function Main()
 {
 	try {
-		this.darkTheme = Ui.mainWindow.styleSheet;
-		this.lightTheme = readFile("skin:light.css");
-		Ui.themeButton.clicked.connect(this, "on_themeButton_clicked");
-
 		Ui.repeatCheckBox["clicked(bool)"].connect(Ui.playlistWidget["setRepeatMode(bool)"]);
 		Ui.playlistWidget["repeatModeChanged(bool)"].connect(Ui.repeatCheckBox["setChecked(bool)"]);
 		Ui.repeatCheckBox.setChecked(Ui.playlistWidget.repeatMode());
@@ -94,6 +90,43 @@ Main.prototype.afterShow = function()
 {
 	if (Settings.value("MetroSkin/Splitter"))
 		Ui.splitter.setSizes(Settings.value("MetroSkin/Splitter"));
+
+	this.darkTheme = Ui.mainWindow.styleSheet;
+	this.lightTheme = readFile("light.css");
+
+	maskImage("shuffle.png", "#000000", 0.4);
+	maskImage("repeat.png",  "#000000", 0.4);
+
+	Ui.themeButton["clicked(bool)"].connect(this, "loadTheme");
+	Ui.themeButton.checked = (Settings.value("MetroSkin/LightTheme") == "true");
+	this.loadTheme(Ui.themeButton.checked);
+}
+
+Main.prototype.loadTheme = function(useLightTheme)
+{
+	if (useLightTheme == true) {
+		var styleSheet = this.darkTheme + this.lightTheme
+		var color = "#3D3D3D";
+	} else {
+		var styleSheet = this.darkTheme;
+		var color = "#FFFFFF";
+	}
+
+	maskImage("prev.png", color);
+	maskImage("stop.png", color);
+	maskImage("play.png", color);
+	maskImage("pause.png", color);
+	maskImage("next.png", color);
+	maskImage("close.png", color);
+	maskImage("minimize.png", color);
+	maskImage("shuffle.png", color);
+	maskImage("repeat.png",  color);
+	maskImage("icon.png",  color);
+
+	Ui.mainWindow.styleSheet = styleSheet;
+	Ui.playButton.styleSheet = Ui.playButton.styleSheet;
+
+	Settings.setValue("MetroSkin/LightTheme", useLightTheme);
 }
 
 Main.prototype.on_playButton_clicked = function()
@@ -161,12 +194,4 @@ Main.prototype.setBorderVisible = function(enabled)
 		Ui.borderWidget.layout().setContentsMargins(1, 1, 1, 1);
 	else
 		Ui.borderWidget.layout().setContentsMargins(0, 0, 0, 0);
-}
-
-Main.prototype.on_themeButton_clicked = function()
-{
-	if (Ui.themeButton.checked)
-		Ui.mainWindow.styleSheet = this.darkTheme + this.lightTheme;
-	else
-		Ui.mainWindow.styleSheet = this.darkTheme;
 }
