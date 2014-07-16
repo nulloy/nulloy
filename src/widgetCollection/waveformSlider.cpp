@@ -20,14 +20,11 @@
 #include <QFile>
 #include <QStylePainter>
 #include <QStyleOptionFocusRect>
-#include <QToolTip>
 
 #ifndef _N_NO_PLUGINS_
 #include "pluginLoader.h"
-#include "tagReaderInterface.h"
 #else
 #include "waveformBuilderGstreamer.h"
-#include "tagReaderGstreamer.h"
 #endif
 
 NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
@@ -41,7 +38,6 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_progressCompositionMode = QPainter::CompositionMode_Overlay;
 	m_pausedCompositionMode = QPainter::CompositionMode_Overlay;
 
-	setMouseTracking(TRUE);
 
 #ifndef _N_NO_PLUGINS_
 	m_waveBuilder = dynamic_cast<NWaveformBuilderInterface *>(NPluginLoader::getPlugin(N::WaveformBuilder));
@@ -142,47 +138,6 @@ void NWaveformSlider::checkForUpdate()
 	if (m_needsUpdate)
 		update();
 	m_needsUpdate = FALSE;
-}
-
-void NWaveformSlider::mouseMoveEvent(QMouseEvent *event)
-{
-	showToolTip(event->x(), event->y());
-
-	QAbstractSlider::mouseMoveEvent(event);
-}
-
-void NWaveformSlider::showToolTip(int x, int y)
-{
-	if (x == -1 || y == -1)
-		return;
-
-	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-	int durationSec = tagReader->toString("%D").toInt();
-
-	float posAtX = (float)x / width();
-	int secAtX = durationSec * posAtX;
-	QTime timeAtX = QTime().addSecs(secAtX);
-	QString strAtPos;
-	if (secAtX > 60 * 60) // has hours
-		strAtPos = timeAtX.toString("h:mm:ss");
-	else
-		strAtPos = timeAtX.toString("m:ss");
-
-	float posCur = (qreal)m_oldValue / maximum();
-	int secCur = durationSec * posCur;
-	int secDiff = secAtX - secCur;
-	QTime timeDiff = QTime().addSecs(qAbs(secDiff));
-	QString diffStr;
-	if (qAbs(secDiff) > 60 * 60) // has hours
-		diffStr = timeDiff.toString("h:mm:ss");
-	else
-		diffStr = timeDiff.toString("m:ss");
-
-	QString resStr = QString("%1 (%2%3)").arg(strAtPos)
-										 .arg(secDiff < 0 ? "-" : "+")
-										 .arg(diffStr);
-
-	QToolTip::showText(mapToGlobal(QPoint(x, y)), resStr);
 }
 
 void NWaveformSlider::paintEvent(QPaintEvent *event)

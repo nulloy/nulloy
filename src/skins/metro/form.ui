@@ -193,12 +193,18 @@
 	border: 1 solid #FF2E12;
 }
 
-#TrackInfoWidget QLabel {
+NTrackInfoWidget QLabel {
+	color: #FFFFFF;
+	max-height: 14px;
+	font-size: 11px;
+	font-weight: bold;
+
 	background: argb(37, 37, 38, 200);
-	border-radius: 0;
 	padding: 0 1;
 }
-#TrackInfoWidget #middleCenter {
+
+NTrackInfoWidget #MiddleCenter {
+	font-size: 13px;
 	padding-bottom: 2;
 }
 

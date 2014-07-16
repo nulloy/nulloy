@@ -28,13 +28,16 @@ class NTrackInfoWidget : public QWidget
 	Q_OBJECT
 
 private:
+	qint64 m_msec;
 	QMap <QLabel *, QString> m_map;
 	QMap <QLabel *, QString> m_mapTick;
 	QGraphicsOpacityEffect *m_effect;
 	QPropertyAnimation *m_animation;
 
+	bool event(QEvent *event);
 	void enterEvent(QEvent *event);
 	void leaveEvent(QEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
 
 public:
 	NTrackInfoWidget(QWidget *parent = 0);
@@ -44,6 +47,9 @@ public slots:
 	void updateInfo();
 	void readSettings();
 	void tick(qint64 msec);
+
+private slots:
+	void showToolTip(int x, int y);
 };
 
 #endif

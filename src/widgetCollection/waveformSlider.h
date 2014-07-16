@@ -47,7 +47,6 @@ private:
 	float m_oldBuildPos;
 
 	void mousePressEvent(QMouseEvent *event);
-	void mouseMoveEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
 	void paintEvent(QPaintEvent *event);
 	void changeEvent(QEvent *event);
@@ -65,7 +64,6 @@ public slots:
 
 private slots:
 	void checkForUpdate();
-	void showToolTip(int x, int y);
 	void setValue(int) {};
 
 signals:

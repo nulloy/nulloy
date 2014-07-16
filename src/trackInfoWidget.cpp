@@ -22,8 +22,10 @@
 #include <QLabel>
 #include <QLayout>
 #include <QTime>
+#include <QToolTip>
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
+#include <QMouseEvent>
 
 NTrackInfoWidget::~NTrackInfoWidget() {}
 
@@ -53,6 +55,9 @@ NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
 	vLayout->setContentsMargins(2, 2, 2, 2);
 
 	setMouseTracking(TRUE);
+	QList<QLabel *> labels = findChildren<QLabel *>();
+	foreach (QLabel *label, labels)
+		label->setAttribute(Qt::WA_TransparentForMouseEvents);
 
 	m_effect = new QGraphicsOpacityEffect(this);
 	m_effect->setOpacity(1.0);
@@ -63,6 +68,8 @@ NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
 	m_animation->setEasingCurve(QEasingCurve::OutQuad);
 	m_animation->setStartValue(1.0);
 	m_animation->setEndValue(0.0);
+
+	m_msec = 0;
 
 	readSettings();
 }
@@ -79,6 +86,19 @@ void NTrackInfoWidget::leaveEvent(QEvent *)
 	m_animation->setDirection(QAbstractAnimation::Backward);
 	if (m_animation->state() == QAbstractAnimation::Stopped)
 		m_animation->start();
+}
+
+bool NTrackInfoWidget::event(QEvent *event)
+{
+	if (event->type() == QEvent::ToolTip)
+		QToolTip::hideText();
+
+	return QWidget::event(event);
+}
+
+void NTrackInfoWidget::mouseMoveEvent(QMouseEvent *event)
+{
+	showToolTip(event->x(), event->y());
 }
 
 void NTrackInfoWidget::updateInfo()
@@ -120,6 +140,8 @@ void NTrackInfoWidget::readSettings()
 
 void NTrackInfoWidget::tick(qint64 msec)
 {
+	m_msec = msec;
+
 	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
 	int total = tagReader->toString("%D").toInt();
 	int hours = total / 60 / 60;
@@ -140,3 +162,39 @@ void NTrackInfoWidget::tick(qint64 msec)
 		label->show();
 	}
 }
+
+void NTrackInfoWidget::showToolTip(int x, int y)
+{
+	if (!rect().contains(QPoint(x, y))) {
+		QToolTip::hideText();
+		return;
+	}
+
+	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+	int durationSec = tagReader->toString("%D").toInt();
+
+	float posAtX = (float)x / width();
+	int secAtX = durationSec * posAtX;
+	QTime timeAtX = QTime().addSecs(secAtX);
+	QString strAtPos;
+	if (secAtX > 60 * 60) // has hours
+		strAtPos = timeAtX.toString("h:mm:ss");
+	else
+		strAtPos = timeAtX.toString("m:ss");
+
+	int secCur = m_msec / 1000;
+	int secDiff = secAtX - secCur;
+	QTime timeDiff = QTime().addSecs(qAbs(secDiff));
+	QString diffStr;
+	if (qAbs(secDiff) > 60 * 60) // has hours
+		diffStr = timeDiff.toString("h:mm:ss");
+	else
+		diffStr = timeDiff.toString("m:ss");
+
+	QString resStr = QString("%1 (%2%3)").arg(strAtPos)
+	                                     .arg(secDiff < 0 ? "-" : "+")
+	                                     .arg(diffStr);
+
+	QToolTip::showText(mapToGlobal(QPoint(x, y)), resStr);
+}
+

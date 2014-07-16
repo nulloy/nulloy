@@ -89,7 +89,7 @@
 	border-color: #FF7B59;
 }
 
-#TrackInfoWidget QLabel {
+NTrackInfoWidget QLabel {
 	background: argb(37, 37, 38, 150);
 }
 
