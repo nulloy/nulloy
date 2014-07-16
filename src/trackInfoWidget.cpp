@@ -19,6 +19,8 @@
 #include "settings.h"
 #include "pluginLoader.h"
 
+#include <QLabel>
+#include <QLayout>
 #include <QTime>
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
@@ -27,7 +29,28 @@ NTrackInfoWidget::~NTrackInfoWidget() {}
 
 NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
 {
-	ui.setupUi(this);
+	QStringList vNames = QStringList() << "Top" << "Middle" << "Bottom";
+	QStringList hNames = QStringList() << "Left" << "Center" << "Right";
+	QVBoxLayout *vLayout = new QVBoxLayout;
+	for (int i = 0; i < 3; ++i) {
+		QHBoxLayout *hLayout = new QHBoxLayout;
+		if (i > 0) {
+			QSpacerItem *vSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+			vLayout->addItem(vSpacer);
+		}
+		for (int j = 0; j < 3; ++j) {
+			if (j > 0) {
+				QSpacerItem *hSpacer = new QSpacerItem(40, 14, QSizePolicy::Expanding, QSizePolicy::Minimum);
+				hLayout->addItem(hSpacer);
+			}
+			QLabel *label = new QLabel;
+			label->setObjectName(vNames.at(i) + hNames.at(j));
+			hLayout->addWidget(label);
+		}
+		vLayout->addLayout(hLayout);
+	}
+	setLayout(vLayout);
+	vLayout->setContentsMargins(2, 2, 2, 2);
 
 	setMouseTracking(TRUE);
 

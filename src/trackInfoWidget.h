@@ -18,7 +18,6 @@
 
 #include <QWidget>
 #include <QMap>
-#include "ui_trackInfoWidget.h"
 
 class QPropertyAnimation;
 class QGraphicsOpacityEffect;
@@ -29,7 +28,6 @@ class NTrackInfoWidget : public QWidget
 	Q_OBJECT
 
 private:
-	Ui::TrackInfoWidget ui;
 	QMap <QLabel *, QString> m_map;
 	QMap <QLabel *, QString> m_mapTick;
 	QGraphicsOpacityEffect *m_effect;
