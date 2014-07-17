@@ -122,6 +122,7 @@ Main.prototype.loadTheme = function(useLightTheme)
 	maskImage("shuffle.png", color);
 	maskImage("repeat.png",  color);
 	maskImage("icon.png",  color);
+	maskImage("theme.png",  color);
 
 	Ui.mainWindow.styleSheet = styleSheet;
 	Ui.playButton.styleSheet = Ui.playButton.styleSheet;

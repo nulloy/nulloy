@@ -27,13 +27,13 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="528.22809"
-     inkscape:cy="250.67568"
+     inkscape:zoom="16"
+     inkscape:cx="536.13612"
+     inkscape:cy="476.57815"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     showgrid="false"
-     inkscape:snap-global="true"
+     showgrid="true"
+     inkscape:snap-global="false"
      inkscape:snap-grids="true"
      inkscape:window-width="1977"
      inkscape:window-height="1291"
@@ -149,7 +149,7 @@
          id="tspan3255"
          sodipodi:role="line">Nulloy</tspan></text>
     <g
-       transform="matrix(1.1988343,0,0,1.2213409,171.70114,-714.84003)"
+       transform="matrix(1.1988343,0,0,1.2213409,511.70114,-714.84003)"
        id="g3892"
        style="fill:#000000;fill-opacity:1"
        inkscape:export-filename="icon.png"
@@ -241,7 +241,7 @@
        sodipodi:cy="256"
        sodipodi:rx="20"
        sodipodi:ry="20"
-       d="m 233,256 a 20,20 0 1 1 -40,0 20,20 0 1 1 40,0 z"
+       d="m 233,256 c 0,11.04569 -8.95431,20 -20,20 -11.04569,0 -20,-8.95431 -20,-20 0,-11.04569 8.95431,-20 20,-20 11.04569,0 20,8.95431 20,20 z"
        transform="matrix(0.70853744,0,0,0.70853744,46.141526,520.9766)" />
     <g
        id="g4200"
@@ -866,5 +866,39 @@
        inkscape:export-filename="shuffle.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
+    <g
+       id="g3871"
+       transform="translate(0.02774048,-2.0000026)"
+       inkscape:export-filename="theme.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         sodipodi:open="true"
+         sodipodi:end="10.515519"
+         sodipodi:start="5.1880859"
+         transform="matrix(0.70762944,0,0,0.70762944,139.61371,482.93006)"
+         d="m 480.65266,104.72989 a 8.485281,8.485281 0 1 1 -7.80465,0.017"
+         sodipodi:ry="8.485281"
+         sodipodi:rx="8.485281"
+         sodipodi:cy="112.27309"
+         sodipodi:cx="476.76675"
+         id="path3101"
+         style="fill:none;stroke:#000000;stroke-width:2.76448417;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         sodipodi:type="arc" />
+      <rect
+         y="554.36218"
+         x="475.97226"
+         height="9"
+         width="2.09375"
+         id="rect3875"
+         style="fill:#000000;fill-opacity:1;stroke:none" />
+      <rect
+         y="570.42468"
+         x="469.9375"
+         height="0.9375"
+         width="14.0625"
+         id="rect3091"
+         style="opacity:0;fill:#000000;fill-opacity:1;stroke:none" />
+    </g>
   </g>
 </svg>
