@@ -1,0 +1,108 @@
+#titleLabel {
+	color : #3D3D3D;
+}
+#borderWidget {
+	background-color: #1FAEFF;
+}
+
+#splitter {
+	background: #E8E8EB; /* also main skin background */
+}
+
+#playlistWidget {
+	color: #4F4F4F;
+	background: #F9F9FC;
+	qproperty-currentTextColor: #3D3D3D;
+	qproperty-failedTextColor: #565659;
+}
+#playlistWidget::item {
+	background: #F9F9FC;
+}
+#playlistWidget::item:alternate {
+	background: #E8E8EB;
+}
+#playlistWidget::item:selected {
+	color: #4F4F4F;
+	background: #F3F7FF;
+	border-color: #1FAEFF;
+}
+#playlistWidget::item:alternate:selected {
+	background: #DFE6F2;
+}
+#playlistWidget::item:hover {
+	border-color: #1FAEFF;
+}
+#playlistWidget::item:selected:hover {
+	background: #D8E6FF;
+}
+#playlistWidget::item:alternate:selected:hover {
+	background: #CEDAF2;
+}
+
+#playlistWidget QScrollBar::handle {
+	background: #D0D1D7;
+}
+#playlistWidget QScrollBar::handle:hover {
+	background: #78A7FF;
+}
+#playlistWidget QSlider::sub-page:horizontal {
+	background: #757575;
+}
+
+#repeatCheckBox:checked, #shuffleCheckBox:checked {
+	background: #ABCCFF;
+}
+
+#prevButtonWrapper, #playButtonWrapper,
+#stopButtonWrapper, #nextButtonWrapper {
+	border-color: #3D3D3D;
+}
+#prevButton, #playButton, #stopButton, #nextButton {
+	background: transparent;
+}
+#playButton:hover, #stopButton:hover,
+#nextButton:hover, #prevButton:hover,
+#repeatCheckBox:hover, #shuffleCheckBox:hover,
+#minimizeButton:hover, #themeButton:hover {
+	border-color: #1FAEFF;
+}
+#playButton:pressed, #stopButton:pressed,
+#nextButton:pressed, #prevButton:pressed,
+#repeatCheckBox:pressed, #shuffleCheckBox:pressed,
+#minimizeButton:pressed, #themeButton:pressed {
+	background: rgba(153, 195, 255, 80);
+}
+
+#closeButton:pressed {
+	background: #FFCBBF;
+}
+#closeButton:hover {
+	border-color: #FF7B59;
+}
+
+#volumeSlider::sub-page:horizontal {
+	background: #B7B7BF;
+}
+#volumeSlider::handle:horizontal {
+	background: #3D3D3D;
+}
+#volumeSlider::handle:horizontal:hover {
+	background: #78A7FF;
+}
+#volumeSlider::groove:horizontal {
+	background: #D2D3D9;
+}
+
+NTrackInfoWidget QLabel {
+	background: argb(37, 37, 38, 150);
+}
+
+#waveformSlider {
+	qproperty-background: #CDCDD4;
+	qproperty-waveBackground: #1FAEFF;
+	qproperty-waveBorderColor: #0080FF;
+	qproperty-progressBackground: #4BD161;
+	qproperty-pausedBackground: #D9941C;
+	qproperty-progressCompositionMode: Darken;
+	qproperty-pausedCompositionMode: Overlay;
+}

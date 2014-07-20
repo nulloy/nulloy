@@ -75,10 +75,12 @@ function Main()
 		}
 
 		if (WS_WM_BUTTON_DIRECTION == "left") {
+			Ui.titleWidget.layout().insertWidget(0, Ui.minimizeButton);
 			Ui.titleWidget.layout().insertWidget(0, Ui.closeButton);
-			Ui.titleWidget.layout().insertWidget(1, Ui.minimizeButton);
-			Ui.titleWidget.layout().insertWidget(5, Ui.iconLabel);
+			Ui.titleWidget.layout().insertWidget(10, Ui.themeButton);
+			Ui.titleWidget.layout().insertWidget(10, Ui.iconLabel);
 		}
+		Ui.mainWindow.styleSheet = this.darkTheme + this.lightTheme;
 	} catch (err) {
 		print("QtScript: " + err);
 	}
@@ -88,6 +90,44 @@ Main.prototype.afterShow = function()
 {
 	if (Settings.value("MetroSkin/Splitter"))
 		Ui.splitter.setSizes(Settings.value("MetroSkin/Splitter"));
+
+	this.darkTheme = Ui.mainWindow.styleSheet;
+	this.lightTheme = readFile("light.css");
+
+	maskImage("shuffle.png", "#000000", 0.4);
+	maskImage("repeat.png",  "#000000", 0.4);
+
+	Ui.themeButton["clicked(bool)"].connect(this, "loadTheme");
+	Ui.themeButton.checked = (Settings.value("MetroSkin/LightTheme") == "true");
+	this.loadTheme(Ui.themeButton.checked);
+}
+
+Main.prototype.loadTheme = function(useLightTheme)
+{
+	if (useLightTheme == true) {
+		var styleSheet = this.darkTheme + this.lightTheme
+		var color = "#3D3D3D";
+	} else {
+		var styleSheet = this.darkTheme;
+		var color = "#FFFFFF";
+	}
+
+	maskImage("prev.png", color);
+	maskImage("stop.png", color);
+	maskImage("play.png", color);
+	maskImage("pause.png", color);
+	maskImage("next.png", color);
+	maskImage("close.png", color);
+	maskImage("minimize.png", color);
+	maskImage("shuffle.png", color);
+	maskImage("repeat.png",  color);
+	maskImage("icon.png",  color);
+	maskImage("theme.png",  color);
+
+	Ui.mainWindow.styleSheet = styleSheet;
+	Ui.playButton.styleSheet = Ui.playButton.styleSheet;
+
+	Settings.setValue("MetroSkin/LightTheme", useLightTheme);
 }
 
 Main.prototype.on_playButton_clicked = function()
@@ -156,4 +196,3 @@ Main.prototype.setBorderVisible = function(enabled)
 	else
 		Ui.borderWidget.layout().setContentsMargins(0, 0, 0, 0);
 }
-

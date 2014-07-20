@@ -18,45 +18,38 @@
 
 #include <QWidget>
 #include <QMap>
-#include "ui_trackInfoWidget.h"
 
-class QGraphicsView;
-class QGraphicsScene;
-class QGraphicsProxyWidget;
 class QPropertyAnimation;
-class NTagReaderInterface;
+class QGraphicsOpacityEffect;
+class QLabel;
 
 class NTrackInfoWidget : public QWidget
 {
 	Q_OBJECT
 
 private:
-	Ui::TrackInfoWidget ui;
-	QWidget *m_container;
+	qint64 m_msec;
 	QMap <QLabel *, QString> m_map;
 	QMap <QLabel *, QString> m_mapTick;
-	QGraphicsView *m_view;
-	QGraphicsScene *m_scene;
-	QGraphicsProxyWidget *m_proxy;
+	QGraphicsOpacityEffect *m_effect;
 	QPropertyAnimation *m_animation;
-	NTagReaderInterface *m_tagReader;
 
-	bool eventFilter(QObject *object, QEvent *event);
-	void resizeEvent(QResizeEvent *event);
+	bool event(QEvent *event);
 	void enterEvent(QEvent *event);
 	void leaveEvent(QEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
 
 public:
 	NTrackInfoWidget(QWidget *parent = 0);
 	~NTrackInfoWidget();
-	void setTagReader(NTagReaderInterface *tagReader);
-	QString styleSheet() const;
-	void setStyleSheet(const QString &stylesheet);
 
 public slots:
 	void updateInfo();
 	void readSettings();
 	void tick(qint64 msec);
+
+private slots:
+	void showToolTip(int x, int y);
 };
 
 #endif

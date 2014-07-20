@@ -52,7 +52,7 @@
 	border: 1 solid transparent;
 }
 #playlistWidget::item:alternate {
-	background: #2D2D2E;
+	background: #2D2D30;
 }
 #playlistWidget::item:selected {
 	background: #2C3A52;
@@ -123,19 +123,21 @@
 }
 #prevButtonWrapper, #playButtonWrapper,
 #stopButtonWrapper, #nextButtonWrapper {
-	border: 2px solid #fff;
+	border: 2px solid #FFFFFF;
 	border-radius: 15px;
 	margin: 3px 15px;
 }
 #playButton:hover, #stopButton:hover,
 #nextButton:hover, #prevButton:hover,
-#repeatCheckBox:hover, #shuffleCheckBox:hover {
+#repeatCheckBox:hover, #shuffleCheckBox:hover,
+#minimizeButton:hover, #themeButton:hover {
 	border: 1 solid #5882CF;
 }
 
 #playButton:pressed, #stopButton:pressed,
 #nextButton:pressed, #prevButton:pressed,
-#repeatCheckBox:pressed, #shuffleCheckBox:pressed {
+#repeatCheckBox:pressed, #shuffleCheckBox:pressed,
+#minimizeButton:pressed, #themeButton:pressed {
 	background: rgba(55, 99, 179, 80);
 	padding: 0;
 }
@@ -157,6 +159,20 @@
 #minimizeButton {
 	qproperty-icon: url(minimize.png);
 }
+#themeButton {
+	qproperty-icon: url(theme.png);
+}
+
+#minimizeButton, #closeButton, #themeButton {
+	border: 0;
+}
+#closeButton:pressed {
+	background: #781212;
+	padding: 0;
+}
+#closeButton:hover {
+	border: 1 solid #FF2E12;
+}
 
 #volumeSlider::groove:horizontal {
 	background: #434346;
@@ -173,31 +189,31 @@
 	background: #5D5D61;
 }
 
-#minimizeButton, #closeButton {
-	border: 0;
-}
-#minimizeButton:pressed {
-	background: #2B4169;
-	padding: 0;
-}
-#minimizeButton:hover {
-	border: 1 solid #5882CF;
-}
-#closeButton:pressed {
-	background: #B81B1B;
-	padding: 0;
-}
-#closeButton:hover {
-	border: 1 solid #FF2E12;
-}
+NTrackInfoWidget QLabel {
+	color: #FFFFFF;
+	max-height: 14px;
+	font-size: 11px;
+	font-weight: bold;
 
-#TrackInfoWidget QLabel {
 	background: argb(37, 37, 38, 200);
-	border-radius: 0;
 	padding: 0 1;
 }
-#TrackInfoWidget #middleCenter {
+
+NTrackInfoWidget #MiddleCenter {
+	font-size: 13px;
 	padding-bottom: 2;
+}
+
+#waveformSlider {
+	qproperty-radius: 0;
+	background: #252526;
+	background-image: url(grid.png);
+	qproperty-background: #252526;
+	qproperty-waveBackground: #1B58B8;
+	qproperty-waveBorderColor: #1FAEFF;
+	qproperty-progressBackground: #15992A;
+	qproperty-pausedBackground: #CE8419;
+	qproperty-progressCompositionMode: Overlay;
 }</string>
   </property>
   <property name="sizeGripEnabled">
@@ -684,7 +700,7 @@
                </property>
                <layout class="QHBoxLayout" name="titleBarlLayout">
                 <property name="spacing">
-                 <number>0</number>
+                 <number>5</number>
                 </property>
                 <property name="margin">
                  <number>0</number>
@@ -702,6 +718,43 @@
                     <width>18</width>
                     <height>18</height>
                    </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="themeButton">
+                  <property name="minimumSize">
+                   <size>
+                    <width>30</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>30</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Minimize</string>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>14</width>
+                    <height>17</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -770,13 +823,13 @@
                  <widget class="QToolButton" name="minimizeButton">
                   <property name="minimumSize">
                    <size>
-                    <width>40</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>40</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
@@ -798,13 +851,13 @@
                  <widget class="QToolButton" name="closeButton">
                   <property name="minimumSize">
                    <size>
-                    <width>40</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>40</width>
+                    <width>30</width>
                     <height>22</height>
                    </size>
                   </property>
@@ -860,21 +913,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="NWaveformSlider" name="waveformSlider" native="true">
-                 <property name="styleSheet">
-                  <string notr="true">#waveformSlider {
-	qproperty-radius: 0;
-	background: #252526;
-	background-image: url(grid.png);
-	qproperty-background: #252526;
-	qproperty-waveBackground: #1B58B8;
-	qproperty-waveBorderColor: #1FAEFF;
-	qproperty-progressBackground: #15992A;
-	qproperty-pausedBackground: #ce8419;
-}
-              </string>
-                 </property>
-                </widget>
+                <widget class="NWaveformSlider" name="waveformSlider" native="true"/>
                </item>
               </layout>
              </item>
@@ -1339,11 +1378,6 @@ margin: 2px 17px;
    <header>playlistWidget.h</header>
   </customwidget>
   <customwidget>
-   <class>NCoverWidget</class>
-   <extends>QLabel</extends>
-   <header>coverWidget.h</header>
-  </customwidget>
-  <customwidget>
    <class>NLabel</class>
    <extends>QLabel</extends>
    <header>label.h</header>
@@ -1353,6 +1387,11 @@ margin: 2px 17px;
    <extends>QWidget</extends>
    <header>qsizegrip.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>NCoverWidget</class>
+   <extends>QLabel</extends>
+   <header>coverWidget.h</header>
   </customwidget>
   <customwidget>
    <class>NVolumeSlider</class>
