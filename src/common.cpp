@@ -108,9 +108,9 @@ QStringList NCore::_processPath(const QString &path, const QStringList &nameFilt
 	if (QFileInfo(path).isDir()) {
 		QStringList entryList;
 		if (!nameFilters.isEmpty())
-			entryList = QDir(path).entryList(nameFilters, QDir::AllEntries | QDir::NoDotAndDotDot);
+			entryList = QDir(path).entryList(nameFilters, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 		else
-			entryList = QDir(path).entryList(QDir::AllEntries | QDir::NoDotAndDotDot);
+			entryList = QDir(path).entryList(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 
 		foreach (QString f, entryList)
 			list << _processPath(path + "/" + f, nameFilters);
