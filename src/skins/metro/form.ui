@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">#titleLabel {
-	color : white;
+	color : #FFFFFF;
 }
 
 #borderWidget {
@@ -42,8 +42,8 @@
 
 #playlistWidget {
 	color: #D4D4D4;
-	qproperty-currentTextColor: white;
-	qproperty-failedTextColor: #565659;
+	qproperty-current_text_color: #FFFFFF;
+	qproperty-failed_text_color: #565659;
 	background: #252526;
 	padding: 5;
 }
@@ -180,7 +180,7 @@
 }
 #volumeSlider::handle:horizontal {
 	width: 20;
-	background: white;
+	background: #FFFFFF;
 }
 #volumeSlider::handle:horizontal:hover {
 	background: #6798F2;
@@ -209,11 +209,11 @@ NTrackInfoWidget #MiddleCenter {
 	background: #252526;
 	background-image: url(grid.png);
 	qproperty-background: #252526;
-	qproperty-waveBackground: #1B58B8;
-	qproperty-waveBorderColor: #1FAEFF;
-	qproperty-progressBackground: #15992A;
-	qproperty-pausedBackground: #CE8419;
-	qproperty-progressCompositionMode: Overlay;
+	qproperty-wave_background: #1B58B8;
+	qproperty-wave_border_color: #1FAEFF;
+	qproperty-progress_normal_background: #15992A;
+	qproperty-progress_paused_background: #CE8419;
+	qproperty-normal_composition: Overlay;
 }</string>
   </property>
   <property name="sizeGripEnabled">

@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">#playlistWidget {
-	qproperty-failedTextColor: palette(dark);
+	qproperty-failed_text_color: palette(dark);
 }
 
 #playlistWidget QScrollBar {
@@ -24,21 +24,31 @@
 
 #waveformSlider {
 	qproperty-radius: 3;
-	qproperty-background: #3f4f61;
-	qproperty-waveBackground: #4e9a06;
-	qproperty-waveBorderColor: #8ae234;
-	qproperty-progressBackground: #0080ff;
-	qproperty-pausedBackground: #ce8419;
+	qproperty-background: #3F4F61;
+	qproperty-wave_background: #4E9A06;
+	qproperty-wave_border_color: #8AE234;
+	qproperty-progress_normal_background: #0080FF;
+	qproperty-progress_paused_background: #CE8419;
 }
 
 #coverWidget {
 	background: transparent;
 }
 
-#TrackInfoWidget QLabel {
+NTrackInfoWidget QLabel {
+	color: #FFFFFF;
+	background: argb(0, 0, 0, 180);
 	border-radius: 3;
+	padding: 0 3;
+	max-height: 14px;
+	font-size: 11px;
+	font-weight: bold;
 }
-</string>
+
+NTrackInfoWidget #MiddleCenter {
+	padding-bottom: 2;
+	font-size: 13px;
+}</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>

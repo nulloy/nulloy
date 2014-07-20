@@ -16,7 +16,11 @@
   <property name="styleSheet">
    <string notr="true">#titleLabel {
 	color : #141414;
+	qproperty-shadow_enabled: true;
+	qproperty-shadow_offset_y: 1;
+	qproperty-shadow_color: #FFFFFF;
 }
+
 #borderWidget {
 	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #767676, stop: 1 #515151);
 }
@@ -55,20 +59,20 @@
 }
 
 #playlistWidget {
-	color: black;
-	qproperty-currentTextColor: black;
-	qproperty-failedTextColor: #949494;
-	background: white;
+	color: #000000;
+	qproperty-current_text_color: #000000;
+	qproperty-failed_text_color: #949494;
+	background: #FFFFFF;
 	padding: 5;
 }
 #playlistWidget::item {
-	background: white;
+	background: #FFFFFF;
 }
 #playlistWidget::item:alternate {
 	background: #E9E9E9;
 }
 #playlistWidget::item:selected {
-	color: black;
+	color: #000000;
 	background: #BBBBBB;
 }
 
@@ -79,7 +83,7 @@
 }
 #playlistWidget QScrollBar::handle {
 	border-radius: 4px;
-	border: 1px solid white;
+	border: 1px solid #FFFFFF;
 	background: qlineargradient(spread:pad, x1:0.1, y1:0, x2:0.9, y2:0, stop:0 #AAAAAA, stop:1 #919191);
 	margin-left: 5;
 	border: 5;
@@ -236,7 +240,32 @@
 #volumeSlider::handle:horizontal:hover {
 	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #F8F8F8, stop:1 #FBFFE0);
 }
-</string>
+
+#waveformSlider {
+	background: #000000;
+	qproperty-radius: 5;
+	qproperty-background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #28323D, stop:1 #3F4F61);
+	qproperty-wave_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #55A807, stop:1 #366B04);
+	qproperty-wave_border_color: #8AE234;
+	qproperty-progress_normal_background: #0080ff;
+	qproperty-progress_paused_background: #CE8419;
+}
+
+NTrackInfoWidget QLabel {
+	color: #FFFFFF;
+	background: argb(0, 0, 0, 180);
+	border-radius: 7;
+	padding: 0 3;
+	max-height: 14px;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+NTrackInfoWidget #MiddleCenter {
+	border-radius: 8;
+	padding-bottom: 2;
+	font-size: 13px;
+}</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
@@ -786,14 +815,6 @@
                        <bold>true</bold>
                       </font>
                      </property>
-                     <property name="styleSheet">
-                      <string notr="true">#titleLabel {
-	qproperty-shadowEnabled: true;
-	qproperty-shadowOffsetY: 1;
-	qproperty-shadowColor: white;
-}
-                  </string>
-                     </property>
                      <property name="text">
                       <string notr="true">Nulloy</string>
                      </property>
@@ -972,20 +993,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="NWaveformSlider" name="waveformSlider" native="true">
-                    <property name="styleSheet">
-                     <string notr="true">#waveformSlider {
-	background: black;
-	qproperty-radius: 5;
-	qproperty-background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #28323D, stop:1 #3f4f61);
-	qproperty-waveBackground: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #55A807, stop:1 #366B04);
-	qproperty-waveBorderColor: #8ae234;
-	qproperty-progressBackground: #0080ff;
-	qproperty-pausedBackground: #ce8419;
-}
-                  </string>
-                    </property>
-                   </widget>
+                   <widget class="NWaveformSlider" name="waveformSlider" native="true"/>
                   </item>
                  </layout>
                 </item>
@@ -1462,6 +1470,11 @@
    <header>coverWidget.h</header>
   </customwidget>
   <customwidget>
+   <class>NVolumeSlider</class>
+   <extends>QSlider</extends>
+   <header>volumeSlider.h</header>
+  </customwidget>
+  <customwidget>
    <class>NLabel</class>
    <extends>QLabel</extends>
    <header>label.h</header>
@@ -1471,11 +1484,6 @@
    <extends>QWidget</extends>
    <header>qsizegrip.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>NVolumeSlider</class>
-   <extends>QSlider</extends>
-   <header>volumeSlider.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

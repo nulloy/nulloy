@@ -531,7 +531,7 @@ void NPlaylistWidget::setCurrentTextColor(QColor color)
 	m_currentTextColor = color;
 }
 
-QColor NPlaylistWidget::getCurrentTextColor() const
+QColor NPlaylistWidget::currentTextColor() const
 {
 	return m_currentTextColor;
 }
@@ -541,7 +541,7 @@ void NPlaylistWidget::setFailedTextColor(QColor color)
 	m_failedTextColor = color;
 }
 
-QColor NPlaylistWidget::getFailedTextColor() const
+QColor NPlaylistWidget::failedTextColor() const
 {
 	return m_failedTextColor;
 }

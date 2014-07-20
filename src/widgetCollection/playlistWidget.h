@@ -33,8 +33,8 @@ class QStringList;
 class NPlaylistWidget : public QListWidget
 {
 	Q_OBJECT
-	Q_PROPERTY(QColor failedTextColor READ getFailedTextColor WRITE setFailedTextColor DESIGNABLE true)
-	Q_PROPERTY(QColor currentTextColor READ getCurrentTextColor WRITE setCurrentTextColor DESIGNABLE true)
+	Q_PROPERTY(QColor failed_text_color READ failedTextColor WRITE setFailedTextColor)
+	Q_PROPERTY(QColor current_text_color READ currentTextColor WRITE setCurrentTextColor)
 
 private:
 	NPlaylistWidgetItem *m_currentItem;
@@ -124,10 +124,10 @@ private:
 	QColor m_currentTextColor;
 
 public:
-	QColor getFailedTextColor() const;
+	QColor failedTextColor() const;
 	void setFailedTextColor(QColor color);
 
-	QColor getCurrentTextColor() const;
+	QColor currentTextColor() const;
 	void setCurrentTextColor(QColor color);
 // << STYLESHEET PROPERTIES
 };

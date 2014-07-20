@@ -89,13 +89,13 @@ void NPlaylistWidgetItemDelegate::paint(QPainter *painter,
 	const NPlaylistWidget *playlistWidget = dynamic_cast<const NPlaylistWidget *>(opt.widget);
 
 	if (index == playlistWidget->currentIndex()) { // if currently playing item
-		QColor color = playlistWidget->getCurrentTextColor();
+		QColor color = playlistWidget->currentTextColor();
 		if (color.isValid()) {
 			opt.palette.setColor(QPalette::HighlightedText, color);
 			opt.palette.setColor(QPalette::Text, color);
 		}
 	} else if (index.data(N::FailedRole).toBool()) { // else if a failed one
-		QColor color = playlistWidget->getFailedTextColor();
+		QColor color = playlistWidget->failedTextColor();
 		if (color.isValid()) {
 			opt.palette.setColor(QPalette::HighlightedText, color);
 			opt.palette.setColor(QPalette::Text, color);

@@ -12,8 +12,8 @@
 #playlistWidget {
 	color: #4F4F4F;
 	background: #F9F9FC;
-	qproperty-currentTextColor: #3D3D3D;
-	qproperty-failedTextColor: #565659;
+	qproperty-current_text_color: #3D3D3D;
+	qproperty-failed_text_color: #565659;
 }
 #playlistWidget::item {
 	background: #F9F9FC;
@@ -99,10 +99,10 @@ NTrackInfoWidget QLabel {
 
 #waveformSlider {
 	qproperty-background: #CDCDD4;
-	qproperty-waveBackground: #1FAEFF;
-	qproperty-waveBorderColor: #0080FF;
-	qproperty-progressBackground: #4BD161;
-	qproperty-pausedBackground: #D9941C;
-	qproperty-progressCompositionMode: Darken;
-	qproperty-pausedCompositionMode: Overlay;
+	qproperty-wave_background: #1FAEFF;
+	qproperty-wave_border_color: #0080FF;
+	qproperty-progress_normal_background: #4BD161;
+	qproperty-progress_paused_background: #D9941C;
+	qproperty-normal_composition: Darken;
+	qproperty-paused_composition: Overlay;
 }
