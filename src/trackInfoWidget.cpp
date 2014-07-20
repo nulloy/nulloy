@@ -136,6 +136,8 @@ void NTrackInfoWidget::readSettings()
 			labels.at(i)->hide();
 		}
 	}
+
+	m_tooltipFormat = NSettings::instance()->value("TooltipTrackInfo").toString();
 }
 
 void NTrackInfoWidget::tick(qint64 msec)
@@ -165,36 +167,38 @@ void NTrackInfoWidget::tick(qint64 msec)
 
 void NTrackInfoWidget::showToolTip(int x, int y)
 {
-	if (!rect().contains(QPoint(x, y))) {
+	if (!rect().contains(QPoint(x, y)) || m_tooltipFormat.isEmpty()) {
 		QToolTip::hideText();
 		return;
 	}
 
 	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-	int durationSec = tagReader->toString("%D").toInt();
+	QString text = m_tooltipFormat;
 
-	float posAtX = (float)x / width();
-	int secAtX = durationSec * posAtX;
-	QTime timeAtX = QTime().addSecs(secAtX);
-	QString strAtPos;
-	if (secAtX > 60 * 60) // has hours
-		strAtPos = timeAtX.toString("h:mm:ss");
-	else
-		strAtPos = timeAtX.toString("m:ss");
+	if (m_tooltipFormat.contains("%C") || m_tooltipFormat.contains("%a")) {
+		int durationSec = tagReader->toString("%D").toInt();
+		float posAtX = (float)x / width();
+		int secAtX = durationSec * posAtX;
+		QTime timeAtX = QTime().addSecs(secAtX);
+		QString strAtPos;
+		if (secAtX > 60 * 60) // has hours
+			strAtPos = timeAtX.toString("h:mm:ss");
+		else
+			strAtPos = timeAtX.toString("m:ss");
+		text.replace("%C", strAtPos);
 
-	int secCur = m_msec / 1000;
-	int secDiff = secAtX - secCur;
-	QTime timeDiff = QTime().addSecs(qAbs(secDiff));
-	QString diffStr;
-	if (qAbs(secDiff) > 60 * 60) // has hours
-		diffStr = timeDiff.toString("h:mm:ss");
-	else
-		diffStr = timeDiff.toString("m:ss");
+		int secCur = m_msec / 1000;
+		int secDiff = secAtX - secCur;
+		QTime timeDiff = QTime().addSecs(qAbs(secDiff));
+		QString diffStr;
+		if (qAbs(secDiff) > 60 * 60) // has hours
+			diffStr = timeDiff.toString("h:mm:ss");
+		else
+			diffStr = timeDiff.toString("m:ss");
+		text.replace("%o", QString("%1%2").arg(secDiff < 0 ? "-" : "+").arg(diffStr));
+	}
 
-	QString resStr = QString("%1 (%2%3)").arg(strAtPos)
-	                                     .arg(secDiff < 0 ? "-" : "+")
-	                                     .arg(diffStr);
-
-	QToolTip::showText(mapToGlobal(QPoint(x, y)), resStr);
+	text = tagReader->toString(text);
+	QToolTip::showText(mapToGlobal(QPoint(x, y)), text);
 }
 

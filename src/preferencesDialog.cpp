@@ -146,6 +146,9 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 			"<tr><td><b>%T</b></td><td>" + tr("Current time position (Waveform only)") + "</td></tr>"
 			"<tr><td><b>%r</b></td><td>" + tr("Remaining time (Waveform only)") + "</td></tr>"
 			"<tr><td></td><td></td></tr>"
+			"<tr><td><b>%C</b></td><td>" + tr("Time position under cursor (Tooltip only)") + "</td></tr>"
+			"<tr><td><b>%o</b></td><td>" + tr("Time offset under cursor (Tooltip only)") + "</td></tr>"
+			"<tr><td></td><td></td></tr>"
 			"<tr><td><b>%d</b></td><td>" + tr("Duration in format hh:mm:ss") + "</td></tr>"
 			"<tr><td><b>%d</b></td><td>" + tr("Duration in seconds") + "</td></tr>"
 			"<tr><td><b>%b</b></td><td>" + tr("Bit depth") + "</td></tr>"
@@ -273,6 +276,7 @@ void NPreferencesDialog::loadSettings()
 	// general >>
 	ui.playlistTrackInfoLineEdit->setText(NSettings::instance()->value("PlaylistTrackInfo").toString());
 	ui.windowTrackInfoLineEdit->setText(NSettings::instance()->value("WindowTitleTrackInfo").toString());
+	ui.tooltipTrackInfoLineEdit->setText(NSettings::instance()->value("TooltipTrackInfo").toString());
 	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("MinimizeToTray").toBool());
 	ui.restorePlaylistCheckBox->setChecked(NSettings::instance()->value("RestorePlaylist").toBool());
 	ui.startPausedCheckBox->setChecked(NSettings::instance()->value("StartPaused").toBool());
@@ -357,6 +361,7 @@ void NPreferencesDialog::saveSettings()
 	// general >>
 	NSettings::instance()->setValue("PlaylistTrackInfo", ui.playlistTrackInfoLineEdit->text());
 	NSettings::instance()->setValue("WindowTitleTrackInfo", ui.windowTrackInfoLineEdit->text());
+	NSettings::instance()->setValue("TooltipTrackInfo", ui.tooltipTrackInfoLineEdit->text());
 	NSettings::instance()->setValue("MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
 	NSettings::instance()->setValue("StartPaused", ui.startPausedCheckBox->isChecked());
 	NSettings::instance()->setValue("RestorePlaylist", ui.restorePlaylistCheckBox->isChecked());

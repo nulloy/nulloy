@@ -29,6 +29,7 @@ class NTrackInfoWidget : public QWidget
 
 private:
 	qint64 m_msec;
+	QString m_tooltipFormat;
 	QMap <QLabel *, QString> m_map;
 	QMap <QLabel *, QString> m_mapTick;
 	QGraphicsOpacityEffect *m_effect;
