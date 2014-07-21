@@ -1,8 +1,16 @@
 #titleLabel {
 	color : #3D3D3D;
 }
+
 #borderWidget {
 	background-color: #1FAEFF;
+}
+
+#coverWidget {
+	border-color: #CDCDD4;
+}
+#coverWidget:hover {
+	border-color: #1FAEFF;
 }
 
 #splitter {
