@@ -72,6 +72,7 @@ NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
 	m_msec = 0;
 
 	readSettings();
+	updateInfo();
 }
 
 void NTrackInfoWidget::enterEvent(QEvent *)
@@ -105,10 +106,9 @@ void NTrackInfoWidget::updateInfo()
 {
 	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
 	if (!tagReader->isValid()) {
-		QList<QLabel *> labels = findChildren<QLabel *>();
-		foreach (QLabel *label, labels)
-			label->hide();
+		hide();
 	} else {
+		show();
 		foreach (QLabel *label, m_map.keys()) {
 			QString info = tagReader->toString(m_map[label]);
 			if (!info.isEmpty()) {
