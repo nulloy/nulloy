@@ -88,26 +88,30 @@ QScriptValue maskImage(QScriptContext *context, QScriptEngine *engine)
 	if (context->argumentCount() == 3)
 		opacity = context->argument(2).toNumber();
 
-	QPixmap mask(NSkinFileSystem::prefix() + fileName);
-	QPixmap pixmap(mask.size());
-	color.setAlpha(254);
-	pixmap.fill(color);
+	QImage mask(NSkinFileSystem::prefix() + fileName);
+	QImage result(mask.size(), QImage::Format_ARGB32_Premultiplied);
+	QPainter painter(&result);
+	painter.fillRect(result.rect(), color);
 
-	QPainter painter(&pixmap);
 	painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-	painter.drawPixmap(mask.rect(), mask);
+	
+	// hack for solid bitmaps
+	color.setAlpha(243);
+	painter.fillRect(0, 0, 1, 1, color);
+
+	painter.drawImage(mask.rect(), mask);
 
 	if (opacity != 1.0) {
-		QPixmap copy(pixmap);
-		pixmap.fill(QColor(255, 255, 255, 0));
+		QImage copy(result);
+		painter.fillRect(copy.rect(), Qt::transparent);
 		painter.setCompositionMode(QPainter::CompositionMode_Source);
 		painter.setOpacity(opacity);
-		painter.drawPixmap(copy.rect(), copy);
+		painter.drawImage(copy.rect(), copy);
 	}
 
 	QByteArray byteArray;
 	QBuffer buffer(&byteArray);
-	pixmap.save(&buffer, "PNG");
+	result.save(&buffer, "PNG");
 	NSkinFileSystem::addFile(fileName, byteArray);
 
 	return QScriptValue();
