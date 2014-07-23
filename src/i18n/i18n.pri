@@ -29,8 +29,5 @@ unix {
 	INSTALLS += translations
 }
 
-# manual update:
-# $ make tss
-tss.commands = lupdate . -ts i18n/*.ts
-tss.target = tss
-QMAKE_EXTRA_TARGETS += tss
+# to sync *.ts with sources:
+# $ lupdate src -ts src/i18n/*.ts

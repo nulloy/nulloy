@@ -10,9 +10,6 @@
     <height>370</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
-  </property>
   <property name="styleSheet">
    <string notr="true">#playlistWidget {
 	qproperty-failed_text_color: palette(dark);

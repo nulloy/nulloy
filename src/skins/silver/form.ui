@@ -10,9 +10,6 @@
     <height>505</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
-  </property>
   <property name="styleSheet">
    <string notr="true">#titleLabel {
 	color : #141414;
@@ -1465,16 +1462,6 @@ NTrackInfoWidget #MiddleCenter {
    <header>playlistWidget.h</header>
   </customwidget>
   <customwidget>
-   <class>NCoverWidget</class>
-   <extends>QLabel</extends>
-   <header>coverWidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>NVolumeSlider</class>
-   <extends>QSlider</extends>
-   <header>volumeSlider.h</header>
-  </customwidget>
-  <customwidget>
    <class>NLabel</class>
    <extends>QLabel</extends>
    <header>label.h</header>
@@ -1484,6 +1471,16 @@ NTrackInfoWidget #MiddleCenter {
    <extends>QWidget</extends>
    <header>qsizegrip.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>NCoverWidget</class>
+   <extends>QLabel</extends>
+   <header>coverWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>NVolumeSlider</class>
+   <extends>QSlider</extends>
+   <header>volumeSlider.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

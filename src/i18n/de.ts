@@ -37,188 +37,180 @@
 <context>
     <name>NPlayer</name>
     <message>
-        <location filename="../player.cpp" line="126"/>
+        <location filename="../player.cpp" line="121"/>
         <source>Show / Hide</source>
         <translation>Zeigen / Verbergen</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="128"/>
-        <source>Fenster zeigen/verstecken</source>
-        <translation>Скрыть или показать главное окно</translation>
+        <location filename="../player.cpp" line="123"/>
+        <source>Toggle window visibility</source>
+        <translation>Anzeigen oder verbergen Fenster</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="133"/>
+        <location filename="../player.cpp" line="128"/>
         <source>Play / Pause</source>
         <translation>Start / Pause</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="135"/>
+        <location filename="../player.cpp" line="130"/>
         <source>Toggle playback</source>
         <translation>Wiedergabe starten/pausieren</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="140"/>
+        <location filename="../player.cpp" line="135"/>
         <source>Stop</source>
         <translation>Stopp</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="142"/>
+        <location filename="../player.cpp" line="137"/>
         <source>Stop playback</source>
         <translation>Wiedergabe anhalten</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="147"/>
+        <location filename="../player.cpp" line="142"/>
         <source>Previous</source>
         <translation>Vorig</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="149"/>
+        <location filename="../player.cpp" line="144"/>
         <source>Play previous track in playlist</source>
         <translation>Vorheriger Titel wiedergeben</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="154"/>
+        <location filename="../player.cpp" line="149"/>
         <source>Next</source>
         <translation>Nächste</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="156"/>
+        <location filename="../player.cpp" line="151"/>
         <source>Play next track in playlist</source>
         <translation>Nächster Titel wiedergeben</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="163"/>
+        <location filename="../player.cpp" line="158"/>
         <source>Preferences...</source>
         <translation>Einstellungen...</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="169"/>
+        <location filename="../player.cpp" line="164"/>
         <source>Exit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="173"/>
+        <location filename="../player.cpp" line="168"/>
         <source>Add Files...</source>
         <translation>Dateien hinzufügen...</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="178"/>
+        <location filename="../player.cpp" line="173"/>
         <source>Add Directory...</source>
         <translation>Verzeichnis hinzufügen...</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="181"/>
+        <location filename="../player.cpp" line="176"/>
         <source>Save Playlist...</source>
         <translation>Playlist speichern...</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="185"/>
+        <location filename="../player.cpp" line="180"/>
         <source>Show Cover Art</source>
         <translation>Albumcover anzeigen</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="192"/>
+        <location filename="../player.cpp" line="187"/>
         <source>About</source>
         <translation>Über das Programm</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="196"/>
+        <location filename="../player.cpp" line="191"/>
         <source>On Top During Playback</source>
         <translation>Während Wiedergabe im Vordergrund</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="201"/>
+        <location filename="../player.cpp" line="196"/>
         <source>Always On Top</source>
         <translation>Immer im Vordergrund</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="206"/>
+        <location filename="../player.cpp" line="201"/>
         <source>Fullscreen Mode</source>
         <translation>Vollbildmodus</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="207"/>
+        <location filename="../player.cpp" line="202"/>
         <source>Hide all controll except waveform</source>
         <translation>Steuerelemente ausblenden</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="216"/>
+        <location filename="../player.cpp" line="211"/>
         <source>Load next file in directory when finished</source>
         <translation>Nächste Datei im Verzeichnis laden</translation>
     </message>
     <message>
+        <location filename="../player.cpp" line="216"/>
         <location filename="../player.cpp" line="221"/>
-        <source>    ├  By Name ↓</source>
-        <translation>    ├  Nach Namen ↓</translation>
+        <source>By Name</source>
+        <translation>Nach Namen</translation>
     </message>
     <message>
         <location filename="../player.cpp" line="226"/>
-        <source>    ├  By Name ↑</source>
-        <translation>    ├  Nach Namen ↑</translation>
-    </message>
-    <message>
         <location filename="../player.cpp" line="231"/>
-        <source>    ├  By Date ↓</source>
-        <translation>    ├  Nach Datum ↓</translation>
+        <source>By Date</source>
+        <translation>Nach Datum</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="236"/>
-        <source>    └  By Date ↑</source>
-        <translation>    ├  Nach Datum ↑</translation>
-    </message>
-    <message>
-        <location filename="../player.cpp" line="288"/>
+        <location filename="../player.cpp" line="283"/>
         <source>Playlist</source>
         <translation>Playlist</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="315"/>
+        <location filename="../player.cpp" line="310"/>
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="323"/>
+        <location filename="../player.cpp" line="318"/>
         <source>Controls</source>
         <translation>Bedienung</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="570"/>
+        <location filename="../player.cpp" line="562"/>
         <source>Latest: </source>
         <translation>Neuste: </translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="574"/>
+        <location filename="../player.cpp" line="566"/>
         <source> Update</source>
         <translation> Aktualisieren</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="575"/>
+        <location filename="../player.cpp" line="567"/>
         <source>A newer version is available: </source>
         <translation>Eine neuere Version ist verfügbar: </translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="753"/>
+        <location filename="../player.cpp" line="740"/>
         <source>All supported</source>
         <translation>Alle unterstützten</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="754"/>
+        <location filename="../player.cpp" line="741"/>
         <source>All files</source>
         <translation>Alle Dateien</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="796"/>
+        <location filename="../player.cpp" line="783"/>
         <source>M3U Playlist</source>
         <translation>M3U Playlist</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="797"/>
+        <location filename="../player.cpp" line="784"/>
         <source>Extended M3U Playlist</source>
         <translation>Erweiterte M3U Playlist</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="282"/>
-        <location filename="../player.cpp" line="331"/>
+        <location filename="../player.cpp" line="277"/>
+        <location filename="../player.cpp" line="326"/>
         <source>Window</source>
         <translation>Fenster</translation>
     </message>
@@ -244,177 +236,187 @@
 <context>
     <name>NPreferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.cpp" line="46"/>
+        <location filename="../preferencesDialog.cpp" line="53"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="47"/>
+        <location filename="../preferencesDialog.cpp" line="54"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="48"/>
+        <location filename="../preferencesDialog.cpp" line="55"/>
         <source>Apply</source>
         <translation>Übernehmen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="55"/>
+        <location filename="../preferencesDialog.cpp" line="62"/>
         <source> Preferences</source>
         <translation> Einstellungen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="130"/>
+        <location filename="../preferencesDialog.cpp" line="141"/>
         <source>Artist</source>
         <translation>Künstler</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="131"/>
+        <location filename="../preferencesDialog.cpp" line="142"/>
         <source>Title</source>
         <translation>Titel</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="132"/>
+        <location filename="../preferencesDialog.cpp" line="143"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="133"/>
+        <location filename="../preferencesDialog.cpp" line="144"/>
         <source>Comment</source>
         <translation>Kommentar</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="134"/>
+        <location filename="../preferencesDialog.cpp" line="145"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="135"/>
+        <location filename="../preferencesDialog.cpp" line="146"/>
         <source>Year</source>
         <translation>Jahr</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="136"/>
+        <location filename="../preferencesDialog.cpp" line="147"/>
         <source>Track number</source>
         <translation>Titelnummer</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="138"/>
+        <location filename="../preferencesDialog.cpp" line="149"/>
         <source>Current time position (Waveform only)</source>
         <translation>Aktuelle Zeit (только для звуковой волны)</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="139"/>
+        <location filename="../preferencesDialog.cpp" line="150"/>
         <source>Remaining time (Waveform only)</source>
         <translation>Verbleibende Zeit (только для звуковой волны)</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="141"/>
-        <source>Duration in format hh:mm:ss</source>
-        <translation>Laufzeit in hh: mm: ss</translation>
+        <location filename="../preferencesDialog.cpp" line="152"/>
+        <source>Time position under cursor (Tooltip only)</source>
+        <translation>Zeit unter Mauszeiger (Tooltip nur)</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="142"/>
+        <location filename="../preferencesDialog.cpp" line="153"/>
+        <source>Time offset under cursor (Tooltip only)</source>
+        <translation>Zeitunterschied unter Mauszeiger (Tooltip nur)</translation>
+    </message>
+    <message>
+        <location filename="../preferencesDialog.cpp" line="155"/>
+        <source>Duration in format hh:mm:ss</source>
+        <translation>Laufzeit in hh:mm:ss</translation>
+    </message>
+    <message>
+        <location filename="../preferencesDialog.cpp" line="156"/>
         <source>Duration in seconds</source>
         <translation>Laufzeit in Sekunden</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="143"/>
+        <location filename="../preferencesDialog.cpp" line="157"/>
         <source>Bit depth</source>
         <translation>Bit-Tiefe</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="144"/>
+        <location filename="../preferencesDialog.cpp" line="158"/>
         <source>Bitrate in Kbps</source>
         <translation>Bitrate in Kbps</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="145"/>
+        <location filename="../preferencesDialog.cpp" line="159"/>
         <source>Sample rate in kHz</source>
         <translation>Abtastrate in kHz</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="146"/>
+        <location filename="../preferencesDialog.cpp" line="160"/>
         <source>Number of channels</source>
         <translation>Anzahl der Kanäle</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="148"/>
+        <location filename="../preferencesDialog.cpp" line="162"/>
         <source>File name without extension</source>
         <translation>Dateiname ohne Erweiterung</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="149"/>
+        <location filename="../preferencesDialog.cpp" line="163"/>
         <source>File name</source>
         <translation>Dateiname</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="150"/>
+        <location filename="../preferencesDialog.cpp" line="164"/>
         <source>File name including absolute path</source>
         <translation>Vollständiger Dateipfad</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="151"/>
+        <location filename="../preferencesDialog.cpp" line="165"/>
         <source>File name extension</source>
         <translation>Dateinamenerweiterung</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="152"/>
+        <location filename="../preferencesDialog.cpp" line="166"/>
         <source>File name extension, uppercased</source>
         <translation>Dateinamenerweiterung in Grossbuchstaben</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="154"/>
+        <location filename="../preferencesDialog.cpp" line="168"/>
         <source>Version number</source>
         <translation>Versionsnummer</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="155"/>
+        <location filename="../preferencesDialog.cpp" line="169"/>
         <source>&apos;%&apos; character</source>
         <translation>&apos;%&apos; Zeichen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="157"/>
+        <location filename="../preferencesDialog.cpp" line="171"/>
         <source>Conditions:</source>
         <translation>Bedingungen:</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="158"/>
+        <location filename="../preferencesDialog.cpp" line="172"/>
         <source>true</source>
         <translation>Wahr</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="158"/>
+        <location filename="../preferencesDialog.cpp" line="172"/>
         <source>false</source>
         <translation>Falsch</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="158"/>
+        <location filename="../preferencesDialog.cpp" line="172"/>
         <source>if...else: evaluate for &lt;i&gt;true&lt;/i&gt; or &lt;i&gt;false&lt;/i&gt; case. Note: nesting conditions is not supported yet.</source>
         <translation>if...else: Ist der &lt;i&gt;Wahr&lt;/i&gt; Ausdruck nicht erfüllt wird der &lt;i&gt;Falsch&lt;/i&gt; Ausdruck angewendet. Hinweis: Verschachtelungen sind noch nicht möglich.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="160"/>
+        <location filename="../preferencesDialog.cpp" line="174"/>
         <source>Examples:</source>
         <translation>Beispiele:</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="161"/>
+        <location filename="../preferencesDialog.cpp" line="175"/>
         <source>Print Artist and Title, separated with &quot;-&quot;. If either of the tags is not available, print file name instead.</source>
         <translation>Zeigt Künstler und Titel durch &quot;-&quot; getrennt an. Ist einer dieser Tags nicht verfügbar, wird der Dateiname angezeigt.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="163"/>
+        <location filename="../preferencesDialog.cpp" line="177"/>
         <source>Print Genre. If not available, print nothing.</source>
         <translation>Zeigt das Genre an. Erzeugt keine Ausgabe wenn es nicht verfügbar ist.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="172"/>
+        <location filename="../preferencesDialog.cpp" line="186"/>
         <source>Close</source>
         <translation>Schliessen</translation>
     </message>
-	<message>
-        <location filename="../preferencesDialog.cpp" line="327"/>
+    <message>
+        <location filename="../preferencesDialog.cpp" line="328"/>
         <source> (Built-in)</source>
         <translation> (Eingebaut)</translation>
     </message>
@@ -454,163 +456,168 @@
 <context>
     <name>PreferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
-    <message>
-        <location filename="../preferencesDialog.ui" line="27"/>
+        <location filename="../preferencesDialog.ui" line="24"/>
         <source>General</source>
         <translation>Allgemein</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="95"/>
+        <location filename="../preferencesDialog.ui" line="92"/>
         <source>Skin:</source>
         <translation>Skin:</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="135"/>
+        <location filename="../preferencesDialog.ui" line="132"/>
         <source>Switching skins requires restart</source>
         <translation>Das Ändern des Skins erfordert einen Neustart</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="157"/>
+        <location filename="../preferencesDialog.ui" line="156"/>
         <source>Always show icon in system tray</source>
         <translation>Symbol immer in der Taskleiste anzeigen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="164"/>
+        <location filename="../preferencesDialog.ui" line="167"/>
         <source>Hide to system tray when closed</source>
         <translation>Beim Schliessen in die Taskleiste minimieren</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="173"/>
-        <source>Discard playlist after restart</source>
-        <translation>Playlist nach Neustart verwerfen</translation>
-    </message>
-    <message>
-        <location filename="../preferencesDialog.ui" line="198"/>
+        <location filename="../preferencesDialog.ui" line="205"/>
         <source>Start in paused state</source>
         <translation>Automatische Wiedergabe beim Start deaktivieren</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="211"/>
+        <location filename="../preferencesDialog.ui" line="216"/>
         <source>Allow only one instance</source>
         <translation>Nur eine Instanz zulassen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="236"/>
+        <location filename="../preferencesDialog.ui" line="243"/>
         <source>Enqueue files when in one instance</source>
         <translation>Dateien an Playlist anfügen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="263"/>
+        <location filename="../preferencesDialog.ui" line="270"/>
         <source>Play enqueued files immidiately</source>
         <translation>Beim Hinzufügen wiedergeben</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="281"/>
+        <location filename="../preferencesDialog.ui" line="303"/>
         <source>Display log dialog in case of errors</source>
         <translation>Log-Dialog im Fehlerfall anzeigen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="274"/>
+        <location filename="../preferencesDialog.ui" line="281"/>
         <source>Show volume in decibels (using Stevens&apos; law)</source>
         <translation>Lautstärke in Dezibel anzeigen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="35"/>
+        <location filename="../preferencesDialog.ui" line="32"/>
         <source>Language:</source>
         <translation>Sprache:</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="75"/>
-        <location filename="../preferencesDialog.cpp" line="239"/>
+        <location filename="../preferencesDialog.ui" line="72"/>
+        <location filename="../preferencesDialog.cpp" line="253"/>
         <source>Switching languages requires restart</source>
         <translation>Das Ändern der Sprache erfordert einen Neustart</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="296"/>
+        <location filename="../preferencesDialog.ui" line="178"/>
+        <source>Restore playlist after restart</source>
+        <translation>Wiederherstellen Playlist nach dem Neustart</translation>
+    </message>
+    <message>
+        <location filename="../preferencesDialog.ui" line="292"/>
+        <source>Show progress on taskbar (Windows 7+ only)</source>
+        <translation>Lassen Sie sich die Fortschritte in der Taskleiste (Windows 7 + nur)</translation>
+    </message>
+    <message>
+        <location filename="../preferencesDialog.ui" line="320"/>
         <source>Automatically check for updates</source>
         <translation>Automatisch auf Updates prüfen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="309"/>
+        <location filename="../preferencesDialog.ui" line="333"/>
         <source>Check now</source>
         <translation>Jetzt prüfen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="354"/>
+        <location filename="../preferencesDialog.ui" line="378"/>
         <source>File filters:</source>
         <translation>Dateifilter:</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="382"/>
+        <location filename="../preferencesDialog.ui" line="406"/>
         <source>Track Information</source>
         <translation>Titelinformationen</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="396"/>
+        <location filename="../preferencesDialog.ui" line="420"/>
         <source>Window title:</source>
         <translation>Fenstername:</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="403"/>
+        <location filename="../preferencesDialog.ui" line="427"/>
         <source>Playlist item:</source>
         <translation>Playlist-Item:</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="422"/>
+        <location filename="../preferencesDialog.ui" line="434"/>
+        <source>Tooltip:</source>
+        <translation>Tooltip:</translation>
+    </message>
+    <message>
+        <location filename="../preferencesDialog.ui" line="456"/>
         <source>Help</source>
         <translation>Hilfe</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="432"/>
+        <location filename="../preferencesDialog.ui" line="466"/>
         <source>Waveform sections:</source>
         <translation>Waveform-Anzeige:</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="449"/>
+        <location filename="../preferencesDialog.ui" line="483"/>
         <source>Top</source>
         <translation>Oben</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="454"/>
+        <location filename="../preferencesDialog.ui" line="488"/>
         <source>Middle</source>
         <translation>Mitte</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="459"/>
+        <location filename="../preferencesDialog.ui" line="493"/>
         <source>Bottom</source>
         <translation>Unten</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="464"/>
+        <location filename="../preferencesDialog.ui" line="498"/>
         <source>Left</source>
         <translation>Links</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="469"/>
+        <location filename="../preferencesDialog.ui" line="503"/>
         <source>Center</source>
         <translation>Mitte</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="474"/>
+        <location filename="../preferencesDialog.ui" line="508"/>
         <source>Right</source>
         <translation>Rechts</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="499"/>
+        <location filename="../preferencesDialog.ui" line="533"/>
         <source>Keyboard</source>
         <translation>Tastatur</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="538"/>
+        <location filename="../preferencesDialog.ui" line="572"/>
         <source>Plugins</source>
         <translation>Plugins</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="593"/>
+        <location filename="../preferencesDialog.ui" line="627"/>
         <source>Switching plugins requires restart</source>
         <translation>Das Ändern von Plugins erfordert einen Neustart</translation>
     </message>
@@ -623,12 +630,12 @@
         <translation>Über das Programm </translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="114"/>
+        <location filename="../common.cpp" line="133"/>
         <source>File doesn&apos;t exist: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Die Datei existiert nicht: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="133"/>
+        <location filename="../common.cpp" line="152"/>
         <source>Default file manager is set to &lt;b&gt;%1&lt;/b&gt; but it&apos;s not available.</source>
         <translation>Der Standard-Dateimanager &lt;b&gt;%1&lt;/b&gt; ist nicht verfügbar.</translation>
     </message>
@@ -659,12 +666,12 @@
         <translation>TagReader-Plugin nicht gefunden.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="413"/>
+        <location filename="../preferencesDialog.cpp" line="436"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
-        <translation>Der Infobereich der Taskliste ist nicht verfügbar</translation>
+        <translation>Der Infobereich der Taskliste ist nicht verfügbar.</translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="125"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="124"/>
         <source>Reveal in File Manager Error</source>
         <translation>Dateimanager Fehler</translation>
     </message>
@@ -680,85 +687,71 @@
     </message>
 </context>
 <context>
-    <name>TrackInfoWidget</name>
-    <message>
-        <location filename="../trackInfoWidget.ui" line="14"/>
-        <source>Form</source>
-        <translation>Form</translation>
-    </message>
-</context>
-<context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="14"/>
-        <location filename="../skins/native/form.ui" line="14"/>
-        <location filename="../skins/silver/form.ui" line="14"/>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
-    <message>
-        <location filename="../skins/metro/form.ui" line="791"/>
-        <location filename="../skins/silver/form.ui" line="861"/>
+        <location filename="../skins/metro/form.ui" line="745"/>
+        <location filename="../skins/metro/form.ui" line="843"/>
+        <location filename="../skins/silver/form.ui" line="881"/>
         <source>Minimize</source>
         <translation>Minimieren</translation>
     </message>
     <message>
-        <location filename="../skins/metro/form.ui" line="813"/>
-        <location filename="../skins/silver/form.ui" line="916"/>
+        <location filename="../skins/metro/form.ui" line="865"/>
+        <location filename="../skins/silver/form.ui" line="936"/>
         <source>Close</source>
         <translation>Schliessen</translation>
     </message>
     <message>
-        <location filename="../skins/metro/form.ui" line="949"/>
-        <location filename="../skins/native/form.ui" line="177"/>
-        <location filename="../skins/silver/form.ui" line="1066"/>
+        <location filename="../skins/metro/form.ui" line="987"/>
+        <location filename="../skins/native/form.ui" line="184"/>
+        <location filename="../skins/silver/form.ui" line="1073"/>
         <source>Previous</source>
         <translation>Vorig</translation>
     </message>
     <message>
-        <location filename="../skins/metro/form.ui" line="999"/>
-        <location filename="../skins/native/form.ui" line="210"/>
-        <location filename="../skins/silver/form.ui" line="1082"/>
+        <location filename="../skins/metro/form.ui" line="1037"/>
+        <location filename="../skins/native/form.ui" line="217"/>
+        <location filename="../skins/silver/form.ui" line="1089"/>
         <source>Play / Pause</source>
         <translation>Start / Pause</translation>
     </message>
     <message>
-        <location filename="../skins/metro/form.ui" line="1049"/>
-        <location filename="../skins/native/form.ui" line="243"/>
-        <location filename="../skins/silver/form.ui" line="1098"/>
+        <location filename="../skins/metro/form.ui" line="1087"/>
+        <location filename="../skins/native/form.ui" line="250"/>
+        <location filename="../skins/silver/form.ui" line="1105"/>
         <source>Stop</source>
         <translation>Stopp</translation>
     </message>
     <message>
-        <location filename="../skins/metro/form.ui" line="1093"/>
-        <location filename="../skins/native/form.ui" line="270"/>
-        <location filename="../skins/silver/form.ui" line="1114"/>
+        <location filename="../skins/metro/form.ui" line="1131"/>
+        <location filename="../skins/native/form.ui" line="277"/>
+        <location filename="../skins/silver/form.ui" line="1121"/>
         <source>Next</source>
         <translation>Nächste</translation>
     </message>
     <message>
-        <location filename="../skins/metro/form.ui" line="1144"/>
-        <location filename="../skins/native/form.ui" line="313"/>
-        <location filename="../skins/silver/form.ui" line="1182"/>
+        <location filename="../skins/metro/form.ui" line="1182"/>
+        <location filename="../skins/native/form.ui" line="320"/>
+        <location filename="../skins/silver/form.ui" line="1189"/>
         <source>Repeat</source>
         <translation>Wiederholen</translation>
     </message>
     <message>
-        <location filename="../skins/metro/form.ui" line="1172"/>
-        <location filename="../skins/native/form.ui" line="343"/>
-        <location filename="../skins/silver/form.ui" line="1207"/>
+        <location filename="../skins/metro/form.ui" line="1210"/>
+        <location filename="../skins/native/form.ui" line="350"/>
+        <location filename="../skins/silver/form.ui" line="1214"/>
         <source>Shuffle</source>
         <translation>Shuffle</translation>
     </message>
     <message>
-        <location filename="../skins/metro/form.ui" line="1211"/>
+        <location filename="../skins/metro/form.ui" line="1249"/>
         <source>Size Grip</source>
         <translation>Fenstergrösse anpassen</translation>
     </message>
     <message>
-        <location filename="../skins/metro/form.ui" line="1255"/>
-        <location filename="../skins/native/form.ui" line="395"/>
-        <location filename="../skins/silver/form.ui" line="1333"/>
+        <location filename="../skins/metro/form.ui" line="1293"/>
+        <location filename="../skins/native/form.ui" line="402"/>
+        <location filename="../skins/silver/form.ui" line="1340"/>
         <source>Volume</source>
         <translation>Lautstärke</translation>
     </message>

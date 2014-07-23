@@ -213,22 +213,22 @@ NPlayer::NPlayer()
 	loadNextAction->setObjectName("loadNextAction");
 	connect(loadNextAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
 
-	NAction *loadNextNameDownAction = new NAction(trUtf8("    ├  By Name ↓"), this);
+	NAction *loadNextNameDownAction = new NAction(QString::fromUtf8("    ├  %1 ↓").arg(tr("By Name")), this);
 	loadNextNameDownAction->setCheckable(TRUE);
 	loadNextNameDownAction->setObjectName("loadNextNameDownAction");
 	connect(loadNextNameDownAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
 
-	NAction *loadNextNameUpAction = new NAction(trUtf8("    ├  By Name ↑"), this);
+	NAction *loadNextNameUpAction = new NAction(QString::fromUtf8("    ├  %1 ↑").arg(tr("By Name")), this);
 	loadNextNameUpAction->setCheckable(TRUE);
 	loadNextNameUpAction->setObjectName("loadNextNameUpAction");
 	connect(loadNextNameUpAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
 
-	NAction *loadNextDateDownAction = new NAction(trUtf8("    ├  By Date ↓"), this);
+	NAction *loadNextDateDownAction = new NAction(QString::fromUtf8("    ├  %1 ↓").arg(tr("By Date")), this);
 	loadNextDateDownAction->setCheckable(TRUE);
 	loadNextDateDownAction->setObjectName("loadNextDateDownAction");
 	connect(loadNextDateDownAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
 
-	NAction *loadNextDateUpAction = new NAction(trUtf8("    └  By Date ↑"), this);
+	NAction *loadNextDateUpAction = new NAction(QString::fromUtf8("    └  %1 ↑").arg(tr("By Date")), this);
 	loadNextDateUpAction->setCheckable(TRUE);
 	loadNextDateUpAction->setObjectName("loadNextDateUpAction");
 	connect(loadNextDateUpAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));

@@ -10,9 +10,6 @@
     <height>565</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
-  </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
   </property>
@@ -352,7 +349,7 @@ padding: 5px;</string>
             </size>
            </property>
            <property name="text">
-            <string>Latest: x.x</string>
+            <string notr="true">Latest: x.x</string>
            </property>
           </widget>
          </item>
@@ -594,8 +591,8 @@ padding: 5px;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>568</width>
-            <height>457</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
          </widget>
