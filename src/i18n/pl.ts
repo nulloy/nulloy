@@ -413,6 +413,11 @@
         <source>Close</source>
         <translation>Zamknij</translation>
     </message>
+    <message>
+        <location filename="../preferencesDialog.cpp" line="327"/>
+        <source> (Built-in)</source>
+        <translation> (Wbudowany)</translation>
+    </message>
 </context>
 <context>
     <name>NShortcutEditorWidget</name>
@@ -662,11 +667,6 @@
         <location filename="../widgetCollection/playlistWidget.cpp" line="125"/>
         <source>Reveal in File Manager Error</source>
         <translation>Wykrycie w Menedżerze plików nie powiodło się</translation>
-    </message>
-    <message>
-        <location filename="../skinLoader.cpp" line="144"/>
-        <source> (Built-in)</source>
-        <translation> (Wbudowany)</translation>
     </message>
     <message>
         <location filename="../skinLoader.cpp" line="158"/>
