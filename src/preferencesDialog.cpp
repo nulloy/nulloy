@@ -39,6 +39,9 @@
 
 using namespace NPluginLoader;
 
+QStringList vNames = QStringList() << "Top" << "Middle" << "Bottom";
+QStringList hNames = QStringList() << "Left" << "Center" << "Right";
+
 NPreferencesDialog::~NPreferencesDialog() {}
 
 NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
@@ -302,7 +305,7 @@ void NPreferencesDialog::loadSettings()
 	for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
 		for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {
 			QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() + ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
-			QTableWidgetItem *item = new QTableWidgetItem(NSettings::instance()->value("TrackInfo/" + objecName).toString());
+			QTableWidgetItem *item = new QTableWidgetItem(NSettings::instance()->value("TrackInfo/" + vNames.at(i) + hNames.at(j)).toString());
 			item->setTextAlignment(Qt::AlignCenter);
 			ui.waveformTrackInfoTable->setItem(i, j, item);
 		}
@@ -384,7 +387,7 @@ void NPreferencesDialog::saveSettings()
 	for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
 		for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {
 			QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() + ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
-			NSettings::instance()->setValue("TrackInfo/" + objecName, ui.waveformTrackInfoTable->item(i, j)->text());
+			NSettings::instance()->setValue("TrackInfo/" + vNames.at(i) + hNames.at(j), ui.waveformTrackInfoTable->item(i, j)->text());
 		}
 	}
 	// << track info overlay

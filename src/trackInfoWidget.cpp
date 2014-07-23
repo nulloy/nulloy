@@ -34,13 +34,13 @@ NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
 	QStringList vNames = QStringList() << "Top" << "Middle" << "Bottom";
 	QStringList hNames = QStringList() << "Left" << "Center" << "Right";
 	QVBoxLayout *vLayout = new QVBoxLayout;
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < vNames.count(); ++i) {
 		QHBoxLayout *hLayout = new QHBoxLayout;
 		if (i > 0) {
 			QSpacerItem *vSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
 			vLayout->addItem(vSpacer);
 		}
-		for (int j = 0; j < 3; ++j) {
+		for (int j = 0; j < hNames.count(); ++j) {
 			if (j > 0) {
 				QSpacerItem *hSpacer = new QSpacerItem(40, 14, QSizePolicy::Expanding, QSizePolicy::Minimum);
 				hLayout->addItem(hSpacer);
