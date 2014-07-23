@@ -20,16 +20,21 @@
     </message>
     <message>
         <location filename="../aboutDialog.cpp" line="98"/>
+        <source>Thanks</source>
+        <translation>Remerciements</translation>
+    </message>
+    <message>
+        <location filename="../aboutDialog.cpp" line="119"/>
         <source>Changelog</source>
         <translation>Changelog</translation>
     </message>
     <message>
-        <location filename="../aboutDialog.cpp" line="119"/>
+        <location filename="../aboutDialog.cpp" line="140"/>
         <source>License</source>
         <translation>License</translation>
     </message>
     <message>
-        <location filename="../aboutDialog.cpp" line="157"/>
+        <location filename="../aboutDialog.cpp" line="178"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
