@@ -148,74 +148,79 @@
     </message>
     <message>
         <location filename="../player.cpp" line="211"/>
+        <source>Loop playlist</source>
+        <translation>Зациклить плейлист</translation>
+    </message>
+    <message>
+        <location filename="../player.cpp" line="216"/>
         <source>Load next file in directory when finished</source>
         <translation>Загрузить следующий файл из директории</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="216"/>
         <location filename="../player.cpp" line="221"/>
+        <location filename="../player.cpp" line="226"/>
         <source>By Name</source>
         <translation>Сортировать по имени</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="226"/>
         <location filename="../player.cpp" line="231"/>
+        <location filename="../player.cpp" line="236"/>
         <source>By Date</source>
         <translation>Сортировать по дате</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="283"/>
+        <location filename="../player.cpp" line="288"/>
         <source>Playlist</source>
         <translation>Плейлист</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="310"/>
+        <location filename="../player.cpp" line="316"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="318"/>
+        <location filename="../player.cpp" line="324"/>
         <source>Controls</source>
         <translation>Управление</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="562"/>
+        <location filename="../player.cpp" line="574"/>
         <source>Latest: </source>
         <translation>Последняя: </translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="566"/>
+        <location filename="../player.cpp" line="578"/>
         <source> Update</source>
         <translation> Обновление</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="567"/>
+        <location filename="../player.cpp" line="579"/>
         <source>A newer version is available: </source>
         <translation>Новое обновление доступно: </translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="740"/>
+        <location filename="../player.cpp" line="754"/>
         <source>All supported</source>
         <translation>Все поддерживаемые</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="741"/>
+        <location filename="../player.cpp" line="755"/>
         <source>All files</source>
         <translation>Все файлы</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="783"/>
+        <location filename="../player.cpp" line="797"/>
         <source>M3U Playlist</source>
         <translation>M3U Плейлист</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="784"/>
+        <location filename="../player.cpp" line="798"/>
         <source>Extended M3U Playlist</source>
         <translation>Расширенный M3U Плейлист</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="277"/>
-        <location filename="../player.cpp" line="326"/>
+        <location filename="../player.cpp" line="282"/>
+        <location filename="../player.cpp" line="332"/>
         <source>Window</source>
         <translation>Окно</translation>
     </message>

@@ -148,74 +148,79 @@
     </message>
     <message>
         <location filename="../player.cpp" line="211"/>
+        <source>Loop playlist</source>
+        <translation>Pętla listę odtwarzania</translation>
+    </message>
+    <message>
+        <location filename="../player.cpp" line="216"/>
         <source>Load next file in directory when finished</source>
         <translation>Wczytaj następny plik w katalogu po zakończeniu odtwarzania</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="216"/>
         <location filename="../player.cpp" line="221"/>
+        <location filename="../player.cpp" line="226"/>
         <source>By Name</source>
         <translation>Według nazwy</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="226"/>
         <location filename="../player.cpp" line="231"/>
+        <location filename="../player.cpp" line="236"/>
         <source>By Date</source>
         <translation>Według daty</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="283"/>
+        <location filename="../player.cpp" line="288"/>
         <source>Playlist</source>
         <translation>Lista odtwarzania</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="310"/>
+        <location filename="../player.cpp" line="316"/>
         <source>File</source>
         <translation>Plik</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="318"/>
+        <location filename="../player.cpp" line="324"/>
         <source>Controls</source>
         <translation>Sterowanie</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="562"/>
+        <location filename="../player.cpp" line="574"/>
         <source>Latest: </source>
         <translation>Najnowszy: </translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="566"/>
+        <location filename="../player.cpp" line="578"/>
         <source> Update</source>
         <translation> Aktualizacja</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="567"/>
+        <location filename="../player.cpp" line="579"/>
         <source>A newer version is available: </source>
         <translation>Dostępna nowa wersja: </translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="740"/>
+        <location filename="../player.cpp" line="754"/>
         <source>All supported</source>
         <translation>Pełne wsparcie</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="741"/>
+        <location filename="../player.cpp" line="755"/>
         <source>All files</source>
         <translation>Wszystkie pliki</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="783"/>
+        <location filename="../player.cpp" line="797"/>
         <source>M3U Playlist</source>
         <translation>Lista odtwarzania M3U</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="784"/>
+        <location filename="../player.cpp" line="798"/>
         <source>Extended M3U Playlist</source>
         <translation>Rozszerzona lista odtwarzania M3U</translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="277"/>
-        <location filename="../player.cpp" line="326"/>
+        <location filename="../player.cpp" line="282"/>
+        <location filename="../player.cpp" line="332"/>
         <source>Window</source>
         <translation>Okno</translation>
     </message>

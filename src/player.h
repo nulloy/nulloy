@@ -80,7 +80,7 @@ private slots:
 	void on_showCoverAction_toggled(bool checked);
 	void downloadVersion();
 	void on_versionDownloader_finished(QNetworkReply *reply);
-	void loadNextActionTriggered();
+	void playlistActionTriggered();
 	void on_trayClickTimer_timeout();
 	void trayIconCountClicks(int clicks);
 

@@ -70,6 +70,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("AutoCheckUpdates", TRUE);
 	initValue("DisplayLogDialog", TRUE);
 	initValue("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
+	initValue("LoopPlaylist", FALSE);
 	initValue("LoadNext", FALSE);
 	initValue("ShowCoverArt", TRUE);
 	initValue("LoadNextSort", QDir::Name);

@@ -208,30 +208,35 @@ NPlayer::NPlayer()
 
 
 	// playlist actions >>
+	NAction *loopPlaylistAction = new NAction(tr("Loop playlist"), this);
+	loopPlaylistAction->setCheckable(TRUE);
+	loopPlaylistAction->setObjectName("loopPlaylistAction");
+	connect(loopPlaylistAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
+
 	NAction *loadNextAction = new NAction(tr("Load next file in directory when finished"), this);
 	loadNextAction->setCheckable(TRUE);
 	loadNextAction->setObjectName("loadNextAction");
-	connect(loadNextAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+	connect(loadNextAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	NAction *loadNextNameDownAction = new NAction(QString::fromUtf8("    ├  %1 ↓").arg(tr("By Name")), this);
 	loadNextNameDownAction->setCheckable(TRUE);
 	loadNextNameDownAction->setObjectName("loadNextNameDownAction");
-	connect(loadNextNameDownAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+	connect(loadNextNameDownAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	NAction *loadNextNameUpAction = new NAction(QString::fromUtf8("    ├  %1 ↑").arg(tr("By Name")), this);
 	loadNextNameUpAction->setCheckable(TRUE);
 	loadNextNameUpAction->setObjectName("loadNextNameUpAction");
-	connect(loadNextNameUpAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+	connect(loadNextNameUpAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	NAction *loadNextDateDownAction = new NAction(QString::fromUtf8("    ├  %1 ↓").arg(tr("By Date")), this);
 	loadNextDateDownAction->setCheckable(TRUE);
 	loadNextDateDownAction->setObjectName("loadNextDateDownAction");
-	connect(loadNextDateDownAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+	connect(loadNextDateDownAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	NAction *loadNextDateUpAction = new NAction(QString::fromUtf8("    └  %1 ↑").arg(tr("By Date")), this);
 	loadNextDateUpAction->setCheckable(TRUE);
 	loadNextDateUpAction->setObjectName("loadNextDateUpAction");
-	connect(loadNextDateUpAction, SIGNAL(triggered()), this, SLOT(loadNextActionTriggered()));
+	connect(loadNextDateUpAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	QActionGroup *group = new QActionGroup(this);
 	loadNextNameDownAction->setActionGroup(group);
@@ -281,6 +286,7 @@ NPlayer::NPlayer()
 	m_contextMenu->addMenu(windowSubMenu);
 
 	QMenu *playlistSubMenu = new QMenu(tr("Playlist"), m_mainWindow);
+	playlistSubMenu->addAction(loopPlaylistAction);
 	playlistSubMenu->addAction(loadNextAction);
 	playlistSubMenu->addAction(loadNextNameDownAction);
 	playlistSubMenu->addAction(loadNextNameUpAction);
@@ -503,6 +509,12 @@ void NPlayer::loadSettings()
 		whilePlayingOnTopAction->setChecked(TRUE);
 	}
 
+	bool loopPlaylist = m_settings->value("LoopPlaylist").toBool();
+	if (loopPlaylist) {
+		NAction *loopPlaylistAction = qFindChild<NAction *>(this, "loopPlaylistAction");
+		loopPlaylistAction->setChecked(TRUE);
+	}
+
 	bool loadNext = m_settings->value("LoadNext").toBool();
 	if (loadNext) {
 		NAction *loadNextAction = qFindChild<NAction *>(this, "loadNextAction");
@@ -700,12 +712,14 @@ void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)
 		m_mainWindow->setOnTop(checked && m_playbackEngine->state() == N::PlaybackPlaying);
 }
 
-void NPlayer::loadNextActionTriggered()
+void NPlayer::playlistActionTriggered()
 {
 	NAction *action = reinterpret_cast<NAction *>(QObject::sender());
 	QString name = action->objectName();
 	bool checked = action->isChecked();
-	if (name == "loadNextAction")
+	if (name == "loopPlaylistAction")
+		m_settings->setValue("LoopPlaylist", checked);
+	else if (name == "loadNextAction")
 		m_settings->setValue("LoadNext", checked);
 	else if (name == "loadNextNameDownAction")
 		m_settings->setValue("LoadNextSort", (int)QDir::Name);

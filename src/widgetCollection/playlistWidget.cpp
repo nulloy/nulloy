@@ -295,6 +295,8 @@ void NPlaylistWidget::playNextRow()
 	} else {
 		if (row < count() - 1) {
 			activateItem(item(row + 1));
+		} else if (NSettings::instance()->value("LoopPlaylist").toBool()) {
+			activateItem(item(0));
 		} else if (NSettings::instance()->value("LoadNext").toBool()) {
 			QDir::SortFlag flag = (QDir::SortFlag)NSettings::instance()->value("LoadNextSort").toInt();
 			QString file = m_currentItem->data(N::PathRole).toString();
@@ -327,8 +329,11 @@ void NPlaylistWidget::playPreviousRow()
 			m_currentShuffledIndex = m_shuffledItems.count() - 1;
 		activateItem(m_shuffledItems.at(m_currentShuffledIndex));
 	} else {
-		if (row > 0)
+		if (row > 0) {
 			activateItem(item(row - 1));
+		} else if (NSettings::instance()->value("LoopPlaylist").toBool()) {
+			activateItem(item(count() - 1));
+		}
 	}
 }
 
