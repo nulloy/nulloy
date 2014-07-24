@@ -66,6 +66,13 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	ui.skinComboBox->hide();
 #endif
 
+	QPixmap pixmap = QIcon::fromTheme("dialog-warning", style()->standardIcon(QStyle::SP_MessageBoxWarning)).pixmap(16);
+	QByteArray byteArray;
+	QBuffer buffer(&byteArray);
+	pixmap.save(&buffer, "PNG");
+	NSkinFileSystem::addFile("warning.png", byteArray);
+	QString url = "<img src=\"skin:warning.png\"/>";
+
 #ifdef _N_NO_PLUGINS_
 	ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 #else
@@ -86,21 +93,16 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	else
 		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 
-	ui.languageRestartLabel->setVisible(FALSE);
-	ui.skinRestartLabel->setVisible(FALSE);
+	ui.pluginsRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.pluginsRestartLabel->text());
 	ui.pluginsRestartLabel->setVisible(FALSE);
-
-	QPixmap pixmap = QIcon::fromTheme("dialog-warning", style()->standardIcon(QStyle::SP_MessageBoxWarning)).pixmap(16);
-	QByteArray byteArray;
-	QBuffer buffer(&byteArray);
-	pixmap.save(&buffer, "PNG");
-	NSkinFileSystem::addFile("warning.png", byteArray);
-	QString url = "<img src=\"skin:warning.png\"/>";
+#endif
 
 	ui.languageRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.languageRestartLabel->text());
+	ui.languageRestartLabel->setVisible(FALSE);
+
 	ui.skinRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.skinRestartLabel->text());
-	ui.pluginsRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.pluginsRestartLabel->text());
-#endif
+	ui.skinRestartLabel->setVisible(FALSE);
+	connect(ui.skinComboBox, SIGNAL(activated(int)), ui.skinRestartLabel, SLOT(show()));
 
 #ifndef Q_WS_WIN
 	ui.taskbarProgressCheckBox->hide();
@@ -223,7 +225,7 @@ QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
 	foreach (int i, indexesFilteredByType) {
 		QString containerName = descriptors.at(i)[ContainerNameRole].toString();
 		QRadioButton *button = new QRadioButton(containerName);
-		connect(button, SIGNAL(toggled(bool)), this, SLOT(pluginsChanged()));
+		connect(button, SIGNAL(toggled(bool)), ui.pluginsRestartLabel, SLOT(show()));
 		if (containerName == settingsContainer)
 			button->setChecked(TRUE);
 		m_radioButtons[button] = descriptors.at(i);
@@ -233,24 +235,14 @@ QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
 	return groupBox;
 }
 
-void NPreferencesDialog::pluginsChanged()
-{
-	ui.pluginsRestartLabel->setVisible(TRUE);
-}
-
-void NPreferencesDialog::on_skinComboBox_activated(int index)
-{
-	Q_UNUSED(index);
-	ui.skinRestartLabel->setVisible(TRUE);
-}
-
 void NPreferencesDialog::on_languageComboBox_activated(int index)
 {
 	ui.languageRestartLabel->setVisible(TRUE);
 
 	QLocale locale = ui.languageComboBox->itemData(index).toLocale();
 	NI18NLoader::loadTranslation(locale.language());
-    ui.languageRestartLabel->setText(QCoreApplication::translate("PreferencesDialog", "Switching languages requires restart", 0, QApplication::UnicodeUTF8));
+	QString newText = QCoreApplication::translate("PreferencesDialog", "Switching languages requires restart", 0, QApplication::UnicodeUTF8);
+    ui.languageRestartLabel->setText(ui.languageRestartLabel->text().replace(QRegExp("(.*)&nbsp;.*"), "\\1&nbsp;" + newText));
 }
 
 QString NPreferencesDialog::selectedContainer(N::PluginType type)
@@ -410,17 +402,13 @@ void NPreferencesDialog::saveSettings()
 
 	// skins >>
 #ifndef _N_NO_SKINS_
-	QVariant skinVariant = ui.skinComboBox->itemData(ui.skinComboBox->currentIndex());
-	NSettings::instance()->setValue("Skin", skinVariant);
-	ui.skinRestartLabel->setVisible(NSettings::instance()->value("Skin").isValid() && skinVariant != NSettings::instance()->value("Skin"));
+	NSettings::instance()->setValue("Skin", ui.skinComboBox->itemData(ui.skinComboBox->currentIndex()));
 #endif
 	// << skins
 
 
 	// translations >>
-	QLocale locale = ui.languageComboBox->itemData(ui.languageComboBox->currentIndex()).toLocale();
-	NSettings::instance()->setValue("Language", locale.bcp47Name().split('-').first());
-	ui.languageRestartLabel->setVisible(NSettings::instance()->value("Language").isValid() && locale != NSettings::instance()->value("Language").toLocale());
+	NSettings::instance()->setValue("Language", ui.languageComboBox->itemData(ui.languageComboBox->currentIndex()).toLocale().bcp47Name().split('-').first());
 	// << translations
 
 
