@@ -491,35 +491,14 @@ void NPlayer::loadSettings()
 	if (m_settings->value("AutoCheckUpdates").toBool())
 		downloadVersion();
 
-	bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
-	if (alwaysOnTop) {
-		NAction *alwaysOnTopAction = qFindChild<NAction *>(this, "alwaysOnTopAction");
-		alwaysOnTopAction->setChecked(TRUE);
-	}
+	qFindChild<NAction *>(this, "showCoverAction")->setChecked(m_settings->value("ShowCoverArt").toBool());
+	qFindChild<QWidget *>(m_mainWindow, "coverWidget")->setEnabled(m_settings->value("ShowCoverArt").toBool());
 
-	bool showCover = m_settings->value("ShowCoverArt").toBool();
-	NAction *showCoverAction = qFindChild<NAction *>(this, "showCoverAction");
-	showCoverAction->setChecked(showCover);
-	QWidget *coverWidget = qFindChild<QWidget *>(m_mainWindow, "coverWidget");
-	coverWidget->setEnabled(showCover);
+	qFindChild<NAction *>(this, "alwaysOnTopAction"      )->setChecked(m_settings->value("AlwaysOnTop").toBool());
+	qFindChild<NAction *>(this, "whilePlayingOnTopAction")->setChecked(m_settings->value("WhilePlayingOnTop").toBool());
+	qFindChild<NAction *>(this, "loopPlaylistAction"     )->setChecked(m_settings->value("LoopPlaylist").toBool());
+	qFindChild<NAction *>(this, "loadNextAction"         )->setChecked(m_settings->value("LoadNext").toBool());
 
-	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
-	if (whilePlaying) {
-		NAction *whilePlayingOnTopAction = qFindChild<NAction *>(this, "whilePlayingOnTopAction");
-		whilePlayingOnTopAction->setChecked(TRUE);
-	}
-
-	bool loopPlaylist = m_settings->value("LoopPlaylist").toBool();
-	if (loopPlaylist) {
-		NAction *loopPlaylistAction = qFindChild<NAction *>(this, "loopPlaylistAction");
-		loopPlaylistAction->setChecked(TRUE);
-	}
-
-	bool loadNext = m_settings->value("LoadNext").toBool();
-	if (loadNext) {
-		NAction *loadNextAction = qFindChild<NAction *>(this, "loadNextAction");
-		loadNextAction->setChecked(TRUE);
-	}
 	QDir::SortFlag flag = (QDir::SortFlag)m_settings->value("LoadNextSort").toInt();
 	NAction *action;
 	if (flag == (QDir::Name))
