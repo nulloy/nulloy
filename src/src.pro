@@ -14,9 +14,7 @@ SOURCES += *.cpp
 
 FORMS += *.ui
 
-isEmpty(TMP_DIR){
-	TMP_DIR = $$PWD/../.tmp
-}
+isEmpty(TMP_DIR):TMP_DIR = $$PWD/../.tmp
 OBJECTS_DIR	= $$TMP_DIR
 MOC_DIR     = $$TMP_DIR
 RCC_DIR     = $$TMP_DIR

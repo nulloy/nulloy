@@ -199,6 +199,7 @@ echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
 [ ! -d "$NULLOY_BUILD_TMP_DIR" ] && mkdir $NULLOY_BUILD_TMP_DIR
 echo "TMP_DIR = $NULLOY_BUILD_TMP_DIR" >> $QMAKE_CACHE
 
+[ ! -z "$LRELEASE" ] && echo "LRELEASE = $LRELEASE" >> $QMAKE_CACHE
 
 if [[ `uname | grep -i darwin` ]]; then
     QMAKE_EXTRA_OPTIONS="-spec macx-g++"
