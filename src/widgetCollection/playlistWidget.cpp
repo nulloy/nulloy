@@ -257,6 +257,7 @@ void NPlaylistWidget::addFiles(const QStringList &files)
 void NPlaylistWidget::setFiles(const QStringList &files)
 {
 	clear();
+	m_shuffledItems.clear();
 	m_currentItem = NULL;
 	foreach (QString path, files)
 		addItem(new NPlaylistWidgetItem(QFileInfo(path)));
@@ -265,6 +266,7 @@ void NPlaylistWidget::setFiles(const QStringList &files)
 bool NPlaylistWidget::setPlaylist(const QString &file)
 {
 	clear();
+	m_shuffledItems.clear();
 	m_currentItem = NULL;
 
 	QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readPlaylist(file);
