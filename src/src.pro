@@ -92,25 +92,6 @@ build_pass:CONFIG(static, static|shared) {
 }
 
 
-# qmake -config no-plugins
-!no-plugins {
-	HEADERS -= pluginLoader.h
-	SOURCES -= pluginLoader.cpp
-} else {
-	DEFINES += _N_NO_PLUGINS_
-}
-
-
-# qmake -config embed-gstreamer
-embed-gstreamer|no-plugins {
-	include(plugins/gstreamer.pri)
-	DEFINES += _N_GSTREAMER_PLUGINS_BUILTIN_
-	HEADERS += plugins/waveformBuilderGstreamer/*.h plugins/playbackEngineGstreamer/*.h
-	SOURCES += plugins/waveformBuilderGstreamer/*.cpp plugins/playbackEngineGstreamer/*.cpp
-	INCLUDEPATH += plugins/waveformBuilderGstreamer plugins/playbackEngineGstreamer
-}
-
-
 # qmake "PREFIX=/usr"
 unix:!mac {
 	prefix.path = $$PREFIX
@@ -125,18 +106,15 @@ unix:!mac {
 
 	INSTALLS += target icons desktop
 
-	!no-plugins {
-		plugins.files = ../plugins/*
-		plugins.path = $$prefix.path/lib/nulloy/plugins
-		INSTALLS += plugins
-	}
+
+	plugins.files = ../plugins/*
+	plugins.path = $$prefix.path/lib/nulloy/plugins
+	INSTALLS += plugins
 }
 mac {
 	prefix.path = ../$${TARGET}.app
 
-	!no-plugins {
-		plugins.files = ../plugins/*
-		plugins.path = $$prefix.path/Contents/MacOS/plugins
-		INSTALLS += plugins
-	}
+	plugins.files = ../plugins/*
+	plugins.path = $$prefix.path/Contents/MacOS/plugins
+	INSTALLS += plugins
 }

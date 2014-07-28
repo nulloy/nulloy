@@ -15,17 +15,12 @@
 
 #include "waveformSlider.h"
 #include "waveformBuilderInterface.h"
+#include "pluginLoader.h"
 
 #include <QMouseEvent>
 #include <QFile>
 #include <QStylePainter>
 #include <QStyleOptionFocusRect>
-
-#ifndef _N_NO_PLUGINS_
-#include "pluginLoader.h"
-#else
-#include "waveformBuilderGstreamer.h"
-#endif
 
 NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 {
@@ -38,14 +33,7 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_normalComposition = QPainter::CompositionMode_Overlay;
 	m_pausedComposition = QPainter::CompositionMode_Overlay;
 
-
-#ifndef _N_NO_PLUGINS_
 	m_waveBuilder = dynamic_cast<NWaveformBuilderInterface *>(NPluginLoader::getPlugin(N::WaveformBuilder));
-#else
-	NWaveformBuilderInterface *builder = dynamic_cast<NWaveformBuilderInterface *>(new NWaveformBuilderGstreamer());
-	dynamic_cast<NPlugin *>(builder)->init();
-	m_waveBuilder = builder;
-#endif
 
 	m_bufImage.resize(7);
 

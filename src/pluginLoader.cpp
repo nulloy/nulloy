@@ -28,11 +28,6 @@
 #include <QMessageBox>
 #include <QPluginLoader>
 
-#ifdef _N_GSTREAMER_PLUGINS_BUILTIN_
-#include "playbackEngineGstreamer.h"
-#include "waveformBuilderGstreamer.h"
-#endif
-
 Q_DECLARE_METATYPE(NPlugin *)
 Q_DECLARE_METATYPE(QPluginLoader *)
 
@@ -102,28 +97,6 @@ void NPluginLoader::_init()
 	if (__init)
 		return;
 	__init = TRUE;
-
-#if 0
-	QMap<QString, bool> usedFlags;
-	QList<NPlugin *> plugins;
-	QList<NPlugin *> pluginsStatic;
-#ifdef _N_GSTREAMER_PLUGINS_BUILTIN_
-	pluginsStatic << new NPlaybackEngineGStreamer() << new NWaveformBuilderGstreamer();
-#endif
-	pluginsStatic << QPluginLoader::staticInstances();
-
-	foreach (NPlugin *plugin, pluginsStatic) {
-		if (plugin) {
-			plugins << plugin;
-			plugin->init();
-			QString id = plugin->identifier();
-			id.insert(id.lastIndexOf('/'), " (Built-in)");
-			_identifiers << id;
-			_loaders << NULL;
-			usedFlags << TRUE;
-		}
-	}
-#endif
 
 	QStringList pluginsDirList;
 	pluginsDirList << QCoreApplication::applicationDirPath() + "/plugins";

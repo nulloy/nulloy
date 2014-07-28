@@ -11,12 +11,10 @@ HAVE_VLC=no
 FORCE_VERSION=no
 BUILD_GSTREAMER=yes
 BUILD_GSTREAMER_TAGREADER=yes
-EMBED_GSTREAMER=no
 BUILD_TAGLIB=no
 BUILD_VLC=no
 BUILD_PHONON=no
 SUPPORT_SKINS=yes
-SUPPORT_PLUGINS=yes
 OSX_BUNDLE=yes
 
 
@@ -25,12 +23,10 @@ echo_help()
 	echo "Usage:  $BASENAME [options]"
 	echo '    --no-gstreamer              do not build GStreamer plugins'
 	echo '    --no-gstreamer-tagreader    do not build GStreamer TagReader plugin'
-	echo '    --embed-gstreamer           embed GStreamer plugins statically'
 	echo '    --vlc                       build VLC plugins'
 	echo '    --phonon                    build Phonon plugins'
 	echo '    --taglib                    build with TagLib'
 	echo '    --no-skins                  disable skins support'
-	echo '    --no-plugins                disable plugins support'
 	echo '    --force-version VERSION     overrides version.pri'
 	echo '    --prefix PREFIX             installation prefix'
 	echo '    --no-app-bundle             do not make .app, Mac OS X only'
@@ -51,7 +47,7 @@ if [ ! $? -eq 4 ]; then
 	exit 1
 fi
 
-args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer no-gstreamer-tagreader embed-gstreamer vlc phonon taglib no-skins no-plugins debug prefix: no-app-bundle help" -- "$@"`
+args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer no-gstreamer-tagreader vlc phonon taglib no-skins debug prefix: no-app-bundle help" -- "$@"`
 
 if test $? != 0; then
 	echo_try; exit 1
@@ -69,8 +65,6 @@ while [ $# -gt 0 ]; do
 		BUILD_GSTREAMER=no
 	elif [ $1 == "--no-gstreamer-tagreader" ]; then
 		BUILD_GSTREAMER_TAGREADER=no
-	elif [ $1 == "--embed-gstreamer" ]; then
-		EMBED_GSTREAMER=yes
 	elif [ $1 == "--vlc" ]; then
 		BUILD_VLC=yes
 	elif [ $1 == "--phonon" ]; then
@@ -79,8 +73,6 @@ while [ $# -gt 0 ]; do
 		BUILD_TAGLIB=yes
 	elif [ $1 == "--no-skins" ]; then
 		SUPPORT_SKINS=no
-	elif [ $1 == "--no-plugins" ]; then
-		SUPPORT_PLUGINS=no
 	elif [ $1 == "--no-app-bundle" ]; then
 		OSX_BUNDLE=no
 	elif [ $1 == "--help" ]; then
@@ -131,7 +123,7 @@ which pkg-config > /dev/null
 if [ $? -eq 0 ]; then
 	echo "checking for pkg-config... yes"
 
-	if [[ $BUILD_GSTREAMER == "yes" || $EMBED_GSTREAMER == "yes" ]]; then
+	if [ "$BUILD_GSTREAMER" == "yes" ]; then
 		pkg_check_lib gstreamer-0.10
 	fi
 
@@ -152,35 +144,12 @@ else
 	exit 1
 fi
 
-if [ $SUPPORT_PLUGINS == "no" ]; then
-	if [ $BUILD_GSTREAMER == "no" ]; then
-		echo "'--no-gstreamer' cannot be used along with '--no-plugins'"
-		exit 1
-	else
-		BUILD_GSTREAMER=no
-	fi
-	if [ $EMBED_GSTREAMER == "yes" ]; then
-		echo "'--embed-gstreamer' cannot be used along with '--no-plugins'"
-		exit 1
-	fi
-	if [ $BUILD_PHONON == "yes" ]; then
-		echo "'--phonon' cannot be used along with '--no-plugins'"
-		exit 1
-	fi
-	if [ $BUILD_VLC == "yes" ]; then
-		echo "'--vlc' cannot be used along with '--no-plugins'"
-		exit 1
-	fi
-fi
-
 [ $BUILD_GSTREAMER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG gstreamer"
 [ $BUILD_GSTREAMER_TAGREADER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG gstreamer-tagreader"
-[ $EMBED_GSTREAMER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG embed-gstreamer"
 [ $BUILD_VLC == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG vlc"
 [ $BUILD_PHONON == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG phonon"
 [ $BUILD_TAGLIB == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG taglib"
 [ $SUPPORT_SKINS == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-skins"
-[ $SUPPORT_PLUGINS == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-plugins"
 [ $OSX_BUNDLE == "no" ] && QMAKE_CONFIG="$QMAKE_CONFIG no-app-bundle"
 if [ $DEBUG == "yes" ]; then
 	QMAKE_CONFIG="$QMAKE_CONFIG debug"

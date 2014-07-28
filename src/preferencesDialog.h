@@ -19,10 +19,7 @@
 #include <QDialog>
 #include "ui_preferencesDialog.h"
 #include "global.h"
-
-#ifndef _N_NO_PLUGINS_
 #include "pluginLoader.h"
-#endif
 
 class QGroupBox;
 class QRadioButton;

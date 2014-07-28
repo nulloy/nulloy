@@ -25,7 +25,6 @@ win32 {
 }
 
 
-
 HEADERS += $$files(*.h)
 SOURCES += $$files(*.cpp)
 

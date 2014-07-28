@@ -24,6 +24,7 @@
 #include "playbackEngineInterface.h"
 #include "playlistWidget.h"
 #include "playlistWidgetItem.h"
+#include "pluginLoader.h"
 #include "preferencesDialog.h"
 #include "scriptEngine.h"
 #include "settings.h"
@@ -34,12 +35,6 @@
 #ifndef _N_NO_SKINS_
 #include "skinLoader.h"
 #include "skinFileSystem.h"
-#endif
-
-#ifndef _N_NO_PLUGINS_
-#include "pluginLoader.h"
-#else
-#include "playbackEngineGstreamer.h"
 #endif
 
 #ifdef Q_WS_WIN
@@ -64,12 +59,7 @@ NPlayer::NPlayer()
 	NI18NLoader::loadTranslation();
 
 	// construct playbackEngine >>
-#ifndef _N_NO_PLUGINS_
 	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
-#else
-	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(new NPlaybackEngineGStreamer());
-	dynamic_cast<NPlugin *>(m_playbackEngine)->init();
-#endif
 	m_playbackEngine->setParent(this);
 	connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), this, SLOT(on_playbackEngine_mediaChanged(const QString &)));
 	connect(m_playbackEngine, SIGNAL(stateChanged(N::PlaybackState)), this, SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));

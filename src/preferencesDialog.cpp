@@ -73,9 +73,6 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	NSkinFileSystem::addFile("warning.png", byteArray);
 	QString url = "<img src=\"skin:warning.png\"/>";
 
-#ifdef _N_NO_PLUGINS_
-	ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
-#else
 	QVBoxLayout *scrollLayout = new QVBoxLayout;
 	ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
 
@@ -95,7 +92,6 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 
 	ui.pluginsRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.pluginsRestartLabel->text());
 	ui.pluginsRestartLabel->setVisible(FALSE);
-#endif
 
 	ui.languageRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.languageRestartLabel->text());
 	ui.languageRestartLabel->setVisible(FALSE);
@@ -386,7 +382,6 @@ void NPreferencesDialog::saveSettings()
 
 
 	// plugins >>
-#ifndef _N_NO_PLUGINS_
 	NFlagIterator<N::PluginType> iter(N::MaxPlugin);
 	while (iter.hasNext()) {
 		iter.next();
@@ -396,7 +391,6 @@ void NPreferencesDialog::saveSettings()
 		if (!containerName.isEmpty())
 			NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);
 	}
-#endif
 	// << plugins
 
 

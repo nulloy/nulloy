@@ -46,7 +46,5 @@ QList<NPlugin *> NContainerGstreamer::plugins()
 	return m_plugins;
 }
 
-#if !defined _N_GSTREAMER_PLUGINS_BUILTIN_ && !defined _N_NO_PLUGINS_
 Q_EXPORT_PLUGIN2(plugin_gstreamer, NContainerGstreamer)
-#endif
 
