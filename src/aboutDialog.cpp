@@ -189,7 +189,7 @@ NAboutDialog::~NAboutDialog() {}
 void NAboutDialog::show()
 {
 	QDialog::show();
-	
+
 	// resize according to content
 	foreach (QString objectName, QStringList() << "aboutTextBrowser" << "licenseTextBrowser"){
 		QTextBrowser *textBrowser = qFindChild<QTextBrowser *>(parent(), objectName);

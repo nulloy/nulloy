@@ -111,16 +111,16 @@ void NPluginLoader::_init()
 #endif
 
 #ifdef Q_WS_WIN
-		QStringList subDirsList;
-		foreach (QString dirStr, pluginsDirList) {
-			QDir dir(dirStr);
-			if (dir.exists()) {
-				foreach (QString subDir, dir.entryList(QDir::Dirs))
-					subDirsList << dirStr + "/" + subDir;
-			}
+	QStringList subDirsList;
+	foreach (QString dirStr, pluginsDirList) {
+		QDir dir(dirStr);
+		if (dir.exists()) {
+			foreach (QString subDir, dir.entryList(QDir::Dirs))
+				subDirsList << dirStr + "/" + subDir;
 		}
-		_putenv(QString("PATH=" + pluginsDirList.join(";") + ";" +
-			subDirsList.join(";") + ";" + getenv("PATH")).replace('/', '\\').toUtf8());
+	}
+	_putenv(QString("PATH=" + pluginsDirList.join(";") + ";" +
+		subDirsList.join(";") + ";" + getenv("PATH")).replace('/', '\\').toUtf8());
 #endif
 	foreach (QString dirStr, pluginsDirList) {
 		QDir dir(dirStr);

@@ -94,7 +94,7 @@ QScriptValue maskImage(QScriptContext *context, QScriptEngine *engine)
 	painter.fillRect(result.rect(), color);
 
 	painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-	
+
 	// hack for solid bitmaps
 	color.setAlpha(243);
 	painter.fillRect(0, 0, 1, 1, color);

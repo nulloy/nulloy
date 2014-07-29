@@ -106,7 +106,6 @@ unix:!mac {
 
 	INSTALLS += target icons desktop
 
-
 	plugins.files = ../plugins/*
 	plugins.path = $$prefix.path/lib/nulloy/plugins
 	INSTALLS += plugins

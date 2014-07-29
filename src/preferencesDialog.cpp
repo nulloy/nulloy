@@ -238,7 +238,7 @@ void NPreferencesDialog::on_languageComboBox_activated(int index)
 	QLocale locale = ui.languageComboBox->itemData(index).toLocale();
 	NI18NLoader::loadTranslation(locale.language());
 	QString newText = QCoreApplication::translate("PreferencesDialog", "Switching languages requires restart", 0, QApplication::UnicodeUTF8);
-    ui.languageRestartLabel->setText(ui.languageRestartLabel->text().replace(QRegExp("(.*)&nbsp;.*"), "\\1&nbsp;" + newText));
+	ui.languageRestartLabel->setText(ui.languageRestartLabel->text().replace(QRegExp("(.*)&nbsp;.*"), "\\1&nbsp;" + newText));
 }
 
 QString NPreferencesDialog::selectedContainer(N::PluginType type)

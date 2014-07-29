@@ -28,7 +28,7 @@ private:
 	NW7TaskBar() {}
 	~NW7TaskBar() {}
 	NW7TaskBar(NW7TaskBar const &copy);
-    NW7TaskBar operator=(NW7TaskBar const &copy);
+	NW7TaskBar operator=(NW7TaskBar const &copy);
 
 public:
 	enum State {
