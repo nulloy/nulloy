@@ -31,4 +31,4 @@ unix {
 }
 
 # to sync *.ts with sources:
-# $ lupdate src -ts src/i18n/*.ts
+# $ lupdate -locations relative src -ts src/i18n/*.ts
