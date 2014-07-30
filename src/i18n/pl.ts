@@ -631,6 +631,11 @@
         <source>Switching plugins requires restart</source>
         <translation>Zmiana wtyczek wymaga restartu</translation>
     </message>
+    <message>
+        <location filename="../preferencesDialog.cpp" line="+94"/>
+        <source>English</source>
+        <translation>Polski</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -676,7 +681,7 @@
         <translation>Nie znaleziono wtyczki odczytującej tagi utworów muzycznych (TagReader).</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+178"/>
+        <location filename="../preferencesDialog.cpp" line="+87"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Tacka systemowa (Obszar powiadomień) jest niedostępny w twoim systemie.</translation>
     </message>

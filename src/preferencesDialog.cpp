@@ -329,8 +329,12 @@ void NPreferencesDialog::loadSettings()
 	// translations >>
 	int localeIndex;
 	ui.languageComboBox->clear();
-	foreach (QLocale::Language language, NI18NLoader::translations())
-		ui.languageComboBox->addItem(QLocale::languageToString(language), QLocale(language));
+	foreach (QLocale::Language language, NI18NLoader::translations()) {
+		NI18NLoader::loadTranslation(language);
+		QString languageString = QLocale::languageToString(language);
+		QString localizedString = QCoreApplication::translate("PreferencesDialog", "English", 0, QApplication::UnicodeUTF8);
+		ui.languageComboBox->addItem(QString("%1 (%2)").arg(localizedString).arg(languageString), QLocale(language));
+	}
 
 	if (ui.languageComboBox->count() == 1)
 		ui.languageComboBox->setEnabled(FALSE);

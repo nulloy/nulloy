@@ -631,6 +631,11 @@
         <source>Switching plugins requires restart</source>
         <translation>Das Ändern von Plugins erfordert einen Neustart</translation>
     </message>
+    <message>
+        <location filename="../preferencesDialog.cpp" line="+94"/>
+        <source>English</source>
+        <translation>Deutsche</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -676,7 +681,7 @@
         <translation>TagReader-Plugin nicht gefunden.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+178"/>
+        <location filename="../preferencesDialog.cpp" line="+87"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Der Infobereich der Taskliste ist nicht verfügbar.</translation>
     </message>

@@ -631,6 +631,11 @@
         <source>Switching plugins requires restart</source>
         <translation>Переключение плагинов требует перезапуска</translation>
     </message>
+    <message>
+        <location filename="../preferencesDialog.cpp" line="+94"/>
+        <source>English</source>
+        <translation>Русский</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -676,7 +681,7 @@
         <translation>TagReader плагин отсутствует.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+178"/>
+        <location filename="../preferencesDialog.cpp" line="+87"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Системный лоток (область уведомлений) на этой системе не доступна.</translation>
     </message>

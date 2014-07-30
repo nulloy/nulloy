@@ -631,6 +631,11 @@
         <source>Switching plugins requires restart</source>
         <translation>Changer de plugin necessite un redémarrage de Nulloy</translation>
     </message>
+    <message>
+        <location filename="../preferencesDialog.cpp" line="+94"/>
+        <source>English</source>
+        <translation>Français</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -676,7 +681,7 @@
         <translation>Plugin introuvage (TagReader).</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+178"/>
+        <location filename="../preferencesDialog.cpp" line="+87"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>L&apos;affichage dans une zone de notification n&apos;est pas disponible pour ce système.</translation>
     </message>
