@@ -43,7 +43,7 @@ mingw32-make install
 
 ```bat
 cd C:\nulloy.git
-configure.bat --taglib --no-gstreamer-tagreader --force-version 1-testing
+configure --force-version 1-testing
 mingw32-make
 Nulloy.exe
 ```
