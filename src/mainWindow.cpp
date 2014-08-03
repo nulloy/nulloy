@@ -35,6 +35,8 @@
 #include <QLayout>
 #include <QWindowStateChangeEvent>
 #include <QTime>
+#include <QDesktopWidget>
+#include <QApplication>
 
 NMainWindow::NMainWindow(QWidget *parent) : QDialog(parent)
 {
@@ -67,8 +69,8 @@ void NMainWindow::init(const QString &uiFile)
 	ui.setupUi(this);
 #endif
 
-	m_oldPos = QPoint(-1, -1);
-	m_oldSize = QSize(-1, -1);
+	m_unmaximizedSize = QSize();
+	m_unmaximizedPos = QPoint();
 
 	// enabling dragging window from any point
 	QList<QWidget *> widgets = findChildren<QWidget *>();
@@ -93,49 +95,100 @@ void NMainWindow::init(const QString &uiFile)
 	QMetaObject::connectSlotsByName(this);
 }
 
-void NMainWindow::toggleVisibility()
-{
-	setVisible(!isVisible());
-}
-
 void NMainWindow::loadSettings()
 {
+	QPoint _pos;
 	QStringList posList = NSettings::instance()->value("Position").toStringList();
 	if (!posList.isEmpty()) {
-		m_oldPos = QPoint(posList.at(0).toInt(), posList.at(1).toInt());
-		move(m_oldPos);
+		_pos = QPoint(posList.at(0).toInt(), posList.at(1).toInt());
+		move(_pos);
 	}
 
+	QSize _size;
 	QStringList sizeList = NSettings::instance()->value("Size").toStringList();
 	if (!sizeList.isEmpty())
-		m_oldSize = QSize(sizeList.at(0).toInt(), sizeList.at(1).toInt());
+		_size = QSize(sizeList.at(0).toInt(), sizeList.at(1).toInt());
 	else
-		m_oldSize = QSize(430, 350);
+		_size = QSize(430, 350);
+	resize(_size);
 
-	resize(m_oldSize);
-
-	bool maximized = NSettings::instance()->value("Maximized").toBool();
-	if (maximized)
-		showMaximized();
+	if (NSettings::instance()->value("Maximized").toBool()) {
+		m_unmaximizedPos = _pos;
+		m_unmaximizedSize = _size;
+		toggleMaximize();
+	}
 }
 
 void NMainWindow::saveSettings()
 {
-	bool maximized = isMaximized();
-	NSettings::instance()->setValue("Maximized", maximized);
+	NSettings::instance()->setValue("Maximized", isMaximized());
 
-	QPoint savePos;
-	QSize saveSize;
-	if (!maximized) {
-		savePos = pos();
-		saveSize = size();
-	} else {
-		savePos = m_oldPos;
-		saveSize = m_oldSize;
+	QPoint _pos = pos();
+	QSize _size = size();
+	if (m_unmaximizedSize.isValid()) {
+		_pos = m_unmaximizedPos;
+		_size = m_unmaximizedSize;
 	}
 
-	NSettings::instance()->setValue("Position", QStringList() << QString::number(savePos.x()) << QString::number(savePos.y()));
-	NSettings::instance()->setValue("Size", QStringList() << QString::number(saveSize.width()) << QString::number(saveSize.height()));
+	NSettings::instance()->setValue("Position", QStringList() << QString::number(_pos.x()) << QString::number(_pos.y()));
+	NSettings::instance()->setValue("Size", QStringList() << QString::number(_size.width()) << QString::number(_size.height()));
+}
+
+void NMainWindow::show()
+{
+	if (isMaximized()) {
+		showMaximized();
+		setGeometry(QApplication::desktop()->availableGeometry());
+		showMaximized();
+	} else {
+		showNormal();
+	}
+}
+
+void NMainWindow::toggleMaximize()
+{
+	if (isMaximized()) {
+		showNormal();
+		resize(m_unmaximizedSize);
+		move(m_unmaximizedPos);
+		m_unmaximizedPos = QPoint();
+		m_unmaximizedSize = QSize();
+	} else {
+		m_unmaximizedPos = pos();
+		m_unmaximizedSize = size();
+		showMaximized();
+		setGeometry(QApplication::desktop()->availableGeometry());
+		showMaximized();
+	}
+
+	emit fullScreenEnabled(FALSE);
+	emit maximizeEnabled(isMaximized());
+}
+
+void NMainWindow::toggleFullScreen()
+{
+	m_isFullScreen = !m_isFullScreen;
+	emit fullScreenEnabled(m_isFullScreen);
+
+	if (m_isFullScreen) {
+		if (!m_unmaximizedSize.isValid()) {
+			m_unmaximizedSize = size();
+			m_unmaximizedPos = pos();
+		}
+		QDialog::showFullScreen();
+	} else {
+		QPoint _pos = m_unmaximizedPos;
+		QSize _size = m_unmaximizedSize;
+		QDialog::showNormal();
+		m_unmaximizedPos = _pos;
+		m_unmaximizedSize = _size;
+		if (m_unmaximizedSize.isValid()) {
+			resize(m_unmaximizedSize);
+			move(m_unmaximizedPos);
+			m_unmaximizedSize = QSize();
+			m_unmaximizedPos = QPoint();
+		}
+	}
 }
 
 void NMainWindow::setTitle(QString title)
@@ -146,16 +199,23 @@ void NMainWindow::setTitle(QString title)
 
 void NMainWindow::changeEvent(QEvent *event)
 {
+	QWidget::changeEvent(event);
+
+	if (windowFlags() & Qt::FramelessWindowHint)
+		return;
+
 	if (event->type() == QEvent::WindowStateChange) {
 		QWindowStateChangeEvent *stateEvent = static_cast<QWindowStateChangeEvent *>(event);
-
 		if (stateEvent->oldState() == Qt::WindowNoState && isMaximized()) {
-			m_oldPos = pos();
-			m_oldSize = size();
+			if (!m_unmaximizedSize.isValid()) {
+				m_unmaximizedPos = pos();
+				m_unmaximizedSize = size();
+			}
+		} else if (!isMaximized() && !isMinimized() && !m_isFullScreen) {
+			m_unmaximizedSize = QSize();
+			m_unmaximizedPos = QPoint();
 		}
 	}
-
-	QWidget::changeEvent(event);
 }
 
 bool NMainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -179,7 +239,7 @@ void NMainWindow::mousePressEvent(QMouseEvent *event)
 
 void NMainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-	if ((event->buttons() & Qt::LeftButton) && m_dragActive) {
+	if ((event->buttons() & Qt::LeftButton) && m_dragActive && !isMaximized()) {
 		move(event->globalPos() - m_dragPoint);
 		event->accept();
 	}
@@ -191,21 +251,8 @@ void NMainWindow::resizeEvent(QResizeEvent *event)
 	emit resized();
 }
 
-void NMainWindow::showEvent(QShowEvent *event)
-{
-	loadSettings();
-	QDialog::showEvent(event);
-}
-
-void NMainWindow::hideEvent(QHideEvent *event)
-{
-	saveSettings();
-	QDialog::hideEvent(event);
-}
-
 void NMainWindow::closeEvent(QCloseEvent *event)
 {
-	saveSettings();
 	QDialog::closeEvent(event);
 	emit closed();
 }
@@ -256,29 +303,6 @@ bool NMainWindow::winEvent(MSG *message, long *result)
 	}
 }
 #endif
-
-void NMainWindow::toggleMaximize()
-{
-	if (isMaximized())
-		showNormal();
-	else
-		showMaximized();
-
-	emit fullScreenEnabled(FALSE);
-	emit maximizeEnabled(isMaximized());
-}
-
-void NMainWindow::showFullScreen()
-{
-	emit fullScreenEnabled(TRUE);
-	QDialog::showFullScreen();
-}
-
-void NMainWindow::showNormal()
-{
-	emit fullScreenEnabled(FALSE);
-	QDialog::showNormal();
-}
 
 void NMainWindow::setOnTop(bool onTop)
 {

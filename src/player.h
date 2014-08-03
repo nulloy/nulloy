@@ -70,17 +70,17 @@ private slots:
 	void saveSettings();
 
 	void on_preferencesDialog_settingsChanged();
-	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
-	void on_mainWindow_closed();
 	void on_playbackEngine_mediaChanged(const QString &path);
 	void on_playbackEngine_stateChanged(N::PlaybackState state);
 	void on_alwaysOnTopAction_toggled(bool checked);
-	void on_fullScreenAction_toggled(bool checked);
 	void on_whilePlayingOnTopAction_toggled(bool checked);
 	void on_showCoverAction_toggled(bool checked);
 	void downloadVersion();
 	void on_versionDownloader_finished(QNetworkReply *reply);
 	void playlistActionTriggered();
+
+	void on_mainWindow_closed();
+	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
 	void on_trayClickTimer_timeout();
 	void trayIconCountClicks(int clicks);
 

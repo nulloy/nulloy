@@ -190,10 +190,9 @@ NPlayer::NPlayer()
 
 	NAction *fullScreenAction = new NAction(tr("Fullscreen Mode"), this);
 	fullScreenAction->setStatusTip(tr("Hide all controll except waveform"));
-	fullScreenAction->setCheckable(TRUE);
 	fullScreenAction->setObjectName("fullScreenAction");
 	fullScreenAction->setCustomizable(TRUE);
-	connect(fullScreenAction, SIGNAL(toggled(bool)), this, SLOT(on_fullScreenAction_toggled(bool)));
+	connect(fullScreenAction, SIGNAL(triggered()), m_mainWindow, SLOT(toggleFullScreen()));
 	// << actions
 
 
@@ -349,6 +348,7 @@ NPlayer::NPlayer()
 
 	m_mainWindow->setTitle(QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion());
 	m_mainWindow->show();
+	m_mainWindow->loadSettings();
 	QResizeEvent e(m_mainWindow->size(), m_mainWindow->size());
 	QCoreApplication::sendEvent(m_mainWindow, &e);
 
@@ -389,7 +389,7 @@ bool NPlayer::eventFilter(QObject *obj, QEvent *event)
 void NPlayer::readMessage(const QString &str)
 {
 	if (str.isEmpty()) {
-		m_mainWindow->showNormal();
+		m_mainWindow->show();
 		m_mainWindow->activateWindow();
 		m_mainWindow->raise();
 		return;
@@ -582,10 +582,11 @@ void NPlayer::on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
 
 void NPlayer::toggleWindowVisibility()
 {
-	if (!m_mainWindow->isVisible() || !m_mainWindow->isActiveWindow()) {
-		m_mainWindow->showNormal();
+	if (!m_mainWindow->isVisible() || m_mainWindow->isMinimized()) {
+		m_mainWindow->show();
 		m_mainWindow->activateWindow();
 		m_mainWindow->raise();
+
 	} else if (m_settings->value("MinimizeToTray").toBool()) {
 		m_mainWindow->setVisible(FALSE);
 		m_systemTray->setVisible(TRUE);
@@ -597,7 +598,7 @@ void NPlayer::toggleWindowVisibility()
 void NPlayer::trayIconCountClicks(int clicks)
 {
 	if (clicks == 1) {
-		m_mainWindow->showNormal();
+		m_mainWindow->show();
 		m_mainWindow->activateWindow();
 		m_mainWindow->raise();
 	} else if (clicks == 2) {
@@ -609,7 +610,7 @@ void NPlayer::trayIconCountClicks(int clicks)
 
 void NPlayer::quit()
 {
-	m_mainWindow->close();
+	m_mainWindow->saveSettings();
 	saveDefaultPlaylist();
 	saveSettings();
 	QCoreApplication::quit();
@@ -661,15 +662,6 @@ void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
 	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
 	if (!whilePlaying || m_playbackEngine->state() != N::PlaybackPlaying)
 		m_mainWindow->setOnTop(checked);
-}
-
-void NPlayer::on_fullScreenAction_toggled(bool checked)
-{
-	if (checked) {
-		m_mainWindow->showFullScreen();
-	} else {
-		m_mainWindow->showNormal();
-	}
 }
 
 void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)
