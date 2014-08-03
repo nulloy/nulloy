@@ -147,7 +147,7 @@
         <translation>Enlever tous les contrôles exepté la forme d&apos;onde</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>Loop playlist</source>
         <translation>Boucle playlist</translation>
     </message>
@@ -174,7 +174,7 @@
         <translation>Playlist</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="+27"/>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
@@ -184,7 +184,7 @@
         <translation>Contrôles</translation>
     </message>
     <message>
-        <location line="+229"/>
+        <location line="+230"/>
         <source>Latest: </source>
         <translation>Dernière version: </translation>
     </message>
@@ -199,7 +199,7 @@
         <translation>Une nouvelle version est disponible: </translation>
     </message>
     <message>
-        <location line="+175"/>
+        <location line="+167"/>
         <source>All supported</source>
         <translation>Toutes les extensions supportées</translation>
     </message>
@@ -219,8 +219,8 @@
         <translation>Playlist M3U étendue</translation>
     </message>
     <message>
-        <location line="-495"/>
-        <location line="+50"/>
+        <location line="-487"/>
+        <location line="+49"/>
         <source>Window</source>
         <translation>Fenêtre</translation>
     </message>
@@ -426,7 +426,7 @@
         <translation>Fermer</translation>
     </message>
     <message>
-        <location line="+132"/>
+        <location line="+133"/>
         <source> (Built-in)</source>
         <translation> (Encastré)</translation>
     </message>
@@ -511,12 +511,12 @@
         <translation>Démarrer la lecture des nouveaux fichiers dès leur ajout à la playlist</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+44"/>
         <source>Display log dialog in case of errors</source>
         <translation>Afficher la fenêtre de logs en cas d&apos;erreur</translation>
     </message>
     <message>
-        <location line="-22"/>
+        <location line="-33"/>
         <source>Show volume in decibels (using Stevens&apos; law)</source>
         <translation>Afficher le volume en décibels (utilise la loi de Stevens)</translation>
     </message>
@@ -527,7 +527,7 @@
     </message>
     <message>
         <location line="+40"/>
-        <location filename="../preferencesDialog.cpp" line="-76"/>
+        <location filename="../preferencesDialog.cpp" line="-77"/>
         <source>Switching languages requires restart</source>
         <translation>Changer de langue necessite un redémarrage de Nulloy</translation>
     </message>
@@ -540,6 +540,11 @@
         <location line="+114"/>
         <source>Show progress on taskbar (Windows 7+ only)</source>
         <translation>Montrer les progrès réalisés dans la barre des tâches (Windows 7 + uniquement)</translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Search Cover Art in same directory (cover|folder|front).(jpg/png)</source>
+        <translation>Recherche pour l&apos;album de l&apos;image dans le même répertoire (cover|folder|front).(jpg/png)</translation>
     </message>
     <message>
         <location line="+28"/>
@@ -632,7 +637,7 @@
         <translation>Changer de plugin necessite un redémarrage de Nulloy</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+94"/>
+        <location filename="../preferencesDialog.cpp" line="+96"/>
         <source>English</source>
         <translation>Français</translation>
     </message>
@@ -681,7 +686,7 @@
         <translation>Plugin introuvage (TagReader).</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+87"/>
+        <location filename="../preferencesDialog.cpp" line="+88"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>L&apos;affichage dans une zone de notification n&apos;est pas disponible pour ce système.</translation>
     </message>
@@ -704,7 +709,7 @@
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="+748"/>
+        <location filename="../skins/metro/form.ui" line="+745"/>
         <location line="+98"/>
         <location filename="../skins/silver/form.ui" line="+881"/>
         <source>Minimize</source>

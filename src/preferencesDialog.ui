@@ -296,6 +296,17 @@ padding: 5px;</string>
         </layout>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_14">
+         <item>
+          <widget class="QCheckBox" name="coverArtFromDirCheckBox">
+           <property name="text">
+            <string>Search Cover Art in same directory (cover|folder|front).(jpg/png)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QCheckBox" name="displayLogDialogCheckBox">
@@ -591,8 +602,8 @@ padding: 5px;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>568</width>
+            <height>457</height>
            </rect>
           </property>
          </widget>

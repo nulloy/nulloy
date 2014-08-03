@@ -147,7 +147,7 @@
         <translation>Ukryj wszystko z wyjątkiem widma dźwięku</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>Loop playlist</source>
         <translation>Pętla listę odtwarzania</translation>
     </message>
@@ -174,7 +174,7 @@
         <translation>Lista odtwarzania</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="+27"/>
         <source>File</source>
         <translation>Plik</translation>
     </message>
@@ -184,7 +184,7 @@
         <translation>Sterowanie</translation>
     </message>
     <message>
-        <location line="+229"/>
+        <location line="+230"/>
         <source>Latest: </source>
         <translation>Najnowszy: </translation>
     </message>
@@ -199,7 +199,7 @@
         <translation>Dostępna nowa wersja: </translation>
     </message>
     <message>
-        <location line="+175"/>
+        <location line="+167"/>
         <source>All supported</source>
         <translation>Pełne wsparcie</translation>
     </message>
@@ -219,8 +219,8 @@
         <translation>Rozszerzona lista odtwarzania M3U</translation>
     </message>
     <message>
-        <location line="-495"/>
-        <location line="+50"/>
+        <location line="-487"/>
+        <location line="+49"/>
         <source>Window</source>
         <translation>Okno</translation>
     </message>
@@ -426,7 +426,7 @@
         <translation>Zamknij</translation>
     </message>
     <message>
-        <location line="+132"/>
+        <location line="+133"/>
         <source> (Built-in)</source>
         <translation> (Wbudowany)</translation>
     </message>
@@ -511,12 +511,12 @@
         <translation>Natychmiast odtwórz zakolejkowane utwory</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+44"/>
         <source>Display log dialog in case of errors</source>
         <translation>Wyświetl raport w razie wystąpienia błędów</translation>
     </message>
     <message>
-        <location line="-22"/>
+        <location line="-33"/>
         <source>Show volume in decibels (using Stevens&apos; law)</source>
         <translation>Pokazuj głośność w decybelach (używając Steven&apos; law)</translation>
     </message>
@@ -527,7 +527,7 @@
     </message>
     <message>
         <location line="+40"/>
-        <location filename="../preferencesDialog.cpp" line="-76"/>
+        <location filename="../preferencesDialog.cpp" line="-77"/>
         <source>Switching languages requires restart</source>
         <translation>Zmiana języka wymaga restartu</translation>
     </message>
@@ -540,6 +540,11 @@
         <location line="+114"/>
         <source>Show progress on taskbar (Windows 7+ only)</source>
         <translation>Pokaż postęp na pasku zadań (Windows 7 + tylko)</translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Search Cover Art in same directory (cover|folder|front).(jpg/png)</source>
+        <translation>Szukaj okładki w katalogu (cover|folder|front).(jpg/png)</translation>
     </message>
     <message>
         <location line="+28"/>
@@ -632,7 +637,7 @@
         <translation>Zmiana wtyczek wymaga restartu</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+94"/>
+        <location filename="../preferencesDialog.cpp" line="+96"/>
         <source>English</source>
         <translation>Polski</translation>
     </message>
@@ -681,7 +686,7 @@
         <translation>Nie znaleziono wtyczki odczytującej tagi utworów muzycznych (TagReader).</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+87"/>
+        <location filename="../preferencesDialog.cpp" line="+88"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Tacka systemowa (Obszar powiadomień) jest niedostępny w twoim systemie.</translation>
     </message>
@@ -704,7 +709,7 @@
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="+748"/>
+        <location filename="../skins/metro/form.ui" line="+745"/>
         <location line="+98"/>
         <location filename="../skins/silver/form.ui" line="+881"/>
         <source>Minimize</source>

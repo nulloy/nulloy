@@ -282,6 +282,7 @@ void NPreferencesDialog::loadSettings()
 	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
 	ui.showDecibelsVolumeCheckBox->setChecked(NSettings::instance()->value("ShowDecibelsVolume").toBool());
 	ui.fileFiltersTextEdit->setPlainText(NSettings::instance()->value("FileFilters").toStringList().join(" "));
+	ui.coverArtFromDirCheckBox->setChecked(NSettings::instance()->value("CoverArtFromDir").toBool());
 #ifdef Q_WS_WIN
 	ui.taskbarProgressCheckBox->setChecked(NSettings::instance()->value("TaskbarProgress").toBool());
 #endif
@@ -368,6 +369,7 @@ void NPreferencesDialog::saveSettings()
 	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
 	NSettings::instance()->setValue("ShowDecibelsVolume", ui.showDecibelsVolumeCheckBox->isChecked());
 	NSettings::instance()->setValue("FileFilters", ui.fileFiltersTextEdit->toPlainText().split(" "));
+	NSettings::instance()->setValue("CoverArtFromDir", ui.coverArtFromDirCheckBox->isChecked());
 #ifdef Q_WS_WIN
 	NSettings::instance()->setValue("TaskbarProgress", ui.taskbarProgressCheckBox->isChecked());
 	NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());

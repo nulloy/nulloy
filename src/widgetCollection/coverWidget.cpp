@@ -16,6 +16,7 @@
 #include "coverWidget.h"
 #include "coverReaderInterface.h"
 #include "pluginLoader.h"
+#include "settings.h"
 
 #include <QResizeEvent>
 #include <QDialog>
@@ -34,15 +35,13 @@ NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 {
 	m_coverReader = dynamic_cast<NCoverReaderInterface *>(NPluginLoader::getPlugin(N::CoverReader));
 
-	if (m_coverReader) {
-		m_popup = new NCoverWidgetPopup(this);
-		m_popup->setMaximumSize(0, 0);
-		QVBoxLayout *layout = new QVBoxLayout;
-		layout->setContentsMargins(0, 0, 0, 0);
-		m_popup->setLayout(layout);
-		m_fullsizeLabel = new QLabel;
-		layout->addWidget(m_fullsizeLabel);
-	}
+	m_popup = new NCoverWidgetPopup(this);
+	m_popup->setMaximumSize(0, 0);
+	QVBoxLayout *layout = new QVBoxLayout;
+	layout->setContentsMargins(0, 0, 0, 0);
+	m_popup->setLayout(layout);
+	m_fullsizeLabel = new QLabel;
+	layout->addWidget(m_fullsizeLabel);
 
 	hide();
 	setScaledContents(TRUE);
@@ -62,14 +61,30 @@ void NCoverWidget::changeEvent(QEvent *event)
 
 void NCoverWidget::setSource(const QString &file)
 {
-	if (!m_coverReader)
-		return;
-
 	hide();
 	init();
 
-	m_coverReader->setSource(file);
-	m_pixmap = QPixmap::fromImage(m_coverReader->getImage());
+	if (NSettings::instance()->value("PlaylistTrackInfo").toBool()) {
+		QDir dir = QFileInfo(file).absoluteDir();
+		QStringList files = dir.entryList(QStringList() << "*.jpg" << "*.png", QDir::Files);
+		QStringList patterns = QStringList() << "cover.*" << "folder.*" << "front.*";
+		foreach (QString pattern, patterns) {
+			int index = files.indexOf(QRegExp(pattern, Qt::CaseInsensitive));
+			if (index != -1) {
+				m_pixmap = QPixmap(dir.absolutePath() + "/" + files.at(index));
+				break;
+			}
+		}
+	}
+
+	// fallback to coverReader
+	if (m_pixmap.isNull()) {
+		if (!m_coverReader)
+			return;
+
+		m_coverReader->setSource(file);
+		m_pixmap = QPixmap::fromImage(m_coverReader->getImage());
+	}
 
 	if (!m_pixmap.isNull()) { // first scale, then show
 		setPixmap(m_pixmap);
@@ -81,6 +96,8 @@ void NCoverWidget::setSource(const QString &file)
 
 void NCoverWidget::init()
 {
+	m_pixmap = QPixmap();
+
 	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
 
 	setMinimumSize(0, 0);
@@ -96,7 +113,7 @@ void NCoverWidget::mousePressEvent(QMouseEvent *event)
 {
 	Q_UNUSED(event);
 	m_fullsizeLabel->setPixmap(m_pixmap);
-	m_popup->setWindowTitle(QString("%1x%2px").arg(m_pixmap.width()).arg(m_pixmap.height()));
+	m_popup->setWindowTitle(QString("%1 x %2").arg(m_pixmap.width()).arg(m_pixmap.height()));
 	m_popup->show();
 }
 

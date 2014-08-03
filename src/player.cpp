@@ -283,8 +283,7 @@ NPlayer::NPlayer()
 	playlistSubMenu->addAction(loadNextDateUpAction);
 	m_contextMenu->addMenu(playlistSubMenu);
 
-	if (NPluginLoader::getPlugin(N::CoverReader))
-		m_contextMenu->addAction(showCoverAction);
+	m_contextMenu->addAction(showCoverAction);
 	m_contextMenu->addAction(preferencesAction);
 	m_contextMenu->addSeparator();
 	m_contextMenu->addAction(aboutAction);
