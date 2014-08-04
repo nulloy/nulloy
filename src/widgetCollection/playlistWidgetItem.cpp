@@ -86,7 +86,7 @@ void NPlaylistWidgetItemDelegate::paint(QPainter *painter,
                                   const QModelIndex &index) const
 {
 	QStyleOptionViewItemV4 opt = option;
-	const NPlaylistWidget *playlistWidget = dynamic_cast<const NPlaylistWidget *>(opt.widget);
+	const NPlaylistWidget *playlistWidget = qobject_cast<const NPlaylistWidget *>(opt.widget);
 
 	if (index == playlistWidget->currentIndex()) { // if currently playing item
 		QColor color = playlistWidget->currentTextColor();

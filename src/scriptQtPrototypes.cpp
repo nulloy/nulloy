@@ -157,7 +157,7 @@ void NLayoutPrototype::setSpacingAt(int index, int spacing)
 	QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
 	if (layout) {
 		layout->removeItem(layout->itemAt(index));
-		dynamic_cast<QBoxLayout *>(layout)->insertSpacing(index, spacing);
+		qobject_cast<QBoxLayout *>(layout)->insertSpacing(index, spacing);
 	}
 }
 
@@ -165,7 +165,7 @@ void NLayoutPrototype::insertWidget(int index, QWidget *widget)
 {
 	QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
 	if (layout)
-		dynamic_cast<QBoxLayout *>(layout)->insertWidget(index, widget);
+		qobject_cast<QBoxLayout *>(layout)->insertWidget(index, widget);
 }
 
 NSplitterPrototype::NSplitterPrototype(QObject *parent) : QObject(parent) {}

@@ -243,7 +243,7 @@ void NPlaylistWidget::activateItem(NPlaylistWidgetItem *item)
 
 void NPlaylistWidget::on_itemActivated(QListWidgetItem *item)
 {
-	setCurrentItem(dynamic_cast<NPlaylistWidgetItem *>(item));
+	setCurrentItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
 	emit currentActivated();
 	m_currentShuffledIndex = m_shuffledItems.indexOf(m_currentItem);
 }
@@ -418,7 +418,7 @@ void NPlaylistWidget::setRepeatMode(bool enable)
 
 NPlaylistWidgetItem* NPlaylistWidget::item(int row)
 {
-	return dynamic_cast<NPlaylistWidgetItem *>(QListWidget::item(row));
+	return reinterpret_cast<NPlaylistWidgetItem *>(QListWidget::item(row));
 }
 
 
