@@ -741,8 +741,8 @@ NTrackInfoWidget #MiddleCenter {
                   <property name="focusPolicy">
                    <enum>Qt::NoFocus</enum>
                   </property>
-                  <property name="toolTip">
-                   <string>Minimize</string>
+                  <property name="text">
+                   <string notr="true"/>
                   </property>
                   <property name="iconSize">
                    <size>
