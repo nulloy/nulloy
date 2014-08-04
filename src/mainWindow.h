@@ -67,6 +67,7 @@ public slots:
 	void toggleFullScreen();
 	void setTitle(QString title);
 	void setOnTop(bool onTop);
+	void reject() {};
 
 signals:
 	void closed();
