@@ -237,6 +237,8 @@ NPlayer::NPlayer()
 
 
 	// keyboard shortcuts >>
+	m_settings->initShortcuts(this);
+	m_settings->loadShortcuts();
 	foreach (NAction *action, findChildren<NAction *>()) {
 		if (!action->shortcuts().isEmpty())
 			m_mainWindow->addAction(action);
@@ -346,9 +348,6 @@ NPlayer::NPlayer()
 	m_logDialog = new NLogDialog(m_mainWindow);
 	connect(m_playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)),
 	        m_logDialog, SLOT(showMessage(QMessageBox::Icon, const QString &, const QString &)));
-
-	m_settings->initShortcuts(this);
-	m_settings->loadShortcuts();
 
 	loadSettings();
 
