@@ -146,25 +146,26 @@ NPlayer::NPlayer()
 	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
 	                                         style()->standardIcon(QStyle::SP_MessageBoxInformation)),
 	                                         tr("Preferences..."), this);
-	preferencesAction->setShortcuts(QKeySequence::Preferences);
+	preferencesAction->setShortcut(QKeySequence("Ctrl+P"));
 	connect(preferencesAction, SIGNAL(triggered()), m_preferencesDialog, SLOT(exec()));
 
 	NAction *exitAction = new NAction(QIcon::fromTheme("exit",
 	                                  style()->standardIcon(QStyle::SP_DialogCloseButton)),
 	                                  tr("Exit"), this);
-	exitAction->setShortcuts(QKeySequence::Quit);
+	exitAction->setShortcut(QKeySequence("Ctrl+Q"));
 	connect(exitAction, SIGNAL(triggered()), this, SLOT(quit()));
 
 	NAction *openFileDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Add Files..."), this);
-	openFileDialogAction->setShortcuts(QKeySequence::Open);
+	openFileDialogAction->setShortcut(QKeySequence("Ctrl+O"));
 	connect(openFileDialogAction, SIGNAL(triggered()), this, SLOT(showOpenFileDialog()));
 	connect(m_playlistWidget, SIGNAL(activateEmptyFail()), openFileDialogAction, SLOT(trigger()));
 
 	NAction *openDirDialogAction = new NAction(style()->standardIcon(QStyle::SP_FileDialogNewFolder), tr("Add Directory..."), this);
+	openDirDialogAction->setShortcut(QKeySequence("Ctrl+Shift+O"));
 	connect(openDirDialogAction, SIGNAL(triggered()), this, SLOT(showOpenDirDialog()));
 
 	NAction *savePlaylistDialogAction = new NAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save Playlist..."), this);
-	savePlaylistDialogAction->setShortcuts(QKeySequence::Save);
+	savePlaylistDialogAction->setShortcut(QKeySequence("Ctrl+S"));
 	connect(savePlaylistDialogAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
 
 	NAction *showCoverAction = new NAction(tr("Show Cover Art"), this);
@@ -233,6 +234,14 @@ NPlayer::NPlayer()
 	loadNextDateDownAction->setActionGroup(group);
 	loadNextDateUpAction->setActionGroup(group);
 	// << playlist actions
+
+
+	// keyboard shortcuts >>
+	foreach (NAction *action, findChildren<NAction *>()) {
+		if (!action->shortcuts().isEmpty())
+			m_mainWindow->addAction(action);
+	}
+	// << keyboard shortcuts
 
 
 	// tray icon >>
@@ -340,8 +349,6 @@ NPlayer::NPlayer()
 
 	m_settings->initShortcuts(this);
 	m_settings->loadShortcuts();
-	foreach (NAction *action, m_settings->shortcuts())
-		m_mainWindow->addAction(action);
 
 	loadSettings();
 
