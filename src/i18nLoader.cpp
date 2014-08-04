@@ -23,6 +23,8 @@
 #include <QDebug>
 #include <QTranslator>
 
+static const char _i18nDirName[] = "i18n";
+
 namespace NI18NLoader
 {
 	bool __init = FALSE;
@@ -40,13 +42,13 @@ void NI18NLoader::_init()
 	_translations[QLocale::English] = "";
 
 	QStringList langDirList;
-	langDirList << QCoreApplication::applicationDirPath() + "/i18n";
+	langDirList << QCoreApplication::applicationDirPath() + "/" + _i18nDirName;
 #ifndef Q_WS_WIN
 	if (NCore::rcDir() != QCoreApplication::applicationDirPath())
-		langDirList << NCore::rcDir() + "/i18n";
+		langDirList << NCore::rcDir() + "/" + _i18nDirName;
 	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {
 		QDir dir(QCoreApplication::applicationDirPath());
-		dir.cd("../share/nulloy/i18n");
+		dir.cd(QString() + "../share/nulloy/" + _i18nDirName);
 		langDirList << dir.absolutePath();
 	}
 #endif

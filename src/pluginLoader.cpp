@@ -31,13 +31,15 @@
 Q_DECLARE_METATYPE(NPlugin *)
 Q_DECLARE_METATYPE(QPluginLoader *)
 
+static const char _containerPrefer[] = "GStreamer";
+static const char _pluginsDirName[] = "plugins";
+
 namespace NPluginLoader
 {
 	bool __init = FALSE;
 	QList<Descriptor> _descriptors;
 	QMap<N::PluginType, NPlugin *> _usedPlugins;
 	QMap<QPluginLoader *, bool> _usedLoaders;
-	QString _containerPrefer = "GStreamer";
 
 	void _init();
 	NPlugin* _findPlugin(N::PluginType type);
@@ -99,13 +101,13 @@ void NPluginLoader::_init()
 	__init = TRUE;
 
 	QStringList pluginsDirList;
-	pluginsDirList << QCoreApplication::applicationDirPath() + "/plugins";
+	pluginsDirList << QCoreApplication::applicationDirPath() + "/" + _pluginsDirName;
 #ifndef Q_WS_WIN
 	if (NCore::rcDir() != QCoreApplication::applicationDirPath())
-		pluginsDirList << NCore::rcDir() + "/plugins";
+		pluginsDirList << NCore::rcDir() + "/" + _pluginsDirName;
 	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {
 		QDir dir(QCoreApplication::applicationDirPath());
-		dir.cd("../lib/nulloy/plugins");
+		dir.cd(QString() + "../lib/nulloy/" + _pluginsDirName);
 		pluginsDirList << dir.absolutePath();
 	}
 #endif

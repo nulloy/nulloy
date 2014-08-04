@@ -33,7 +33,6 @@ public:
 private:
 	NSkinFileSystem();
 	static QHash<QString, QByteArray> m_fileHash;
-	static QString m_prefix;
 	static NSkinFileSystem *m_instance;
 };
 

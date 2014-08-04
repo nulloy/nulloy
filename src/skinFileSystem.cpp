@@ -19,8 +19,9 @@
 #include <QByteArray>
 #include <QString>
 
+static const char _prefix[] = "skin:";
+
 QHash<QString, QByteArray> NSkinFileSystem::m_fileHash;
-QString NSkinFileSystem::m_prefix;
 NSkinFileSystem *NSkinFileSystem::m_instance;
 
 class NSkinFileEngine : public QAbstractFileEngine
@@ -45,13 +46,12 @@ private:
 
 NSkinFileSystem::NSkinFileSystem()
 {
-	m_prefix = "skin:";
 	m_instance = NULL;
 }
 
 QString NSkinFileSystem::prefix()
 {
-	return m_prefix;
+	return _prefix;
 }
 
 bool NSkinFileSystem::init()
@@ -74,10 +74,10 @@ QAbstractFileEngine* NSkinFileSystem::create(const QString &fileName) const
 {
 	init();
 
-	if (!fileName.startsWith(m_prefix))
+	if (!fileName.startsWith(_prefix))
 		return NULL;
 
-	QString key = fileName.mid(m_prefix.size());
+	QString key = fileName.mid(strlen(_prefix));
 	if (m_fileHash.contains(key))
 		return new NSkinFileEngine(m_fileHash.value(key), fileName);
 	else
