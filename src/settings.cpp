@@ -117,43 +117,42 @@ void NSettings::initShortcuts(QObject *instance)
 
 void NSettings::loadShortcuts()
 {
-	struct _local
-	{
-		static QList<QKeySequence> strToSeq(const QStringList &strList)
-		{
-			QList<QKeySequence> shortcuts;
-			foreach (QString str, strList)
-				shortcuts << QKeySequence(str);
-			return shortcuts;
-		}
-	};
-
 	foreach (NAction *action, m_actionList) {
-		action->setShortcuts(_local::strToSeq(value("Shortcuts/" + action->objectName()).toStringList()));
-		action->setGlobalShortcuts(_local::strToSeq(value("GlobalShortcuts/" + action->objectName()).toStringList()));
+		QList<QKeySequence> localShortcuts;
+		QStringList localsList = value("Shortcuts/" + action->objectName()).toStringList();
+		foreach (QString str, localsList)
+			localShortcuts << QKeySequence(str);
+		action->setShortcuts(localShortcuts);
+
+		QList<QKeySequence> globalShortcuts;
+		QStringList globalsList = value("GlobalShortcuts/" + action->objectName()).toStringList();
+		foreach (QString str, globalsList)
+			globalShortcuts << QKeySequence(str);
+		action->setGlobalShortcuts(globalShortcuts);
 	}
 }
 
 void NSettings::saveShortcuts()
 {
-	struct _local
-	{
-		static void save(NSettings *settings, QList<QKeySequence> keys, QString name)
-		{
-			QStringList keyStrings;
-			foreach (QKeySequence seq, keys) {
-				if (!seq.isEmpty())
-					keyStrings << seq.toString();
-			}
-			settings->setValue(name, keyStrings);
-		}
-	};
-
 	foreach (NAction *action, m_actionList) {
 		if (action->objectName().isEmpty() || !action->isCustomizable())
 			continue;
-		_local::save(this, action->shortcuts(), "Shortcuts/" + action->objectName());
-		_local::save(this, action->globalShortcuts(), "GlobalShortcuts/" + action->objectName());
+
+		QStringList localsList;
+		QList<QKeySequence> localKeys = action->shortcuts();
+		foreach (QKeySequence seq, localKeys) {
+			if (!seq.isEmpty())
+				localsList << seq.toString();
+		}
+		setValue("Shortcuts/" + action->objectName(), localsList);
+
+		QStringList globalsList;
+		QList<QKeySequence> globalKeys = action->globalShortcuts();
+		foreach (QKeySequence seq, globalKeys) {
+			if (!seq.isEmpty())
+				globalsList << seq.toString();
+		}
+		setValue("GlobalShortcuts/" + action->objectName(), globalsList);
 	}
 }
 

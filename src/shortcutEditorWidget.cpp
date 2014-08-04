@@ -91,25 +91,23 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 
 void NShortcutEditorWidget::applyShortcuts()
 {
-	struct _local
-	{
-		static QList<QKeySequence> stringToList(const QString &string)
-		{
-			QList<QKeySequence> shortcuts;
-			QStringList strList = string.split(", ");
-			foreach (QString str, strList)
-				shortcuts << QKeySequence(str);
-			return shortcuts;
-		}
-	};
-
 	for (int i = 0; i < rowCount(); ++i) {
 		QString objectName = item(i, Name)->data(Qt::UserRole).toString();
 		foreach (NAction *action, m_actionList) {
 			if (objectName != action->objectName())
 				continue;
-			action->setShortcuts(_local::stringToList(item(i, Shortcut)->text()));
-			action->setGlobalShortcuts(_local::stringToList(item(i, GlobalShortcut)->text()));
+
+			QList<QKeySequence> localShortcuts;
+			QStringList localsList = item(i, Shortcut)->text().split(", ");
+			foreach (QString str, localsList)
+				localShortcuts << QKeySequence(str);
+			action->setShortcuts(localShortcuts);
+
+			QList<QKeySequence> globalShortcuts;
+			QStringList globalsList = item(i, GlobalShortcut)->text().split(", ");
+			foreach (QString str, globalsList)
+				globalShortcuts << QKeySequence(str);
+			action->setGlobalShortcuts(globalShortcuts);
 		}
 	}
 }

@@ -343,7 +343,6 @@ void NPreferencesDialog::loadSettings()
 
 
 	// shortcuts >>
-	NSettings::instance()->loadShortcuts();
 	ui.shortcutEditorWidget->init(NSettings::instance()->shortcuts());
 	// << shortcuts
 }
