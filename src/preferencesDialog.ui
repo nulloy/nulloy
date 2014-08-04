@@ -326,7 +326,7 @@ padding: 5px;</string>
           <number>0</number>
          </property>
          <item>
-          <widget class="QCheckBox" name="versionCheckBox">
+          <widget class="QCheckBox" name="autoCheckUpdatesCheckBox">
            <property name="text">
             <string>Automatically check for updates</string>
            </property>
@@ -451,7 +451,7 @@ padding: 5px;</string>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="QLineEdit" name="windowTrackInfoLineEdit"/>
+             <widget class="QLineEdit" name="windowTitleTrackInfoLineEdit"/>
             </item>
             <item>
              <widget class="QLineEdit" name="playlistTrackInfoLineEdit"/>

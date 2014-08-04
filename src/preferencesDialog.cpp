@@ -101,7 +101,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	connect(ui.skinComboBox, SIGNAL(activated(int)), ui.skinRestartLabel, SLOT(show()));
 
 #ifndef Q_WS_WIN
-	ui.taskbarProgressCheckBox->hide();
+	delete ui.taskbarProgressCheckBox;
 #endif
 
 	ui.waveformTrackInfoTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
@@ -265,27 +265,23 @@ QString NPreferencesDialog::selectedContainer(N::PluginType type)
 void NPreferencesDialog::loadSettings()
 {
 	// general >>
-	ui.playlistTrackInfoLineEdit->setText(NSettings::instance()->value("PlaylistTrackInfo").toString());
-	ui.windowTrackInfoLineEdit->setText(NSettings::instance()->value("WindowTitleTrackInfo").toString());
-	ui.tooltipTrackInfoLineEdit->setText(NSettings::instance()->value("TooltipTrackInfo").toString());
-	ui.minimizeToTrayCheckBox->setChecked(NSettings::instance()->value("MinimizeToTray").toBool());
-	ui.restorePlaylistCheckBox->setChecked(NSettings::instance()->value("RestorePlaylist").toBool());
-	ui.startPausedCheckBox->setChecked(NSettings::instance()->value("StartPaused").toBool());
+	QList<QWidget *> widgets = findChildren<QWidget *>();
+	foreach (QWidget *widget, widgets) {
+		QString className = QString(widget->metaObject()->className()).mid(1);
+		QString settingsName = widget->objectName();
+		settingsName[0] = settingsName.at(0).toUpper();
+		settingsName.remove(className);
+		if (widget->inherits("QCheckBox")) {
+			qobject_cast<QCheckBox *>(widget)->setChecked(NSettings::instance()->value(settingsName).toBool());
+		} else if (widget->inherits("QLineEdit")) {
+			qobject_cast<QLineEdit *>(widget)->setText(NSettings::instance()->value(settingsName).toString());
+		}
+	}
+
 	ui.startPausedCheckBox->setEnabled(NSettings::instance()->value("RestorePlaylist").toBool());
-	ui.singleInstanceCheckBox->setChecked(NSettings::instance()->value("SingleInstance").toBool());
-	ui.enqueueFilesCheckBox->setChecked(NSettings::instance()->value("EnqueueFiles").toBool());
 	ui.enqueueFilesCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool());
-	ui.playEnqueuedCheckBox->setChecked(NSettings::instance()->value("PlayEnqueued").toBool());
 	ui.playEnqueuedCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool() && NSettings::instance()->value("EnqueueFiles").toBool());
-	ui.trayIconCheckBox->setChecked(NSettings::instance()->value("TrayIcon").toBool());
-	ui.versionCheckBox->setChecked(NSettings::instance()->value("AutoCheckUpdates").toBool());
-	ui.displayLogDialogCheckBox->setChecked(NSettings::instance()->value("DisplayLogDialog").toBool());
-	ui.showDecibelsVolumeCheckBox->setChecked(NSettings::instance()->value("ShowDecibelsVolume").toBool());
 	ui.fileFiltersTextEdit->setPlainText(NSettings::instance()->value("FileFilters").toStringList().join(" "));
-	ui.coverArtFromDirCheckBox->setChecked(NSettings::instance()->value("CoverArtFromDir").toBool());
-#ifdef Q_WS_WIN
-	ui.taskbarProgressCheckBox->setChecked(NSettings::instance()->value("TaskbarProgress").toBool());
-#endif
 	ui.versionLabel->setText("");
 	// << general
 
@@ -355,23 +351,21 @@ void NPreferencesDialog::loadSettings()
 void NPreferencesDialog::saveSettings()
 {
 	// general >>
-	NSettings::instance()->setValue("PlaylistTrackInfo", ui.playlistTrackInfoLineEdit->text());
-	NSettings::instance()->setValue("WindowTitleTrackInfo", ui.windowTrackInfoLineEdit->text());
-	NSettings::instance()->setValue("TooltipTrackInfo", ui.tooltipTrackInfoLineEdit->text());
-	NSettings::instance()->setValue("MinimizeToTray", ui.minimizeToTrayCheckBox->isChecked());
-	NSettings::instance()->setValue("StartPaused", ui.startPausedCheckBox->isChecked());
-	NSettings::instance()->setValue("RestorePlaylist", ui.restorePlaylistCheckBox->isChecked());
-	NSettings::instance()->setValue("SingleInstance", ui.singleInstanceCheckBox->isChecked());
-	NSettings::instance()->setValue("EnqueueFiles", ui.enqueueFilesCheckBox->isChecked());
-	NSettings::instance()->setValue("PlayEnqueued", ui.playEnqueuedCheckBox->isChecked());
-	NSettings::instance()->setValue("TrayIcon", ui.trayIconCheckBox->isChecked());
-	NSettings::instance()->setValue("AutoCheckUpdates", ui.versionCheckBox->isChecked());
-	NSettings::instance()->setValue("DisplayLogDialog", ui.displayLogDialogCheckBox->isChecked());
-	NSettings::instance()->setValue("ShowDecibelsVolume", ui.showDecibelsVolumeCheckBox->isChecked());
+	QList<QWidget *> widgets = findChildren<QWidget *>();
+	foreach (QWidget *widget, widgets) {
+		QString className = QString(widget->metaObject()->className()).mid(1);
+		QString settingsName = widget->objectName();
+		settingsName[0] = settingsName.at(0).toUpper();
+		settingsName.remove(className);
+		if (widget->inherits("QCheckBox")) {
+			NSettings::instance()->setValue(settingsName, qobject_cast<QCheckBox *>(widget)->isChecked());
+		} else if (widget->inherits("QLineEdit")) {
+			NSettings::instance()->setValue(settingsName, qobject_cast<QLineEdit *>(widget)->text());
+		}
+	}
+
 	NSettings::instance()->setValue("FileFilters", ui.fileFiltersTextEdit->toPlainText().split(" "));
-	NSettings::instance()->setValue("CoverArtFromDir", ui.coverArtFromDirCheckBox->isChecked());
 #ifdef Q_WS_WIN
-	NSettings::instance()->setValue("TaskbarProgress", ui.taskbarProgressCheckBox->isChecked());
 	NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
 #endif
 	// << general
