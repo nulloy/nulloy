@@ -30,13 +30,10 @@ private:
 	Ui::Dialog ui;
 #endif
 	bool m_dragActive;
-	bool m_skinEnabled;
 	QPoint m_dragPoint;
-	QString m_styleSheet;
 	QPoint m_unmaximizedPos;
 	QSize m_unmaximizedSize;
 	bool m_isFullScreen;
-	QWidget *m_waveformSlider;
 
 	void changeEvent(QEvent *event);
 	bool eventFilter(QObject *obj, QEvent *event);

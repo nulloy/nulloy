@@ -71,6 +71,8 @@ void NMainWindow::init(const QString &uiFile)
 
 	m_unmaximizedSize = QSize();
 	m_unmaximizedPos = QPoint();
+	m_isFullScreen = FALSE;
+	m_dragActive = FALSE;
 
 	// enabling dragging window from any point
 	QList<QWidget *> widgets = findChildren<QWidget *>();
@@ -157,8 +159,10 @@ void NMainWindow::toggleMaximize()
 		m_unmaximizedPos = pos();
 		m_unmaximizedSize = size();
 		showMaximized();
+#ifdef Q_WS_WIN
 		setGeometry(QApplication::desktop()->availableGeometry());
 		showMaximized();
+#endif
 	}
 
 	emit fullScreenEnabled(FALSE);
@@ -167,10 +171,7 @@ void NMainWindow::toggleMaximize()
 
 void NMainWindow::toggleFullScreen()
 {
-	m_isFullScreen = !m_isFullScreen;
-	emit fullScreenEnabled(m_isFullScreen);
-
-	if (m_isFullScreen) {
+	if (!m_isFullScreen) {
 		if (!m_unmaximizedSize.isValid()) {
 			m_unmaximizedSize = size();
 			m_unmaximizedPos = pos();
@@ -189,6 +190,9 @@ void NMainWindow::toggleFullScreen()
 			m_unmaximizedPos = QPoint();
 		}
 	}
+
+	m_isFullScreen = !m_isFullScreen;
+	emit fullScreenEnabled(m_isFullScreen);
 }
 
 void NMainWindow::setTitle(QString title)
