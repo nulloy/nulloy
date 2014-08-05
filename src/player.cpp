@@ -56,7 +56,7 @@ NPlayer::NPlayer()
 	qsrand((uint)QTime::currentTime().msec());
 	m_settings = NSettings::instance();
 
-	NI18NLoader::loadTranslation();
+	NI18NLoader::init();
 
 	// construct playbackEngine >>
 	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));

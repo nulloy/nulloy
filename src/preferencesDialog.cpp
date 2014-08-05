@@ -236,8 +236,7 @@ void NPreferencesDialog::on_languageComboBox_activated(int index)
 	ui.languageRestartLabel->setVisible(TRUE);
 
 	QLocale locale = ui.languageComboBox->itemData(index).toLocale();
-	NI18NLoader::loadTranslation(locale.language());
-	QString newText = QCoreApplication::translate("PreferencesDialog", "Switching languages requires restart", 0, QApplication::UnicodeUTF8);
+	QString newText = NI18NLoader::translate(locale.language(), "PreferencesDialog", "Switching languages requires restart");
 	ui.languageRestartLabel->setText(ui.languageRestartLabel->text().replace(QRegExp("(.*)&nbsp;.*"), "\\1&nbsp;" + newText));
 }
 
@@ -327,9 +326,8 @@ void NPreferencesDialog::loadSettings()
 	int localeIndex;
 	ui.languageComboBox->clear();
 	foreach (QLocale::Language language, NI18NLoader::translations()) {
-		NI18NLoader::loadTranslation(language);
 		QString languageString = QLocale::languageToString(language);
-		QString localizedString = QCoreApplication::translate("PreferencesDialog", "English", 0, QApplication::UnicodeUTF8);
+		QString localizedString = NI18NLoader::translate(language, "PreferencesDialog", "English");
 		ui.languageComboBox->addItem(QString("%1 (%2)").arg(localizedString).arg(languageString), QLocale(language));
 	}
 
