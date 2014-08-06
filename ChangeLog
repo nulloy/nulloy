@@ -1,3 +1,10 @@
+* 0.7.5, Thu Aug 7 2014
+- Search Cover Art in same directory
+- Fix: broken standard shortcuts
+- Fix/Mac: broken maximize & fullscreen
+- Fix/Win: overlaps taskbar when maximized
+- Fix/Win: broken playback for M4A & WavPack
+
 * 0.7.4, Fri Jul 25 2014
 - French, German, Polish and Russian translations
 - Light theme for Metro skin
