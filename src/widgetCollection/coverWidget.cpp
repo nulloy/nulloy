@@ -84,6 +84,7 @@ void NCoverWidget::setSource(const QString &file)
 
 		m_coverReader->setSource(file);
 		m_pixmap = QPixmap::fromImage(m_coverReader->getImage());
+		m_coverReader->setSource(""); // release the file
 	}
 
 	if (!m_pixmap.isNull()) { // first scale, then show
