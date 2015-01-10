@@ -27,8 +27,8 @@
 	border: 1px solid #5882CF;
 }
 
-#splitter {
-	background: #2D2D30; /* also main skin background */
+#centralWidget, #splitter {
+	background: #2D2D30;
 }
 #splitter::handle {
 	background-image: url(splitter.png);

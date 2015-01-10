@@ -13,8 +13,8 @@
 	border-color: #1FAEFF;
 }
 
-#splitter {
-	background: #E8E8EB; /* also main skin background */
+#centralWidget, #splitter {
+	background: #E8E8EB;
 }
 
 #playlistWidget {

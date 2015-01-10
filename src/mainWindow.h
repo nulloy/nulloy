@@ -72,6 +72,7 @@ signals:
 	void newTitle(const QString &title);
 	void fullScreenEnabled(bool enabled);
 	void maximizeEnabled(bool enabled);
+	void focusChanged(bool focused);
 };
 
 #endif

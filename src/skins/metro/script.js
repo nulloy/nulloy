@@ -61,6 +61,7 @@ function Main()
 		Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
 		Ui.mainWindow["maximizeEnabled(bool)"].connect(this, "on_maximizeEnabled");
 		Ui.mainWindow.resized.connect(this, "on_resized");
+		Ui.mainWindow["focusChanged(bool)"].connect(this, "on_focusChanged");
 
 		Ui.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
 
@@ -190,8 +191,11 @@ Main.prototype.on_maximizeEnabled = function(enabled)
 
 Main.prototype.setBorderVisible = function(enabled)
 {
-	if (enabled)
-		Ui.borderWidget.layout().setContentsMargins(1, 1, 1, 1);
-	else
-		Ui.borderWidget.layout().setContentsMargins(0, 0, 0, 0);
+	Ui.centralWidget.styleSheet = enabled ? "" : "#borderWidget { background-color: transparent; }";
 }
+
+Main.prototype.on_focusChanged = function(focused)
+{
+	this.setBorderVisible(focused);
+}
+

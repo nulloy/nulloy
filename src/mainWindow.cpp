@@ -205,6 +205,8 @@ void NMainWindow::changeEvent(QEvent *event)
 {
 	QWidget::changeEvent(event);
 
+	emit focusChanged(isActiveWindow());
+
 	if (windowFlags() & Qt::FramelessWindowHint)
 		return;
 
