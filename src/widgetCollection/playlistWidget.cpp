@@ -131,7 +131,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 	if (!item) {
 		m_currentItem = NULL;
 		m_tagReader->setSource("");
-		emit mediaSet("");
+		emit setMedia("");
 		return;
 	}
 
@@ -181,7 +181,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 	m_currentItem = item;
 	update();
 
-	emit mediaSet(file);
+	emit setMedia(file);
 }
 
 void NPlaylistWidget::currentFailed()
@@ -245,7 +245,9 @@ void NPlaylistWidget::on_itemActivated(QListWidgetItem *item)
 {
 	setCurrentItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
 	emit currentActivated();
-	m_currentShuffledIndex = m_shuffledItems.indexOf(m_currentItem);
+
+	if (m_shuffleMode)
+		m_currentShuffledIndex = m_shuffledItems.indexOf(m_currentItem);
 }
 
 void NPlaylistWidget::addFiles(const QStringList &files)
@@ -286,7 +288,7 @@ void NPlaylistWidget::playFiles(const QStringList &files)
 	playRow(0);
 }
 
-void NPlaylistWidget::playNextRow()
+void NPlaylistWidget::playNextItem()
 {
 	int row = currentRow();
 	if (m_shuffleMode) {
@@ -313,16 +315,15 @@ void NPlaylistWidget::playNextRow()
 	}
 }
 
-
 void NPlaylistWidget::currentFinished()
 {
 	if (m_repeatMode)
 		activateItem(m_currentItem);
 	else
-		playNextRow();
+		playNextItem();
 }
 
-void NPlaylistWidget::playPreviousRow()
+void NPlaylistWidget::playPrevItem()
 {
 	int row = currentRow();
 	if (m_shuffleMode) {

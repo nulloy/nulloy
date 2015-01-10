@@ -98,6 +98,7 @@ NPlayer::NPlayer()
 	connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
 
 	m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
+	connect(m_playbackEngine, SIGNAL(aboutToFinish()), m_playlistWidget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
 
 	m_trackInfoWidget = new NTrackInfoWidget();
 	QVBoxLayout *trackInfoLayout = new QVBoxLayout;
@@ -134,14 +135,14 @@ NPlayer::NPlayer()
 	prevAction->setStatusTip(tr("Play previous track in playlist"));
 	prevAction->setGlobal(TRUE);
 	prevAction->setCustomizable(TRUE);
-	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playPreviousRow()));
+	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playPrevItem()));
 
 	NAction *nextAction = new NAction(QIcon::fromTheme("media-playback-forward", style()->standardIcon(QStyle::SP_MediaSkipForward)), tr("Next"), this);
 	nextAction->setObjectName("nextAction");
 	nextAction->setStatusTip(tr("Play next track in playlist"));
 	nextAction->setGlobal(TRUE);
 	nextAction->setCustomizable(TRUE);
-	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playNextRow()));
+	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playNextItem()));
 
 	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
 	                                         style()->standardIcon(QStyle::SP_MessageBoxInformation)),
@@ -411,9 +412,9 @@ void NPlayer::readMessage(const QString &str)
 
 	foreach (QString arg, notPathArgList) {
 		if (arg == "--next")
-			m_playlistWidget->playNextRow();
+			m_playlistWidget->playNextItem();
 		else if (arg == "--prev")
-			m_playlistWidget->playPreviousRow();
+			m_playlistWidget->playPrevItem();
 		else if (arg == "--stop")
 			m_playbackEngine->stop();
 		else if (arg == "--pause")

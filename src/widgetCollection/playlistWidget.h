@@ -77,8 +77,8 @@ public:
 	Q_INVOKABLE bool repeatMode();
 
 public slots:
-	void playNextRow();
-	void playPreviousRow();
+	void playNextItem();
+	void playPrevItem();
 	void playRow(int row);
 
 	void addFiles(const QStringList &files);
@@ -94,7 +94,7 @@ public slots:
 
 signals:
 	void currentActivated();
-	void mediaSet(const QString &file);
+	void setMedia(const QString &file);
 	void activateEmptyFail();
 
 	void shuffleModeChanged(bool enable);

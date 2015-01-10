@@ -19,19 +19,14 @@
 #include <QtGlobal>
 #include <QTimer>
 
-static void _on_eos(GstBus *bus, GstMessage *msg, gpointer userData)
+static void _on_eos(GstBus *, GstMessage *, gpointer userData)
 {
-	Q_UNUSED(bus);
-	Q_UNUSED(msg);
-
 	NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
-	obj->_emitFinished();
+	obj->_finish();
 }
 
-static void _on_error(GstBus *bus, GstMessage *msg, gpointer userData)
+static void _on_error(GstBus *, GstMessage *msg, gpointer userData)
 {
-	Q_UNUSED(bus);
-
 	gchar *debug;
 	GError *err;
 
@@ -40,9 +35,28 @@ static void _on_error(GstBus *bus, GstMessage *msg, gpointer userData)
 
 	NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
 	obj->_emitError(err->message);
-	obj->_emitFailed();
+	obj->_fail();
 
 	g_error_free(err);
+}
+
+static void _on_about_to_finish(GstElement *playbin, gpointer userData)
+{
+	NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
+
+	gchar *uri_before;
+	g_object_get(playbin, "uri", &uri_before, NULL);
+
+	obj->_crossfadingPrepare();
+	obj->_emitAboutToFinish();
+
+	gchar *uri_after = g_filename_to_uri(QFileInfo(obj->currentMedia()).absoluteFilePath().toUtf8().constData(), NULL, NULL);
+
+	if (g_strcmp0(uri_before, uri_after) == 0) // uri hasn't changed
+		obj->_crossfadingCancel();
+
+	g_free(uri_before);
+	g_free(uri_after);
 }
 
 N::PlaybackState NPlaybackEngineGStreamer::fromGstState(GstState state)
@@ -73,6 +87,7 @@ void NPlaybackEngineGStreamer::init()
 	}
 
 	m_playbin = gst_element_factory_make("playbin2", NULL);
+	g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
 
 #if !defined Q_WS_WIN && !defined Q_WS_MAC
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
@@ -88,10 +103,10 @@ void NPlaybackEngineGStreamer::init()
 	m_oldState = N::PlaybackStopped;
 	m_currentMedia = "";
 	m_durationNsec = 0;
+	m_crossfading = FALSE;
 
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(checkStatus()));
-	m_timer->start(100);
 
 	m_init = TRUE;
 }
@@ -111,18 +126,18 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 	qreal vol = m_oldVolume;
 #endif
 
-	stop();
+	if (!m_crossfading)
+		stop();
 
 	if (file.isEmpty()) {
-		m_currentMedia = "";
-		emit mediaChanged("");
+		stop();
+		emit mediaChanged(m_currentMedia = "");
 		return;
 	}
 
 	if (!QFile(file).exists()) {
+		_fail();
 		emit message(QMessageBox::Warning, file, "No such file or directory");
-		emit mediaChanged("");
-		emit _emitFailed();
 		return;
 	}
 
@@ -131,7 +146,7 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 		m_currentMedia = file;
 	g_object_set(m_playbin, "uri", uri, NULL);
 
-	emit mediaChanged(file);
+	emit mediaChanged(m_currentMedia);
 
 #if defined Q_WS_WIN || defined Q_WS_MAC
 	if (vol != -1)
@@ -169,18 +184,7 @@ void NPlaybackEngineGStreamer::setPosition(qreal pos)
 
 qreal NPlaybackEngineGStreamer::position()
 {
-	if (!hasMedia() || m_durationNsec <= 0)
-		return -1;
-
-	GstFormat format = GST_FORMAT_TIME;
-	gint64 pos;
-	gboolean res = gst_element_query_position(m_playbin, &format, &pos);
-	if (!res || format != GST_FORMAT_TIME)
-		return 0;
-
-	emit tick(pos / 1000000);
-
-	return (qreal)pos / m_durationNsec;
+	return m_crossfading ? 0 : m_oldPosition;
 }
 
 qint64 NPlaybackEngineGStreamer::durationMsec()
@@ -190,15 +194,17 @@ qint64 NPlaybackEngineGStreamer::durationMsec()
 
 void NPlaybackEngineGStreamer::play()
 {
-	if (!hasMedia())
+	if (!hasMedia() || m_crossfading)
 		return;
 
-	GstState state;
-	gst_element_get_state(m_playbin, &state, NULL, 0);
-	if (state != GST_STATE_PLAYING)
+	GstState gstState;
+	gst_element_get_state(m_playbin, &gstState, NULL, 0);
+	if (gstState != GST_STATE_PLAYING) {
 		gst_element_set_state(m_playbin, GST_STATE_PLAYING);
-	else
-		gst_element_set_state(m_playbin, GST_STATE_PAUSED);
+		m_timer->start(100);
+	} else {
+		pause();
+	}
 }
 
 void NPlaybackEngineGStreamer::pause()
@@ -207,6 +213,9 @@ void NPlaybackEngineGStreamer::pause()
 		return;
 
 	gst_element_set_state(m_playbin, GST_STATE_PAUSED);
+
+	m_timer->stop();
+	checkStatus();
 }
 
 void NPlaybackEngineGStreamer::stop()
@@ -214,6 +223,7 @@ void NPlaybackEngineGStreamer::stop()
 	if (!hasMedia())
 		return;
 
+	m_crossfading = FALSE;
 	gst_element_set_state(m_playbin, GST_STATE_NULL);
 }
 
@@ -232,10 +242,8 @@ void NPlaybackEngineGStreamer::checkStatus()
 	GstState gstState;
 	gst_element_get_state(m_playbin, &gstState, NULL, 0);
 	N::PlaybackState state = fromGstState(gstState);
-	if (m_oldState != state) {
-		emit stateChanged(state);
-		m_oldState = state;
-	}
+	if (m_oldState != state)
+		emit stateChanged(m_oldState = state);
 
 	if (state == N::PlaybackPlaying || state == N::PlaybackPaused) {
 		// duration may change for some reason
@@ -251,11 +259,27 @@ void NPlaybackEngineGStreamer::checkStatus()
 		m_posponedPosition = -1;
 		emit positionChanged(m_posponedPosition);
 	} else {
-		qreal pos = position();
-		if (m_oldPosition != pos) {
-			m_oldPosition = pos;
-			emit positionChanged(pos);
+		qreal pos;
+		gint64 gstPos = 0;
+
+		if (!hasMedia() || m_durationNsec <= 0) {
+			pos = -1;
+		} else {
+			GstFormat format = GST_FORMAT_TIME;
+			gboolean res = gst_element_query_position(m_playbin, &format, &gstPos);
+			if (!res || format != GST_FORMAT_TIME)
+				gstPos = 0;
+			pos = (qreal)gstPos / m_durationNsec;
 		}
+
+		if (m_oldPosition != pos) {
+			if (m_oldPosition > pos)
+				m_crossfading = FALSE;
+			m_oldPosition = pos;
+			emit positionChanged(m_crossfading ? 0 : m_oldPosition);
+		}
+
+		emit tick(m_crossfading ? 0 : gstPos / 1000000);
 	}
 
 #if defined Q_WS_WIN || defined Q_WS_MAC
@@ -282,22 +306,27 @@ void NPlaybackEngineGStreamer::checkStatus()
 		m_oldVolume = vol;
 		emit volumeChanged(vol);
 	}
+
+	if (state == N::PlaybackStopped)
+		m_timer->stop();
 }
 
-void NPlaybackEngineGStreamer::_emitFinished()
+void NPlaybackEngineGStreamer::_finish()
 {
 	stop();
 	emit finished();
-	emit stateChanged(N::PlaybackStopped);
-	m_oldState = N::PlaybackStopped;
+	emit stateChanged(m_oldState = N::PlaybackStopped);
 }
 
-void NPlaybackEngineGStreamer::_emitFailed()
+void NPlaybackEngineGStreamer::_fail()
 {
-	stop();
+	if (!m_crossfading) // avoid thread deadlock
+		stop();
+	else
+		m_crossfading = FALSE;
+	emit mediaChanged(m_currentMedia = "");
 	emit failed();
-	emit stateChanged(N::PlaybackStopped);
-	m_oldState = N::PlaybackStopped;
+	emit stateChanged(m_oldState = N::PlaybackStopped);
 }
 
 void NPlaybackEngineGStreamer::_emitError(QString error)
@@ -305,3 +334,17 @@ void NPlaybackEngineGStreamer::_emitError(QString error)
 	emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), error);
 }
 
+void NPlaybackEngineGStreamer::_emitAboutToFinish()
+{
+	emit aboutToFinish();
+}
+
+void NPlaybackEngineGStreamer::_crossfadingPrepare()
+{
+	m_crossfading = TRUE;
+}
+
+void NPlaybackEngineGStreamer::_crossfadingCancel()
+{
+	m_crossfading = FALSE;
+}

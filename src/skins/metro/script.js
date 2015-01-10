@@ -24,12 +24,12 @@ function Main()
 
 		Ui.playButton.clicked.connect(this, "on_playButton_clicked");
 		Ui.stopButton.clicked.connect(PlaybackEngine.stop);
-		Ui.prevButton.clicked.connect(Ui.playlistWidget.playPreviousRow);
+		Ui.prevButton.clicked.connect(Ui.playlistWidget.playPrevItem);
 
 		Ui.titleWidget.enableDoubleClick();
 		Ui.titleWidget.doubleClicked.connect(Ui.mainWindow.toggleMaximize);
 
-		Ui.nextButton.clicked.connect(Ui.playlistWidget.playNextRow);
+		Ui.nextButton.clicked.connect(Ui.playlistWidget.playNextItem);
 
 		Ui.volumeSlider.minimum = 0;
 		Ui.volumeSlider.maximum = 100;
@@ -42,7 +42,7 @@ function Main()
 		PlaybackEngine["mediaChanged(const QString &)"].connect(Ui.coverWidget["setSource(const QString &)"]);
 		PlaybackEngine["finished()"].connect(Ui.playlistWidget.currentFinished);
 		PlaybackEngine["failed()"].connect(this, "on_failed");
-		Ui.playlistWidget["mediaSet(const QString &)"].connect(PlaybackEngine["setMedia(const QString &)"]);
+		Ui.playlistWidget["setMedia(const QString &)"].connect(PlaybackEngine["setMedia(const QString &)"]);
 		Ui.playlistWidget["currentActivated()"].connect(PlaybackEngine.play);
 
 		Ui.volumeSlider["sliderMoved(qreal)"].connect(PlaybackEngine["setVolume(qreal)"]);
@@ -150,7 +150,7 @@ Main.prototype.on_stateChanged = function(state)
 Main.prototype.on_failed = function()
 {
 	Ui.playlistWidget.currentFailed();
-	Ui.playlistWidget.playNextRow();
+	Ui.playlistWidget.playNextItem();
 }
 
 Main.prototype.on_resized = function()
