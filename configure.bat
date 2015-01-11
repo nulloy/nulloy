@@ -112,7 +112,7 @@ if "%DEBUG%" == "yes" (
 	echo CONFIG += release>> %QMAKE_CACHE%
 )
 
-echo CONFIG += APP_NAME=%APP_NAME%>> %QMAKE_CACHE%
+echo APP_NAME = %APP_NAME%>> %QMAKE_CACHE%
 
 if not "%FORCE_VERSION%" == "no" (
 	echo Forced version: %FORCE_VERSION%
