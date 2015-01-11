@@ -56,7 +56,7 @@ fi
 eval set -- $args
 while [ $# -gt 0 ]; do
 	if [ $1 == "--prefix" ]; then
-		shift; PREFIX=`readlink -m "$1"`
+		shift; PREFIX=`realpath "$1"`
 	elif [ $1 == "--debug" ]; then
 		DEBUG=yes
 	elif [ $1 == "--force-version" ]; then
@@ -171,7 +171,7 @@ echo "TMP_DIR = $NULLOY_BUILD_TMP_DIR" >> $QMAKE_CACHE
 [ ! -z "$LRELEASE" ] && echo "LRELEASE = $LRELEASE" >> $QMAKE_CACHE
 
 if [[ `uname | grep -i darwin` ]]; then
-    QMAKE_EXTRA_OPTIONS="-spec macx-g++"
+	QMAKE_EXTRA_OPTIONS="-spec macx-g++"
 else
 	echo
 	echo "Install prefix: $PREFIX"
@@ -182,8 +182,8 @@ echo "Running qmake..."
 
 $QMAKE "CONFIG+=$QMAKE_CONFIG" PREFIX="$PREFIX" APP_NAME="$APP_NAME" $QMAKE_EXTRA_OPTIONS
 if [ $? -ne 0 ]; then
-    echo "$BASENAME: qmake failed"
-    exit 1
+	echo "$BASENAME: qmake failed"
+	exit 1
 fi
 
 echo "Nulloy has been configured. Now run \`make'."
