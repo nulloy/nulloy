@@ -42,7 +42,7 @@ NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 	m_fullsizeLabel = new QLabel;
 
 	QHBoxLayout *hLayout = new QHBoxLayout;
-    hLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
+	hLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	hLayout->addWidget(m_fullsizeLabel);
 	hLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
 
@@ -60,8 +60,8 @@ NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 	container->setStyleSheet("background-color: rgba(0, 0, 0, 200);");
 
 	m_popup->setLayout(cLayout);
-	m_popup->setWindowFlags(m_popup->windowFlags() | Qt::FramelessWindowHint);
-    m_popup->setAttribute(Qt::WA_TranslucentBackground);
+	m_popup->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
+	m_popup->setAttribute(Qt::WA_TranslucentBackground);
 
 	hide();
 	setScaledContents(TRUE);
@@ -132,16 +132,16 @@ void NCoverWidget::resizeEvent(QResizeEvent *event)
 
 void NCoverWidget::mousePressEvent(QMouseEvent *)
 {
-	QSize popupMaxSize = QWidget::window()->size();
 	QSize margin = QSize(MARGIN * 2, MARGIN * 2);
 	QPixmap pixmap = m_pixmap;
-	QSize pixmapMaxSize = popupMaxSize - margin;
+	QSize pixmapMaxSize = QWidget::window()->size() - margin;
 	if (pixmap.height() > pixmapMaxSize.height() || pixmap.width() > pixmapMaxSize.width())
 		pixmap = pixmap.scaled(pixmapMaxSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 	m_fullsizeLabel->setPixmap(pixmap);
 	m_popup->show();
-	m_popup->setMinimumSize(popupMaxSize);
-	m_popup->setMaximumSize(popupMaxSize);
+	m_popup->setMinimumSize(QWidget::window()->size());
+	m_popup->setMaximumSize(QWidget::window()->size());
+	m_popup->setGeometry(QWidget::window()->geometry());
 	m_popup->setToolTip(QString("%1 x %2").arg(m_pixmap.width()).arg(m_pixmap.height()));
 }
 
