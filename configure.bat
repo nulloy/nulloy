@@ -16,6 +16,7 @@ set BUILD_TAGLIB=yes
 set BUILD_VLC=no
 set BUILD_PHONON=no
 set SUPPORT_SKINS=yes
+set APP_NAME=Nulloy
 
 :getopt
 	shift
@@ -110,6 +111,8 @@ if "%DEBUG%" == "yes" (
 ) else (
 	echo CONFIG += release>> %QMAKE_CACHE%
 )
+
+echo CONFIG += APP_NAME=%APP_NAME%>> %QMAKE_CACHE%
 
 if not "%FORCE_VERSION%" == "no" (
 	echo Forced version: %FORCE_VERSION%

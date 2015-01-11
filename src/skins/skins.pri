@@ -34,11 +34,9 @@ system($$metro_skin.commands)
 unix {
 	skins.files = ../skins/*
 	mac {
-		prefix.path = ../$${TARGET}.app
-		skins.path = $$prefix.path/Contents/MacOS/skins
+		skins.path = $${APP_NAME}.app/Contents/MacOS/skins
 	} else {
-		prefix.path = $$PREFIX
-		skins.path = $$prefix.path/share/nulloy/skins
+		skins.path = $$PREFIX/share/$$APP_NAME/skins
 	}
 	INSTALLS += skins
 }

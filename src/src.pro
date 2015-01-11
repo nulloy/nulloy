@@ -3,8 +3,7 @@ QT += script
 
 mac:no-app-bundle:CONFIG -= app_bundle
 
-unix:TARGET = nulloy
-win32:TARGET = Nulloy
+TARGET = $$APP_NAME
 DESTDIR = ..
 
 INCLUDEPATH += . interfaces/
@@ -94,26 +93,15 @@ build_pass:CONFIG(static, static|shared) {
 
 # qmake "PREFIX=/usr"
 unix:!mac {
-	prefix.path = $$PREFIX
-	target.path = $$prefix.path/bin
+	target.path = $$PREFIX/bin
 
 	system(icons/install-icons.sh $$TMP_DIR/icons)
 	icons.files = $$TMP_DIR/icons/*
-	icons.path = $$prefix.path
+	icons.path = $$PREFIX
 
-	desktop.files = ../nulloy.desktop
-	desktop.path = $$prefix.path/share/applications
+	desktop.files = ../$${APP_NAME}.desktop
+	desktop.path = $$PREFIX/share/applications
 
 	INSTALLS += target icons desktop
-
-	plugins.files = ../plugins/*
-	plugins.path = $$prefix.path/lib/nulloy/plugins
-	INSTALLS += plugins
 }
-mac {
-	prefix.path = ../$${TARGET}.app
 
-	plugins.files = ../plugins/*
-	plugins.path = $$prefix.path/Contents/MacOS/plugins
-	INSTALLS += plugins
-}

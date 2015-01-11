@@ -24,7 +24,6 @@ win32 {
 	DEFINES += LIBXML_STATIC
 }
 
-
 HEADERS += $$files(*.h)
 SOURCES += $$files(*.cpp)
 

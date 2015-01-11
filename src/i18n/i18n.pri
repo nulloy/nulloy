@@ -17,15 +17,14 @@ QMAKE_EXTRA_TARGETS += qms
 PRE_TARGETDEPS += $$qms.target
 system($$qms.commands)
 
+
 # install
 unix {
 	translations.files = ../i18n/*
 	mac {
-		prefix.path = ../$${TARGET}.app
-		translations.path = $$prefix.path/Contents/MacOS/i18n
+		translations.path = $${APP_NAME}.app/Contents/MacOS/i18n
 	} else {
-		prefix.path = $$PREFIX
-		translations.path = $$prefix.path/share/nulloy/i18n
+		translations.path = $$PREFIX/share/$$APP_NAME/i18n
 	}
 	INSTALLS += translations
 }

@@ -16,7 +16,7 @@ BUILD_VLC=no
 BUILD_PHONON=no
 SUPPORT_SKINS=yes
 OSX_BUNDLE=yes
-
+APP_NAME=nulloy
 
 echo_help()
 {
@@ -180,7 +180,7 @@ fi
 echo
 echo "Running qmake..."
 
-$QMAKE "CONFIG+=$QMAKE_CONFIG" PREFIX="$PREFIX" $QMAKE_EXTRA_OPTIONS
+$QMAKE "CONFIG+=$QMAKE_CONFIG" PREFIX="$PREFIX" APP_NAME="$APP_NAME" $QMAKE_EXTRA_OPTIONS
 if [ $? -ne 0 ]; then
     echo "$BASENAME: qmake failed"
     exit 1
