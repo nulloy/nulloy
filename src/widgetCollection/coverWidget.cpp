@@ -20,13 +20,17 @@
 
 #include <QResizeEvent>
 #include <QDialog>
-#include <QVBoxLayout>
+#include <QBoxLayout>
+#include <QGraphicsDropShadowEffect>
 #include <QCoreApplication>
+
+#define MARGIN 50
 
 class NCoverWidgetPopup : public QDialog
 {
 private:
 	void mousePressEvent(QMouseEvent *)	{ hide(); }
+	void changeEvent(QEvent *) { if (!isActiveWindow()) hide(); }
 public:
 	NCoverWidgetPopup(QWidget *parent = 0) : QDialog(parent) {}
 };
@@ -34,14 +38,30 @@ public:
 NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 {
 	m_coverReader = dynamic_cast<NCoverReaderInterface *>(NPluginLoader::getPlugin(N::CoverReader));
-
 	m_popup = new NCoverWidgetPopup(this);
-	m_popup->setMaximumSize(0, 0);
-	QVBoxLayout *layout = new QVBoxLayout;
-	layout->setContentsMargins(0, 0, 0, 0);
-	m_popup->setLayout(layout);
 	m_fullsizeLabel = new QLabel;
-	layout->addWidget(m_fullsizeLabel);
+
+	QHBoxLayout *hLayout = new QHBoxLayout;
+    hLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
+	hLayout->addWidget(m_fullsizeLabel);
+	hLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
+
+	QVBoxLayout *vLayout = new QVBoxLayout;
+	vLayout->setContentsMargins(MARGIN, MARGIN, MARGIN, MARGIN);
+	vLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
+	vLayout->addLayout(hLayout);
+	vLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
+
+	QWidget *container = new QWidget();
+	QVBoxLayout *cLayout = new QVBoxLayout;
+	cLayout->addWidget(container);
+	cLayout->setContentsMargins(0, 0, 0, 0);
+	container->setLayout(vLayout);
+	container->setStyleSheet("background-color: rgba(0, 0, 0, 200);");
+
+	m_popup->setLayout(cLayout);
+	m_popup->setWindowFlags(m_popup->windowFlags() | Qt::FramelessWindowHint);
+    m_popup->setAttribute(Qt::WA_TranslucentBackground);
 
 	hide();
 	setScaledContents(TRUE);
@@ -110,12 +130,19 @@ void NCoverWidget::resizeEvent(QResizeEvent *event)
 	fitToHeight(event->size().height());
 }
 
-void NCoverWidget::mousePressEvent(QMouseEvent *event)
+void NCoverWidget::mousePressEvent(QMouseEvent *)
 {
-	Q_UNUSED(event);
-	m_fullsizeLabel->setPixmap(m_pixmap);
-	m_popup->setWindowTitle(QString("%1 x %2").arg(m_pixmap.width()).arg(m_pixmap.height()));
+	QSize popupMaxSize = QWidget::window()->size();
+	QSize margin = QSize(MARGIN * 2, MARGIN * 2);
+	QPixmap pixmap = m_pixmap;
+	QSize pixmapMaxSize = popupMaxSize - margin;
+	if (pixmap.height() > pixmapMaxSize.height() || pixmap.width() > pixmapMaxSize.width())
+		pixmap = pixmap.scaled(pixmapMaxSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	m_fullsizeLabel->setPixmap(pixmap);
 	m_popup->show();
+	m_popup->setMinimumSize(popupMaxSize);
+	m_popup->setMaximumSize(popupMaxSize);
+	m_popup->setToolTip(QString("%1 x %2").arg(m_pixmap.width()).arg(m_pixmap.height()));
 }
 
 void NCoverWidget::fitToHeight(int height)
