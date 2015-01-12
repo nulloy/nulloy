@@ -5,17 +5,18 @@ include(../plugin.pri)
 
 unix {
 	CONFIG += link_pkgconfig
-	PKGCONFIG += gstreamer-0.10
+	PKGCONFIG += gstreamer-1.0
 }
 
 win32 {
-	INCLUDEPATH +=  $(OSSBUILD_GSTREAMER_SDK_DIR)/include \
-	                $(OSSBUILD_GSTREAMER_SDK_DIR)/include/gstreamer-0.10 \
-	                $(OSSBUILD_GSTREAMER_SDK_DIR)/include/glib-2.0 \
-	                $(OSSBUILD_GSTREAMER_SDK_DIR)/include/libxml2
+	INCLUDEPATH +=  $(GSTREAMER_1_0_ROOT_X86)/include \
+	                $(GSTREAMER_1_0_ROOT_X86)/include/gstreamer-1.0 \
+	                $(GSTREAMER_1_0_ROOT_X86)/include/glib-2.0 \
+	                $(GSTREAMER_1_0_ROOT_X86)/lib/glib-2.0/include \
+	                $(GSTREAMER_1_0_ROOT_X86)/include/libxml2
 
-	LIBS +=         -L$(OSSBUILD_GSTREAMER_SDK_DIR)/lib \
-	                -lgstreamer-0.10 \
+	LIBS +=         -L$(GSTREAMER_1_0_ROOT_X86)/lib \
+	                -lgstreamer-1.0 \
 	                -lglib-2.0 \
 	                -liconv \
 	                -lxml2 \
@@ -28,7 +29,7 @@ HEADERS += $$files(*.h)
 SOURCES += $$files(*.cpp)
 
 gstreamer-tagreader {
-	unix:PKGCONFIG += gstreamer-pbutils-0.10
+	unix:PKGCONFIG += gstreamer-pbutils-1.0
 	DEFINES += _N_GSTREAMER_TAGREADER_PLUGIN_
 } else {
 	HEADERS -= tagReaderGstreamer.h

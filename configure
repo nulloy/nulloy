@@ -124,7 +124,11 @@ if [ $? -eq 0 ]; then
 	echo "checking for pkg-config... yes"
 
 	if [ "$BUILD_GSTREAMER" == "yes" ]; then
-		pkg_check_lib gstreamer-0.10
+		pkg_check_lib gstreamer-1.0
+	fi
+
+	if [ "$BUILD_GSTREAMER_TAGREADER" == "yes" ]; then
+		pkg_check_lib gstreamer-pbutils-1.0
 	fi
 
 	if [ "$BUILD_VLC" == "yes" ]; then

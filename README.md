@@ -11,7 +11,7 @@
 ### Prerequisites
 * Qt 4.x MinGW libraries for Windows http://qt-project.org/downloads
 * MinGW http://sourceforge.net/projects/mingw-w64/
-* GStreamer Build & SDK http://code.google.com/p/ossbuild/
+* GStreamer1.0-devel MSI installer http://gstreamer.freedesktop.org/download/
 * CMake http://www.cmake.org/
 * TagLib Source http://taglib.github.io/
 * Zlib precompiled dlls http://zlib.net/
@@ -25,7 +25,7 @@ Extract and/or install the downloads. Create ```vars.bat``` file with:
 set QTDIR=C:\qt-libs-dir
 set TAGLIB_DIR=C:\taglib-source-dir
 set ZLIB_DIR=C:\zlib-dlls-dir
-set PATH=%QTDIR%\bin;C:\mingw-dir\bin;C:\Program Files\7-Zip;%ZLIB_DIR%;%PATH%
+set PATH=%QTDIR%\bin;%GSTREAMER_1_0_ROOT_X86%\bin;C:\mingw-dir\bin;C:\Program Files\7-Zip;%ZLIB_DIR%;%PATH%
 ```
 
 Create a shortcut from ```vars.bat``` and set target as ```%COMSPEC% /k "C:\vars.bat"```. Open the shortcut.
@@ -62,7 +62,7 @@ Install Xcode and then install Xcode Command Line Tools. Install MacPorts and op
 
 ```sh
 . ~/.profile
-sudo port install pkgconfig getopt qt4-mac gstreamer010{,-gst-plugins-base} zlib taglib
+sudo port install pkgconfig getopt qt4-mac gstreamer1{,-gst-plugins-base} zlib taglib
 ```
 
 ### Build & Run Nulloy
@@ -79,7 +79,7 @@ make
 Install extra GStreamer plugins for more audio formats
 
 ```sh
-sudo port install gstreamer010-gst-plugins-{good,bad,ugly}
+sudo port install gstreamer1-gst-plugins-{good,bad,ugly}
 ```
 
 
@@ -91,13 +91,13 @@ sudo port install gstreamer010-gst-plugins-{good,bad,ugly}
 #### DEB-based distro
 
 ```sh
-apt-get install g++ libqt4-dev qt4-qmake libgstreamer{-plugins-base,}0.10-dev zip libx11-dev libtag1-dev
+apt-get install g++ libqt4-dev qt4-qmake libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev
 ```
 
 #### RPM-based distro
 
 ```sh
-yum install gcc-c++ qt-devel gstreamer{-plugins-base,}-devel zip libX11-devel taglib-devel
+yum install gcc-c++ qt-devel gstreamer1{-plugins-base,}-devel zip libX11-devel taglib-devel
 ```
 
 ### Build & Run Nulloy
@@ -116,11 +116,11 @@ Install extra GStreamer plugins for more audio formats
 #### DEB-based distro
 
 ```sh
-apt-get install gstreamer0.10{-ffmpeg,-plugins-{good,bad,ugly}}
+apt-get install gstreamer1.0-plugins-{good,bad,ugly}
 ```
 
 #### RPM-based distro
 
 ```sh
-yum install gstreamer{-ffmpeg,-plugins-{good,bad,ugly}}
+yum install gstreamer1-plugins-{good,bad,ugly}}
 ```

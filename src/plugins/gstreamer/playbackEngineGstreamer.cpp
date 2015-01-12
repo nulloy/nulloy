@@ -86,7 +86,7 @@ void NPlaybackEngineGStreamer::init()
 		emit failed();
 	}
 
-	m_playbin = gst_element_factory_make("playbin2", NULL);
+	m_playbin = gst_element_factory_make("playbin", NULL);
 	g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
 
 #if !defined Q_WS_WIN && !defined Q_WS_MAC
@@ -248,9 +248,8 @@ void NPlaybackEngineGStreamer::checkStatus()
 	if (state == N::PlaybackPlaying || state == N::PlaybackPaused) {
 		// duration may change for some reason
 		// TODO use DURATION_CHANGED in gstreamer1.0
-		GstFormat format = GST_FORMAT_TIME;
-		gboolean res = gst_element_query_duration(m_playbin, &format, &m_durationNsec);
-		if (!res || format != GST_FORMAT_TIME)
+		gboolean res = gst_element_query_duration(m_playbin, GST_FORMAT_TIME, &m_durationNsec);
+		if (!res)
 			m_durationNsec = 0;
 	}
 
@@ -265,9 +264,8 @@ void NPlaybackEngineGStreamer::checkStatus()
 		if (!hasMedia() || m_durationNsec <= 0) {
 			pos = -1;
 		} else {
-			GstFormat format = GST_FORMAT_TIME;
-			gboolean res = gst_element_query_position(m_playbin, &format, &gstPos);
-			if (!res || format != GST_FORMAT_TIME)
+			gboolean res = gst_element_query_position(m_playbin, GST_FORMAT_TIME, &gstPos);
+			if (!res)
 				gstPos = 0;
 			pos = (qreal)gstPos / m_durationNsec;
 		}

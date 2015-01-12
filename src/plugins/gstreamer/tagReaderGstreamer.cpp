@@ -79,7 +79,7 @@ void NTagReaderGstreamer::setSource(const QString &file)
 
 	const GstTagList *tagList = gst_discoverer_info_get_tags(info);
 	m_taglist = gst_tag_list_copy(tagList);
-	if (gst_is_tag_list(m_taglist) && !gst_tag_list_is_empty(m_taglist)) {
+	if (GST_IS_TAG_LIST(m_taglist) && !gst_tag_list_is_empty(m_taglist)) {
 		gchar *gstr = NULL;
 		if (gst_tag_list_get_string(m_taglist, GST_TAG_AUDIO_CODEC, &gstr))
 			m_codecName = QString::fromUtf8(gstr);

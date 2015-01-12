@@ -56,21 +56,23 @@ static void _on_error(GstBus *bus, GstMessage *msg, gpointer userData)
 }
 #endif
 
-static void _handleBuffer(GstPad *pad, GstBuffer *buffer, gpointer userData)
+static void _handleBuffer(GstPad *pad, GstPadProbeInfo *info, gpointer userData)
 {
 	QMutexLocker locker(&_mutex);
 
-	Q_UNUSED(pad);
-
 	int nChannels;
-	GstStructure *structure = gst_caps_get_structure(GST_BUFFER_CAPS(buffer), 0);
+	GstStructure *structure = gst_caps_get_structure(gst_pad_get_current_caps(pad), 0);
 	gst_structure_get_int(structure, "channels", &nChannels);
 
-	gint16 *pcmBuffer = reinterpret_cast<gint16 *>(GST_BUFFER_DATA(buffer));
-	int nSamples = (GST_BUFFER_SIZE(buffer) / sizeof(gint16)) / nChannels;
+	GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER(info);
+	GstMapInfo mapInfo;
+	gst_buffer_map(buffer, &mapInfo, GST_MAP_READ);
+	gint16 *pcmBuffer = (gint16 *)mapInfo.data;
+	int nSamples = (mapInfo.size / sizeof(gint16)) / nChannels;
 
 	NWaveformBuilderGstreamer *obj = reinterpret_cast<NWaveformBuilderGstreamer *>(userData);
 	obj->handleBuffer(pcmBuffer, nChannels, nSamples);
+	gst_buffer_unmap(buffer, &mapInfo);
 }
 
 void NWaveformBuilderGstreamer::handleBuffer(gint16 *pcmBuffer, int nChannels, int nSamples)
@@ -151,7 +153,7 @@ void NWaveformBuilderGstreamer::start(const QString &file)
 	m_currentFile = file;
 
 	m_playbin = gst_parse_launch("uridecodebin name=w_uridecodebin \
-	                              ! audioconvert ! audio/x-raw-int, width=16, signed=true \
+	                              ! audioconvert ! audio/x-raw, format=S16LE \
 	                              ! fakesink name=w_sink", NULL);
 
 #if !defined Q_WS_WIN && !defined Q_WS_MAC
@@ -170,8 +172,8 @@ void NWaveformBuilderGstreamer::start(const QString &file)
 	gst_object_unref(uridecodebin);
 
 	GstElement *sink = gst_bin_get_by_name(GST_BIN(m_playbin), "w_sink");
-	GstPad *pad = gst_element_get_pad(sink, "sink");
-	gst_pad_add_buffer_probe(pad, G_CALLBACK(_handleBuffer), this);
+	GstPad *pad = gst_element_get_static_pad(sink, "sink");
+	gst_pad_add_probe(pad, GST_PAD_PROBE_TYPE_BUFFER, (GstPadProbeCallback)_handleBuffer, this, NULL);
 	gst_object_unref(sink);
 	gst_object_unref(pad);
 
@@ -194,13 +196,9 @@ qreal NWaveformBuilderGstreamer::position()
 	if (!isRunning())
 		return 0;
 
-	GstFormat format = GST_FORMAT_TIME;
 	gint64 len, pos;
-	gst_element_query_duration(m_playbin, &format, &len);
-	gst_element_query_position(m_playbin, &format, &pos);
-
-	if (format != GST_FORMAT_TIME)
-		return 0;
+	gst_element_query_duration(m_playbin, GST_FORMAT_TIME, &len);
+	gst_element_query_position(m_playbin, GST_FORMAT_TIME, &pos);
 
 	return (qreal)pos / len;
 }

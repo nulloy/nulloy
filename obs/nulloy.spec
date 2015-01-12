@@ -10,7 +10,7 @@ BuildRequires: qt-devel gcc-c++
 %else
 BuildRequires: libqt-devel
 %endif
-BuildRequires: gstreamer-devel gstreamer-plugins-base-devel zip libX11-devel taglib-devel
+BuildRequires: gstreamer1-devel gstreamer1-plugins-base-devel zip libX11-devel taglib-devel
 BuildRoot:     %{_topdir}/%{name}-%{version}-root
 
 %description
