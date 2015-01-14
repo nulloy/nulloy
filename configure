@@ -56,7 +56,12 @@ fi
 eval set -- $args
 while [ $# -gt 0 ]; do
 	if [ $1 == "--prefix" ]; then
-		shift; PREFIX=`realpath "$1"`
+		shift
+		if (command -v realpath &> /dev/null); then
+			PREFIX=`realpath "$1"`
+		else
+			PREFIX=`readlink -m "$1"`
+		fi
 	elif [ $1 == "--debug" ]; then
 		DEBUG=yes
 	elif [ $1 == "--force-version" ]; then
