@@ -5,6 +5,7 @@ compiler:
   - gcc
 
 install:
+  - sudo add-apt-repository ppa:gstreamer-developers/ppa -y
   - sudo apt-get update
   - sudo apt-get install libqt4-dev qt4-qmake libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev zip libx11-dev libtag1-dev
 
