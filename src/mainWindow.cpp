@@ -259,6 +259,7 @@ void NMainWindow::resizeEvent(QResizeEvent *event)
 
 void NMainWindow::closeEvent(QCloseEvent *event)
 {
+	accept();
 	QDialog::closeEvent(event);
 	emit closed();
 }
