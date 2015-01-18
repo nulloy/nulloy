@@ -423,9 +423,10 @@ void NPlayer::readMessage(const QString &str)
 
 	if (!files.isEmpty()) {
 		if (NSettings::instance()->value("EnqueueFiles").toBool()) {
+			int lastRow = m_playlistWidget->count();
 			m_playlistWidget->addFiles(files);
 			if (m_playbackEngine->state() == N::PlaybackStopped || NSettings::instance()->value("PlayEnqueued").toBool())
-				m_playlistWidget->playRow(m_playlistWidget->count() - 1);
+				m_playlistWidget->playRow(lastRow);
 		} else {
 			m_playlistWidget->playFiles(files);
 		}
