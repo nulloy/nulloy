@@ -447,7 +447,7 @@ void NPlayer::loadDefaultPlaylist()
 	if (!playlistRowValues.isEmpty()) {
 		int row = playlistRowValues.at(0).toInt();
 		qreal pos = playlistRowValues.at(1).toFloat();
-		if (pos != 0 && pos != 1) {
+		if (pos > 0 && pos < 1) {
 			m_playlistWidget->playRow(row);
 			m_playbackEngine->setPosition(pos);
 			if (m_settings->value("StartPaused").toBool())
