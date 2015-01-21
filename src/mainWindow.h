@@ -52,6 +52,7 @@ public:
 	NMainWindow(QWidget *parent = 0);
 	~NMainWindow();
 	void init(const QString &uiFile);
+	bool isOnTop();
 #ifdef Q_WS_WIN
 	Q_INVOKABLE void setFramelessShadow(bool enabled);
 #endif

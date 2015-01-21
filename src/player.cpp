@@ -646,8 +646,10 @@ void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
 {
 	bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
 	bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
-	if (!alwaysOnTop)
-		m_mainWindow->setOnTop(whilePlaying && state == N::PlaybackPlaying);
+	bool oldOnTop = m_mainWindow->isOnTop();
+	bool newOnTop = (whilePlaying && state == N::PlaybackPlaying);
+	if (!alwaysOnTop && (oldOnTop != newOnTop))
+		m_mainWindow->setOnTop(newOnTop);
 #ifdef Q_WS_WIN
 	if (NW7TaskBar::instance()->isEnabled()) {
 		if (state == N::PlaybackPlaying) {

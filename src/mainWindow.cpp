@@ -311,6 +311,17 @@ bool NMainWindow::winEvent(MSG *message, long *result)
 }
 #endif
 
+bool NMainWindow::isOnTop()
+{
+#ifdef Q_WS_WIN
+	DWORD dwExStyle = GetWindowLong(this->winId(), GWL_EXSTYLE);
+	return (dwExStyle & WS_EX_TOPMOST);
+#else
+	Qt::WindowFlags flags = windowFlags();
+	return (flags & Qt::WindowStaysOnTopHint);
+#endif
+}
+
 void NMainWindow::setOnTop(bool onTop)
 {
 #ifdef Q_WS_WIN
