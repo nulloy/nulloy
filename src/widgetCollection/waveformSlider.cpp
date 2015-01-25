@@ -33,6 +33,9 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_normalComposition = QPainter::CompositionMode_Overlay;
 	m_pausedComposition = QPainter::CompositionMode_Overlay;
 
+	setMinimum(0);
+	setMaximum(10000);
+
 	m_waveBuilder = dynamic_cast<NWaveformBuilderInterface *>(NPluginLoader::getPlugin(N::WaveformBuilder));
 
 	m_bufImage.resize(7);

@@ -21,6 +21,7 @@
 #include "logDialog.h"
 #include "playlistStorage.h"
 #include "mainWindow.h"
+#include "waveformSlider.h"
 #include "playbackEngineInterface.h"
 #include "playlistWidget.h"
 #include "playlistWidgetItem.h"
@@ -104,9 +105,72 @@ NPlayer::NPlayer()
 	QVBoxLayout *trackInfoLayout = new QVBoxLayout;
 	trackInfoLayout->setContentsMargins(0, 0, 0, 0);
 	trackInfoLayout->addWidget(m_trackInfoWidget);
-	QWidget *waveformSlider = qFindChild<QWidget *>(m_mainWindow, "waveformSlider");
-	waveformSlider->setLayout(trackInfoLayout);
+	m_waveformSlider = qFindChild<NWaveformSlider *>(m_mainWindow, "waveformSlider");
+	m_waveformSlider->setLayout(trackInfoLayout);
 	connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
+
+
+	// must have and auto connections >>
+	QAbstractButton *playButton = qFindChild<QAbstractButton *>(m_mainWindow, "playButton");
+	if (playButton)
+		connect(playButton, SIGNAL(clicked()), this, SLOT(on_playButton_clicked()));
+
+	QAbstractButton *stopButton = qFindChild<QAbstractButton *>(m_mainWindow, "stopButton");
+	if (stopButton)
+		connect(stopButton, SIGNAL(clicked()), m_playbackEngine, SLOT(stop()));
+
+	QAbstractButton *prevButton = qFindChild<QAbstractButton *>(m_mainWindow, "prevButton");
+	if (prevButton)
+		connect(prevButton, SIGNAL(clicked()), m_playlistWidget, SLOT(playPrevItem()));
+
+	QAbstractButton *nextButton = qFindChild<QAbstractButton *>(m_mainWindow, "nextButton");
+	if (nextButton)
+		connect(nextButton, SIGNAL(clicked()), m_playlistWidget, SLOT(playNextItem()));
+
+	QAbstractButton *closeButton = qFindChild<QAbstractButton *>(m_mainWindow, "closeButton");
+	if (closeButton)
+		connect(closeButton, SIGNAL(clicked()), m_mainWindow, SLOT(close()));
+
+	QAbstractButton *minimizeButton = qFindChild<QAbstractButton *>(m_mainWindow, "minimizeButton");
+	if (minimizeButton)
+		connect(minimizeButton, SIGNAL(clicked()), m_mainWindow, SLOT(showMinimized()));
+
+	QSlider *volumeSlider = qFindChild<QSlider *>(m_mainWindow, "volumeSlider");
+	if (volumeSlider) {
+		volumeSlider->setMinimum(0);
+		volumeSlider->setMaximum(100);
+		connect(volumeSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setVolume(qreal)));
+		connect(m_playbackEngine, SIGNAL(volumeChanged(qreal)), volumeSlider, SLOT(setValue(qreal)));
+	}
+
+	QCheckBox *repeatCheckBox = qFindChild<QCheckBox *>(m_mainWindow, "repeatCheckBox");
+	if (repeatCheckBox) {
+		connect(repeatCheckBox, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setRepeatMode(bool)));
+		connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), repeatCheckBox, SLOT(setChecked(bool)));
+		repeatCheckBox->setChecked(m_playlistWidget->repeatMode());
+	}
+
+	QCheckBox *shuffleCheckBox = qFindChild<QCheckBox *>(m_mainWindow, "shuffleCheckBox");
+	if (shuffleCheckBox) {
+		connect(shuffleCheckBox, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setShuffleMode(bool)));
+		connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), shuffleCheckBox, SLOT(setChecked(bool)));
+	}
+
+	m_coverWidget = qFindChild<QWidget *>(m_mainWindow, "coverWidget");
+	if (m_coverWidget)
+		connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_coverWidget, SLOT(setSource(const QString &)));
+
+	connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_waveformSlider, SLOT(drawFile(const QString &)));
+	connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(currentFinished()));
+	connect(m_playbackEngine, SIGNAL(failed()), this, SLOT(on_playbackEngine_failed()));
+
+	connect(m_playlistWidget, SIGNAL(setMedia(const QString &)), m_playbackEngine, SLOT(setMedia(const QString &)));
+	connect(m_playlistWidget, SIGNAL(currentActivated()), m_playbackEngine, SLOT(play()));
+
+	connect(m_waveformSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setPosition(qreal)));
+	connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), m_waveformSlider, SLOT(setValue(qreal)));
+	// << must have and auto connections
+
 
 	// actions >>
 	NAction *showHideAction = new NAction(QIcon::fromTheme("preferences-system-windows", QIcon(":/trolltech/styles/commonstyle/images/dockdock-16.png")), tr("Show / Hide"), this);
@@ -489,7 +553,8 @@ void NPlayer::loadSettings()
 		downloadVersion();
 
 	qFindChild<NAction *>(this, "showCoverAction")->setChecked(m_settings->value("ShowCoverArt").toBool());
-	qFindChild<QWidget *>(m_mainWindow, "coverWidget")->setEnabled(m_settings->value("ShowCoverArt").toBool());
+	if (m_coverWidget)
+		m_coverWidget->setEnabled(m_settings->value("ShowCoverArt").toBool());
 
 	qFindChild<NAction *>(this, "alwaysOnTopAction"      )->setChecked(m_settings->value("AlwaysOnTop").toBool());
 	qFindChild<NAction *>(this, "whilePlayingOnTopAction")->setChecked(m_settings->value("WhilePlayingOnTop").toBool());
@@ -662,6 +727,8 @@ void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
 		}
 	}
 #endif
+
+	m_waveformSlider->setPausedState(state == N::PlaybackPaused);
 }
 
 void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
@@ -704,8 +771,22 @@ void NPlayer::playlistActionTriggered()
 void NPlayer::on_showCoverAction_toggled(bool checked)
 {
 	m_settings->setValue("ShowCoverArt", checked);
-	QWidget *coverWidget = qFindChild<QWidget *>(m_mainWindow, "coverWidget");
-	coverWidget->setEnabled(checked);
+	if (m_coverWidget)
+		m_coverWidget->setEnabled(checked);
+}
+
+void NPlayer::on_playButton_clicked()
+{
+	if (!m_playlistWidget->hasCurrent())
+		m_playlistWidget->playRow(0);
+	else
+		m_playbackEngine->play(); // toggle play/pause
+}
+
+void NPlayer::on_playbackEngine_failed()
+{
+	m_playlistWidget->currentFailed();
+	m_playlistWidget->playNextItem();
 }
 
 void NPlayer::showAboutMessageBox()

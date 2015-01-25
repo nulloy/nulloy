@@ -24,6 +24,7 @@ class NLogDialog;
 class NMainWindow;
 class NPlaybackEngineInterface;
 class NPlaylistWidget;
+class NWaveformSlider;
 class NPreferencesDialog;
 class NAboutDialog;
 class NScriptEngine;
@@ -43,6 +44,8 @@ private:
 	NSettings *m_settings;
 	NScriptEngine *m_scriptEngine;
 	NMainWindow *m_mainWindow;
+	QWidget *m_coverWidget;
+	NWaveformSlider *m_waveformSlider;
 	NPreferencesDialog *m_preferencesDialog;
 	NAboutDialog *m_aboutDialog;
 	NPlaybackEngineInterface *m_playbackEngine;
@@ -75,6 +78,8 @@ private slots:
 	void on_alwaysOnTopAction_toggled(bool checked);
 	void on_whilePlayingOnTopAction_toggled(bool checked);
 	void on_showCoverAction_toggled(bool checked);
+	void on_playButton_clicked();
+	void on_playbackEngine_failed();
 	void downloadVersion();
 	void on_versionDownloader_finished(QNetworkReply *reply);
 	void playlistActionTriggered();
