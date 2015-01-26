@@ -140,12 +140,21 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
 	if (ws == "mac") {
 		direction = "left";
 	} else if (ws == "x11") {
-		QProcess gconftool;
-		gconftool.start("gconftool-2 --get \"/apps/metacity/general/button_layout\"");
-		gconftool.waitForStarted();
-		gconftool.waitForFinished();
-		if (gconftool.readAll().endsWith(":\n"))
-			direction = "left";
+		if (system("pidof marco >/dev/null") == 0) {
+			QProcess dconf;
+			dconf.start("dconf read \"/org/mate/marco/general/button-layout\"");
+			dconf.waitForStarted();
+			dconf.waitForFinished();
+			if (dconf.readAll().endsWith(":'\n"))
+				direction = "left";
+		} else if (system("pidof metacity >/dev/null") == 0) {
+			QProcess gconftool;
+			gconftool.start("gconftool-2 --get \"/apps/metacity/general/button_layout\"");
+			gconftool.waitForStarted();
+			gconftool.waitForFinished();
+			if (gconftool.readAll().endsWith(":\n"))
+				direction = "left";
+		}
 	}
 	global.setProperty("WS_WM_BUTTON_DIRECTION", direction);
 
