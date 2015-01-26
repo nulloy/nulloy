@@ -74,15 +74,12 @@ NTrackInfoWidget #MiddleCenter {
         <property name="childrenCollapsible">
          <bool>true</bool>
         </property>
-        <widget class="NDropArea" name="dropArea" native="true">
+        <widget class="QWidget" name="splitTop" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
-         </property>
-         <property name="acceptDrops">
-          <bool>true</bool>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="spacing">
@@ -499,12 +496,6 @@ NTrackInfoWidget #MiddleCenter {
    <class>NWaveformSlider</class>
    <extends>QWidget</extends>
    <header>waveformSlider.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>NDropArea</class>
-   <extends>QWidget</extends>
-   <header>dropArea.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

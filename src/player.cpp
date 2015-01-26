@@ -166,6 +166,7 @@ NPlayer::NPlayer()
 
 	connect(m_playlistWidget, SIGNAL(setMedia(const QString &)), m_playbackEngine, SLOT(setMedia(const QString &)));
 	connect(m_playlistWidget, SIGNAL(currentActivated()), m_playbackEngine, SLOT(play()));
+	connect(m_waveformSlider, SIGNAL(filesDropped(const QStringList &)), m_playlistWidget, SLOT(playFiles(const QStringList &)));
 
 	connect(m_waveformSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setPosition(qreal)));
 	connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), m_waveformSlider, SLOT(setValue(qreal)));

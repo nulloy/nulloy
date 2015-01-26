@@ -16,6 +16,8 @@
 #include "waveformSlider.h"
 #include "waveformBuilderInterface.h"
 #include "pluginLoader.h"
+#include "settings.h"
+#include "common.h"
 
 #include <QMouseEvent>
 #include <QFile>
@@ -43,6 +45,8 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
 	m_timer->start(50);
+
+	setAcceptDrops(TRUE);
 
 	m_oldSize = QSize(0, 0);
 	init();
@@ -269,8 +273,7 @@ void NWaveformSlider::drawFile(const QString &file)
 	setEnabled(TRUE);
 }
 
-// STYLESHEET PROPERTIES
-
+// STYLESHEET PROPERTIES >>
 int NWaveformSlider::radius()
 {
 	return m_radius;
@@ -350,3 +353,45 @@ void NWaveformSlider::setPausedComposition(const QString &mode)
 {
 	m_pausedComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
 }
+// << STYLESHEET PROPERTIES
+
+
+// DRAG & DROP >>
+void NWaveformSlider::dragEnterEvent(QDragEnterEvent *event)
+{
+	if (event->mimeData() && event->mimeData()->hasUrls() && !event->mimeData()->urls().isEmpty())
+		event->acceptProposedAction();
+	else
+		event->ignore();
+}
+
+void NWaveformSlider::dragMoveEvent(QDragMoveEvent *event)
+{
+	event->acceptProposedAction();
+}
+
+void NWaveformSlider::dragLeaveEvent(QDragLeaveEvent *event)
+{
+	event->accept();
+}
+
+void NWaveformSlider::dropEvent(QDropEvent *event)
+{
+	const QMimeData *data = event->mimeData();
+	if (data->hasUrls()) {
+		QStringList files;
+		foreach (QUrl url, data->urls())
+			files << NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toStringList());
+		emit filesDropped(files);
+	}
+
+	event->acceptProposedAction();
+}
+
+QStringList NWaveformSlider::mimeTypes() const
+{
+	QStringList qstrList;
+	qstrList.append("text/uri-list");
+	return qstrList;
+}
+// << DRAG & DROP

@@ -17,7 +17,6 @@
 
 #include "common.h"
 #include "settings.h"
-#include "dropArea.h"
 
 #ifndef _N_NO_SKINS_
 #include "skinFileSystem.h"

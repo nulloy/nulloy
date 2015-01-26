@@ -25,7 +25,6 @@ function Main()
 
 		PlaybackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 
-		Ui.dropArea["filesDropped(const QStringList &)"].connect(Ui.playlistWidget["playFiles(const QStringList &)"]);
 		Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
 
 		Ui.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
@@ -39,8 +38,8 @@ function Main()
 			Ui.playlistWidget.styleSheet = "";
 			Ui.playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
 
-			Ui.dropArea.layout().setContentsMargins(10, 7, 10, 7);
-			Ui.dropArea.layout().setSpacing(7);
+			Ui.splitTop.layout().setContentsMargins(10, 7, 10, 7);
+			Ui.splitTop.layout().setSpacing(7);
 
 			var margins = Ui.controlsContainer.layout().contentsMargins();
 			margins.right = 7;

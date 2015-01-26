@@ -55,14 +55,12 @@ win32 {
 
 	HEADERS -= skinFileSystem.h   skinLoader.h
 	SOURCES -= skinFileSystem.cpp skinLoader.cpp
-	HEADERS += widgetCollection/dropArea.h \
-	           widgetCollection/label.h \
+	HEADERS += widgetCollection/label.h \
 	           widgetCollection/playlistWidget.h \
 	           widgetCollection/slider.h \
 	           widgetCollection/waveformSlider.h \
 	           widgetCollection/playlistWidgetItem.h
-	SOURCES += widgetCollection/dropArea.cpp \
-	           widgetCollection/label.cpp \
+	SOURCES += widgetCollection/label.cpp \
 	           widgetCollection/playlistWidget.cpp \
 	           widgetCollection/slider.cpp \
 	           widgetCollection/waveformSlider.cpp \

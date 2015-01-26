@@ -724,10 +724,7 @@ NTrackInfoWidget #MiddleCenter {
               <number>0</number>
              </property>
              <item>
-              <widget class="NDropArea" name="dropArea" native="true">
-               <property name="acceptDrops">
-                <bool>true</bool>
-               </property>
+              <widget class="QWidget" name="splitTop" native="true">
                <layout class="QVBoxLayout" name="verticalLayout_2">
                 <property name="spacing">
                  <number>0</number>
@@ -1448,12 +1445,6 @@ NTrackInfoWidget #MiddleCenter {
    <class>NWaveformSlider</class>
    <extends>QWidget</extends>
    <header>waveformSlider.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>NDropArea</class>
-   <extends>QWidget</extends>
-   <header>dropArea.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

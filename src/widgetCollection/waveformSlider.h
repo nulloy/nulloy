@@ -69,7 +69,19 @@ private slots:
 signals:
 	void sliderMoved(qreal value);
 
-// STYLESHEET PROPERTIES
+// DRAG & DROP >>
+protected:
+	QStringList mimeTypes() const;
+	virtual void dragEnterEvent(QDragEnterEvent *event);
+	virtual void dragMoveEvent(QDragMoveEvent *event);
+	virtual void dragLeaveEvent(QDragLeaveEvent *event);
+	virtual void dropEvent(QDropEvent *event);
+
+signals:
+	void filesDropped(const QStringList &file);
+// << DRAG & DROP
+
+// STYLESHEET PROPERTIES >>
 private:
 	int m_radius;
 	QBrush m_background;
@@ -105,6 +117,7 @@ public:
 
 	QString pausedComposition();
 	void setPausedComposition(const QString &mode);
+// << STYLESHEET PROPERTIES
 };
 
 #endif

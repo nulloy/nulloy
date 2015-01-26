@@ -20,8 +20,6 @@ function Main()
 
 		PlaybackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 
-		Ui.dropArea["filesDropped(const QStringList &)"].connect(Ui.playlistWidget["playFiles(const QStringList &)"]);
-
 		Ui.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
 		Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
 		Ui.mainWindow["maximizeEnabled(bool)"].connect(this, "on_maximizeEnabled");

@@ -20,13 +20,11 @@ function Main()
 
 		PlaybackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 
-		Ui.dropArea["filesDropped(const QStringList &)"].connect(Ui.playlistWidget["playFiles(const QStringList &)"]);
-
 		Ui.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
 		Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
 		Ui.mainWindow.resized.connect(this, "on_resized");
 
-		Ui.shadowWidget.setParent(Ui.dropArea);
+		Ui.shadowWidget.setParent(Ui.splitTop);
 		Ui.shadowWidget.setParent(Ui.playlistWidget);
 		Ui.shadowWidget.show();
 
