@@ -146,7 +146,7 @@ Main.prototype.on_maximizeEnabled = function(enabled)
 
 Main.prototype.setBorderVisible = function(enabled)
 {
-	Ui.centralWidget.styleSheet = enabled ? "" : "#borderWidget { background-color: transparent; }";
+	Ui.borderWidget.styleSheet = enabled ? "" : "#borderWidget { background-color: #3D3D3D; }";
 }
 
 Main.prototype.on_focusChanged = function(focused)

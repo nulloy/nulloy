@@ -58,7 +58,7 @@ void NMainWindow::init(const QString &uiFile)
 	formFile.close();
 
 	QVBoxLayout *layout = new QVBoxLayout;
-	layout->addWidget(qFindChild<QWidget *>(form, "centralWidget"));
+	layout->addWidget(form->layout()->itemAt(0)->widget());
 	layout->setContentsMargins(0, 0, 0, 0);
 	setLayout(layout);
 	setStyleSheet(form->styleSheet());
