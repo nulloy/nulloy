@@ -3,12 +3,10 @@ win32:TARGET = PluginGStreamer
 
 include(../plugin.pri)
 
-unix {
+unix|unix_mingw {
 	CONFIG += link_pkgconfig
 	PKGCONFIG += gstreamer-1.0
-}
-
-win32 {
+} else:win32 {
 	INCLUDEPATH +=  $(GSTREAMER_1_0_ROOT_X86)/include \
 	                $(GSTREAMER_1_0_ROOT_X86)/include/gstreamer-1.0 \
 	                $(GSTREAMER_1_0_ROOT_X86)/include/glib-2.0 \
@@ -29,7 +27,7 @@ HEADERS += $$files(*.h)
 SOURCES += $$files(*.cpp)
 
 gstreamer-tagreader {
-	unix:PKGCONFIG += gstreamer-pbutils-1.0
+	unix|unix_mingw:PKGCONFIG += gstreamer-pbutils-1.0
 	DEFINES += _N_GSTREAMER_TAGREADER_PLUGIN_
 } else {
 	HEADERS -= tagReaderGstreamer.h

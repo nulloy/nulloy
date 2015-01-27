@@ -1,5 +1,5 @@
 defineReplace(fixSlashes) {
-    win32:1 ~= s,/,\\,g
+    win32:!unix_mingw:1 ~= s,/,\\,g
     return($$1)
 }
 

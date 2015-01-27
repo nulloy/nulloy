@@ -1,6 +1,4 @@
 # build
-unix:MV_CMD = mv
-win32:MV_CMD = move
 isEmpty(LRELEASE):LRELEASE = lrelease
 
 QMS_SRC_DIR = $$SRC_DIR/i18n
@@ -11,7 +9,7 @@ mkdir($$QMS_DEST_DIR)
 qms.target = $$QMS_DEST_DIR/*.qm
 
 qms.commands = $$LRELEASE $$qms.depends && \
-               $$MV_CMD $$fixSlashes($$QMS_SRC_DIR/*.qm) $$fixSlashes($$QMS_DEST_DIR)
+               $$QMAKE_MOVE $$fixSlashes($$QMS_SRC_DIR/*.qm) $$fixSlashes($$QMS_DEST_DIR)
 
 QMAKE_EXTRA_TARGETS += qms
 PRE_TARGETDEPS += $$qms.target

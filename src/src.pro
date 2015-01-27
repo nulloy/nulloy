@@ -30,17 +30,14 @@ include(trash/trash.pri)
 win32:include(ux/w7TaskBar.pri)
 
 # zlib
-unix {
+unix|unix_mingw {
 	CONFIG += link_pkgconfig
-	# zlib
 	PKGCONFIG += zlib
-	# X11
-	!mac:PKGCONFIG += x11
-}
-win32 {
+} else:win32 {
 	LIBS += -L$(ZLIB_DIR)/lib -lzdll
 }
 
+unix:!mac:PKGCONFIG += x11
 
 # qmake -config no-skins
 !no-skins {

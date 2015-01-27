@@ -166,6 +166,11 @@ else
 	QMAKE_CONFIG="$QMAKE_CONFIG release"
 fi
 
+if [[ `qmake -query "QMAKE_MKSPECS" | grep -i mingw` ]]; then
+	QMAKE_CONFIG="$QMAKE_CONFIG unix_mingw"
+	APP_NAME=Nulloy
+fi
+
 if [ $FORCE_VERSION != "no" ]; then
 	echo "Forced version: $FORCE_VERSION"
 	echo "N_CONFIG_FORCE_VERSION = $FORCE_VERSION" > $QMAKE_CACHE
