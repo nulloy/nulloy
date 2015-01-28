@@ -115,8 +115,10 @@ QStringList NCore::_processPath(const QString &path, const QStringList &nameFilt
 		foreach (QString f, entryList)
 			list << _processPath(path + "/" + f, nameFilters);
 	} else {
-		list << path;
+		if (QDir::match(nameFilters, path))
+			list << path;
 	}
+
 	return list;
 }
 
