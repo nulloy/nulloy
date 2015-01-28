@@ -542,11 +542,6 @@
         <translation>Отображать состояние проигрывания на панели задач (только для Windows 7+)</translation>
     </message>
     <message>
-        <location line="+11"/>
-        <source>Search Cover Art in same directory (cover|folder|front).(jpg/png)</source>
-        <translation>Искать обложку в той же директории (cover|folder|front).(jpg/png)</translation>
-    </message>
-    <message>
         <location line="+28"/>
         <source>Automatically check for updates</source>
         <translation>Автоматическая проверка обновлений</translation>

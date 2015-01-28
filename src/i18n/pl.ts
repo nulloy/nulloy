@@ -542,11 +542,6 @@
         <translation>Pokaż postęp na pasku zadań (Windows 7 + tylko)</translation>
     </message>
     <message>
-        <location line="+11"/>
-        <source>Search Cover Art in same directory (cover|folder|front).(jpg/png)</source>
-        <translation>Szukaj okładki w katalogu (cover|folder|front).(jpg/png)</translation>
-    </message>
-    <message>
         <location line="+28"/>
         <source>Automatically check for updates</source>
         <translation>Automatycznie sprawdzaj aktualizacje</translation>

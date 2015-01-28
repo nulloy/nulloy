@@ -84,27 +84,34 @@ void NCoverWidget::setSource(const QString &file)
 	hide();
 	init();
 
-	if (NSettings::instance()->value("PlaylistTrackInfo").toBool()) {
-		QDir dir = QFileInfo(file).absoluteDir();
-		QStringList files = dir.entryList(QStringList() << "*.jpg" << "*.png", QDir::Files);
-		QStringList patterns = QStringList() << "cover.*" << "folder.*" << "front.*";
-		foreach (QString pattern, patterns) {
-			int index = files.indexOf(QRegExp(pattern, Qt::CaseInsensitive));
-			if (index != -1) {
-				m_pixmap = QPixmap(dir.absolutePath() + "/" + files.at(index));
-				break;
-			}
-		}
-	}
-
-	// fallback to coverReader
-	if (m_pixmap.isNull()) {
-		if (!m_coverReader)
-			return;
-
+	if (m_coverReader) {
 		m_coverReader->setSource(file);
 		m_pixmap = QPixmap::fromImage(m_coverReader->getImage());
 		m_coverReader->setSource(""); // release the file
+	}
+
+	if (m_pixmap.isNull()){ // fallback to external file
+		QString pixmapFile;
+		QDir dir = QFileInfo(file).absoluteDir();
+		QStringList images = dir.entryList(QStringList() << "*.jpg" << "*.png", QDir::Files);
+
+		// search for image which file name starts same as source file
+		QString baseName = QFileInfo(file).completeBaseName();
+		foreach (QString image, images) {
+			if (baseName.startsWith(QFileInfo(image).completeBaseName())) {
+				pixmapFile = dir.absolutePath() + "/" + image;
+				break;
+			}
+		}
+
+		// search for cover.* or folder.* or front.*
+		if (pixmapFile.isEmpty()) {
+			QStringList matchedImages = images.filter(QRegExp("^(cover|folder|front)\\..*$", Qt::CaseInsensitive));
+			if (!matchedImages.isEmpty())
+				pixmapFile = dir.absolutePath() + "/" + matchedImages.first();
+		}
+
+		m_pixmap = QPixmap(pixmapFile);
 	}
 
 	if (!m_pixmap.isNull()) { // first scale, then show

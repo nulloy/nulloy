@@ -542,11 +542,6 @@
         <translation>Montrer les progrès réalisés dans la barre des tâches (Windows 7 + uniquement)</translation>
     </message>
     <message>
-        <location line="+11"/>
-        <source>Search Cover Art in same directory (cover|folder|front).(jpg/png)</source>
-        <translation>Recherche pour l&apos;album de l&apos;image dans le même répertoire (cover|folder|front).(jpg/png)</translation>
-    </message>
-    <message>
         <location line="+28"/>
         <source>Automatically check for updates</source>
         <translation>Chercher automatiquement des mises-à-jour</translation>

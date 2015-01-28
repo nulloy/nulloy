@@ -76,7 +76,6 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("LoadNextSort", QDir::Name);
 	initValue("Volume", 0.8);
 	initValue("ShowDecibelsVolume", FALSE);
-	initValue("CoverArtFromDir", TRUE);
 
 #ifdef Q_WS_WIN
 	initValue("TaskbarProgress", TRUE);
