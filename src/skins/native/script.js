@@ -20,8 +20,8 @@ function Main()
 		Ui.stopButton.setStandardIcon("media-playback-stop", ":stop.png");
 		Ui.prevButton.setStandardIcon("media-skip-backward", ":prev.png");
 		Ui.nextButton.setStandardIcon("media-skip-forward", ":next.png");
-		Ui.repeatCheckBox.setStandardIcon("media-playlist-repeat", ":repeat.png");
-		Ui.shuffleCheckBox.setStandardIcon("media-playlist-shuffle", ":shuffle.png");
+		Ui.repeatButton.setStandardIcon("media-playlist-repeat", ":repeat.png");
+		Ui.shuffleButton.setStandardIcon("media-playlist-shuffle", ":shuffle.png");
 
 		PlaybackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 

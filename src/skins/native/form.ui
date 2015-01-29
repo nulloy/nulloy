@@ -288,7 +288,7 @@ NTrackInfoWidget #MiddleCenter {
            </spacer>
           </item>
           <item>
-           <widget class="QToolButton" name="repeatCheckBox">
+           <widget class="QToolButton" name="repeatButton">
             <property name="minimumSize">
              <size>
               <width>30</width>
@@ -318,7 +318,7 @@ NTrackInfoWidget #MiddleCenter {
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="shuffleCheckBox">
+           <widget class="QToolButton" name="shuffleButton">
             <property name="minimumSize">
              <size>
               <width>29</width>

@@ -130,49 +130,49 @@
 	border:  1px solid #DEDEDE;
 }
 #prevButton, #playButton, #stopButton, #nextButton,
-#repeatCheckBox, #shuffleCheckBox {
+#repeatButton, #shuffleButton {
 	border-radius: 2px;
 	border: 1px solid #4A4A4A;
 	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #FAFAFA, stop:1 #9b9b9b);
 	padding-top: 1px;
 }
 #prevButton, #playButton, #stopButton,
-#repeatCheckBox {
+#repeatButton {
 	border-right: none;
 }
 #playButton, #stopButton {
 	border-radius: 0;
 }
-#prevButton, #repeatCheckBox {
+#prevButton, #repeatButton {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
-#nextButton, #shuffleCheckBox {
+#nextButton, #shuffleButton {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 }
 #playButton:hover, #stopButton:hover,
 #nextButton:hover, #prevButton:hover,
-#repeatCheckBox:hover, #shuffleCheckBox:hover {
+#repeatButton:hover, #shuffleButton:hover {
 	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #FFFFFE, stop:1 #FBFFDD);
 }
 #playButton:pressed, #stopButton:pressed,
 #nextButton:pressed, #prevButton:pressed,
-#repeatCheckBox:pressed, #shuffleCheckBox:pressed,
-#repeatCheckBox:checked, #shuffleCheckBox:checked {
+#repeatButton:pressed, #shuffleButton:pressed,
+#repeatButton:checked, #shuffleButton:checked {
 	background: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 #666666, stop:1 #9E9E9E);
 	padding-top: 2px;
 }
-#repeatCheckBox:checked, #shuffleCheckBox:checked {
+#repeatButton:checked, #shuffleButton:checked {
 	padding-top: 0;
 }
-#repeatCheckBox:checked:pressed, #shuffleCheckBox:checked:pressed {
+#repeatButton:checked:pressed, #shuffleButton:checked:pressed {
 	padding-top: 2px;
 }
-#repeatCheckBox {
+#repeatButton {
 	qproperty-icon: url(repeat.png);
 }
-#shuffleCheckBox {
+#shuffleButton {
 	qproperty-icon: url(shuffle.png);
 }
 #prevButton {
@@ -751,7 +751,7 @@ NTrackInfoWidget #MiddleCenter {
                        <number>1</number>
                       </property>
                       <item>
-                       <widget class="QToolButton" name="repeatCheckBox">
+                       <widget class="QToolButton" name="repeatButton">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                           <horstretch>0</horstretch>
@@ -776,7 +776,7 @@ NTrackInfoWidget #MiddleCenter {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QToolButton" name="shuffleCheckBox">
+                       <widget class="QToolButton" name="shuffleButton">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                           <horstretch>0</horstretch>

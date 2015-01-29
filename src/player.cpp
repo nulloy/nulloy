@@ -143,17 +143,17 @@ NPlayer::NPlayer()
 		connect(m_playbackEngine, SIGNAL(volumeChanged(qreal)), volumeSlider, SLOT(setValue(qreal)));
 	}
 
-	QCheckBox *repeatCheckBox = qFindChild<QCheckBox *>(m_mainWindow, "repeatCheckBox");
-	if (repeatCheckBox) {
-		connect(repeatCheckBox, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setRepeatMode(bool)));
-		connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), repeatCheckBox, SLOT(setChecked(bool)));
-		repeatCheckBox->setChecked(m_playlistWidget->repeatMode());
+	QAbstractButton *repeatButton = qFindChild<QAbstractButton *>(m_mainWindow, "repeatButton");
+	if (repeatButton) {
+		connect(repeatButton, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setRepeatMode(bool)));
+		connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), repeatButton, SLOT(setChecked(bool)));
+		repeatButton->setChecked(m_playlistWidget->repeatMode());
 	}
 
-	QCheckBox *shuffleCheckBox = qFindChild<QCheckBox *>(m_mainWindow, "shuffleCheckBox");
-	if (shuffleCheckBox) {
-		connect(shuffleCheckBox, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setShuffleMode(bool)));
-		connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), shuffleCheckBox, SLOT(setChecked(bool)));
+	QAbstractButton *shuffleButton = qFindChild<QAbstractButton *>(m_mainWindow, "shuffleButton");
+	if (shuffleButton) {
+		connect(shuffleButton, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setShuffleMode(bool)));
+		connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), shuffleButton, SLOT(setChecked(bool)));
 	}
 
 	m_coverWidget = qFindChild<QWidget *>(m_mainWindow, "coverWidget");
