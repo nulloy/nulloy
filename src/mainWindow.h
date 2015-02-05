@@ -40,6 +40,7 @@ private:
 	void closeEvent(QCloseEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
+	void wheelEvent(QWheelEvent *event);
 	void resizeEvent(QResizeEvent *event);
 
 #ifdef Q_WS_WIN
@@ -74,6 +75,7 @@ signals:
 	void fullScreenEnabled(bool enabled);
 	void maximizeEnabled(bool enabled);
 	void focusChanged(bool focused);
+	void scrolled(int delta);
 };
 
 #endif

@@ -51,6 +51,9 @@ private:
 	void setCurrentItem(NPlaylistWidgetItem *item);
 	void activateItem(NPlaylistWidgetItem *item);
 
+protected:
+	void wheelEvent(QWheelEvent *event);
+
 protected slots:
 	void rowsInserted(const QModelIndex &parent, int start, int end);
 	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);

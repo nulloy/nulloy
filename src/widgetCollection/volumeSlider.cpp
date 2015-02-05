@@ -23,6 +23,9 @@ static const qreal log10over20 = qreal(0.1151292546497022842); // ln(10) / 20
 
 NVolumeSlider::NVolumeSlider(QWidget *parent) : NSlider(parent)
 {
+	setMinimum(0);
+	setMaximum(100);
+
 	connect(this, SIGNAL(valueChanged(int)), this, SLOT(on_valueChanged(int)));
 }
 
@@ -33,20 +36,21 @@ void NVolumeSlider::on_valueChanged(int value)
 
 void NVolumeSlider::mousePressEvent(QMouseEvent *event)
 {
-	showToolTip(event->x(), event->y());
 	NSlider::mousePressEvent(event);
+	showToolTip(event->x(), event->y());
 }
 
 void NVolumeSlider::mouseMoveEvent(QMouseEvent *event)
 {
-	showToolTip(event->x(), event->y());
 	NSlider::mouseMoveEvent(event);
+	showToolTip(event->x(), event->y());
 }
 
 void NVolumeSlider::wheelEvent(QWheelEvent *event)
 {
-	showToolTip(event->x(), event->y());
 	NSlider::wheelEvent(event);
+	event->accept();
+	showToolTip(event->x(), event->y());
 }
 
 QString NVolumeSlider::toolTipText(int value)

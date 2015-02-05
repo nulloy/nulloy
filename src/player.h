@@ -25,6 +25,7 @@ class NMainWindow;
 class NPlaybackEngineInterface;
 class NPlaylistWidget;
 class NWaveformSlider;
+class NVolumeSlider;
 class NPreferencesDialog;
 class NAboutDialog;
 class NScriptEngine;
@@ -48,6 +49,7 @@ private:
 	NWaveformSlider *m_waveformSlider;
 	NPreferencesDialog *m_preferencesDialog;
 	NAboutDialog *m_aboutDialog;
+	NVolumeSlider *m_volumeSlider;
 	NPlaybackEngineInterface *m_playbackEngine;
 	QMenu *m_contextMenu;
 	NPlaylistWidget *m_playlistWidget;
@@ -85,6 +87,7 @@ private slots:
 	void playlistActionTriggered();
 
 	void on_mainWindow_closed();
+	void on_mainWindow_scrolled(int delta);
 	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
 	void on_trayClickTimer_timeout();
 	void trayIconCountClicks(int clicks);

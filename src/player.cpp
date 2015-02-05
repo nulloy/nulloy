@@ -22,6 +22,7 @@
 #include "playlistStorage.h"
 #include "mainWindow.h"
 #include "waveformSlider.h"
+#include "volumeSlider.h"
 #include "playbackEngineInterface.h"
 #include "playlistWidget.h"
 #include "playlistWidgetItem.h"
@@ -135,12 +136,11 @@ NPlayer::NPlayer()
 	if (minimizeButton)
 		connect(minimizeButton, SIGNAL(clicked()), m_mainWindow, SLOT(showMinimized()));
 
-	QSlider *volumeSlider = qFindChild<QSlider *>(m_mainWindow, "volumeSlider");
-	if (volumeSlider) {
-		volumeSlider->setMinimum(0);
-		volumeSlider->setMaximum(100);
-		connect(volumeSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setVolume(qreal)));
-		connect(m_playbackEngine, SIGNAL(volumeChanged(qreal)), volumeSlider, SLOT(setValue(qreal)));
+	m_volumeSlider = qFindChild<NVolumeSlider *>(m_mainWindow, "volumeSlider");
+	if (m_volumeSlider) {
+		connect(m_volumeSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setVolume(qreal)));
+		connect(m_playbackEngine, SIGNAL(volumeChanged(qreal)), m_volumeSlider, SLOT(setValue(qreal)));
+		connect(m_mainWindow, SIGNAL(scrolled(int)), this, SLOT(on_mainWindow_scrolled(int)));
 	}
 
 	QAbstractButton *repeatButton = qFindChild<QAbstractButton *>(m_mainWindow, "repeatButton");
@@ -819,9 +819,14 @@ void NPlayer::showOpenFileDialog()
 		m_playlistWidget->playRow(0);
 }
 
+void NPlayer::on_mainWindow_scrolled(int delta)
+{
+	QWheelEvent event(QPoint(), delta, Qt::NoButton, Qt::NoModifier);
+	QApplication::sendEvent(m_volumeSlider, &event);
+}
+
 void NPlayer::showOpenDirDialog()
 {
-
 	QString dir = QFileDialog::getExistingDirectory(
 		m_mainWindow, qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
 		m_settings->value("LastDirectory").toString(),

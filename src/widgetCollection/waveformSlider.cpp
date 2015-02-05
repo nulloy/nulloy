@@ -247,7 +247,7 @@ void NWaveformSlider::mousePressEvent(QMouseEvent *event)
 
 void NWaveformSlider::wheelEvent(QWheelEvent *event)
 {
-	event->accept();
+	event->ignore();
 }
 
 void NWaveformSlider::changeEvent(QEvent *event)

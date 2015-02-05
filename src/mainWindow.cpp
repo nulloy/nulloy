@@ -250,6 +250,14 @@ void NMainWindow::mouseMoveEvent(QMouseEvent *event)
 	}
 }
 
+void NMainWindow::wheelEvent(QWheelEvent *event)
+{
+	QDialog::wheelEvent(event);
+
+	if (event->orientation() == Qt::Vertical)
+		emit scrolled(event->delta());
+}
+
 void NMainWindow::resizeEvent(QResizeEvent *event)
 {
 	QDialog::resizeEvent(event);
