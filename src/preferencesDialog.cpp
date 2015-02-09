@@ -128,7 +128,6 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 {
 	QDialog *dialog = new QDialog(this);
 	dialog->setWindowTitle("Title Formats");
-	dialog->setMaximumSize(0, 0);
 
 	QVBoxLayout *layout = new QVBoxLayout;
 	dialog->setLayout(layout);
@@ -174,10 +173,8 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 			"<tr><td></td><td></td></tr>"
 			"<tr><td><b>{%g|}</b></td><td>" + tr("Print Genre. If not available, print nothing.") + "</td></tr>"
 		"</table><br>");
-	textBrowser->setStyleSheet("background: transparent");
+	textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
 	textBrowser->setFrameShape(QFrame::NoFrame);
-	textBrowser->setMinimumWidth(400);
-	textBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	layout->addWidget(textBrowser);
 
@@ -190,10 +187,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	layout->addLayout(buttonLayout);
 
 	dialog->show();
-
-	// resize according to content
-	QSize textSize = textBrowser->document()->size().toSize();
-	textBrowser->setMinimumHeight(textSize.height());
+	dialog->resize(400, 400);
 }
 
 QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
