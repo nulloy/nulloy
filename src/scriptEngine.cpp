@@ -64,7 +64,7 @@ void enumFromScriptValue(const QScriptValue &value, T &en)
 	en = (T)value.toInt32();
 }
 
-QScriptValue readFile(QScriptContext *context, QScriptEngine *engine)
+QScriptValue readFile(QScriptContext *context, QScriptEngine *)
 {
 	if (context->argumentCount() != 1)
 		return QString();
@@ -72,11 +72,12 @@ QScriptValue readFile(QScriptContext *context, QScriptEngine *engine)
 	QString fileName = context->argument(0).toString();
 
 	QFile file(NSkinFileSystem::prefix() + fileName);
-	file.open(QFile::ReadOnly);
+	if (!file.open(QIODevice::ReadOnly))
+		return QString();
 	return QLatin1String(file.readAll());
 }
 
-QScriptValue maskImage(QScriptContext *context, QScriptEngine *engine)
+QScriptValue maskImage(QScriptContext *context, QScriptEngine *)
 {
 	if (context->argumentCount() < 2)
 		return QScriptValue();
@@ -115,6 +116,21 @@ QScriptValue maskImage(QScriptContext *context, QScriptEngine *engine)
 	NSkinFileSystem::addFile(fileName, byteArray);
 
 	return QScriptValue();
+}
+
+QScriptValue addApplicationFont(QScriptContext *context, QScriptEngine *)
+{
+	if (context->argumentCount() != 1)
+		return -1;
+
+	QString fileName = context->argument(0).toString();
+
+	QFile file(NSkinFileSystem::prefix() + fileName);
+	if (!file.open(QIODevice::ReadOnly))
+		return -1;
+	QByteArray byteArray = file.readAll();
+
+	return QFontDatabase::addApplicationFontFromData(byteArray);
 }
 
 NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
@@ -185,5 +201,6 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
 
 	globalObject().setProperty("readFile", newFunction(readFile));
 	globalObject().setProperty("maskImage", newFunction(maskImage));
+	globalObject().setProperty("addApplicationFont", newFunction(addApplicationFont));
 }
 
