@@ -36,13 +36,12 @@ class NWaveformSlider : public QAbstractSlider
 
 private:
 	NWaveformBuilderInterface *m_waveBuilder;
-	QImage m_waveImage;
-	QVector<QImage> m_bufImage;
+	QImage m_normalImage;
+	QImage m_playingImage;
+	QImage m_pausedImage;
 	QTimer *m_timer;
 	bool m_pausedState;
-
 	QSize m_oldSize;
-	int m_oldValue;
 	int m_oldIndex;
 	float m_oldBuildPos;
 

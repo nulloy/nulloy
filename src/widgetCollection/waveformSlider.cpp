@@ -40,11 +40,9 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 
 	m_waveBuilder = dynamic_cast<NWaveformBuilderInterface *>(NPluginLoader::getPlugin(N::WaveformBuilder));
 
-	m_bufImage.resize(7);
-
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
-	m_timer->start(50);
+	m_timer->start();
 
 	setAcceptDrops(TRUE);
 
@@ -60,7 +58,6 @@ void NWaveformSlider::setPausedState(bool state)
 
 void NWaveformSlider::init()
 {
-	m_oldValue = -1;
 	m_oldIndex = -1;
 	m_oldBuildPos = -1;
 	m_pausedState = FALSE;
@@ -84,29 +81,25 @@ void NWaveformSlider::checkForUpdate()
 	if (!m_waveBuilder)
 		return;
 
-	if (m_oldValue != value() || m_oldSize != size())
-		m_needsUpdate = TRUE;
-
 	float pos;
 	int index;
 	m_waveBuilder->positionAndIndex(pos, index);
 
-	if ((!(pos < 0 || index < 0) &&
-	     !(m_oldBuildPos == pos &&
-	     m_oldIndex == index &&
-	     m_waveImage.size() == size())) ||
-	    m_needsUpdate)
-	{
+	if (m_oldSize != size() || m_oldIndex != index)
+		m_needsUpdate = TRUE;
+
+	if (m_needsUpdate) {
+		QPainter painter;
+		QImage waveImage = m_normalImage = m_playingImage = m_pausedImage = QImage(size(), QImage::Format_ARGB32_Premultiplied);
+		waveImage.fill(0);
+
 		m_oldBuildPos = pos;
 		m_oldIndex = index;
+		m_oldSize = size();
 
-		if (m_waveImage.size() != size())
-			m_waveImage = QImage(size(), QImage::Format_ARGB32_Premultiplied);
 
-		QPainter painter(&m_waveImage);
-		m_waveImage.fill(0);
-
-		painter.setRenderHint(QPainter::Antialiasing);
+		// waveform >>
+		painter.begin(&waveImage);
 		painter.setBrush(m_waveBackground);
 		QPen wavePen;
 		wavePen.setWidth(0);
@@ -127,110 +120,49 @@ void NWaveformSlider::checkForUpdate()
 		QPainterPath fullPath(pathNeg);
 		fullPath.connectPath(pathPos.toReversed());
 		fullPath.closeSubpath();
+		painter.setRenderHint(QPainter::Antialiasing);
 		painter.drawPath(fullPath);
-	}
+		painter.end();
+		// << waveform
 
-	if (m_needsUpdate)
+
+		QList<QImage *> images; images << &m_normalImage << &m_playingImage << &m_pausedImage;
+		QList<QPainter::CompositionMode> modes; modes << QPainter::CompositionMode_SourceOver << m_playingComposition << m_pausedComposition;
+		QList<QBrush> brushes; brushes << m_background << m_progressPlayingBackground << m_progressPausedBackground;
+		for (int i = 0; i < images.size(); ++i) {
+			painter.begin(images[i]);
+			// background
+			painter.setPen(Qt::NoPen);
+			painter.setBrush(brushes[i]);
+			painter.setRenderHint(QPainter::Antialiasing);
+			painter.drawRoundedRect(rect(), m_radius, m_radius);
+			// background + waveform
+			painter.setCompositionMode(modes[i]);
+			painter.drawImage(0, 0, waveImage);
+			painter.end();
+		}
+
 		update();
-	m_needsUpdate = FALSE;
+		m_needsUpdate = FALSE;
+	}
 }
 
-void NWaveformSlider::paintEvent(QPaintEvent *event)
+void NWaveformSlider::paintEvent(QPaintEvent *)
 {
-	Q_UNUSED(event);
-
-	if (m_oldSize != size()) {
-		for (int i = 0; i < m_bufImage.size(); ++i)
-			m_bufImage[i] = QImage(size(), QImage::Format_ARGB32_Premultiplied);
-	}
-
-	m_oldSize = size();
-	m_oldValue = value();
-
-	for (int i = 0; i < m_bufImage.size(); ++i)
-		m_bufImage[i].fill(0);
-
-	QPen pen;
-	QBrush brush;
-	QPainter painter;
-
-	painter.begin(&m_bufImage[2]);
-	painter.setRenderHint(QPainter::Antialiasing);
-	// main bg
-	painter.setPen(Qt::NoPen);
-	painter.setBrush(m_background);
-	painter.drawRoundedRect(rect(), m_radius, m_radius);
-	painter.end();
-
-	int x = qRound((qreal)m_oldValue / maximum() * width());
+	QPainter painter(this);
 
 	if (isEnabled()) {
-		painter.begin(&m_bufImage[3]);
-		// progress rectangle
-		painter.setPen(Qt::NoPen);
-		QPainter::CompositionMode progressComposition;
-		if (!m_pausedState) {
-			painter.setBrush(m_progressPlayingBackground);
-			progressComposition = m_playingComposition;
-		} else {
-			painter.setBrush(m_progressPausedBackground);
-			progressComposition = m_pausedComposition;
-		}
-		painter.drawRect(rect().adjusted(0, 0, x - width(), 0));
-		painter.end();
+		int x = qRound((qreal)value() / maximum() * width());
 
-		painter.begin(&m_bufImage[0]);
-		painter.drawImage(0, 0, m_bufImage[2]);
-		painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-		painter.drawImage(0, 0, m_bufImage[3]);
-		painter.end();
+		QRect right = rect().adjusted(x, 0, 0, 0);
+		painter.drawImage(right, m_normalImage, right);
 
-		painter.begin(&m_bufImage[1]);
-		painter.drawImage(0, 0, m_bufImage[2]);
-		painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-		painter.drawImage(0, 0, m_bufImage[3]);
-		painter.end();
-
-		painter.begin(&m_bufImage[4]);
-		painter.drawImage(0, 0, m_bufImage[0]);
-		painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-		painter.drawImage(0, 0, m_waveImage);
-		painter.end();
-
-		painter.begin(&m_bufImage[5]);
-		painter.drawImage(0, 0, m_bufImage[1]);
-		painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-		painter.drawImage(0, 0, m_waveImage);
-		painter.end();
-
-		painter.begin(&m_bufImage[6]);
-		painter.drawImage(0, 0, m_bufImage[0]);
-		painter.drawImage(0, 0, m_bufImage[1]);
-		painter.drawImage(0, 0, m_bufImage[5]);
-		painter.setCompositionMode(progressComposition);
-		painter.drawImage(0, 0, m_bufImage[4]);
-
-		// progress line
-		/*painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-		QColor main_border = QColor("#000000");
-		main_border.setAlpha(200);
-		painter.setPen(main_border);
-		painter.drawLine(x, 0, x, height());*/
-		painter.end();
-
-		painter.begin(this);
-		painter.drawImage(0, 0, m_bufImage[6]);
-		// main border
-		/*painter.setRenderHint(QPainter::Antialiasing);
-		painter.setBrush(Qt::NoBrush);
-		main_border.setAlpha(255);
-		painter.setPen(main_border);
-		painter.drawRoundedRect(rect(), 6, 6);*/
-		painter.end();
+		QRect left = rect().adjusted(0, 0, x - width(), 0);
+		painter.drawImage(left, m_pausedState ? m_pausedImage : m_playingImage, left);
 	} else {
-		painter.begin(this);
-		painter.drawImage(0, 0, m_bufImage[2]);
-		painter.end();
+		painter.setPen(Qt::NoPen);
+		painter.setBrush(m_background);
+		painter.drawRoundedRect(rect(), m_radius, m_radius);
 	}
 }
 
