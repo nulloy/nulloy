@@ -260,6 +260,8 @@ void NPreferencesDialog::loadSettings()
 	// general >>
 	QList<QWidget *> widgets = findChildren<QWidget *>();
 	foreach (QWidget *widget, widgets) {
+		if (!widget->inherits("QCheckBox") && !widget->inherits("QLineEdit"))
+			continue;
 		QString className = QString(widget->metaObject()->className()).mid(1);
 		QString settingsName = widget->objectName();
 		settingsName[0] = settingsName.at(0).toUpper();
@@ -344,6 +346,8 @@ void NPreferencesDialog::saveSettings()
 	// general >>
 	QList<QWidget *> widgets = findChildren<QWidget *>();
 	foreach (QWidget *widget, widgets) {
+		if (!widget->inherits("QCheckBox") && !widget->inherits("QLineEdit"))
+			continue;
 		QString className = QString(widget->metaObject()->className()).mid(1);
 		QString settingsName = widget->objectName();
 		settingsName[0] = settingsName.at(0).toUpper();
