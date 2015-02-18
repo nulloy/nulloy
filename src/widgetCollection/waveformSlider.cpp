@@ -30,9 +30,9 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_background = QBrush(Qt::darkBlue);
 	m_waveBackground = QBrush(Qt::darkGreen);
 	m_waveBorderColor = QColor(Qt::green);
-	m_progressNormalBackground = QBrush(Qt::darkCyan);
+	m_progressPlayingBackground = QBrush(Qt::darkCyan);
 	m_progressPausedBackground = QBrush(Qt::darkGray);
-	m_normalComposition = QPainter::CompositionMode_Overlay;
+	m_playingComposition = QPainter::CompositionMode_Overlay;
 	m_pausedComposition = QPainter::CompositionMode_Overlay;
 
 	setMinimum(0);
@@ -170,8 +170,8 @@ void NWaveformSlider::paintEvent(QPaintEvent *event)
 		painter.setPen(Qt::NoPen);
 		QPainter::CompositionMode progressComposition;
 		if (!m_pausedState) {
-			painter.setBrush(m_progressNormalBackground);
-			progressComposition = m_normalComposition;
+			painter.setBrush(m_progressPlayingBackground);
+			progressComposition = m_playingComposition;
 		} else {
 			painter.setBrush(m_progressPausedBackground);
 			progressComposition = m_pausedComposition;
@@ -314,14 +314,14 @@ void NWaveformSlider::setWaveBorderColor(QColor color)
 	m_waveBorderColor = color;
 }
 
-QBrush NWaveformSlider::progressNormalBackground()
+QBrush NWaveformSlider::progressPlayingBackground()
 {
-	return m_progressNormalBackground;
+	return m_progressPlayingBackground;
 }
 
-void NWaveformSlider::setProgressNormalBackground(QBrush brush)
+void NWaveformSlider::setProgressPlayingBackground(QBrush brush)
 {
-	m_progressNormalBackground = brush;
+	m_progressPlayingBackground = brush;
 }
 
 QBrush NWaveformSlider::progressPausedBackground()
@@ -334,14 +334,14 @@ void NWaveformSlider::setProgressPausedBackground(QBrush brush)
 	m_progressPausedBackground = brush;
 }
 
-QString NWaveformSlider::normalComposition()
+QString NWaveformSlider::playingComposition()
 {
-	return ENUM_TO_STR(N, CompositionMode, m_normalComposition);
+	return ENUM_TO_STR(N, CompositionMode, m_playingComposition);
 }
 
-void NWaveformSlider::setNormalComposition(const QString &mode)
+void NWaveformSlider::setPlayingComposition(const QString &mode)
 {
-	m_normalComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
+	m_playingComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
 }
 
 QString NWaveformSlider::pausedComposition()

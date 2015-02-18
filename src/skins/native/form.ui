@@ -24,7 +24,7 @@
 	qproperty-background: #3F4F61;
 	qproperty-wave_background: #4E9A06;
 	qproperty-wave_border_color: #8AE234;
-	qproperty-progress_normal_background: #0080FF;
+	qproperty-progress_playing_background: #0080FF;
 	qproperty-progress_paused_background: #CE8419;
 }
 

@@ -109,8 +109,8 @@ NTrackInfoWidget QLabel {
 	qproperty-background: #CDCDD4;
 	qproperty-wave_background: #1FAEFF;
 	qproperty-wave_border_color: #0080FF;
-	qproperty-progress_normal_background: #4BD161;
+	qproperty-progress_playing_background: #4BD161;
 	qproperty-progress_paused_background: #D9941C;
-	qproperty-normal_composition: Darken;
+	qproperty-playing_composition: Darken;
 	qproperty-paused_composition: Overlay;
 }

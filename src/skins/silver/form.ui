@@ -244,7 +244,7 @@
 	qproperty-background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #28323D, stop:1 #3F4F61);
 	qproperty-wave_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #55A807, stop:1 #366B04);
 	qproperty-wave_border_color: #8AE234;
-	qproperty-progress_normal_background: #0080ff;
+	qproperty-progress_playing_background: #0080ff;
 	qproperty-progress_paused_background: #CE8419;
 }
 

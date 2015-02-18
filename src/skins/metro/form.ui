@@ -208,9 +208,9 @@ NTrackInfoWidget #MiddleCenter {
 	qproperty-background: #252526;
 	qproperty-wave_background: #1B58B8;
 	qproperty-wave_border_color: #1FAEFF;
-	qproperty-progress_normal_background: #15992A;
+	qproperty-progress_playing_background: #15992A;
 	qproperty-progress_paused_background: #CE8419;
-	qproperty-normal_composition: Overlay;
+	qproperty-playing_composition: Overlay;
 }</string>
   </property>
   <property name="sizeGripEnabled">

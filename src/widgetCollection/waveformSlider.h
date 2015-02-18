@@ -26,13 +26,13 @@ class NWaveformSlider : public QAbstractSlider
 {
 	Q_OBJECT
 	Q_PROPERTY(int radius READ radius WRITE setRadius)
-	Q_PROPERTY(QBrush  background                 READ background WRITE setBackground)
-	Q_PROPERTY(QBrush  wave_background            READ waveBackground  WRITE setWaveBackground)
-	Q_PROPERTY(QColor  wave_border_color          READ waveBorderColor WRITE setWaveBorderColor)
-	Q_PROPERTY(QBrush  progress_normal_background READ progressNormalBackground WRITE setProgressNormalBackground)
-	Q_PROPERTY(QBrush  progress_paused_background READ progressPausedBackground WRITE setProgressPausedBackground)
-	Q_PROPERTY(QString normal_composition         READ normalComposition WRITE setNormalComposition)
-	Q_PROPERTY(QString paused_composition         READ pausedComposition WRITE setPausedComposition)
+	Q_PROPERTY(QBrush background READ background WRITE setBackground)
+	Q_PROPERTY(QBrush wave_background READ waveBackground WRITE setWaveBackground)
+	Q_PROPERTY(QColor wave_border_color READ waveBorderColor WRITE setWaveBorderColor)
+	Q_PROPERTY(QBrush progress_playing_background READ progressPlayingBackground WRITE setProgressPlayingBackground)
+	Q_PROPERTY(QBrush progress_paused_background READ progressPausedBackground WRITE setProgressPausedBackground)
+	Q_PROPERTY(QString playing_composition READ playingComposition WRITE setPlayingComposition)
+	Q_PROPERTY(QString paused_composition READ pausedComposition WRITE setPausedComposition)
 
 private:
 	NWaveformBuilderInterface *m_waveBuilder;
@@ -87,9 +87,9 @@ private:
 	QBrush m_background;
 	QBrush m_waveBackground;
 	QColor m_waveBorderColor;
-	QBrush m_progressNormalBackground;
+	QBrush m_progressPlayingBackground;
 	QBrush m_progressPausedBackground;
-	QPainter::CompositionMode m_normalComposition;
+	QPainter::CompositionMode m_playingComposition;
 	QPainter::CompositionMode m_pausedComposition;
 	bool m_needsUpdate;
 
@@ -106,14 +106,14 @@ public:
 	QColor waveBorderColor();
 	void setWaveBorderColor(QColor color);
 
-	QBrush progressNormalBackground();
-	void setProgressNormalBackground(QBrush brush);
+	QBrush progressPlayingBackground();
+	void setProgressPlayingBackground(QBrush brush);
 
 	QBrush progressPausedBackground();
 	void setProgressPausedBackground(QBrush brush);
 
-	QString normalComposition();
-	void setNormalComposition(const QString &mode);
+	QString playingComposition();
+	void setPlayingComposition(const QString &mode);
 
 	QString pausedComposition();
 	void setPausedComposition(const QString &mode);
