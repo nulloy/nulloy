@@ -62,7 +62,7 @@ void NWaveformSlider::init()
 	m_oldBuildPos = -1;
 	m_pausedState = FALSE;
 	m_needsUpdate = FALSE;
-	setEnabled(FALSE);
+	m_hasMedia = FALSE;
 
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 	setMinimumHeight(50);
@@ -151,7 +151,7 @@ void NWaveformSlider::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
 
-	if (isEnabled()) {
+	if (m_hasMedia) {
 		int x = qRound((qreal)value() / maximum() * width());
 
 		QRect right = rect().adjusted(x, 0, 0, 0);
@@ -194,15 +194,17 @@ void NWaveformSlider::setValue(qreal value)
 	QAbstractSlider::setValue(value * maximum());
 }
 
-void NWaveformSlider::drawFile(const QString &file)
+void NWaveformSlider::setMedia(const QString &file)
 {
 	init();
 
-	if (!QFile(file).exists())
+	if (file.isEmpty() || !QFile(file).exists()) {
+		m_hasMedia = FALSE;
 		return;
+	}
 
+	m_hasMedia = TRUE;
 	m_waveBuilder->start(file);
-	setEnabled(TRUE);
 }
 
 // STYLESHEET PROPERTIES >>

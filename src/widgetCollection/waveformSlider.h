@@ -44,6 +44,7 @@ private:
 	QSize m_oldSize;
 	int m_oldIndex;
 	float m_oldBuildPos;
+	bool m_hasMedia;
 
 	void mousePressEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
@@ -57,7 +58,7 @@ public:
 	QSize sizeHint() const;
 
 public slots:
-	void drawFile(const QString &file);
+	void setMedia(const QString &file);
 	void setPausedState(bool);
 	void setValue(qreal value);
 

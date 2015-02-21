@@ -160,7 +160,7 @@ NPlayer::NPlayer()
 	if (m_coverWidget)
 		connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_coverWidget, SLOT(setSource(const QString &)));
 
-	connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_waveformSlider, SLOT(drawFile(const QString &)));
+	connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_waveformSlider, SLOT(setMedia(const QString &)));
 	connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(currentFinished()));
 	connect(m_playbackEngine, SIGNAL(failed()), this, SLOT(on_playbackEngine_failed()));
 
