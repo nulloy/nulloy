@@ -33,6 +33,8 @@ class NWaveformSlider : public QAbstractSlider
 	Q_PROPERTY(QBrush progress_paused_background READ progressPausedBackground WRITE setProgressPausedBackground)
 	Q_PROPERTY(QString playing_composition READ playingComposition WRITE setPlayingComposition)
 	Q_PROPERTY(QString paused_composition READ pausedComposition WRITE setPausedComposition)
+	Q_PROPERTY(QColor file_drop_border_color READ fileDropBorderColor WRITE setFileDropBorderColor)
+	Q_PROPERTY(QBrush file_drop_background READ fileDropBackground WRITE setFileDropBackground)
 
 private:
 	NWaveformBuilderInterface *m_waveBuilder;
@@ -45,6 +47,7 @@ private:
 	int m_oldIndex;
 	float m_oldBuildPos;
 	bool m_hasMedia;
+	bool m_needsUpdate;
 
 	void mousePressEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
@@ -70,6 +73,9 @@ signals:
 	void sliderMoved(qreal value);
 
 // DRAG & DROP >>
+private:
+	bool m_fileDrop;
+
 protected:
 	QStringList mimeTypes() const;
 	virtual void dragEnterEvent(QDragEnterEvent *event);
@@ -91,7 +97,8 @@ private:
 	QBrush m_progressPausedBackground;
 	QPainter::CompositionMode m_playingComposition;
 	QPainter::CompositionMode m_pausedComposition;
-	bool m_needsUpdate;
+	QColor m_fileDropBorderColor;
+	QBrush m_fileDropBackground;
 
 public:
 	int radius();
@@ -117,6 +124,12 @@ public:
 
 	QString pausedComposition();
 	void setPausedComposition(const QString &mode);
+
+	QColor fileDropBorderColor();
+	void setFileDropBorderColor(QColor color);
+
+	QBrush fileDropBackground();
+	void setFileDropBackground(QBrush brush);
 // << STYLESHEET PROPERTIES
 };
 

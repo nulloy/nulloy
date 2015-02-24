@@ -37,6 +37,12 @@
 
 NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 {
+	m_fileDropBorderColor = QColor(Qt::transparent);
+	m_fileDropBackground = QBrush(Qt::NoBrush);
+	m_failedTextColor = QColor(Qt::red);
+	m_currentTextColor = QColor(Qt::black);
+	m_fileDropRadius = 0;
+
 	m_tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
 	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
 
@@ -77,7 +83,8 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	m_contextMenu->addAction(removeAction);
 	m_contextMenu->addAction(trashAction);
 
-	m_drag = NULL;
+	m_itemDrag = NULL;
+	m_fileDrop = FALSE;
 
 	m_repeatMode = NSettings::instance()->value("Repeat").toBool();
 	m_shuffleMode = FALSE;
@@ -440,9 +447,21 @@ NPlaylistWidgetItem* NPlaylistWidget::item(int row)
 	return reinterpret_cast<NPlaylistWidgetItem *>(QListWidget::item(row));
 }
 
+void NPlaylistWidget::paintEvent(QPaintEvent *e)
+{
+	QListWidget::paintEvent(e);
+
+	if (m_fileDrop) {
+		QPainter painter(viewport());
+		painter.setRenderHint(QPainter::Antialiasing);
+		painter.setPen(m_fileDropBorderColor);
+		painter.setBrush(m_fileDropBackground);
+		painter.drawRoundedRect(QRectF(viewport()->rect()).adjusted(0.5, 0.5, -0.5, -0.5), m_fileDropRadius, m_fileDropRadius);
+	}
+}
+
 
 // DRAG & DROP >>
-
 bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAction action)
 {
 	Q_UNUSED(action);
@@ -453,7 +472,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
 		}
 	}
 
-	m_drag = NULL;
+	m_itemDrag = NULL;
 	return TRUE;
 }
 
@@ -503,26 +522,34 @@ void NPlaylistWidget::mouseMoveEvent(QMouseEvent *event)
 	mimeData->setUrls(urls);
 	m_mimeDataUrls.clear();
 
-	m_drag = new QDrag(this);
-	m_drag->setMimeData(mimeData);
+	m_itemDrag = new QDrag(this);
+	m_itemDrag->setMimeData(mimeData);
 	// restrct to move action
-	m_drag->start(Qt::MoveAction);
+	m_itemDrag->start(Qt::MoveAction);
 }
 
 void NPlaylistWidget::dropEvent(QDropEvent *event)
 {
-	if (m_drag) // moving withing playlist
+	if (m_itemDrag) // moving withing playlist
 		event->setDropAction(Qt::MoveAction);
 	else // dropping from file manager
 		event->setDropAction(Qt::CopyAction);
 
 	QListWidget::dropEvent(event);
+
+	m_fileDrop = FALSE;
+	viewport()->update();
 }
 
 void NPlaylistWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-	if (m_drag && !m_mimeDataUrls.isEmpty())
-		m_drag->mimeData()->setUrls(m_mimeDataUrls); // recover old data
+	if (m_itemDrag && !m_mimeDataUrls.isEmpty())
+		m_itemDrag->mimeData()->setUrls(m_mimeDataUrls); // recover old data
+
+	if (!m_itemDrag) {
+		m_fileDrop = TRUE;
+		viewport()->update();
+	}
 
 	// change to move action
 	event->setDropAction(Qt::MoveAction);
@@ -534,24 +561,28 @@ void NPlaylistWidget::dragMoveEvent(QDragMoveEvent *event)
 	// change to move action
 	event->setDropAction(Qt::MoveAction);
 	QListWidget::dragMoveEvent(event);
+
+	if (!m_itemDrag)
+		m_fileDrop = (!itemAt(event->pos())) ? TRUE : FALSE;
 }
 
 void NPlaylistWidget::dragLeaveEvent(QDragLeaveEvent *event)
 {
-	if (m_drag) {
-		m_mimeDataUrls = m_drag->mimeData()->urls(); // backup
+	if (m_itemDrag) {
+		m_mimeDataUrls = m_itemDrag->mimeData()->urls(); // backup
 
 		// forbid drag outside, set dummy mime data
-		m_drag->mimeData()->clear();
+		m_itemDrag->mimeData()->clear();
 	}
 	event->ignore();
-}
 
+	m_fileDrop = FALSE;
+	viewport()->update();
+}
 // << DRAG & DROP
 
 
 // STYLESHEET PROPERTIES >>
-
 void NPlaylistWidget::setCurrentTextColor(QColor color)
 {
 	m_currentTextColor = color;
@@ -572,5 +603,34 @@ QColor NPlaylistWidget::failedTextColor() const
 	return m_failedTextColor;
 }
 
+QColor NPlaylistWidget::fileDropBorderColor()
+{
+	return m_fileDropBorderColor;
+}
+
+void NPlaylistWidget::setFileDropBorderColor(QColor color)
+{
+	m_fileDropBorderColor = color;
+}
+
+QBrush NPlaylistWidget::fileDropBackground()
+{
+	return m_fileDropBackground;
+}
+
+void NPlaylistWidget::setFileDropBackground(QBrush brush)
+{
+	m_fileDropBackground = brush;
+}
+
+int NPlaylistWidget::fileDropRadius()
+{
+	return m_fileDropRadius;
+}
+
+void NPlaylistWidget::setFileDropRadius(int radius)
+{
+	m_fileDropRadius = radius;
+}
 // << STYLESHEET PROPERTIES
 

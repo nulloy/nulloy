@@ -35,6 +35,9 @@ class NPlaylistWidget : public QListWidget
 	Q_OBJECT
 	Q_PROPERTY(QColor failed_text_color READ failedTextColor WRITE setFailedTextColor)
 	Q_PROPERTY(QColor current_text_color READ currentTextColor WRITE setCurrentTextColor)
+	Q_PROPERTY(QColor file_drop_border_color READ fileDropBorderColor WRITE setFileDropBorderColor)
+	Q_PROPERTY(QBrush file_drop_background READ fileDropBackground WRITE setFileDropBackground)
+	Q_PROPERTY(int file_drop_radius READ fileDropRadius WRITE setFileDropRadius)
 
 private:
 	NPlaylistWidgetItem *m_currentItem;
@@ -47,6 +50,7 @@ private:
 	bool m_shuffleMode;
 	bool m_repeatMode;
 
+	void paintEvent(QPaintEvent *event);
 	void contextMenuEvent(QContextMenuEvent *event);
 	void setCurrentItem(NPlaylistWidgetItem *item);
 	void activateItem(NPlaylistWidgetItem *item);
@@ -105,7 +109,8 @@ signals:
 
 // DRAG & DROP >>
 private:
-	QPointer<QDrag> m_drag;
+	QPointer<QDrag> m_itemDrag;
+	bool m_fileDrop;
 	QList<QUrl> m_mimeDataUrls;
 	QStringList mimeTypes() const;
 	QMimeData* mimeData(const QList<NPlaylistWidgetItem *> items) const;
@@ -125,6 +130,9 @@ protected:
 private:
 	QColor m_failedTextColor;
 	QColor m_currentTextColor;
+	QColor m_fileDropBorderColor;
+	QBrush m_fileDropBackground;
+	int m_fileDropRadius;
 
 public:
 	QColor failedTextColor() const;
@@ -132,6 +140,15 @@ public:
 
 	QColor currentTextColor() const;
 	void setCurrentTextColor(QColor color);
+
+	QColor fileDropBorderColor();
+	void setFileDropBorderColor(QColor color);
+
+	QBrush fileDropBackground();
+	void setFileDropBackground(QBrush brush);
+
+	int fileDropRadius();
+	void setFileDropRadius(int radius);
 // << STYLESHEET PROPERTIES
 };
 

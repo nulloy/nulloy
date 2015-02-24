@@ -61,6 +61,9 @@
 	qproperty-failed_text_color: #949494;
 	background: #FFFFFF;
 	padding: 5;
+	qproperty-file_drop_radius: 5;
+	qproperty-file_drop_border_color: rgba(97, 148, 215, 50);
+	qproperty-file_drop_background: rgba(97, 148, 215, 100);
 }
 #playlistWidget::item {
 	background: #FFFFFF;
@@ -246,6 +249,8 @@
 	qproperty-wave_border_color: #8AE234;
 	qproperty-progress_playing_background: #0080ff;
 	qproperty-progress_paused_background: #CE8419;
+	qproperty-file_drop_border_color: rgba(97, 148, 215, 150);
+	qproperty-file_drop_background: rgba(97, 148, 215, 150);
 }
 
 NTrackInfoWidget QLabel {

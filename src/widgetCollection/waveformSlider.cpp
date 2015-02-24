@@ -27,6 +27,7 @@
 NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 {
 	m_radius = 0;
+	m_fileDrop = FALSE;
 	m_background = QBrush(Qt::darkBlue);
 	m_waveBackground = QBrush(Qt::darkGreen);
 	m_waveBorderColor = QColor(Qt::green);
@@ -34,6 +35,8 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_progressPausedBackground = QBrush(Qt::darkGray);
 	m_playingComposition = QPainter::CompositionMode_Overlay;
 	m_pausedComposition = QPainter::CompositionMode_Overlay;
+	m_fileDropBorderColor = QColor(Qt::transparent);
+	m_fileDropBackground = QBrush(Qt::NoBrush);
 
 	setMinimum(0);
 	setMaximum(10000);
@@ -91,7 +94,6 @@ void NWaveformSlider::checkForUpdate()
 	if (m_needsUpdate) {
 		QPainter painter;
 		QImage waveImage = m_normalImage = m_playingImage = m_pausedImage = QImage(size(), QImage::Format_ARGB32_Premultiplied);
-		waveImage.fill(0);
 
 		m_oldBuildPos = pos;
 		m_oldIndex = index;
@@ -99,6 +101,7 @@ void NWaveformSlider::checkForUpdate()
 
 
 		// waveform >>
+		waveImage.fill(0);
 		painter.begin(&waveImage);
 		painter.setBrush(m_waveBackground);
 		QPen wavePen;
@@ -132,6 +135,7 @@ void NWaveformSlider::checkForUpdate()
 		for (int i = 0; i < images.size(); ++i) {
 			painter.begin(images[i]);
 			// background
+			images[i]->fill(0);
 			painter.setPen(Qt::NoPen);
 			painter.setBrush(brushes[i]);
 			painter.setRenderHint(QPainter::Antialiasing);
@@ -160,9 +164,17 @@ void NWaveformSlider::paintEvent(QPaintEvent *)
 		QRect left = rect().adjusted(0, 0, x - width(), 0);
 		painter.drawImage(left, m_pausedState ? m_pausedImage : m_playingImage, left);
 	} else {
+		painter.setRenderHint(QPainter::Antialiasing);
 		painter.setPen(Qt::NoPen);
 		painter.setBrush(m_background);
 		painter.drawRoundedRect(rect(), m_radius, m_radius);
+	}
+
+	if (m_fileDrop) {
+		painter.setRenderHint(QPainter::Antialiasing);
+		painter.setPen(m_fileDropBorderColor);
+		painter.setBrush(m_fileDropBackground);
+		painter.drawRoundedRect(QRectF(rect()).adjusted(0.5, 0.5, -0.5, -0.5), m_radius - 1, m_radius - 1);
 	}
 }
 
@@ -287,16 +299,39 @@ void NWaveformSlider::setPausedComposition(const QString &mode)
 {
 	m_pausedComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
 }
+
+QColor NWaveformSlider::fileDropBorderColor()
+{
+	return m_fileDropBorderColor;
+}
+
+void NWaveformSlider::setFileDropBorderColor(QColor color)
+{
+	m_fileDropBorderColor = color;
+}
+
+QBrush NWaveformSlider::fileDropBackground()
+{
+	return m_fileDropBackground;
+}
+
+void NWaveformSlider::setFileDropBackground(QBrush brush)
+{
+	m_fileDropBackground = brush;
+}
 // << STYLESHEET PROPERTIES
 
 
 // DRAG & DROP >>
 void NWaveformSlider::dragEnterEvent(QDragEnterEvent *event)
 {
-	if (event->mimeData() && event->mimeData()->hasUrls() && !event->mimeData()->urls().isEmpty())
+	if (event->mimeData() && event->mimeData()->hasUrls() && !event->mimeData()->urls().isEmpty()) {
 		event->acceptProposedAction();
-	else
+		m_fileDrop = TRUE;
+		update();
+	} else {
 		event->ignore();
+	}
 }
 
 void NWaveformSlider::dragMoveEvent(QDragMoveEvent *event)
@@ -307,6 +342,8 @@ void NWaveformSlider::dragMoveEvent(QDragMoveEvent *event)
 void NWaveformSlider::dragLeaveEvent(QDragLeaveEvent *event)
 {
 	event->accept();
+	m_fileDrop = FALSE;
+	update();
 }
 
 void NWaveformSlider::dropEvent(QDropEvent *event)
@@ -320,6 +357,9 @@ void NWaveformSlider::dropEvent(QDropEvent *event)
 	}
 
 	event->acceptProposedAction();
+
+	m_fileDrop = FALSE;
+	update();
 }
 
 QStringList NWaveformSlider::mimeTypes() const

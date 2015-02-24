@@ -43,6 +43,8 @@
 	qproperty-failed_text_color: #565659;
 	background: #252526;
 	padding: 5;
+	qproperty-file_drop_border_color: #5882CF;
+	qproperty-file_drop_background: rgba(88, 130, 207, 50);
 }
 #playlistWidget::item {
 	background: #252526;
@@ -211,6 +213,8 @@ NTrackInfoWidget #MiddleCenter {
 	qproperty-progress_playing_background: #15992A;
 	qproperty-progress_paused_background: #CE8419;
 	qproperty-playing_composition: Overlay;
+	qproperty-file_drop_border_color: #5882CF;
+	qproperty-file_drop_background: rgba(88, 130, 207, 50);
 }</string>
   </property>
   <property name="sizeGripEnabled">

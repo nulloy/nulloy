@@ -22,6 +22,8 @@
 	background: #F9F9FC;
 	qproperty-current_text_color: #3D3D3D;
 	qproperty-failed_text_color: #565659;
+	qproperty-file_drop_border_color: #1FAEFF;
+	qproperty-file_drop_background: rgba(31, 174, 255, 50);
 }
 #playlistWidget::item {
 	background: #F9F9FC;
@@ -113,4 +115,6 @@ NTrackInfoWidget QLabel {
 	qproperty-progress_paused_background: #D9941C;
 	qproperty-playing_composition: Darken;
 	qproperty-paused_composition: Overlay;
+	qproperty-file_drop_border_color: #1FAEFF;
+	qproperty-file_drop_background: rgba(31, 174, 255, 50);
 }
