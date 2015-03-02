@@ -23,7 +23,7 @@
 
 NAbstractWaveformBuilder::NAbstractWaveformBuilder()
 {
-	m_cacheLoaded = FALSE;
+	m_cacheLoaded = false;
 	m_cacheFile = NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".peaks";
 }
 
@@ -46,7 +46,7 @@ void NAbstractWaveformBuilder::cacheLoad()
 	QDataStream inBuffer(&buffer, QIODevice::ReadOnly);
 	inBuffer >> m_peaksCache >> m_dateHash;
 
-	m_cacheLoaded = TRUE;
+	m_cacheLoaded = true;
 }
 
 void NAbstractWaveformBuilder::cacheSave()
@@ -67,7 +67,7 @@ bool NAbstractWaveformBuilder::peaksFindFromCache(const QString &file)
 {
 	cacheLoad();
 	if (!m_cacheLoaded)
-		return FALSE;
+		return false;
 
 	QDir dir(QFileInfo(m_cacheFile).absolutePath());
 	QString path = dir.relativeFilePath(QFileInfo(file).absoluteFilePath());
@@ -75,21 +75,21 @@ bool NAbstractWaveformBuilder::peaksFindFromCache(const QString &file)
 	QByteArray pathHash = QCryptographicHash::hash(path.toUtf8(), QCryptographicHash::Sha1);
 	QString modifDate = m_dateHash.value(pathHash);
 	if (modifDate.isEmpty())
-		return FALSE;
+		return false;
 
 	if (modifDate ==  QFileInfo(file).lastModified().toString(Qt::ISODate)) {
 		NWaveformPeaks *peaks = m_peaksCache.object(pathHash);
 		if (peaks) {
 			m_peaks = *peaks;
-			return TRUE;
+			return true;
 		} else {
 			m_dateHash.remove(pathHash);
-			return FALSE;
+			return false;
 		}
 	} else {
 		m_peaksCache.remove(pathHash);
 		m_dateHash.remove(pathHash);
-		return FALSE;
+		return false;
 	}
 }
 

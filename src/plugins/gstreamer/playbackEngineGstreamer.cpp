@@ -103,12 +103,12 @@ void NPlaybackEngineGStreamer::init()
 	m_oldState = N::PlaybackStopped;
 	m_currentMedia = "";
 	m_durationNsec = 0;
-	m_crossfading = FALSE;
+	m_crossfading = false;
 
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(checkStatus()));
 
-	m_init = TRUE;
+	m_init = true;
 }
 
 NPlaybackEngineGStreamer::~NPlaybackEngineGStreamer()
@@ -223,7 +223,7 @@ void NPlaybackEngineGStreamer::stop()
 	if (!hasMedia())
 		return;
 
-	m_crossfading = FALSE;
+	m_crossfading = false;
 	gst_element_set_state(m_playbin, GST_STATE_NULL);
 }
 
@@ -272,7 +272,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 
 		if (m_oldPosition != pos) {
 			if (m_oldPosition > pos)
-				m_crossfading = FALSE;
+				m_crossfading = false;
 			m_oldPosition = pos;
 			emit positionChanged(m_crossfading ? 0 : m_oldPosition);
 		}
@@ -321,7 +321,7 @@ void NPlaybackEngineGStreamer::_fail()
 	if (!m_crossfading) // avoid thread deadlock
 		stop();
 	else
-		m_crossfading = FALSE;
+		m_crossfading = false;
 	emit mediaChanged(m_currentMedia = "");
 	emit failed();
 	emit stateChanged(m_oldState = N::PlaybackStopped);
@@ -339,10 +339,10 @@ void NPlaybackEngineGStreamer::_emitAboutToFinish()
 
 void NPlaybackEngineGStreamer::_crossfadingPrepare()
 {
-	m_crossfading = TRUE;
+	m_crossfading = true;
 }
 
 void NPlaybackEngineGStreamer::_crossfadingCancel()
 {
-	m_crossfading = FALSE;
+	m_crossfading = false;
 }

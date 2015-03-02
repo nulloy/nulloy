@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 			return 0; // return if delivered
 	}
 
-	QApplication::setQuitOnLastWindowClosed(FALSE);
+	QApplication::setQuitOnLastWindowClosed(false);
 	QCoreApplication::setApplicationName("Nulloy");
 	QCoreApplication::setApplicationVersion(QString(_N_VERSION_) + " Alpha");
 	QCoreApplication::setOrganizationDomain("nulloy.com");

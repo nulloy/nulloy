@@ -34,7 +34,7 @@ private:
 	int m_bitDepth;
 	bool m_isValid;
 	QString m_codecName;
-	QString parse(const QString &format, bool *success, bool stopOnFail = FALSE);
+	QString parse(const QString &format, bool *success, bool stopOnFail = false);
 
 public:
 	NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}

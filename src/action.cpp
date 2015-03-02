@@ -17,14 +17,14 @@
 
 void NAction::init()
 {
-	m_global = FALSE;
-	m_customizable = FALSE;
+	m_global = false;
+	m_customizable = false;
 }
 
 void NAction::setEnabled(bool enable)
 {
 	foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
-		shortcut->setEnabled((enable == TRUE) ? m_global : FALSE);
+		shortcut->setEnabled((enable == true) ? m_global : false);
 	QAction::setEnabled(enable);
 }
 
@@ -60,10 +60,10 @@ void NAction::setGlobalShortcuts(QKeySequence::StandardKey key)
 
 void NAction::setGlobalShortcuts(const QList<QKeySequence> &shortcuts)
 {
-	setGlobal(FALSE);
+	setGlobal(false);
 	foreach (QKeySequence seq, shortcuts) {
 		if (!seq.isEmpty()) {
-			setGlobal(TRUE);
+			setGlobal(true);
 			break;
 		}
 	}

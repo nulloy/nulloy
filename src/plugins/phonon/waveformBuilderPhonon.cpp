@@ -52,7 +52,7 @@ void NWaveformBuilderPhonon::init()
 
 	reset();
 
-	m_init = TRUE;
+	m_init = true;
 }
 
 NWaveformBuilderPhonon::~NWaveformBuilderPhonon()

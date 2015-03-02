@@ -36,7 +36,7 @@ void NTagReaderTaglib::init()
 	if (m_init)
 		return;
 
-	m_init = TRUE;
+	m_init = true;
 	NTaglib::_tagRef = NULL;
 }
 
@@ -77,7 +77,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 	if (format.isEmpty())
 		return "";
 
-	*success = TRUE;
+	*success = true;
 
 	if (!isValid())
 		return "NTagReaderTaglib::InvalidFile";
@@ -121,14 +121,14 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 				QString str = QString::number(tag->year());
 				if (str == "0") {
 					str = "<Unknown year>";
-					*success = FALSE;
+					*success = false;
 				}
 				res += str;
 			} else if (ch == 'n') {
 				QString str = QString::number(tag->track());
 				if (str == "0") {
 					str = "<Unknown track number>";
-					*success = FALSE;
+					*success = false;
 				}
 				res += str;
 			} else if (ch == 'b') {
@@ -161,7 +161,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 				}
 				else {
 					res += "<Unknown bit depth>";
-					*success = FALSE;
+					*success = false;
 				}
 			} else if (ch == 'd') {
 				QString duration;
@@ -176,14 +176,14 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 						duration.sprintf("%d:%02d", minutes, seconds);
 				} else {
 					duration = "<Unknown duration>";
-					*success = FALSE;
+					*success = false;
 				}
 				res += duration;
 			} else if (ch == 'D') {
 				QString duration;
 				if (seconds_total == 0) {
 					duration = "<Unknown duration>";
-					*success = FALSE;
+					*success = false;
 				} else {
 					duration = QString::number(seconds_total);
 				}
@@ -192,21 +192,21 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 				QString str = QString::number(ap->bitrate());
 				if (str == "0") {
 					str = "<Unknown bitrate>";
-					*success = FALSE;
+					*success = false;
 				}
 				res += str;
 			} else if (ch == 's') {
 				QString str = QString::number(ap->sampleRate() / (float)1000);
 				if (str == "0") {
 					str = "<Unknown sample rate>";
-					*success = FALSE;
+					*success = false;
 				}
 				res += str;
 			} else if (ch == 'C') {
 				QString str = QString::number(ap->channels());
 				if (str == "0") {
 					str = "<Unknown channels number>";
-					*success = FALSE;
+					*success = false;
 				}
 				res += str;
 			} else if (ch == 'f') {
@@ -249,7 +249,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 			}
 
 			bool cond_res;
-			QString cond_true = parse(values.at(0), &cond_res, TRUE);
+			QString cond_true = parse(values.at(0), &cond_res, true);
 			if (cond_res) {
 				res += cond_true;
 			} else {

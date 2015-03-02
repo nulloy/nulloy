@@ -34,7 +34,7 @@ static const char _skinsDirName[] = "skins";
 
 namespace NSkinLoader
 {
-	bool __init = FALSE;
+	bool __init = false;
 	QMap<int, QString> _identifiers;
 	QString _formPath;
 	QString _scriptPath;
@@ -54,7 +54,7 @@ bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
 
 	in >> signature;
 	if (signature != 0x04034b50)
-		return FALSE;
+		return false;
 
 	in >> extractVersion >> bitFlag >> compMethod;
 	in >> modTime >> modDate >> crc >> compSize >> unCompSize;
@@ -77,14 +77,14 @@ bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
 
 	data = unCompData;
 
-	return TRUE;
+	return true;
 }
 
 void NSkinLoader::_init()
 {
 	if (__init)
 		return;
-	__init = TRUE;
+	__init = true;
 
 	QStringList skinsDirList;
 	// ":" is a prefix for .qrc resources
@@ -128,11 +128,11 @@ void NSkinLoader::_init()
 			zipFile.close();
 		} else if (skinContainer.isDir()) {
 			QFileInfoList infoList = QDir(skinContainer.absoluteFilePath()).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
-			bool isSkin = FALSE;
+			bool isSkin = false;
 			foreach (QFileInfo fileInfo, infoList) {
 				if (fileInfo.fileName() != _idFileName)
 					continue;
-				isSkin = TRUE;
+				isSkin = true;
 				QFile file(fileInfo.absoluteFilePath());
 				file.open(QIODevice::ReadOnly);
 				QByteArray data = file.readAll();

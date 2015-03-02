@@ -84,10 +84,10 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 	m_contextMenu->addAction(trashAction);
 
 	m_itemDrag = NULL;
-	m_fileDrop = FALSE;
+	m_fileDrop = false;
 
 	m_repeatMode = NSettings::instance()->value("Repeat").toBool();
-	m_shuffleMode = FALSE;
+	m_shuffleMode = false;
 	m_currentShuffledIndex = 0;
 	setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 }
@@ -187,19 +187,19 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 		item->setText(QFileInfo(file).fileName());
 	}
 
-	item->setData(N::FailedRole, FALSE); // reset failed role
+	item->setData(N::FailedRole, false); // reset failed role
 
 	// setting currently playing font to bold, colors set in delegate
 	QFont f = item->font();
 	if (m_currentItem) {
 		// reset old item to defaults
-		f.setBold(FALSE);
+		f.setBold(false);
 		m_currentItem->setFont(f);
 
 		m_currentItem->setData(N::PositionRole, m_playbackEngine->position());
 		m_currentItem->setData(N::CountRole, m_currentItem->data(N::CountRole).toInt() + 1);
 	}
-	f.setBold(TRUE);
+	f.setBold(true);
 	item->setFont(f);
 
 	scrollToItem(item);
@@ -211,7 +211,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 
 void NPlaylistWidget::currentFailed()
 {
-	m_currentItem->setData(N::FailedRole, TRUE);
+	m_currentItem->setData(N::FailedRole, true);
 }
 
 int NPlaylistWidget::currentRow()
@@ -299,12 +299,12 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
 	QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readPlaylist(file);
 
 	if (dataItemsList.isEmpty())
-		return FALSE;
+		return false;
 
 	for (int i = 0; i < dataItemsList.count(); ++i)
 		addItem(new NPlaylistWidgetItem(dataItemsList.at(i)));
 
-	return TRUE;
+	return true;
 }
 
 void NPlaylistWidget::playFiles(const QStringList &files)
@@ -371,16 +371,16 @@ void NPlaylistWidget::rowsInserted(const QModelIndex &parent, int start, int end
 		m_shuffledItems.append(item(i));
 	}
 	if (m_shuffleMode)
-		setShuffleMode(TRUE);
+		setShuffleMode(true);
 	QListWidget::rowsInserted(parent, start, end);
 }
 
 void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end)
 {
-	bool currentRemoved = FALSE;
+	bool currentRemoved = false;
 	for (int i = start; i < end + 1; ++i) {
 		if (item(i) == m_currentItem)
-			currentRemoved = TRUE;
+			currentRemoved = true;
 		m_shuffledItems.removeAll(item(i));
 	}
 
@@ -473,7 +473,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
 	}
 
 	m_itemDrag = NULL;
-	return TRUE;
+	return true;
 }
 
 QStringList NPlaylistWidget::mimeTypes() const
@@ -537,7 +537,7 @@ void NPlaylistWidget::dropEvent(QDropEvent *event)
 
 	QListWidget::dropEvent(event);
 
-	m_fileDrop = FALSE;
+	m_fileDrop = false;
 	viewport()->update();
 }
 
@@ -547,7 +547,7 @@ void NPlaylistWidget::dragEnterEvent(QDragEnterEvent *event)
 		m_itemDrag->mimeData()->setUrls(m_mimeDataUrls); // recover old data
 
 	if (!m_itemDrag) {
-		m_fileDrop = TRUE;
+		m_fileDrop = true;
 		viewport()->update();
 	}
 
@@ -563,7 +563,7 @@ void NPlaylistWidget::dragMoveEvent(QDragMoveEvent *event)
 	QListWidget::dragMoveEvent(event);
 
 	if (!m_itemDrag)
-		m_fileDrop = (!itemAt(event->pos())) ? TRUE : FALSE;
+		m_fileDrop = (!itemAt(event->pos())) ? true : false;
 }
 
 void NPlaylistWidget::dragLeaveEvent(QDragLeaveEvent *event)
@@ -576,7 +576,7 @@ void NPlaylistWidget::dragLeaveEvent(QDragLeaveEvent *event)
 	}
 	event->ignore();
 
-	m_fileDrop = FALSE;
+	m_fileDrop = false;
 	viewport()->update();
 }
 // << DRAG & DROP

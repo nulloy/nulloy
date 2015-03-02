@@ -91,13 +91,13 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 
 	ui.pluginsRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.pluginsRestartLabel->text());
-	ui.pluginsRestartLabel->setVisible(FALSE);
+	ui.pluginsRestartLabel->setVisible(false);
 
 	ui.languageRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.languageRestartLabel->text());
-	ui.languageRestartLabel->setVisible(FALSE);
+	ui.languageRestartLabel->setVisible(false);
 
 	ui.skinRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.skinRestartLabel->text());
-	ui.skinRestartLabel->setVisible(FALSE);
+	ui.skinRestartLabel->setVisible(false);
 	connect(ui.skinComboBox, SIGNAL(activated(int)), ui.skinRestartLabel, SLOT(show()));
 
 #ifndef Q_WS_WIN
@@ -217,7 +217,7 @@ QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
 		QRadioButton *button = new QRadioButton(containerName);
 		connect(button, SIGNAL(toggled(bool)), ui.pluginsRestartLabel, SLOT(show()));
 		if (containerName == settingsContainer)
-			button->setChecked(TRUE);
+			button->setChecked(true);
 		m_radioButtons[button] = descriptors.at(i);
 		layout->addWidget(button);
 	}
@@ -227,7 +227,7 @@ QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
 
 void NPreferencesDialog::on_languageComboBox_activated(int index)
 {
-	ui.languageRestartLabel->setVisible(TRUE);
+	ui.languageRestartLabel->setVisible(true);
 
 	QLocale locale = ui.languageComboBox->itemData(index).toLocale();
 	QString newText = NI18NLoader::translate(locale.language(), "PreferencesDialog", "Switching languages requires restart");
@@ -309,7 +309,7 @@ void NPreferencesDialog::loadSettings()
 	}
 
 	if (ui.skinComboBox->count() == 1)
-		ui.skinComboBox->setEnabled(FALSE);
+		ui.skinComboBox->setEnabled(false);
 
 	skinIndex = ui.skinComboBox->findData(NSettings::instance()->value("Skin"));
 	if (skinIndex != -1)
@@ -328,7 +328,7 @@ void NPreferencesDialog::loadSettings()
 	}
 
 	if (ui.languageComboBox->count() == 1)
-		ui.languageComboBox->setEnabled(FALSE);
+		ui.languageComboBox->setEnabled(false);
 
 	localeIndex = ui.languageComboBox->findData(QLocale(NSettings::instance()->value("Language").toString()));
 	if (localeIndex != -1)

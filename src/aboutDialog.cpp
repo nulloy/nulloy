@@ -87,7 +87,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 	aboutTextBrowser->setFrameShape(QFrame::NoFrame);
 	aboutTextBrowser->setMinimumWidth(350);
 	aboutTextBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	aboutTextBrowser->setOpenExternalLinks(TRUE);
+	aboutTextBrowser->setOpenExternalLinks(true);
 	aboutTextBrowser->setHtml("<center>" + aboutHtml + "</center>");
 
 	aboutTabLayout->addWidget(aboutTextBrowser);
@@ -131,7 +131,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 
 	QTextBrowser *changelogTextBrowser = new QTextBrowser;
 	changelogTextBrowser->setHtml(changelogHtml);
-	changelogTextBrowser->setOpenExternalLinks(TRUE);
+	changelogTextBrowser->setOpenExternalLinks(true);
 	changelogTabLayout->addWidget(changelogTextBrowser);
 	// << changelog tab
 
@@ -166,7 +166,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 	licenseTextBrowser->setStyleSheet("background: transparent");
 	licenseTextBrowser->setFrameShape(QFrame::NoFrame);
 	licenseTextBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	licenseTextBrowser->setOpenExternalLinks(TRUE);
+	licenseTextBrowser->setOpenExternalLinks(true);
 	licenseTextBrowser->setAlignment(Qt::AlignVCenter);
 	licenseTextBrowser->setHtml(licenseHtml);
 

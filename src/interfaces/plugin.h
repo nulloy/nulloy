@@ -25,7 +25,7 @@ protected:
 	bool m_init;
 
 public:
-	NPlugin() { m_init = FALSE; }
+	NPlugin() { m_init = false; }
 	virtual ~NPlugin() {}
 	virtual QString name() { return reinterpret_cast<QObject *>(this)->metaObject()->className(); }
 	virtual QString interfaceString() = 0;

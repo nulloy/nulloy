@@ -40,7 +40,7 @@
 NMainWindow::NMainWindow(QWidget *parent) : QDialog(parent)
 {
 #ifdef Q_WS_WIN
-	m_framelessShadow = FALSE;
+	m_framelessShadow = false;
 #endif
 }
 
@@ -70,8 +70,8 @@ void NMainWindow::init(const QString &uiFile)
 
 	m_unmaximizedSize = QSize();
 	m_unmaximizedPos = QPoint();
-	m_isFullScreen = FALSE;
-	m_dragActive = FALSE;
+	m_isFullScreen = false;
+	m_dragActive = false;
 
 	// enabling dragging window from any point
 	QList<QWidget *> widgets = findChildren<QWidget *>();
@@ -164,7 +164,7 @@ void NMainWindow::toggleMaximize()
 #endif
 	}
 
-	emit fullScreenEnabled(FALSE);
+	emit fullScreenEnabled(false);
 	emit maximizeEnabled(isMaximized());
 }
 
@@ -226,17 +226,17 @@ void NMainWindow::changeEvent(QEvent *event)
 bool NMainWindow::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::MouseButtonPress && obj != this)
-		m_dragActive = FALSE;
+		m_dragActive = false;
 
-	return FALSE;
+	return false;
 }
 
 void NMainWindow::mousePressEvent(QMouseEvent *event)
 {
 	activateWindow();
-	m_dragActive = FALSE;
+	m_dragActive = false;
 	if (event->button() == Qt::LeftButton) {
-		m_dragActive = TRUE;
+		m_dragActive = true;
 		m_dragPoint = event->globalPos() - frameGeometry().topLeft();
 		event->accept();
 	}
@@ -277,7 +277,7 @@ bool _DwmIsCompositionEnabled()
 	HMODULE library = LoadLibrary(L"dwmapi.dll");
 	bool result = false;
 	if (library) {
-		BOOL enabled = FALSE;
+		BOOL enabled = false;
 		HRESULT (WINAPI *pFn)(BOOL *enabled) = (HRESULT (WINAPI *)(BOOL *enabled))(GetProcAddress(library, "DwmIsCompositionEnabled"));
 		result = SUCCEEDED(pFn(&enabled)) && enabled;
 		FreeLibrary(library);

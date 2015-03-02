@@ -25,7 +25,7 @@ static NW7TaskBar *_instance = NULL;
 static WId _winId;
 static ITaskbarList3 *_taskBar = NULL;
 static UINT _messageId;
-static bool _enabled = TRUE;
+static bool _enabled = true;
 
 NW7TaskBar* NW7TaskBar::instance()
 {
@@ -70,13 +70,13 @@ bool NW7TaskBar::winEvent(MSG *message, long *result)
 			if (FAILED(hr)) {
 				_taskBar->Release();
 				_taskBar = NULL;
-				return FALSE;
+				return false;
 			}
 		}
 		*result = hr;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void NW7TaskBar::setProgress(qreal val)

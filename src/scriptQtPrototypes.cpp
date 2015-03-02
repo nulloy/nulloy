@@ -37,7 +37,7 @@ bool NWidgetPrototype::eventFilter(QObject *obj, QEvent *event)
 			emit doubleClicked();
 	}
 
-	return FALSE;
+	return false;
 }
 
 void NWidgetPrototype::setParent(QWidget *parent)

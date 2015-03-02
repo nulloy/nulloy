@@ -177,36 +177,36 @@ NPlayer::NPlayer()
 	NAction *showHideAction = new NAction(QIcon::fromTheme("preferences-system-windows", QIcon(":/trolltech/styles/commonstyle/images/dockdock-16.png")), tr("Show / Hide"), this);
 	showHideAction->setObjectName("showHideAction");
 	showHideAction->setStatusTip(tr("Toggle window visibility"));
-	showHideAction->setGlobal(TRUE);
-	showHideAction->setCustomizable(TRUE);
+	showHideAction->setGlobal(true);
+	showHideAction->setCustomizable(true);
 	connect(showHideAction, SIGNAL(triggered()), this, SLOT(toggleWindowVisibility()));
 
 	NAction *playAction = new NAction(QIcon::fromTheme("media-playback-start", style()->standardIcon(QStyle::SP_MediaPlay)), tr("Play / Pause"), this);
 	playAction->setObjectName("playAction");
 	playAction->setStatusTip(tr("Toggle playback"));
-	playAction->setGlobal(TRUE);
-	playAction->setCustomizable(TRUE);
+	playAction->setGlobal(true);
+	playAction->setCustomizable(true);
 	connect(playAction, SIGNAL(triggered()), m_playbackEngine, SLOT(play()));
 
 	NAction *stopAction = new NAction(QIcon::fromTheme("media-playback-stop", style()->standardIcon(QStyle::SP_MediaStop)), tr("Stop"), this);
 	stopAction->setObjectName("stopAction");
 	stopAction->setStatusTip(tr("Stop playback"));
-	stopAction->setGlobal(TRUE);
-	stopAction->setCustomizable(TRUE);
+	stopAction->setGlobal(true);
+	stopAction->setCustomizable(true);
 	connect(stopAction, SIGNAL(triggered()), m_playbackEngine, SLOT(stop()));
 
 	NAction *prevAction = new NAction(QIcon::fromTheme("media-playback-backward", style()->standardIcon(QStyle::SP_MediaSkipBackward)), tr("Previous"), this);
 	prevAction->setObjectName("prevAction");
 	prevAction->setStatusTip(tr("Play previous track in playlist"));
-	prevAction->setGlobal(TRUE);
-	prevAction->setCustomizable(TRUE);
+	prevAction->setGlobal(true);
+	prevAction->setCustomizable(true);
 	connect(prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playPrevItem()));
 
 	NAction *nextAction = new NAction(QIcon::fromTheme("media-playback-forward", style()->standardIcon(QStyle::SP_MediaSkipForward)), tr("Next"), this);
 	nextAction->setObjectName("nextAction");
 	nextAction->setStatusTip(tr("Play next track in playlist"));
-	nextAction->setGlobal(TRUE);
-	nextAction->setCustomizable(TRUE);
+	nextAction->setGlobal(true);
+	nextAction->setCustomizable(true);
 	connect(nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playNextItem()));
 
 	NAction *preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
@@ -235,7 +235,7 @@ NPlayer::NPlayer()
 	connect(savePlaylistDialogAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
 
 	NAction *showCoverAction = new NAction(tr("Show Cover Art"), this);
-	showCoverAction->setCheckable(TRUE);
+	showCoverAction->setCheckable(true);
 	showCoverAction->setObjectName("showCoverAction");
 	connect(showCoverAction, SIGNAL(toggled(bool)), this, SLOT(on_showCoverAction_toggled(bool)));
 
@@ -246,51 +246,51 @@ NPlayer::NPlayer()
 	m_aboutDialog = NULL;
 
 	NAction *whilePlayingOnTopAction = new NAction(tr("On Top During Playback"), this);
-	whilePlayingOnTopAction->setCheckable(TRUE);
+	whilePlayingOnTopAction->setCheckable(true);
 	whilePlayingOnTopAction->setObjectName("whilePlayingOnTopAction");
 	connect(whilePlayingOnTopAction, SIGNAL(toggled(bool)), this, SLOT(on_whilePlayingOnTopAction_toggled(bool)));
 
 	NAction *alwaysOnTopAction = new NAction(tr("Always On Top"), this);
-	alwaysOnTopAction->setCheckable(TRUE);
+	alwaysOnTopAction->setCheckable(true);
 	alwaysOnTopAction->setObjectName("alwaysOnTopAction");
 	connect(alwaysOnTopAction, SIGNAL(toggled(bool)), this, SLOT(on_alwaysOnTopAction_toggled(bool)));
 
 	NAction *fullScreenAction = new NAction(tr("Fullscreen Mode"), this);
 	fullScreenAction->setStatusTip(tr("Hide all controll except waveform"));
 	fullScreenAction->setObjectName("fullScreenAction");
-	fullScreenAction->setCustomizable(TRUE);
+	fullScreenAction->setCustomizable(true);
 	connect(fullScreenAction, SIGNAL(triggered()), m_mainWindow, SLOT(toggleFullScreen()));
 	// << actions
 
 
 	// playlist actions >>
 	NAction *loopPlaylistAction = new NAction(tr("Loop playlist"), this);
-	loopPlaylistAction->setCheckable(TRUE);
+	loopPlaylistAction->setCheckable(true);
 	loopPlaylistAction->setObjectName("loopPlaylistAction");
 	connect(loopPlaylistAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	NAction *loadNextAction = new NAction(tr("Load next file in directory when finished"), this);
-	loadNextAction->setCheckable(TRUE);
+	loadNextAction->setCheckable(true);
 	loadNextAction->setObjectName("loadNextAction");
 	connect(loadNextAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	NAction *loadNextNameDownAction = new NAction(QString::fromUtf8("    ├  %1 ↓").arg(tr("By Name")), this);
-	loadNextNameDownAction->setCheckable(TRUE);
+	loadNextNameDownAction->setCheckable(true);
 	loadNextNameDownAction->setObjectName("loadNextNameDownAction");
 	connect(loadNextNameDownAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	NAction *loadNextNameUpAction = new NAction(QString::fromUtf8("    ├  %1 ↑").arg(tr("By Name")), this);
-	loadNextNameUpAction->setCheckable(TRUE);
+	loadNextNameUpAction->setCheckable(true);
 	loadNextNameUpAction->setObjectName("loadNextNameUpAction");
 	connect(loadNextNameUpAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	NAction *loadNextDateDownAction = new NAction(QString::fromUtf8("    ├  %1 ↓").arg(tr("By Date")), this);
-	loadNextDateDownAction->setCheckable(TRUE);
+	loadNextDateDownAction->setCheckable(true);
 	loadNextDateDownAction->setObjectName("loadNextDateDownAction");
 	connect(loadNextDateDownAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
 	NAction *loadNextDateUpAction = new NAction(QString::fromUtf8("    └  %1 ↑").arg(tr("By Date")), this);
-	loadNextDateUpAction->setCheckable(TRUE);
+	loadNextDateUpAction->setCheckable(true);
 	loadNextDateUpAction->setObjectName("loadNextDateUpAction");
 	connect(loadNextDateUpAction, SIGNAL(triggered()), this, SLOT(playlistActionTriggered()));
 
@@ -332,7 +332,7 @@ NPlayer::NPlayer()
 	m_systemTray->setIcon(m_mainWindow->windowIcon());
 #endif
 	m_trayClickTimer = new QTimer(this);
-	m_trayClickTimer->setSingleShot(TRUE);
+	m_trayClickTimer->setSingleShot(true);
 	connect(m_trayClickTimer, SIGNAL(timeout()), this, SLOT(on_trayClickTimer_timeout()));
 	// << tray icon
 
@@ -451,7 +451,7 @@ bool NPlayer::eventFilter(QObject *obj, QEvent *event)
 		if (!fileEvent->file().isEmpty())
 		m_playlistWidget->playFiles(QStringList() << fileEvent->file());
 
-		return FALSE;
+		return false;
 	}
 
 	return QObject::eventFilter(obj, event);
@@ -574,7 +574,7 @@ void NPlayer::loadSettings()
 		action = qFindChild<NAction *>(this, "loadNextDateUpAction");
 	else
 		action = qFindChild<NAction *>(this, "loadNextNameDownAction");
-	action->setChecked(TRUE);
+	action->setChecked(true);
 
 	m_playbackEngine->setVolume(m_settings->value("Volume").toFloat());
 }
@@ -630,7 +630,7 @@ void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
 void NPlayer::on_mainWindow_closed()
 {
 	if (m_settings->value("MinimizeToTray").toBool()) {
-		m_systemTray->setVisible(TRUE);
+		m_systemTray->setVisible(true);
 	} else {
 		quit();
 	}
@@ -645,10 +645,10 @@ void NPlayer::on_trayClickTimer_timeout()
 void NPlayer::on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
 {
 	if (reason == QSystemTrayIcon::Trigger) { // single click
-		m_trayIconDoubleClickCheck = FALSE;
+		m_trayIconDoubleClickCheck = false;
 		m_trayClickTimer->start(QApplication::doubleClickInterval());
 	} else if (reason == QSystemTrayIcon::DoubleClick) {
-		m_trayIconDoubleClickCheck = TRUE;
+		m_trayIconDoubleClickCheck = true;
 		trayIconCountClicks(2);
 	}
 }
@@ -661,8 +661,8 @@ void NPlayer::toggleWindowVisibility()
 		m_mainWindow->raise();
 
 	} else if (m_settings->value("MinimizeToTray").toBool()) {
-		m_mainWindow->setVisible(FALSE);
-		m_systemTray->setVisible(TRUE);
+		m_mainWindow->setVisible(false);
+		m_systemTray->setVisible(true);
 	} else {
 		m_mainWindow->showMinimized();
 	}

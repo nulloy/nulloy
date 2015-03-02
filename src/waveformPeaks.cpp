@@ -30,7 +30,7 @@ void NWaveformPeaks::reset()
 	m_factor = 1024;
 	m_factor_k = 2;
 	m_counter = 0;
-	m_completed = FALSE;
+	m_completed = false;
 
 	m_vector = QVector< QPair<qreal, qreal> >(MAX_RES, qMakePair(0.0, 0.0));
 }
@@ -45,7 +45,7 @@ int NWaveformPeaks::size()
 
 void NWaveformPeaks::complete()
 {
-	m_completed = TRUE;
+	m_completed = true;
 	m_vector.resize(m_index + 1);
 }
 

@@ -27,7 +27,7 @@ static const char _i18nDirName[] = "i18n";
 
 namespace NI18NLoader
 {
-	bool _init = FALSE;
+	bool _init = false;
 	QMap<QLocale::Language, QString> _translations;
 	QTranslator _translator;
 }
@@ -36,7 +36,7 @@ void NI18NLoader::init()
 {
 	if (_init)
 		return;
-	_init = TRUE;
+	_init = true;
 
 	_translations[QLocale::English] = "";
 

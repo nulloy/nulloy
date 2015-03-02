@@ -64,7 +64,7 @@ NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 	m_popup->setAttribute(Qt::WA_TranslucentBackground);
 
 	hide();
-	setScaledContents(TRUE);
+	setScaledContents(true);
 }
 
 NCoverWidget::~NCoverWidget() {}

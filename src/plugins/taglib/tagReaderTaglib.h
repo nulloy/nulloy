@@ -31,7 +31,7 @@ class NTagReaderTaglib : public NTagReaderInterface, public NPlugin
 
 private:
 	QString m_path;
-	QString parse(const QString &format, bool *success, bool stopOnFail = FALSE);
+	QString parse(const QString &format, bool *success, bool stopOnFail = false);
 
 public:
 	NTagReaderTaglib(QObject *parent = 0) : NTagReaderInterface(parent) {}

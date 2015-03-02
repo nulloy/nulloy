@@ -26,7 +26,7 @@ void NCoverReaderTaglib::init()
 	if (m_init)
 		return;
 
-	m_init = TRUE;
+	m_init = true;
 	NTaglib::_tagRef = NULL;
 }
 

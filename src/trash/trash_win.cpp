@@ -28,7 +28,7 @@ int _trash(const QString &path, QString *error)
 	shfo.wFunc = FO_DELETE;
 	shfo.pFrom = (wchar_t *)(new_path.utf16());
 	shfo.fFlags = FOF_NOCONFIRMATION | FOF_SIMPLEPROGRESS | FOF_NOERRORUI | FOF_ALLOWUNDO;
-	shfo.fAnyOperationsAborted = FALSE;
+	shfo.fAnyOperationsAborted = false;
 	shfo.hNameMappings = NULL;
 	shfo.pTo = NULL;
 	shfo.lpszProgressTitle = NULL;

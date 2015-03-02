@@ -58,9 +58,9 @@ bool NSkinFileSystem::init()
 {
 	if (!m_instance) {
 		m_instance = new NSkinFileSystem;
-		return TRUE;
+		return true;
 	} else {
-		return FALSE;
+		return false;
 	}
 }
 

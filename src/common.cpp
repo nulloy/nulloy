@@ -28,9 +28,9 @@ namespace NCore
 {
 	static QList<QByteArray> _argList;
 	static QVector<const char *> _argVector;
-	static bool _cArgs_init = FALSE;
+	static bool _cArgs_init = false;
 
-	static bool _rcDir_init = FALSE;
+	static bool _rcDir_init = false;
 	static QString _rcDir = "./";
 
 	static QStringList _processPath(const QString &path, const QStringList &nameFilters);
@@ -43,7 +43,7 @@ void NCore::cArgs(int *argc, const char ***argv)
 			_argList << s.toLatin1();
 			_argVector << _argList.last().constData();
 		}
-		_cArgs_init = TRUE;
+		_cArgs_init = true;
 	}
 
 	*argv = &_argVector[0];
@@ -96,7 +96,7 @@ QString NCore::rcDir()
 		if (!dir.exists())
 			dir.mkdir(_rcDir);
 
-		_rcDir_init = TRUE;
+		_rcDir_init = true;
 	}
 	return _rcDir;
 }
@@ -133,7 +133,7 @@ bool NCore::revealInFileManager(const QString &file, QString *error)
 
 	if (!fileInfo.exists()) {
 		*error = QString(QObject::tr("File doesn't exist: <b>%1</b>")).arg(QFileInfo(file).fileName());
-		return FALSE;
+		return false;
 	}
 
 	QString fileManagerCommand;
@@ -152,7 +152,7 @@ bool NCore::revealInFileManager(const QString &file, QString *error)
 	fileManagerCommand = QString::fromUtf8(xdg.readAll()).simplified().remove(".desktop");
 	if (QProcess::execute("which " + fileManagerCommand) != 0) {
 		*error = QString(QObject::tr("Default file manager is set to <b>%1</b> but it's not available.")).arg(fileManagerCommand);
-		return FALSE;
+		return false;
 	}
 
 	if (fileManagerCommand == "dolphin") {
@@ -172,6 +172,6 @@ bool NCore::revealInFileManager(const QString &file, QString *error)
 	reveal.waitForStarted();
 	reveal.waitForFinished();
 
-	return TRUE;
+	return true;
 }
 

@@ -36,7 +36,7 @@ static const char _pluginsDirName[] = "plugins";
 
 namespace NPluginLoader
 {
-	bool __init = FALSE;
+	bool __init = false;
 	QList<Descriptor> _descriptors;
 	QMap<N::PluginType, NPlugin *> _usedPlugins;
 	QMap<QPluginLoader *, bool> _usedLoaders;
@@ -86,7 +86,7 @@ NPlugin* NPluginLoader::_findPlugin(N::PluginType type)
 	plugin->init();
 
 	QPluginLoader *loader = _descriptors.at(index)[LoaderObjectRole].value<QPluginLoader *>();
-	_usedLoaders[loader] = TRUE;
+	_usedLoaders[loader] = true;
 
 	QString containerName = _descriptors.at(index)[ContainerNameRole].toString();
 	NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);
@@ -98,7 +98,7 @@ void NPluginLoader::_init()
 {
 	if (__init)
 		return;
-	__init = TRUE;
+	__init = true;
 
 	QStringList pluginsDirList;
 	pluginsDirList << QCoreApplication::applicationDirPath() + "/" + _pluginsDirName;
@@ -138,7 +138,7 @@ void NPluginLoader::_init()
 			if (!QLibrary::isLibrary(fileFullPath))
 				continue;
 			QPluginLoader *loader = new QPluginLoader(fileFullPath);
-			_usedLoaders[loader] = FALSE;
+			_usedLoaders[loader] = false;
 			QObject *instance = loader->instance();
 			NPluginContainer *container = qobject_cast<NPluginContainer *>(instance);
 			if (container) {
@@ -168,7 +168,7 @@ void NPluginLoader::_init()
 	}
 
 	// unload non-used
-	foreach(QPluginLoader *loader, _usedLoaders.keys(FALSE))
+	foreach(QPluginLoader *loader, _usedLoaders.keys(false))
 		loader->unload();
 
 	if (!_usedPlugins[N::WaveformBuilder] ||

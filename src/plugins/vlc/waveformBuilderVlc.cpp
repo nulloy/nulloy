@@ -106,7 +106,7 @@ void NWaveformBuilderVlc::init()
 
 	reset();
 
-	m_init = TRUE;
+	m_init = true;
 }
 
 NWaveformBuilderVlc::~NWaveformBuilderVlc()

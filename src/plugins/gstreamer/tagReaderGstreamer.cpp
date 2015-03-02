@@ -26,7 +26,7 @@ void NTagReaderGstreamer::init()
 	if (m_init)
 		return;
 
-	m_isValid = FALSE;
+	m_isValid = false;
 	m_taglist = NULL;
 
 	int argc;
@@ -38,7 +38,7 @@ void NTagReaderGstreamer::init()
 		return;
 	}
 
-	m_init = TRUE;
+	m_init = true;
 }
 
 void NTagReaderGstreamer::setSource(const QString &file)
@@ -48,7 +48,7 @@ void NTagReaderGstreamer::setSource(const QString &file)
 		m_taglist = NULL;
 	}
 
-	m_isValid = FALSE;
+	m_isValid = false;
 
 	if (file.isEmpty())
 		return;
@@ -83,7 +83,7 @@ void NTagReaderGstreamer::setSource(const QString &file)
 		gchar *gstr = NULL;
 		if (gst_tag_list_get_string(m_taglist, GST_TAG_AUDIO_CODEC, &gstr))
 			m_codecName = QString::fromUtf8(gstr);
-		m_isValid = TRUE;
+		m_isValid = true;
 	}
 }
 
@@ -107,7 +107,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 	if (format.isEmpty())
 		return "";
 
-	*success = TRUE;
+	*success = true;
 
 	if (!m_isValid)
 		return "NTagReaderGstreamer::InvalidFile";
@@ -155,7 +155,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 				}
 				if (str == "0") {
 					str = "<Unknown year>";
-					*success = FALSE;
+					*success = false;
 				}
 				res += str;
 			} else if (ch == 'n') {
@@ -169,7 +169,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 			} else if (ch == 'b') {
 				if (m_codecName.contains("MP3")) {
 					res += "<Unknown bit depth>";
-					*success = FALSE;
+					*success = false;
 				} else {
 					res += QString::number(m_bitDepth);
 				}
@@ -185,7 +185,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 					else
 						duration.sprintf("%d:%02d", minutes, seconds);
 				} else {
-					*success = FALSE;
+					*success = false;
 					duration = "<Unknown duration>";
 				}
 				res += duration;
@@ -193,7 +193,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 				QString duration;
 				if (seconds_total == 0) {
 					duration = "<Unknown duration>";
-					*success = FALSE;
+					*success = false;
 				} else {
 					duration = QString::number(seconds_total);
 				}
@@ -210,7 +210,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 				res += QString::number(m_sampleRate);
 			} else if (ch == 'C') {
 				res += "<Usupported tag: channels number>";
-				*success = FALSE;
+				*success = false;
 			} else if (ch == 'f') {
 				res += QFileInfo(m_path).baseName();
 			} else if (ch == 'F') {
@@ -252,7 +252,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, bool st
 			}
 
 			bool cond_res;
-			QString cond_true = parse(values.at(0), &cond_res, TRUE);
+			QString cond_true = parse(values.at(0), &cond_res, true);
 			if (cond_res) {
 				res += cond_true;
 			} else {

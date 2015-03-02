@@ -39,7 +39,7 @@ public:
 	NWidgetPrototype(QObject *parent = 0);
 	int windowFlags();
 	void setWindowFlags(int flags);
-	Q_INVOKABLE void setAttribute(int attribute, bool enable = TRUE);
+	Q_INVOKABLE void setAttribute(int attribute, bool enable = true);
 	Q_INVOKABLE QWidget* parentWidget();
 	Q_INVOKABLE void move(int x, int y);
 	Q_INVOKABLE void resize(int w, int h);

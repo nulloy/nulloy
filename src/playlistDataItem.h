@@ -30,7 +30,7 @@ struct NPlaylistDataItem
 	NPlaylistDataItem(const QString &file = "") :
 		path(file),
 		duration(-1),
-		failed(FALSE),
+		failed(false),
 		count(0),
 		position(0.0)
 	{};

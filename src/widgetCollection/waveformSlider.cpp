@@ -27,7 +27,7 @@
 NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 {
 	m_radius = 0;
-	m_fileDrop = FALSE;
+	m_fileDrop = false;
 	m_background = QBrush(Qt::darkBlue);
 	m_waveBackground = QBrush(Qt::darkGreen);
 	m_waveBorderColor = QColor(Qt::green);
@@ -47,7 +47,7 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
 	m_timer->start();
 
-	setAcceptDrops(TRUE);
+	setAcceptDrops(true);
 
 	m_oldSize = QSize(0, 0);
 	init();
@@ -63,9 +63,9 @@ void NWaveformSlider::init()
 {
 	m_oldIndex = -1;
 	m_oldBuildPos = -1;
-	m_pausedState = FALSE;
-	m_needsUpdate = FALSE;
-	m_hasMedia = FALSE;
+	m_pausedState = false;
+	m_needsUpdate = false;
+	m_hasMedia = false;
 
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 	setMinimumHeight(50);
@@ -89,7 +89,7 @@ void NWaveformSlider::checkForUpdate()
 	m_waveBuilder->positionAndIndex(pos, index);
 
 	if (m_oldSize != size() || m_oldIndex != index)
-		m_needsUpdate = TRUE;
+		m_needsUpdate = true;
 
 	if (m_needsUpdate) {
 		QPainter painter;
@@ -147,7 +147,7 @@ void NWaveformSlider::checkForUpdate()
 		}
 
 		update();
-		m_needsUpdate = FALSE;
+		m_needsUpdate = false;
 	}
 }
 
@@ -197,7 +197,7 @@ void NWaveformSlider::wheelEvent(QWheelEvent *event)
 void NWaveformSlider::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::StyleChange)
-		m_needsUpdate = TRUE;
+		m_needsUpdate = true;
 	QWidget::changeEvent(event);
 }
 
@@ -211,11 +211,11 @@ void NWaveformSlider::setMedia(const QString &file)
 	init();
 
 	if (file.isEmpty() || !QFile(file).exists()) {
-		m_hasMedia = FALSE;
+		m_hasMedia = false;
 		return;
 	}
 
-	m_hasMedia = TRUE;
+	m_hasMedia = true;
 	m_waveBuilder->start(file);
 }
 
@@ -327,7 +327,7 @@ void NWaveformSlider::dragEnterEvent(QDragEnterEvent *event)
 {
 	if (event->mimeData() && event->mimeData()->hasUrls() && !event->mimeData()->urls().isEmpty()) {
 		event->acceptProposedAction();
-		m_fileDrop = TRUE;
+		m_fileDrop = true;
 		update();
 	} else {
 		event->ignore();
@@ -342,7 +342,7 @@ void NWaveformSlider::dragMoveEvent(QDragMoveEvent *event)
 void NWaveformSlider::dragLeaveEvent(QDragLeaveEvent *event)
 {
 	event->accept();
-	m_fileDrop = FALSE;
+	m_fileDrop = false;
 	update();
 }
 
@@ -358,7 +358,7 @@ void NWaveformSlider::dropEvent(QDropEvent *event)
 
 	event->acceptProposedAction();
 
-	m_fileDrop = FALSE;
+	m_fileDrop = false;
 	update();
 }
 

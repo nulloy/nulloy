@@ -44,7 +44,7 @@ void NPlaybackEnginePhonon::init()
 
 	Phonon::createPath(m_mediaObject, m_audioOutput);
 
-	m_init = TRUE;
+	m_init = true;
 }
 
 NPlaybackEnginePhonon::~NPlaybackEnginePhonon() {}
@@ -132,9 +132,9 @@ bool NPlaybackEnginePhonon::hasMedia()
 	if (source.type() == Phonon::MediaSource::Invalid ||
 	    source.type() == Phonon::MediaSource::Empty)
 	{
-		return FALSE;
+		return false;
 	} else {
-		return TRUE;
+		return true;
 	}
 }
 

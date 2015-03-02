@@ -54,7 +54,7 @@ NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
 	setLayout(vLayout);
 	vLayout->setContentsMargins(2, 2, 2, 2);
 
-	setMouseTracking(TRUE);
+	setMouseTracking(true);
 	QList<QLabel *> labels = findChildren<QLabel *>();
 	foreach (QLabel *label, labels)
 		label->setAttribute(Qt::WA_TransparentForMouseEvents);

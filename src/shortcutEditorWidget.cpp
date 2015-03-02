@@ -27,14 +27,14 @@ NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(par
 	setColumnCount(4);
 	setHorizontalHeaderLabels(QStringList() << tr("Action") << tr("Description") << tr("Shortcut") << tr("Global Shortcut"));
 
-	verticalHeader()->setVisible(FALSE);
+	verticalHeader()->setVisible(false);
 
 	setEditTriggers(QAbstractItemView::NoEditTriggers);
 	setSelectionMode(QAbstractItemView::SingleSelection);
 
 	setStyleSheet("QTableView::item:disabled { color: black; }");
 
-	m_init = FALSE;
+	m_init = false;
 }
 
 NShortcutEditorWidget::~NShortcutEditorWidget() {}
@@ -43,7 +43,7 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 {
 	if (m_init)
 		return;
-	m_init = TRUE;
+	m_init = true;
 
 	m_actionList = actionList;
 	setRowCount(m_actionList.size());
@@ -80,7 +80,7 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 	horizontalHeader()->setResizeMode(Description, QHeaderView::Fixed);
 	horizontalHeader()->setResizeMode(Shortcut, QHeaderView::Stretch);
 	horizontalHeader()->setResizeMode(GlobalShortcut, QHeaderView::Stretch);
-	horizontalHeader()->setStretchLastSection(TRUE);
+	horizontalHeader()->setStretchLastSection(true);
 
 	int height = horizontalHeader()->height();
 	for (int i = 0; i < rowCount(); ++i)

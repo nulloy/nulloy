@@ -67,7 +67,7 @@ void NPlaybackEngineVlc::init()
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(checkStatus()));
 	m_timer->start(100);
 
-	m_init = TRUE;
+	m_init = true;
 }
 
 NPlaybackEngineVlc::~NPlaybackEngineVlc()
@@ -147,7 +147,7 @@ void NPlaybackEngineVlc::pause()
 	if (!hasMedia())
 		return;
 
-	libvlc_media_player_set_pause(m_mediaPlayer, TRUE);
+	libvlc_media_player_set_pause(m_mediaPlayer, true);
 }
 
 void NPlaybackEngineVlc::stop()

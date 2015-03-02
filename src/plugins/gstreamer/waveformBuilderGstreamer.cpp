@@ -110,7 +110,7 @@ void NWaveformBuilderGstreamer::init()
 
 	reset();
 
-	m_init = TRUE;
+	m_init = true;
 }
 
 NWaveformBuilderGstreamer::~NWaveformBuilderGstreamer()

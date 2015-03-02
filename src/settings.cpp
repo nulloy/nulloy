@@ -54,31 +54,31 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("WindowTitleTrackInfo","\"{%a - %t|%F}\" - " + QCoreApplication::applicationName() + " %v");
 	initValue("TooltipTrackInfo", "%C");
 
-	initValue("Shuffle", FALSE);
-	initValue("Repeat", FALSE);
+	initValue("Shuffle", false);
+	initValue("Repeat", false);
 
-	initValue("Maximized", FALSE);
-	initValue("MinimizeToTray", FALSE);
-	initValue("TrayIcon", FALSE);
-	initValue("AlwaysOnTop", FALSE);
-	initValue("WhilePlayingOnTop", FALSE);
-	initValue("StartPaused", FALSE);
-	initValue("RestorePlaylist", TRUE);
-	initValue("SingleInstance", TRUE);
-	initValue("EnqueueFiles", TRUE);
-	initValue("PlayEnqueued", TRUE);
-	initValue("AutoCheckUpdates", TRUE);
-	initValue("DisplayLogDialog", TRUE);
+	initValue("Maximized", false);
+	initValue("MinimizeToTray", false);
+	initValue("TrayIcon", false);
+	initValue("AlwaysOnTop", false);
+	initValue("WhilePlayingOnTop", false);
+	initValue("StartPaused", false);
+	initValue("RestorePlaylist", true);
+	initValue("SingleInstance", true);
+	initValue("EnqueueFiles", true);
+	initValue("PlayEnqueued", true);
+	initValue("AutoCheckUpdates", true);
+	initValue("DisplayLogDialog", true);
 	initValue("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
-	initValue("LoopPlaylist", FALSE);
-	initValue("LoadNext", FALSE);
-	initValue("ShowCoverArt", TRUE);
+	initValue("LoopPlaylist", false);
+	initValue("LoadNext", false);
+	initValue("ShowCoverArt", true);
 	initValue("LoadNextSort", QDir::Name);
 	initValue("Volume", 0.8);
-	initValue("ShowDecibelsVolume", FALSE);
+	initValue("ShowDecibelsVolume", false);
 
 #ifdef Q_WS_WIN
-	initValue("TaskbarProgress", TRUE);
+	initValue("TaskbarProgress", true);
 #endif
 
 	initValue("FileFilters", QStringList() << "*.m3u" << "*.m3u8"

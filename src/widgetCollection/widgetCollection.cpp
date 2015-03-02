@@ -31,7 +31,7 @@ class CLASS_NAME##Plugin : public QObject, public NWidgetPlugin \
 public: \
 	CLASS_NAME##Plugin(QObject *parent = 0) : QObject(parent), NWidgetPlugin(#CLASS_NAME) {} \
 	virtual QWidget* createWidget(QWidget *parent) { return new CLASS_NAME(parent); } \
-	virtual bool isContainer() const { return FALSE; } \
+	virtual bool isContainer() const { return false; } \
 }; \
 
 N_WIDGET_PLUGIN(NLabel)
@@ -52,7 +52,7 @@ static inline QString _domXml(const QString &className, const QString &name)
 
 NWidgetPlugin::NWidgetPlugin(const QString &className)
 {
-	m_initialized = FALSE;
+	m_initialized = false;
 
 	m_className = className;
 	m_className.remove("Plugin");
@@ -71,7 +71,7 @@ void NWidgetPlugin::initialize(QDesignerFormEditorInterface *core)
 	if (m_initialized)
 		return;
 
-	m_initialized = TRUE;
+	m_initialized = true;
 }
 
 NWidgetCollection::NWidgetCollection(QObject *parent) : QObject(parent)
