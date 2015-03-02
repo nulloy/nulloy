@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2014 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2015 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -50,7 +50,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 			tr("Version: ") + QCoreApplication::applicationVersion() + "<br>" +
 			              (QString(_N_TIME_STAMP_).isEmpty() ? "" : tr("Build: ") + QString(_N_TIME_STAMP_)) +
 			"<br><br>" +
-			"Copyright (C) 2010-2014  Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
+			"Copyright (C) 2010-2015  Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
 		"</span>";
 
 	setWindowTitle(QObject::tr("About ") + QCoreApplication::applicationName());
