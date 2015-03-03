@@ -42,7 +42,7 @@
 <context>
     <name>NPlayer</name>
     <message>
-        <location filename="../player.cpp" line="+111"/>
+        <location filename="../player.cpp" line="+177"/>
         <source>Show / Hide</source>
         <translation>Zeigen / Verbergen</translation>
     </message>
@@ -112,7 +112,7 @@
         <translation>Verzeichnis hinzufügen...</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+4"/>
         <source>Save Playlist...</source>
         <translation>Playlist speichern...</translation>
     </message>
@@ -169,7 +169,7 @@
         <translation>Nach Datum</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+62"/>
         <source>Playlist</source>
         <translation>Playlist</translation>
     </message>
@@ -184,7 +184,7 @@
         <translation>Bedienung</translation>
     </message>
     <message>
-        <location line="+230"/>
+        <location line="+227"/>
         <source>Latest: </source>
         <translation>Neuste: </translation>
     </message>
@@ -199,7 +199,7 @@
         <translation>Eine neuere Version ist verfügbar: </translation>
     </message>
     <message>
-        <location line="+167"/>
+        <location line="+185"/>
         <source>All supported</source>
         <translation>Alle unterstützten</translation>
     </message>
@@ -209,7 +209,7 @@
         <translation>Alle Dateien</translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+47"/>
         <source>M3U Playlist</source>
         <translation>M3U Playlist</translation>
     </message>
@@ -219,7 +219,7 @@
         <translation>Erweiterte M3U Playlist</translation>
     </message>
     <message>
-        <location line="-487"/>
+        <location line="-507"/>
         <location line="+49"/>
         <source>Window</source>
         <translation>Fenster</translation>
@@ -228,7 +228,7 @@
 <context>
     <name>NPlaylistWidget</name>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="+51"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="+58"/>
         <source>Reveal in File Manager...</source>
         <translation>Im Dateimanager anzeigen...</translation>
     </message>
@@ -241,6 +241,11 @@
         <location line="+9"/>
         <source>Move To Trash</source>
         <translation>In den Papierkorb verschieben</translation>
+    </message>
+    <message>
+        <location line="+396"/>
+        <source>Drop media here</source>
+        <translation>Medien hierher ziehen</translation>
     </message>
 </context>
 <context>
@@ -266,7 +271,7 @@
         <translation> Einstellungen</translation>
     </message>
     <message>
-        <location line="+77"/>
+        <location line="+76"/>
         <source>Artist</source>
         <translation>Künstler</translation>
     </message>
@@ -421,12 +426,12 @@
         <translation>Zeigt das Genre an. Erzeugt keine Ausgabe wenn es nicht verfügbar ist.</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+7"/>
         <source>Close</source>
         <translation>Schliessen</translation>
     </message>
     <message>
-        <location line="+133"/>
+        <location line="+127"/>
         <source> (Built-in)</source>
         <translation> (Eingebaut)</translation>
     </message>
@@ -457,7 +462,7 @@
 <context>
     <name>NVolumeSlider</name>
     <message>
-        <location filename="../widgetCollection/volumeSlider.cpp" line="+58"/>
+        <location filename="../widgetCollection/volumeSlider.cpp" line="+62"/>
         <location line="+2"/>
         <source>Volume</source>
         <translation>Lautstärke</translation>
@@ -466,12 +471,12 @@
 <context>
     <name>PreferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.ui" line="+24"/>
+        <location filename="../preferencesDialog.ui" line="+31"/>
         <source>General</source>
         <translation>Allgemein</translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+92"/>
         <source>Skin:</source>
         <translation>Skin:</translation>
     </message>
@@ -511,12 +516,12 @@
         <translation>Beim Hinzufügen wiedergeben</translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+33"/>
         <source>Display log dialog in case of errors</source>
         <translation>Log-Dialog im Fehlerfall anzeigen</translation>
     </message>
     <message>
-        <location line="-33"/>
+        <location line="-22"/>
         <source>Show volume in decibels (using Stevens&apos; law)</source>
         <translation>Lautstärke in Dezibel anzeigen</translation>
     </message>
@@ -527,7 +532,6 @@
     </message>
     <message>
         <location line="+40"/>
-        <location filename="../preferencesDialog.cpp" line="-77"/>
         <source>Switching languages requires restart</source>
         <translation>Das Ändern der Sprache erfordert einen Neustart</translation>
     </message>
@@ -557,7 +561,7 @@
         <translation>Dateifilter:</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="+32"/>
         <source>Track Information</source>
         <translation>Titelinformationen</translation>
     </message>
@@ -632,9 +636,8 @@
         <translation>Das Ändern von Plugins erfordert einen Neustart</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+96"/>
         <source>English</source>
-        <translation>Deutsche</translation>
+        <translation type="obsolete">Deutsche</translation>
     </message>
 </context>
 <context>
@@ -645,7 +648,7 @@
         <translation>Über das Programm </translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="+133"/>
+        <location filename="../common.cpp" line="+135"/>
         <source>File doesn&apos;t exist: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Die Datei existiert nicht: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
@@ -655,7 +658,7 @@
         <translation>Der Standard-Dateimanager &lt;b&gt;%1&lt;/b&gt; ist nicht verfügbar.</translation>
     </message>
     <message>
-        <location filename="../pluginLoader.cpp" line="+153"/>
+        <location filename="../pluginLoader.cpp" line="+155"/>
         <location line="+30"/>
         <source>Plugin loading error</source>
         <translation>Plugin Ladefehler</translation>
@@ -681,17 +684,17 @@
         <translation>TagReader-Plugin nicht gefunden.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+88"/>
+        <location filename="../preferencesDialog.cpp" line="+105"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Der Infobereich der Taskliste ist nicht verfügbar.</translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="+55"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-323"/>
         <source>Reveal in File Manager Error</source>
         <translation>Dateimanager Fehler</translation>
     </message>
     <message>
-        <location filename="../skinLoader.cpp" line="+158"/>
+        <location filename="../skinLoader.cpp" line="+164"/>
         <source>Skin loading error</source>
         <translation>Skin Ladefehler</translation>
     </message>
@@ -704,9 +707,8 @@
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="+745"/>
-        <location line="+98"/>
-        <location filename="../skins/silver/form.ui" line="+881"/>
+        <location filename="../skins/metro/form.ui" line="+420"/>
+        <location filename="../skins/silver/form.ui" line="+459"/>
         <source>Minimize</source>
         <translation>Minimieren</translation>
     </message>
@@ -718,7 +720,7 @@
     </message>
     <message>
         <location line="+122"/>
-        <location filename="../skins/native/form.ui" line="+184"/>
+        <location filename="../skins/native/form.ui" line="+176"/>
         <location filename="../skins/silver/form.ui" line="+137"/>
         <source>Previous</source>
         <translation>Vorig</translation>

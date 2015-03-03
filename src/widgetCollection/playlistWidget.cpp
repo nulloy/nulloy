@@ -451,6 +451,41 @@ void NPlaylistWidget::paintEvent(QPaintEvent *e)
 {
 	QListWidget::paintEvent(e);
 
+	if (count() == 0) {
+		QPainter painter(viewport());
+		painter.setRenderHint(QPainter::Antialiasing);
+
+		int iconSide = 120;
+		painter.translate(0, (iconSide + fontMetrics().height()) / 2);
+		QRect iconRect = QRect(0, 0, iconSide, iconSide);
+		QRect rect = viewport()->rect();
+		iconRect.moveCenter(rect.center());
+		iconRect.moveBottom(rect.center().y() - fontMetrics().height());
+
+		QPen pen = painter.pen();
+		pen.setWidth(4);
+		pen.setStyle(Qt::CustomDashLine);
+		pen.setDashOffset(6);
+		pen.setDashPattern(QVector<qreal>() << 3 << 4);
+		painter.setPen(pen);
+		painter.drawRoundedRect(iconRect, 20, 20);
+		painter.drawText(viewport()->rect(), Qt::AlignHCenter | Qt::AlignVCenter, tr("Drop media here"));
+
+		painter.setPen(Qt::NoPen);
+		QBrush brush = painter.brush();
+		brush.setColor(pen.color());
+		brush.setStyle(Qt::SolidPattern);
+		painter.setBrush(brush);
+		static const QPoint points[7] = {
+			QPoint(33, 78),
+			QPoint(66, 39), QPoint(51, 39),
+			QPoint(51, 0),  QPoint(15, 0),
+			QPoint(15, 39), QPoint(0, 39)
+		};
+		painter.translate((rect.width() - iconSide) / 2 + 26, (rect.height() - iconSide)/ 2 - 54);
+		painter.drawPolygon(points, 7);
+	}
+
 	if (m_fileDrop) {
 		QPainter painter(viewport());
 		painter.setRenderHint(QPainter::Antialiasing);
