@@ -44,14 +44,15 @@ private:
 	QTimer *m_timer;
 	bool m_pausedState;
 	QSize m_oldSize;
-	int m_oldIndex;
-	float m_oldBuildPos;
+	int m_oldBuilderIndex;
+	float m_oldBuilderPos;
 	bool m_hasMedia;
 	bool m_needsUpdate;
 
 	void mousePressEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
 	void paintEvent(QPaintEvent *event);
+	void resizeEvent(QResizeEvent *event);
 	void changeEvent(QEvent *event);
 	void init();
 

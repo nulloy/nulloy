@@ -24,6 +24,9 @@
 #include <QStylePainter>
 #include <QStyleOptionFocusRect>
 
+#define IDLE_INTERVAL 60
+#define FAST_INTERVAL 10
+
 NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 {
 	m_radius = 0;
@@ -45,6 +48,7 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
+	m_timer->setInterval(IDLE_INTERVAL);
 	m_timer->start();
 
 	setAcceptDrops(true);
@@ -61,8 +65,8 @@ void NWaveformSlider::setPausedState(bool state)
 
 void NWaveformSlider::init()
 {
-	m_oldIndex = -1;
-	m_oldBuildPos = -1;
+	m_oldBuilderIndex = -1;
+	m_oldBuilderPos = -1;
 	m_pausedState = false;
 	m_needsUpdate = false;
 	m_hasMedia = false;
@@ -79,24 +83,36 @@ QSize NWaveformSlider::sizeHint() const
 
 NWaveformSlider::~NWaveformSlider() {}
 
+void NWaveformSlider::resizeEvent(QResizeEvent *event)
+{
+	QAbstractSlider::resizeEvent(event);
+	checkForUpdate();
+}
+
 void NWaveformSlider::checkForUpdate()
 {
 	if (!m_waveBuilder)
 		return;
 
-	float pos;
-	int index;
-	m_waveBuilder->positionAndIndex(pos, index);
+	float builderPos;
+	int builderIndex;
+	m_waveBuilder->positionAndIndex(builderPos, builderIndex);
 
-	if (m_oldSize != size() || m_oldIndex != index)
+	if (m_oldSize != size() || m_oldBuilderIndex != builderIndex)
 		m_needsUpdate = true;
+
+	if (builderPos != 1.0 && m_timer->interval() != FAST_INTERVAL)
+		m_timer->setInterval(FAST_INTERVAL);
+	else
+	if (builderPos == 1.0 && m_timer->interval() != IDLE_INTERVAL)
+		m_timer->setInterval(IDLE_INTERVAL);
 
 	if (m_needsUpdate) {
 		QPainter painter;
 		QImage waveImage = m_normalImage = m_playingImage = m_pausedImage = QImage(size(), QImage::Format_ARGB32_Premultiplied);
 
-		m_oldBuildPos = pos;
-		m_oldIndex = index;
+		m_oldBuilderPos = builderPos;
+		m_oldBuilderIndex = builderIndex;
 		m_oldSize = size();
 
 
@@ -110,13 +126,13 @@ void NWaveformSlider::checkForUpdate()
 		painter.setPen(wavePen);
 
 		painter.translate(1, 1);
-		painter.scale((qreal)(width() - 1) / m_oldIndex * m_oldBuildPos, (height() - 2) / 2);
+		painter.scale((qreal)(width() - 1) / m_oldBuilderIndex * m_oldBuilderPos, (height() - 2) / 2);
 		painter.translate(0, 1);
 
 		QPainterPath pathPos;
 		QPainterPath pathNeg;
 		NWaveformPeaks *peaks = m_waveBuilder->peaks();
-		for (int i = 0; i < m_oldIndex; ++i) {
+		for (int i = 0; i < m_oldBuilderIndex; ++i) {
 			pathPos.lineTo(i, peaks->positive(i));
 			pathNeg.lineTo(i, peaks->negative(i));
 		}
