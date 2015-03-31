@@ -39,8 +39,9 @@
 
 using namespace NPluginLoader;
 
-QStringList vNames = QStringList() << "Top" << "Middle" << "Bottom";
-QStringList hNames = QStringList() << "Left" << "Center" << "Right";
+static QStringList vNames = QStringList() << "Top" << "Middle" << "Bottom";
+static QStringList hNames = QStringList() << "Left" << "Center" << "Right";
+static const char *LANGUAGE = QT_TRANSLATE_NOOP("PreferencesDialog", "English");
 
 NPreferencesDialog::~NPreferencesDialog() {}
 
@@ -317,13 +318,12 @@ void NPreferencesDialog::loadSettings()
 #endif
 	// << skins
 
-
 	// translations >>
 	int localeIndex;
 	ui.languageComboBox->clear();
 	foreach (QLocale::Language language, NI18NLoader::translations()) {
 		QString languageString = QLocale::languageToString(language);
-		QString localizedString = NI18NLoader::translate(language, "PreferencesDialog", "English");
+		QString localizedString = NI18NLoader::translate(language, "PreferencesDialog", LANGUAGE);
 		ui.languageComboBox->addItem(QString("%1 (%2)").arg(localizedString).arg(languageString), QLocale(language));
 	}
 

@@ -251,7 +251,7 @@
 <context>
     <name>NPreferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+53"/>
+        <location filename="../preferencesDialog.cpp" line="+54"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
@@ -636,8 +636,9 @@
         <translation>Das Ändern von Plugins erfordert einen Neustart</translation>
     </message>
     <message>
+        <location filename="../preferencesDialog.cpp" line="-265"/>
         <source>English</source>
-        <translation type="obsolete">Deutsche</translation>
+        <translation>Deutsche</translation>
     </message>
 </context>
 <context>
@@ -684,7 +685,7 @@
         <translation>TagReader-Plugin nicht gefunden.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+105"/>
+        <location filename="../preferencesDialog.cpp" line="+369"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Der Infobereich der Taskliste ist nicht verfügbar.</translation>
     </message>

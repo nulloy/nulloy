@@ -251,7 +251,7 @@
 <context>
     <name>NPreferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+53"/>
+        <location filename="../preferencesDialog.cpp" line="+54"/>
         <source>Ok</source>
         <translation>Ок</translation>
     </message>
@@ -636,8 +636,9 @@
         <translation>Переключение плагинов требует перезапуска</translation>
     </message>
     <message>
+        <location filename="../preferencesDialog.cpp" line="-265"/>
         <source>English</source>
-        <translation type="obsolete">Русский</translation>
+        <translation>Русский</translation>
     </message>
 </context>
 <context>
@@ -684,7 +685,7 @@
         <translation>TagReader плагин отсутствует.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+105"/>
+        <location filename="../preferencesDialog.cpp" line="+369"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Системный лоток (область уведомлений) на этой системе не доступна.</translation>
     </message>
