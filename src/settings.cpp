@@ -43,10 +43,10 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 		setValue("SettingsVersion", MIN_VERSION);
 	}
 
-	initValue("Shortcuts/playAction", QStringList() << "X" << "C" << "Space");
-	initValue("Shortcuts/stopAction", "V");
-	initValue("Shortcuts/prevAction", "Z");
-	initValue("Shortcuts/nextAction", "B");
+	initValue("Shortcuts/PlayAction", QStringList() << "X" << "C" << "Space");
+	initValue("Shortcuts/StopAction", "V");
+	initValue("Shortcuts/PrevAction", "Z");
+	initValue("Shortcuts/NextAction", "B");
 
 	initValue("Shortcuts/fullScreenAction", "F11");
 

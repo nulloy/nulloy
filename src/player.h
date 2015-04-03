@@ -32,6 +32,7 @@ class NScriptEngine;
 class NSettings;
 class NTrackInfoWidget;
 class QMenu;
+class NAction;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QString;
@@ -63,6 +64,34 @@ private:
 	bool eventFilter(QObject *obj, QEvent *event);
 	void writePlaylist(const QString &file, N::M3uExtention ext);
 
+	NAction *m_showHideAction;
+	NAction *m_playAction;
+	NAction *m_stopAction;
+	NAction *m_prevAction;
+	NAction *m_nextAction;
+	NAction *m_preferencesAction;
+	NAction *m_exitAction;
+	NAction *m_addFilesAction;
+	NAction *m_addDirAction;
+	NAction *m_savePlaylistAction;
+	NAction *m_showCoverAction;
+	NAction *m_aboutAction;
+	NAction *m_playingOnTopAction;
+	NAction *m_alwaysOnTopAction;
+	NAction *m_fullScreenAction;
+	NAction *m_loopPlaylistAction;
+	NAction *m_nextFileEnableAction;
+	NAction *m_nextFileByNameAscdAction;
+	NAction *m_nextFileByNameDescAction;
+	NAction *m_nextFileByDateAscd;
+	NAction *m_nextFileByDateDesc;
+	void createActions();
+	void createContextMenu();
+	void createGlobalMenu();
+	void createTrayIcon();
+
+	void connectSignals();
+
 public:
 	NPlayer();
 	~NPlayer();
@@ -84,7 +113,7 @@ private slots:
 	void on_playbackEngine_failed();
 	void downloadVersion();
 	void on_versionDownloader_finished(QNetworkReply *reply);
-	void playlistActionTriggered();
+	void on_playlistAction_triggered();
 
 	void on_mainWindow_closed();
 	void on_mainWindow_scrolled(int delta);
