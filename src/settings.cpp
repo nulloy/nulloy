@@ -27,7 +27,7 @@
 
 #include <QDebug>
 
-#define MIN_VERSION "0.4.5"
+#define MIN_VERSION "0.8"
 
 NSettings *NSettings::m_instance = NULL;
 
@@ -47,6 +47,13 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("Shortcuts/StopAction", "V");
 	initValue("Shortcuts/PrevAction", "Z");
 	initValue("Shortcuts/NextAction", "B");
+
+	initValue("Shortcuts/ShortJumpForwardAction", "Shift+Right");
+	initValue("Shortcuts/ShortJumpBackwardsAction", "Shift+Left");
+	initValue("Shortcuts/MediumJumpForwardAction", "Right");
+	initValue("Shortcuts/MediumJumpBackwardsAction", "Left");
+	initValue("Shortcuts/LongJumpForwardAction", "Ctrl+Right");
+	initValue("Shortcuts/LongJumpBackwardsAction", "Ctrl+Left");
 
 	initValue("Shortcuts/fullScreenAction", "F11");
 
@@ -76,6 +83,9 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("LoadNextSort", QDir::Name);
 	initValue("Volume", 0.8);
 	initValue("ShowDecibelsVolume", false);
+	initValue("ShortJump", 5);
+	initValue("MediumJump", 30);
+	initValue("LongJump", 180);
 
 #ifdef Q_WS_WIN
 	initValue("TaskbarProgress", true);

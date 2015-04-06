@@ -85,6 +85,12 @@ private:
 	NAction *m_nextFileByNameDescAction;
 	NAction *m_nextFileByDateAscd;
 	NAction *m_nextFileByDateDesc;
+	NAction *m_shrJumpFwAction;
+	NAction *m_shrJumpBwAction;
+	NAction *m_medJumpFwAction;
+	NAction *m_medJumpBwAction;
+	NAction *m_lngJumpFwAction;
+	NAction *m_lngJumpBwAction;
 	void createActions();
 	void createContextMenu();
 	void createGlobalMenu();
@@ -114,6 +120,7 @@ private slots:
 	void downloadVersion();
 	void on_versionDownloader_finished(QNetworkReply *reply);
 	void on_playlistAction_triggered();
+	void on_jumpAction_triggered();
 
 	void on_mainWindow_closed();
 	void on_mainWindow_scrolled(int delta);

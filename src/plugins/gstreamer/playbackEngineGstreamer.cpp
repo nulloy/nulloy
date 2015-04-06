@@ -19,6 +19,8 @@
 #include <QtGlobal>
 #include <QTimer>
 
+#define NSEC_IN_MSEC 1000000
+
 static void _on_eos(GstBus *, GstMessage *, gpointer userData)
 {
 	NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
@@ -168,18 +170,26 @@ qreal NPlaybackEngineGStreamer::volume()
 
 void NPlaybackEngineGStreamer::setPosition(qreal pos)
 {
-	if (!hasMedia() || pos < 0)
+	if (!hasMedia() || pos < 0 || pos > 1)
 		return;
 
 	if (m_durationNsec > 0) {
-		gst_element_seek(m_playbin, 1.0,
-		                 GST_FORMAT_TIME,
-		                 GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
-		                 GST_SEEK_TYPE_SET, pos * m_durationNsec,
-		                 GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
+		gst_element_seek_simple(m_playbin, GST_FORMAT_TIME,
+		                        GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
+		                        pos * m_durationNsec);
 	} else {
 		m_posponedPosition = pos;
 	}
+}
+
+void NPlaybackEngineGStreamer::jump(qint64 msec)
+{
+	if (!hasMedia())
+		return;
+
+	gst_element_seek_simple(m_playbin, GST_FORMAT_TIME,
+	                        GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
+	                        position() * m_durationNsec + msec * NSEC_IN_MSEC);
 }
 
 qreal NPlaybackEngineGStreamer::position()
@@ -189,7 +199,7 @@ qreal NPlaybackEngineGStreamer::position()
 
 qint64 NPlaybackEngineGStreamer::durationMsec()
 {
-	return m_durationNsec / 1000000;
+	return m_durationNsec / NSEC_IN_MSEC;
 }
 
 void NPlaybackEngineGStreamer::play()
@@ -277,7 +287,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 			emit positionChanged(m_crossfading ? 0 : m_oldPosition);
 		}
 
-		emit tick(m_crossfading ? 0 : gstPos / 1000000);
+		emit tick(m_crossfading ? 0 : gstPos / NSEC_IN_MSEC);
 	}
 
 #if defined Q_WS_WIN || defined Q_WS_MAC

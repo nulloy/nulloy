@@ -225,6 +225,38 @@ void NPlayer::createActions()
 	m_nextFileByDateDesc->setActionGroup(group);
 	// << playlist actions
 
+	// jump actions >>
+	m_shrJumpFwAction = new NAction(tr("Short Jump Forward"), this);
+	m_shrJumpFwAction->setObjectName("ShortJumpForwardAction");
+	m_shrJumpFwAction->setStatusTip(tr("Make a short jump forward"));
+	m_shrJumpFwAction->setCustomizable(true);
+
+	m_shrJumpBwAction = new NAction(tr("Short Jump Backwards"), this);
+	m_shrJumpBwAction->setObjectName("ShortJumpBackwardsAction");
+	m_shrJumpBwAction->setStatusTip(tr("Make a short jump backwards"));
+	m_shrJumpBwAction->setCustomizable(true);
+
+	m_medJumpFwAction = new NAction(tr("Medium Jump Forward"), this);
+	m_medJumpFwAction->setObjectName("MediumJumpForwardAction");
+	m_medJumpFwAction->setStatusTip(tr("Make a Medium jump forward"));
+	m_medJumpFwAction->setCustomizable(true);
+
+	m_medJumpBwAction = new NAction(tr("Medium Jump Backwards"), this);
+	m_medJumpBwAction->setObjectName("MediumJumpBackwardsAction");
+	m_medJumpBwAction->setStatusTip(tr("Make a Medium jump backwards"));
+	m_medJumpBwAction->setCustomizable(true);
+
+	m_lngJumpFwAction = new NAction(tr("Long Jump Forward"), this);
+	m_lngJumpFwAction->setObjectName("LongJumpForwardAction");
+	m_lngJumpFwAction->setStatusTip(tr("Make a Long jump forward"));
+	m_lngJumpFwAction->setCustomizable(true);
+
+	m_lngJumpBwAction = new NAction(tr("Long Jump Backwards"), this);
+	m_lngJumpBwAction->setObjectName("LongJumpBackwardsAction");
+	m_lngJumpBwAction->setStatusTip(tr("Make a Long jump backwards"));
+	m_lngJumpBwAction->setCustomizable(true);
+	// << jump actions
+
 	// keyboard shortcuts
 	m_settings->initShortcuts(this);
 	m_settings->loadShortcuts();
@@ -415,6 +447,12 @@ void NPlayer::connectSignals()
 	connect(m_nextFileByNameDescAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
 	connect(m_nextFileByDateAscd, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
 	connect(m_nextFileByDateDesc, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
+	connect(m_shrJumpFwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_shrJumpBwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_medJumpFwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_medJumpBwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_lngJumpFwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_lngJumpBwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
 
 	connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 	connect(m_systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_trayIcon_activated(QSystemTrayIcon::ActivationReason)));
@@ -746,6 +784,23 @@ void NPlayer::on_playlistAction_triggered()
 		m_settings->setValue("LoadNextSort", (int)QDir::Time | QDir::Reversed);
 	else if (action == m_nextFileByDateDesc)
 		m_settings->setValue("LoadNextSort", (int)(QDir::Time));
+}
+
+void NPlayer::on_jumpAction_triggered()
+{
+	NAction *action = reinterpret_cast<NAction *>(QObject::sender());
+	if (action == m_shrJumpFwAction)
+		m_playbackEngine->jump(NSettings::instance()->value("ShortJump").toDouble() * 1000);
+	else if (action == m_shrJumpBwAction)
+		m_playbackEngine->jump(-NSettings::instance()->value("ShortJump").toDouble() * 1000);
+	else if (action == m_medJumpFwAction)
+		m_playbackEngine->jump(NSettings::instance()->value("MediumJump").toDouble() * 1000);
+	else if (action == m_medJumpBwAction)
+		m_playbackEngine->jump(-NSettings::instance()->value("MediumJump").toDouble() * 1000);
+	else if (action == m_lngJumpFwAction)
+		m_playbackEngine->jump(NSettings::instance()->value("LongJump").toDouble() * 1000);
+	else if (action == m_lngJumpBwAction)
+		m_playbackEngine->jump(-NSettings::instance()->value("LongJump").toDouble() * 1000);
 }
 
 void NPlayer::on_showCoverAction_toggled(bool checked)

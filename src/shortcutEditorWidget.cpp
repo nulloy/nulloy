@@ -81,12 +81,6 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 	horizontalHeader()->setResizeMode(Shortcut, QHeaderView::Stretch);
 	horizontalHeader()->setResizeMode(GlobalShortcut, QHeaderView::Stretch);
 	horizontalHeader()->setStretchLastSection(true);
-
-	int height = horizontalHeader()->height();
-	for (int i = 0; i < rowCount(); ++i)
-		height += rowHeight(i);
-	setMinimumHeight(height);
-	setMaximumHeight(height);
 }
 
 void NShortcutEditorWidget::applyShortcuts()

@@ -42,6 +42,7 @@ public slots:
 	Q_INVOKABLE virtual void setMedia(const QString &file) = 0;
 	Q_INVOKABLE virtual void setVolume(qreal volume) = 0;
 	Q_INVOKABLE virtual void setPosition(qreal pos) = 0;
+	Q_INVOKABLE virtual void jump(qint64 msec) { Q_UNUSED(msec); }
 
 	Q_INVOKABLE virtual void play() = 0;
 	Q_INVOKABLE virtual void stop() = 0;
