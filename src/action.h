@@ -22,7 +22,6 @@
 class NAction : public QAction
 {
 	Q_OBJECT
-	Q_PROPERTY(bool global READ isGlobal WRITE setGlobal)
 	Q_PROPERTY(bool customizable READ isCustomizable WRITE setCustomizable)
 
 public:
@@ -31,11 +30,6 @@ public:
 	NAction(const QIcon &icon, const QString &text, QObject *parent) : QAction(icon, text, parent) { init(); }
 
 	void setEnabled(bool enable);
-	bool isEnabled();
-
-	void setGlobal(bool enable);
-	bool isGlobal() { return m_global; }
-
 	void setCustomizable(bool enable) { m_customizable = enable; }
 	bool isCustomizable() { return m_customizable; }
 
@@ -46,7 +40,6 @@ public:
 
 private:
 	void init();
-	bool m_global;
 	bool m_customizable;
 	QList<QxtGlobalShortcut *> m_globalShortcuts;
 };

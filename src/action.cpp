@@ -17,27 +17,14 @@
 
 void NAction::init()
 {
-	m_global = false;
 	m_customizable = false;
 }
 
 void NAction::setEnabled(bool enable)
 {
 	foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
-		shortcut->setEnabled((enable == true) ? m_global : false);
+		shortcut->setEnabled(enable);
 	QAction::setEnabled(enable);
-}
-
-bool NAction::isEnabled()
-{
-	return (QAction::isEnabled() && m_global);
-}
-
-void NAction::setGlobal(bool enable)
-{
-	m_global = enable;
-	foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
-		shortcut->setEnabled(m_global);
 }
 
 QList<QKeySequence> NAction::globalShortcuts()
@@ -50,7 +37,10 @@ QList<QKeySequence> NAction::globalShortcuts()
 
 void NAction::setGlobalShortcut(const QKeySequence &shortcut)
 {
-	setGlobalShortcuts(QList<QKeySequence>() << shortcut);
+	QList<QKeySequence> list;
+	if (!shortcut.isEmpty())
+		list << shortcut;
+	setGlobalShortcuts(list);
 }
 
 void NAction::setGlobalShortcuts(QKeySequence::StandardKey key)
@@ -60,14 +50,6 @@ void NAction::setGlobalShortcuts(QKeySequence::StandardKey key)
 
 void NAction::setGlobalShortcuts(const QList<QKeySequence> &shortcuts)
 {
-	setGlobal(false);
-	foreach (QKeySequence seq, shortcuts) {
-		if (!seq.isEmpty()) {
-			setGlobal(true);
-			break;
-		}
-	}
-
 	foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
 		delete shortcut;
 	m_globalShortcuts.clear();

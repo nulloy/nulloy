@@ -132,31 +132,26 @@ void NPlayer::createActions()
 	m_showHideAction = new NAction(QIcon::fromTheme("preferences-system-windows", QIcon(":/trolltech/styles/commonstyle/images/dockdock-16.png")), tr("Show / Hide"), this);
 	m_showHideAction->setObjectName("ShowHideAction");
 	m_showHideAction->setStatusTip(tr("Toggle window visibility"));
-	m_showHideAction->setGlobal(true);
 	m_showHideAction->setCustomizable(true);
 
 	m_playAction = new NAction(QIcon::fromTheme("media-playback-start", style()->standardIcon(QStyle::SP_MediaPlay)), tr("Play / Pause"), this);
 	m_playAction->setObjectName("PlayAction");
 	m_playAction->setStatusTip(tr("Toggle playback"));
-	m_playAction->setGlobal(true);
 	m_playAction->setCustomizable(true);
 
 	m_stopAction = new NAction(QIcon::fromTheme("media-playback-stop", style()->standardIcon(QStyle::SP_MediaStop)), tr("Stop"), this);
 	m_stopAction->setObjectName("StopAction");
 	m_stopAction->setStatusTip(tr("Stop playback"));
-	m_stopAction->setGlobal(true);
 	m_stopAction->setCustomizable(true);
 
 	m_prevAction = new NAction(QIcon::fromTheme("media-playback-backward", style()->standardIcon(QStyle::SP_MediaSkipBackward)), tr("Previous"), this);
 	m_prevAction->setObjectName("PrevAction");
 	m_prevAction->setStatusTip(tr("Play previous track in playlist"));
-	m_prevAction->setGlobal(true);
 	m_prevAction->setCustomizable(true);
 
 	m_nextAction = new NAction(QIcon::fromTheme("media-playback-forward", style()->standardIcon(QStyle::SP_MediaSkipForward)), tr("Next"), this);
 	m_nextAction->setObjectName("NextAction");
 	m_nextAction->setStatusTip(tr("Play next track in playlist"));
-	m_nextAction->setGlobal(true);
 	m_nextAction->setCustomizable(true);
 
 	m_preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop", style()->standardIcon(QStyle::SP_MessageBoxInformation)), tr("Preferences..."), this);
@@ -238,22 +233,22 @@ void NPlayer::createActions()
 
 	m_medJumpFwAction = new NAction(tr("Medium Jump Forward"), this);
 	m_medJumpFwAction->setObjectName("MediumJumpForwardAction");
-	m_medJumpFwAction->setStatusTip(tr("Make a Medium jump forward"));
+	m_medJumpFwAction->setStatusTip(tr("Make a medium jump forward"));
 	m_medJumpFwAction->setCustomizable(true);
 
 	m_medJumpBwAction = new NAction(tr("Medium Jump Backwards"), this);
 	m_medJumpBwAction->setObjectName("MediumJumpBackwardsAction");
-	m_medJumpBwAction->setStatusTip(tr("Make a Medium jump backwards"));
+	m_medJumpBwAction->setStatusTip(tr("Make a medium jump backwards"));
 	m_medJumpBwAction->setCustomizable(true);
 
 	m_lngJumpFwAction = new NAction(tr("Long Jump Forward"), this);
 	m_lngJumpFwAction->setObjectName("LongJumpForwardAction");
-	m_lngJumpFwAction->setStatusTip(tr("Make a Long jump forward"));
+	m_lngJumpFwAction->setStatusTip(tr("Make a long jump forward"));
 	m_lngJumpFwAction->setCustomizable(true);
 
 	m_lngJumpBwAction = new NAction(tr("Long Jump Backwards"), this);
 	m_lngJumpBwAction->setObjectName("LongJumpBackwardsAction");
-	m_lngJumpBwAction->setStatusTip(tr("Make a Long jump backwards"));
+	m_lngJumpBwAction->setStatusTip(tr("Make a long jump backwards"));
 	m_lngJumpBwAction->setCustomizable(true);
 	// << jump actions
 

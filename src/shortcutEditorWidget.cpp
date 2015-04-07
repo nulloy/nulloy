@@ -50,7 +50,7 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 	for (int i = 0; i < m_actionList.size(); ++i) {
 		NAction *action = m_actionList.at(i);
 
-		QTableWidgetItem *nameItem = new QTableWidgetItem(action->icon(), action->text());
+		QTableWidgetItem *nameItem = new QTableWidgetItem(action->text());
 		nameItem->setFlags(Qt::NoItemFlags);
 		nameItem->setData(Qt::UserRole, action->objectName());
 		setItem(i, Name, nameItem);
@@ -92,15 +92,21 @@ void NShortcutEditorWidget::applyShortcuts()
 				continue;
 
 			QList<QKeySequence> localShortcuts;
-			QStringList localsList = item(i, Shortcut)->text().split(", ");
-			foreach (QString str, localsList)
-				localShortcuts << QKeySequence(str);
+			QString localText = item(i, Shortcut)->text();
+			if (!localText.isEmpty()) {
+				QStringList localsList = localText.split(", ");
+				foreach (QString str, localsList)
+					localShortcuts << QKeySequence(str);
+			}
 			action->setShortcuts(localShortcuts);
 
 			QList<QKeySequence> globalShortcuts;
-			QStringList globalsList = item(i, GlobalShortcut)->text().split(", ");
-			foreach (QString str, globalsList)
-				globalShortcuts << QKeySequence(str);
+			QString globalText = item(i, GlobalShortcut)->text();
+			if (!globalText.isEmpty()) {
+				QStringList globalsList = globalText.split(", ");
+				foreach (QString str, globalsList)
+					globalShortcuts << QKeySequence(str);
+			}
 			action->setGlobalShortcuts(globalShortcuts);
 		}
 	}

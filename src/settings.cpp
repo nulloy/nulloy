@@ -55,7 +55,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("Shortcuts/LongJumpForwardAction", "Ctrl+Right");
 	initValue("Shortcuts/LongJumpBackwardsAction", "Ctrl+Left");
 
-	initValue("Shortcuts/fullScreenAction", "F11");
+	initValue("Shortcuts/FullScreenAction", "F11");
 
 	initValue("PlaylistTrackInfo", "%F (%d)");
 	initValue("WindowTitleTrackInfo","\"{%a - %t|%F}\" - " + QCoreApplication::applicationName() + " %v");
@@ -129,15 +129,19 @@ void NSettings::loadShortcuts()
 	foreach (NAction *action, m_actionList) {
 		QList<QKeySequence> localShortcuts;
 		QStringList localsList = value("Shortcuts/" + action->objectName()).toStringList();
-		foreach (QString str, localsList)
-			localShortcuts << QKeySequence(str);
-		action->setShortcuts(localShortcuts);
+		if (!localsList.isEmpty()) {
+			foreach (QString str, localsList)
+				localShortcuts << QKeySequence(str);
+			action->setShortcuts(localShortcuts);
+		}
 
 		QList<QKeySequence> globalShortcuts;
 		QStringList globalsList = value("GlobalShortcuts/" + action->objectName()).toStringList();
-		foreach (QString str, globalsList)
-			globalShortcuts << QKeySequence(str);
-		action->setGlobalShortcuts(globalShortcuts);
+		if (!globalsList.isEmpty()) {
+			foreach (QString str, globalsList)
+				globalShortcuts << QKeySequence(str);
+			action->setGlobalShortcuts(globalShortcuts);
+		}
 	}
 }
 
@@ -147,21 +151,29 @@ void NSettings::saveShortcuts()
 		if (action->objectName().isEmpty() || !action->isCustomizable())
 			continue;
 
-		QStringList localsList;
 		QList<QKeySequence> localKeys = action->shortcuts();
-		foreach (QKeySequence seq, localKeys) {
-			if (!seq.isEmpty())
-				localsList << seq.toString();
+		if (!localKeys.isEmpty()) {
+			QStringList localsList;
+			foreach (QKeySequence seq, localKeys) {
+				if (!seq.isEmpty())
+					localsList << seq.toString();
+			}
+			setValue("Shortcuts/" + action->objectName(), localsList);
+		} else {
+			remove("Shortcuts/" + action->objectName());
 		}
-		setValue("Shortcuts/" + action->objectName(), localsList);
 
-		QStringList globalsList;
 		QList<QKeySequence> globalKeys = action->globalShortcuts();
-		foreach (QKeySequence seq, globalKeys) {
-			if (!seq.isEmpty())
-				globalsList << seq.toString();
+		if (!globalKeys.isEmpty()) {
+			QStringList globalsList;
+			foreach (QKeySequence seq, globalKeys) {
+				if (!seq.isEmpty())
+					globalsList << seq.toString();
+			}
+			setValue("GlobalShortcuts/" + action->objectName(), globalsList);
+		} else {
+			remove("GlobalShortcuts/" + action->objectName());
 		}
-		setValue("GlobalShortcuts/" + action->objectName(), globalsList);
 	}
 }
 
