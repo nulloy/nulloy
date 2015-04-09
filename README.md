@@ -1,4 +1,4 @@
-# ![logo](src/icons/icon-32.png) Nulloy Music Player http://nulloy.com
+# Nulloy Music Player http://nulloy.com
 
 [![Build Status](https://travis-ci.org/sergey-vlasov/nulloy.svg?branch=devel)](https://travis-ci.org/sergey-vlasov/nulloy)
 
@@ -9,12 +9,12 @@
 ## Windows Build Instructions
 
 ### Prerequisites
-* Qt 4.x MinGW libraries for Windows http://qt-project.org/downloads
-* MinGW http://sourceforge.net/projects/mingw-w64/
+* Qt 4.x MinGW build http://www.qt.io/download-open-source/
+* MinGW-w64 posix dwarf release http://sourceforge.net/projects/mingw-w64/
 * GStreamer1.0-devel MSI installer http://gstreamer.freedesktop.org/download/
 * CMake http://www.cmake.org/
-* TagLib Source http://taglib.github.io/
-* Zlib precompiled dlls http://zlib.net/
+* TagLib Sources http://taglib.github.io/
+* Zlib DLL http://zlib.net/
 * 7zip http://www.7-zip.org/
 
 ### Environment Setup
@@ -22,10 +22,11 @@
 Extract and/or install the downloads. Create ```vars.bat``` file with:
 
 ```bat
-set QTDIR=C:\qt-libs-dir
-set TAGLIB_DIR=C:\taglib-source-dir
-set ZLIB_DIR=C:\zlib-dlls-dir
-set PATH=%QTDIR%\bin;%GSTREAMER_1_0_ROOT_X86%\bin;C:\mingw-dir\bin;C:\Program Files\7-Zip;%ZLIB_DIR%;%PATH%
+set QTDIR=C:\qt\
+set MINGW_DIR=C:\mingw\
+set TAGLIB_DIR=C:\taglib\
+set ZLIB_DIR=C:\zlib\
+set PATH=C:\Program Files\7-Zip\;%QTDIR%\bin\;%GSTREAMER_1_0_ROOT_X86%\bin\;%MINGW_DIR%\bin\;%ZLIB_DIR%;%PATH%
 ```
 
 Create a shortcut from ```vars.bat``` and set target as ```%COMSPEC% /k "C:\vars.bat"```. Open the shortcut.
