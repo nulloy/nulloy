@@ -3,8 +3,8 @@ DEFINES += QXT_STATIC
 win32:LIBS      += -luser32
 macx:LIBS       += -framework Carbon
 
-INCLUDEPATH += $$PWD $$PWD/../core
-DEPENDPATH += $$PWD $$PWD/../core
+INCLUDEPATH += $$PWD
+DEPENDPATH += $$PWD
 
 HEADERS  += qxtglobalshortcut.h qxtglobalshortcut_p.h
 SOURCES  += qxtglobalshortcut.cpp

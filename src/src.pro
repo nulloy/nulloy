@@ -22,7 +22,7 @@ UI_DIR      = $$TMP_DIR
 SRC_DIR = $$PWD
 
 include(func.pri)
-include(../3rdParty/qxt-0.6.1~reduced/src/gui/qxtglobalshortcut.pri)
+include(../3rdParty/qxt-clementine-0ce17896/qxtglobalshortcut.pri)
 include(../3rdParty/qtsingleapplication-8fd81b2/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 include(i18n/i18n.pri)
