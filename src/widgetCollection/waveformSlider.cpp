@@ -101,10 +101,10 @@ void NWaveformSlider::checkForUpdate()
 	if (m_oldSize != size() || m_oldBuilderIndex != builderIndex)
 		m_needsUpdate = true;
 
-	if (builderPos != 1.0 && m_timer->interval() != FAST_INTERVAL)
+	if ((builderPos != 0.0 && builderPos != 1.0) && m_timer->interval() != FAST_INTERVAL)
 		m_timer->setInterval(FAST_INTERVAL);
 	else
-	if (builderPos == 1.0 && m_timer->interval() != IDLE_INTERVAL)
+	if ((builderPos == 0.0 || builderPos == 1.0) && m_timer->interval() != IDLE_INTERVAL)
 		m_timer->setInterval(IDLE_INTERVAL);
 
 	if (m_needsUpdate) {
