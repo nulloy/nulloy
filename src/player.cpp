@@ -63,11 +63,10 @@ NPlayer::NPlayer()
 	m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
 	m_playbackEngine->setParent(this);
 
-	m_mainWindow = new NMainWindow();
 #ifndef _N_NO_SKINS_
-	m_mainWindow->init(NSkinLoader::skinUiFormFile());
+	m_mainWindow = new NMainWindow(NSkinLoader::skinUiFormFile());
 #else
-	m_mainWindow->init();
+	m_mainWindow = new NMainWindow();
 #endif
 
 	// loading skin script

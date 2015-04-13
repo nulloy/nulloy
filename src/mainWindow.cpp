@@ -37,17 +37,12 @@
 #include <QDesktopWidget>
 #include <QApplication>
 
-NMainWindow::NMainWindow(QWidget *parent) : QDialog(parent)
+NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(parent)
 {
 #ifdef Q_WS_WIN
 	m_framelessShadow = false;
 #endif
-}
 
-NMainWindow::~NMainWindow() {}
-
-void NMainWindow::init(const QString &uiFile)
-{
 	setObjectName("mainWindow");
 
 #ifndef _N_NO_SKINS_
@@ -72,6 +67,8 @@ void NMainWindow::init(const QString &uiFile)
 	m_unmaximizedPos = QPoint();
 	m_isFullScreen = false;
 	m_dragActive = false;
+	m_resizeActive = false;
+	m_resizeSection = Qt::NoSection;
 
 	// enabling dragging window from any point
 	QList<QWidget *> widgets = findChildren<QWidget *>();
@@ -95,6 +92,8 @@ void NMainWindow::init(const QString &uiFile)
 
 	QMetaObject::connectSlotsByName(this);
 }
+
+NMainWindow::~NMainWindow() {}
 
 void NMainWindow::loadSettings()
 {
@@ -206,8 +205,10 @@ void NMainWindow::changeEvent(QEvent *event)
 
 	emit focusChanged(isActiveWindow());
 
-	if (windowFlags() & Qt::FramelessWindowHint)
+	if (windowFlags() & Qt::FramelessWindowHint) {
+		setAttribute(Qt::WA_Hover, true);
 		return;
+	}
 
 	if (event->type() == QEvent::WindowStateChange) {
 		QWindowStateChangeEvent *stateEvent = static_cast<QWindowStateChangeEvent *>(event);
@@ -223,10 +224,101 @@ void NMainWindow::changeEvent(QEvent *event)
 	}
 }
 
-bool NMainWindow::eventFilter(QObject *obj, QEvent *event)
+Qt::WindowFrameSection NMainWindow::getSection(const QPoint &pos)
 {
-	if (event->type() == QEvent::MouseButtonPress && obj != this)
+	int border = 6;
+	int x = pos.x();
+	int y = pos.y();
+	QRect r = rect();
+	int left = r.left();
+	int right = r.right();
+	int top = r.top();
+	int bottom = r.bottom();
+
+	if (x >= left && x < left + border &&
+	    y >= top && y < top + border)
+	{
+		return Qt::TopLeftSection;
+	} else
+	if (x < right && x >= right - border &&
+	    y >= top && y < top + border)
+	{
+		return Qt::TopRightSection;
+	} else
+	if (x < right && x >= right - border &&
+	    y < bottom && y >= bottom - border)
+	{
+		return Qt::BottomRightSection;
+	} else
+	if (x >= left && x < left + border &&
+	    y < bottom && y >= bottom - border)
+	{
+		return Qt::BottomLeftSection;
+	} else
+	if (y >= top && y < top + border)
+	{
+		return Qt::TopSection;
+	} else
+	if (x < right && x >= right - border)
+	{
+		return Qt::RightSection;
+	} else
+	if (y < bottom && y >= bottom - border)
+	{
+		return Qt::BottomSection;
+	} else
+	if (x >= left && x < left + border)
+	{
+		return Qt::LeftSection;
+	} else {
+		return Qt::NoSection;
+	}
+}
+
+void NMainWindow::updateCursor(Qt::WindowFrameSection section)
+{
+	switch (section) {
+		case Qt::TopLeftSection:
+		case Qt::BottomRightSection:
+			setCursor(Qt::SizeFDiagCursor);
+			break;
+		case Qt::TopRightSection:
+		case Qt::BottomLeftSection:
+			setCursor(Qt::SizeBDiagCursor);
+			break;
+		case Qt::TopSection:
+		case Qt::BottomSection:
+			setCursor(Qt::SizeVerCursor);
+			break;
+		case Qt::RightSection:
+		case Qt::LeftSection:
+			setCursor(Qt::SizeHorCursor);
+			break;
+		default:
+			setCursor(Qt::ArrowCursor);
+	}
+}
+
+bool NMainWindow::event(QEvent *event)
+{
+	if (event->type() == QEvent::HoverMove && !m_dragActive) {
+		QPoint pos = static_cast<QHoverEvent *>(event)->pos();
+		if (!m_resizeActive) {
+			m_resizeSection = getSection(pos);
+			updateCursor(m_resizeSection);
+			return true;
+		}
+	}
+
+	return QDialog::event(event);
+}
+
+bool NMainWindow::eventFilter(QObject *, QEvent *event)
+{
+	if (event->type() == QEvent::MouseButtonPress) {
 		m_dragActive = false;
+		m_resizeActive = false;
+	}
 
 	return false;
 }
@@ -235,19 +327,125 @@ void NMainWindow::mousePressEvent(QMouseEvent *event)
 {
 	activateWindow();
 	m_dragActive = false;
+	m_resizeActive = false;
 	if (event->button() == Qt::LeftButton) {
-		m_dragActive = true;
-		m_dragPoint = event->globalPos() - frameGeometry().topLeft();
+		if (m_resizeSection != Qt::NoSection) {
+			m_resizeActive = true;
+			m_resizePoint = event->pos();
+			m_resizeRect = rect();
+		} else {
+			m_dragActive = true;
+			m_dragPoint = event->globalPos() - frameGeometry().topLeft();
+		}
 		event->accept();
 	}
 }
 
 void NMainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-	if ((event->buttons() & Qt::LeftButton) && m_dragActive && !isMaximized()) {
-		move(event->globalPos() - m_dragPoint);
-		event->accept();
+	if ((event->buttons() & Qt::LeftButton) && !isMaximized()) {
+		if (m_dragActive) {
+			move(event->globalPos() - m_dragPoint);
+			event->accept();
+		} else if (m_resizeActive) {
+			QRect g = geometry();
+			QRect origR = geometry();
+			QPoint pos = event->globalPos() - m_resizePoint;
+			switch (m_resizeSection) {
+				case Qt::TopLeftSection:
+					g.setTopLeft(pos + m_resizeRect.topLeft());
+					break;
+				case Qt::TopRightSection:
+					g.setTopRight(pos + m_resizeRect.topRight());
+					break;
+				case Qt::BottomRightSection:
+					g.setBottomRight(pos + m_resizeRect.bottomRight());
+					break;
+				case Qt::BottomLeftSection:
+					g.setBottomLeft(pos + m_resizeRect.bottomLeft());
+					break;
+				case Qt::TopSection:
+					g.setTop(pos.y() + m_resizeRect.top());
+					break;
+				case Qt::RightSection:
+					g.setRight(pos.x() + m_resizeRect.right());
+					break;
+				case Qt::BottomSection:
+					g.setBottom(pos.y() + m_resizeRect.bottom());
+					break;
+				case Qt::LeftSection:
+					g.setLeft(pos.x() + m_resizeRect.left());
+					break;
+				default:
+					break;
+			}
+			QSize min = QLayout::closestAcceptableSize(this, g.size());
+			QRect desk = QApplication::desktop()->availableGeometry(this);
+			if (min.width() > g.width() || min.height() > g.height() ||
+			    desk.left() > g.left() || desk.right() < g.right() ||
+			    desk.top() > g.top() || desk.bottom() < g.bottom())
+			{
+				switch (m_resizeSection) {
+					case Qt::TopLeftSection:
+					case Qt::TopSection:
+					case Qt::LeftSection:
+						if (min.width() > g.width())
+							g.setLeft(origR.left());
+						else if (desk.left() > g.left())
+							g.setLeft(desk.left());
+						if (min.height() > g.height())
+							g.setTop(origR.top());
+						else if (desk.top() > g.top())
+							g.setTop(desk.top());
+						break;
+					case Qt::TopRightSection:
+						if (min.width() > g.width())
+							g.setRight(origR.right());
+						else if (desk.right() < g.right())
+							g.setRight(desk.right());
+						if (min.height() > g.height())
+							g.setTop(origR.top());
+						else if (desk.top() > g.top())
+							g.setTop(desk.top());
+						break;
+					case Qt::BottomRightSection:
+					case Qt::BottomSection:
+					case Qt::RightSection:
+						if (min.width() > g.width())
+							g.setRight(origR.right());
+						else if (desk.right() < g.right())
+							g.setRight(desk.right());
+						if (min.height() > g.height())
+							g.setBottom(origR.bottom());
+						else if (desk.bottom() < g.bottom())
+							g.setBottom(desk.bottom());
+						break;
+					case Qt::BottomLeftSection:
+						if (min.width() > g.width())
+							g.setLeft(origR.left());
+						else if (desk.left() > g.left())
+							g.setLeft(desk.left());
+						if (min.height() > g.height())
+							g.setBottom(origR.bottom());
+						else if (desk.bottom() < g.bottom())
+							g.setBottom(desk.bottom());
+						break;
+					default:
+						break;
+				}
+			}
+			setGeometry(g);
+		}
 	}
+}
+
+void NMainWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+	m_resizeActive = false;
+	m_dragActive = false;
+	updateCursor(Qt::NoSection);
+
+	QDialog::mouseReleaseEvent(event);
 }
 
 void NMainWindow::wheelEvent(QWheelEvent *event)
