@@ -53,6 +53,8 @@ private:
 	NVolumeSlider *m_volumeSlider;
 	NPlaybackEngineInterface *m_playbackEngine;
 	QMenu *m_contextMenu;
+	QMenu *m_windowSubMenu;
+	QMenu *m_playlistSubMenu;
 	NPlaylistWidget *m_playlistWidget;
 	NTrackInfoWidget *m_trackInfoWidget;
 	NLogDialog *m_logDialog;
@@ -79,6 +81,8 @@ private:
 	NAction *m_playingOnTopAction;
 	NAction *m_alwaysOnTopAction;
 	NAction *m_fullScreenAction;
+	NAction *m_shufflePlaylistAction;
+	NAction *m_repeatPlaylistAction;
 	NAction *m_loopPlaylistAction;
 	NAction *m_nextFileEnableAction;
 	NAction *m_nextFileByNameAscdAction;

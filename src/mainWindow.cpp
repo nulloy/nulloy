@@ -37,6 +37,8 @@
 #include <QDesktopWidget>
 #include <QApplication>
 
+#define RESIZE_BORDER 5
+
 NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(parent)
 {
 #ifdef Q_WS_WIN
@@ -226,7 +228,6 @@ void NMainWindow::changeEvent(QEvent *event)
 
 Qt::WindowFrameSection NMainWindow::getSection(const QPoint &pos)
 {
-	int border = 6;
 	int x = pos.x();
 	int y = pos.y();
 	QRect r = rect();
@@ -235,39 +236,39 @@ Qt::WindowFrameSection NMainWindow::getSection(const QPoint &pos)
 	int top = r.top();
 	int bottom = r.bottom();
 
-	if (x >= left && x < left + border &&
-	    y >= top && y < top + border)
+	if (x >= left && x < left + RESIZE_BORDER &&
+	    y >= top && y < top + RESIZE_BORDER)
 	{
 		return Qt::TopLeftSection;
 	} else
-	if (x < right && x >= right - border &&
-	    y >= top && y < top + border)
+	if (x < right && x >= right - RESIZE_BORDER &&
+	    y >= top && y < top + RESIZE_BORDER)
 	{
 		return Qt::TopRightSection;
 	} else
-	if (x < right && x >= right - border &&
-	    y < bottom && y >= bottom - border)
+	if (x < right && x >= right - RESIZE_BORDER &&
+	    y < bottom && y >= bottom - RESIZE_BORDER)
 	{
 		return Qt::BottomRightSection;
 	} else
-	if (x >= left && x < left + border &&
-	    y < bottom && y >= bottom - border)
+	if (x >= left && x < left + RESIZE_BORDER &&
+	    y < bottom && y >= bottom - RESIZE_BORDER)
 	{
 		return Qt::BottomLeftSection;
 	} else
-	if (y >= top && y < top + border)
+	if (y >= top && y < top + RESIZE_BORDER)
 	{
 		return Qt::TopSection;
 	} else
-	if (x < right && x >= right - border)
+	if (x < right && x >= right - RESIZE_BORDER)
 	{
 		return Qt::RightSection;
 	} else
-	if (y < bottom && y >= bottom - border)
+	if (y < bottom && y >= bottom - RESIZE_BORDER)
 	{
 		return Qt::BottomSection;
 	} else
-	if (x >= left && x < left + border)
+	if (x >= left && x < left + RESIZE_BORDER)
 	{
 		return Qt::LeftSection;
 	} else {

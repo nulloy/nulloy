@@ -21,7 +21,7 @@
 
 NSlider::NSlider(QWidget *parent) : QSlider(parent) {}
 
-qreal NSlider::valueAtX(int x)
+qreal NSlider::valueAtPos(int pos)
 {
 	QStyleOptionSlider opt;
 	initStyleOption(&opt);
@@ -38,14 +38,15 @@ qreal NSlider::valueAtX(int x)
 		pxMax = gr.bottom() - sr.height() / 2 + 1;
 	}
 
-	return QStyle::sliderValueFromPosition(minimum(), maximum(), x - pxMin, pxMax - pxMin, opt.upsideDown) / (qreal)maximum();
+	return QStyle::sliderValueFromPosition(minimum(), maximum(), pos - pxMin, pxMax - pxMin, opt.upsideDown) / (qreal)maximum();
 }
 
 void NSlider::mousePressEvent(QMouseEvent *event)
 {
 	if (event->button() != Qt::RightButton) {
 		emit sliderPressed();
-		qreal val = valueAtX(event->x());
+		int pos = (orientation() == Qt::Horizontal) ? event->x() : event->y();
+		qreal val = valueAtPos(pos);
 		setValue(val);
 		emit sliderMoved(val);
 	}
@@ -55,7 +56,8 @@ void NSlider::mousePressEvent(QMouseEvent *event)
 
 void NSlider::mouseMoveEvent(QMouseEvent *event)
 {
-	qreal val = valueAtX(event->x());
+	int pos = (orientation() == Qt::Horizontal) ? event->x() : event->y();
+	qreal val = valueAtPos(pos);
 	setValue(val);
 	emit sliderMoved(val);
 

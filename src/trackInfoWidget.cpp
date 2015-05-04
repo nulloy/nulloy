@@ -29,7 +29,7 @@
 
 NTrackInfoWidget::~NTrackInfoWidget() {}
 
-NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
+NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 {
 	QStringList vNames = QStringList() << "Top" << "Middle" << "Bottom";
 	QStringList hNames = QStringList() << "Left" << "Center" << "Right";
@@ -52,7 +52,8 @@ NTrackInfoWidget::NTrackInfoWidget(QWidget *parent) : QWidget(parent)
 		vLayout->addLayout(hLayout);
 	}
 	setLayout(vLayout);
-	vLayout->setContentsMargins(2, 2, 2, 2);
+	vLayout->setContentsMargins(0, 0, 0, 0);
+	vLayout->setSpacing(1);
 
 	setMouseTracking(true);
 	QList<QLabel *> labels = findChildren<QLabel *>();
@@ -94,7 +95,7 @@ bool NTrackInfoWidget::event(QEvent *event)
 	if (event->type() == QEvent::ToolTip)
 		QToolTip::hideText();
 
-	return QWidget::event(event);
+	return QFrame::event(event);
 }
 
 void NTrackInfoWidget::mouseMoveEvent(QMouseEvent *event)

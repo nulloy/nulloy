@@ -24,7 +24,7 @@ class NSlider : public QSlider
 
 public:
 	NSlider(QWidget *parent);
-	qreal valueAtX(int x);
+	qreal valueAtPos(int pos);
 
 protected:
 	virtual void mousePressEvent(QMouseEvent *event);

@@ -188,6 +188,18 @@ void NPlayer::createActions()
 	m_fullScreenAction->setCustomizable(true);
 
 	// playlist actions >>
+	m_shufflePlaylistAction = new NAction(tr("Shuffle"), this);
+	m_shufflePlaylistAction->setCheckable(true);
+	m_shufflePlaylistAction->setObjectName("ShufflePlaylistAction");
+	m_shufflePlaylistAction->setStatusTip(tr("Shuffle playlist"));
+	m_shufflePlaylistAction->setCustomizable(true);
+
+	m_repeatPlaylistAction = new NAction(tr("Repeat"), this);
+	m_repeatPlaylistAction->setCheckable(true);
+	m_repeatPlaylistAction->setObjectName("RepeatPlaylistAction");
+	m_repeatPlaylistAction->setStatusTip(tr("Repeat playlist"));
+	m_repeatPlaylistAction->setCustomizable(true);
+
 	m_loopPlaylistAction = new NAction(tr("Loop playlist"), this);
 	m_loopPlaylistAction->setCheckable(true);
 	m_loopPlaylistAction->setObjectName("LoopPlaylistAction");
@@ -277,22 +289,24 @@ void NPlayer::createContextMenu()
 	m_contextMenu->addAction(m_addDirAction);
 	m_contextMenu->addAction(m_savePlaylistAction);
 
-	QMenu *windowSubMenu = new QMenu(tr("Window"), m_mainWindow);
-	windowSubMenu->addAction(m_playingOnTopAction);
-	windowSubMenu->addAction(m_alwaysOnTopAction);
-	windowSubMenu->addAction(m_fullScreenAction);
-	m_contextMenu->addMenu(windowSubMenu);
+	m_windowSubMenu = new QMenu(tr("Window"), m_mainWindow);
+	m_windowSubMenu->addAction(m_showCoverAction);
+	m_windowSubMenu->addAction(m_playingOnTopAction);
+	m_windowSubMenu->addAction(m_alwaysOnTopAction);
+	m_windowSubMenu->addAction(m_fullScreenAction);
+	m_contextMenu->addMenu(m_windowSubMenu);
 
-	QMenu *playlistSubMenu = new QMenu(tr("Playlist"), m_mainWindow);
-	playlistSubMenu->addAction(m_loopPlaylistAction);
-	playlistSubMenu->addAction(m_nextFileEnableAction);
-	playlistSubMenu->addAction(m_nextFileByNameAscdAction);
-	playlistSubMenu->addAction(m_nextFileByNameDescAction);
-	playlistSubMenu->addAction(m_nextFileByDateAscd);
-	playlistSubMenu->addAction(m_nextFileByDateDesc);
-	m_contextMenu->addMenu(playlistSubMenu);
+	m_playlistSubMenu = new QMenu(tr("Playlist"), m_mainWindow);
+	m_playlistSubMenu->addAction(m_shufflePlaylistAction);
+	m_playlistSubMenu->addAction(m_repeatPlaylistAction);
+	m_playlistSubMenu->addAction(m_loopPlaylistAction);
+	m_playlistSubMenu->addAction(m_nextFileEnableAction);
+	m_playlistSubMenu->addAction(m_nextFileByNameAscdAction);
+	m_playlistSubMenu->addAction(m_nextFileByNameDescAction);
+	m_playlistSubMenu->addAction(m_nextFileByDateAscd);
+	m_playlistSubMenu->addAction(m_nextFileByDateDesc);
+	m_contextMenu->addMenu(m_playlistSubMenu);
 
-	m_contextMenu->addAction(m_showCoverAction);
 	m_contextMenu->addAction(m_preferencesAction);
 	m_contextMenu->addSeparator();
 	m_contextMenu->addAction(m_aboutAction);
@@ -324,13 +338,9 @@ void NPlayer::createGlobalMenu()
 	controlsMenu->addAction(m_prevAction);
 	controlsMenu->addAction(m_nextAction);
 	controlsMenu->addSeparator();
-	controlsMenu->addMenu(playlistSubMenu);
+	controlsMenu->addMenu(m_playlistSubMenu);
 
-	QMenu *windowMenu = menuBar->addMenu(tr("Window"));
-	windowMenu->addAction(m_showCoverAction);
-	windowMenu->addAction(m_playingOnTopAction);
-	windowMenu->addAction(m_alwaysOnTopAction);
-	windowMenu->addAction(m_fullScreenAction);
+	menuBar->addMenu(m_windowSubMenu);
 #endif
 }
 
@@ -413,6 +423,8 @@ void NPlayer::connectSignals()
 
 	connect(m_playlistWidget, SIGNAL(setMedia(const QString &)), m_playbackEngine, SLOT(setMedia(const QString &)));
 	connect(m_playlistWidget, SIGNAL(currentActivated()), m_playbackEngine, SLOT(play()));
+	connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), m_shufflePlaylistAction, SLOT(setChecked(bool)));
+	connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), m_repeatPlaylistAction, SLOT(setChecked(bool)));
 
 	connect(m_waveformSlider, SIGNAL(filesDropped(const QStringList &)), m_playlistWidget, SLOT(playFiles(const QStringList &)));
 	connect(m_waveformSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setPosition(qreal)));
@@ -435,6 +447,8 @@ void NPlayer::connectSignals()
 	connect(m_playingOnTopAction, SIGNAL(toggled(bool)), this, SLOT(on_whilePlayingOnTopAction_toggled(bool)));
 	connect(m_alwaysOnTopAction, SIGNAL(toggled(bool)), this, SLOT(on_alwaysOnTopAction_toggled(bool)));
 	connect(m_fullScreenAction, SIGNAL(triggered()), m_mainWindow, SLOT(toggleFullScreen()));
+	connect(m_shufflePlaylistAction, SIGNAL(triggered(bool)), m_playlistWidget, SLOT(setShuffleMode(bool)));
+	connect(m_repeatPlaylistAction, SIGNAL(triggered(bool)), m_playlistWidget, SLOT(setRepeatMode(bool)));
 	connect(m_loopPlaylistAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
 	connect(m_nextFileEnableAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
 	connect(m_nextFileByNameAscdAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));

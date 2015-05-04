@@ -16,14 +16,14 @@
 #ifndef N_TRACK_INFO_WIDGET_H
 #define N_TRACK_INFO_WIDGET_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QMap>
 
 class QPropertyAnimation;
 class QGraphicsOpacityEffect;
 class QLabel;
 
-class NTrackInfoWidget : public QWidget
+class NTrackInfoWidget : public QFrame
 {
 	Q_OBJECT
 
@@ -41,7 +41,7 @@ private:
 	void mouseMoveEvent(QMouseEvent *event);
 
 public:
-	NTrackInfoWidget(QWidget *parent = 0);
+	NTrackInfoWidget(QFrame *parent = 0);
 	~NTrackInfoWidget();
 
 public slots:

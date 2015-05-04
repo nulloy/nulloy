@@ -31,16 +31,22 @@ class NWaveformSlider : public QAbstractSlider
 	Q_PROPERTY(QColor wave_border_color READ waveBorderColor WRITE setWaveBorderColor)
 	Q_PROPERTY(QBrush progress_playing_background READ progressPlayingBackground WRITE setProgressPlayingBackground)
 	Q_PROPERTY(QBrush progress_paused_background READ progressPausedBackground WRITE setProgressPausedBackground)
+	Q_PROPERTY(QBrush remaining_playing_background READ remainingPlayingBackground WRITE setRemainingPlayingBackground)
+	Q_PROPERTY(QBrush remaining_paused_background READ remainingPausedBackground WRITE setRemainingPausedBackground)
 	Q_PROPERTY(QString playing_composition READ playingComposition WRITE setPlayingComposition)
 	Q_PROPERTY(QString paused_composition READ pausedComposition WRITE setPausedComposition)
+	Q_PROPERTY(QColor groove_playing_background READ groovePlayingColor WRITE setGroovePlayingColor)
+	Q_PROPERTY(QColor groove_paused_background READ groovePausedColor WRITE setGroovePausedColor)
 	Q_PROPERTY(QColor file_drop_border_color READ fileDropBorderColor WRITE setFileDropBorderColor)
 	Q_PROPERTY(QBrush file_drop_background READ fileDropBackground WRITE setFileDropBackground)
 
 private:
 	NWaveformBuilderInterface *m_waveBuilder;
-	QImage m_normalImage;
-	QImage m_playingImage;
-	QImage m_pausedImage;
+	QImage m_backgroundImage;
+	QImage m_progressPlayingImage;
+	QImage m_progressPausedImage;
+	QImage m_remainingPlayingImage;
+	QImage m_remainingPausedImage;
 	QTimer *m_timer;
 	bool m_pausedState;
 	QSize m_oldSize;
@@ -96,6 +102,10 @@ private:
 	QColor m_waveBorderColor;
 	QBrush m_progressPlayingBackground;
 	QBrush m_progressPausedBackground;
+	QBrush m_remainingPlayingBackground;
+	QBrush m_remainingPausedBackground;
+	QColor m_groovePlayingColor;
+	QColor m_groovePausedColor;
 	QPainter::CompositionMode m_playingComposition;
 	QPainter::CompositionMode m_pausedComposition;
 	QColor m_fileDropBorderColor;
@@ -120,11 +130,23 @@ public:
 	QBrush progressPausedBackground();
 	void setProgressPausedBackground(QBrush brush);
 
+	QBrush remainingPlayingBackground();
+	void setRemainingPlayingBackground(QBrush brush);
+
+	QBrush remainingPausedBackground();
+	void setRemainingPausedBackground(QBrush brush);
+
 	QString playingComposition();
 	void setPlayingComposition(const QString &mode);
 
 	QString pausedComposition();
 	void setPausedComposition(const QString &mode);
+
+	QColor groovePlayingColor();
+	void setGroovePlayingColor(QColor color);
+
+	QColor groovePausedColor();
+	void setGroovePausedColor(QColor color);
 
 	QColor fileDropBorderColor();
 	void setFileDropBorderColor(QColor color);

@@ -28,6 +28,8 @@
 	qproperty-wave_border_color: #8AE234;
 	qproperty-progress_playing_background: #0080FF;
 	qproperty-progress_paused_background: #CE8419;
+	qproperty-playing_composition: Overlay;
+	qproperty-paused_composition: Overlay;
 	qproperty-file_drop_border_color: rgba(97, 148, 215, 100);
 	qproperty-file_drop_background: rgba(97, 148, 215, 100);
 }
@@ -36,6 +38,9 @@
 	background: transparent;
 }
 
+NTrackInfoWidget {
+	margin: 2;
+}
 NTrackInfoWidget QLabel {
 	color: #FFFFFF;
 	background: argb(0, 0, 0, 180);
@@ -45,7 +50,6 @@ NTrackInfoWidget QLabel {
 	font-size: 11px;
 	font-weight: bold;
 }
-
 NTrackInfoWidget #MiddleCenter {
 	padding-bottom: 2;
 	font-size: 13px;

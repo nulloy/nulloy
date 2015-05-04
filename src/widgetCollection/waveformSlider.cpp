@@ -35,9 +35,13 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_waveBackground = QBrush(Qt::darkGreen);
 	m_waveBorderColor = QColor(Qt::green);
 	m_progressPlayingBackground = QBrush(Qt::darkCyan);
-	m_progressPausedBackground = QBrush(Qt::darkGray);
-	m_playingComposition = QPainter::CompositionMode_Overlay;
-	m_pausedComposition = QPainter::CompositionMode_Overlay;
+	m_progressPausedBackground = QBrush(Qt::darkYellow);
+	m_remainingPlayingBackground = QBrush(Qt::NoBrush);
+	m_remainingPausedBackground = QBrush(Qt::NoBrush);
+	m_groovePlayingColor = QColor(Qt::transparent);
+	m_groovePausedColor = QColor(Qt::transparent);
+	m_playingComposition = QPainter::CompositionMode_Screen;
+	m_pausedComposition = QPainter::CompositionMode_Screen;
 	m_fileDropBorderColor = QColor(Qt::transparent);
 	m_fileDropBackground = QBrush(Qt::NoBrush);
 
@@ -109,7 +113,9 @@ void NWaveformSlider::checkForUpdate()
 
 	if (m_needsUpdate) {
 		QPainter painter;
-		QImage waveImage = m_normalImage = m_playingImage = m_pausedImage = QImage(size(), QImage::Format_ARGB32_Premultiplied);
+		QImage waveImage;
+		QImage backgroundImage;
+		waveImage = backgroundImage = m_progressPlayingImage = m_progressPausedImage = m_remainingPlayingImage = m_remainingPausedImage = QImage(size(), QImage::Format_ARGB32_Premultiplied);
 
 		m_oldBuilderPos = builderPos;
 		m_oldBuilderIndex = builderIndex;
@@ -145,20 +151,34 @@ void NWaveformSlider::checkForUpdate()
 		// << waveform
 
 
-		QList<QImage *> images; images << &m_normalImage << &m_playingImage << &m_pausedImage;
-		QList<QPainter::CompositionMode> modes; modes << QPainter::CompositionMode_SourceOver << m_playingComposition << m_pausedComposition;
-		QList<QBrush> brushes; brushes << m_background << m_progressPlayingBackground << m_progressPausedBackground;
+		// main background >>
+		painter.begin(&backgroundImage);
+		backgroundImage.fill(0);
+		painter.setPen(Qt::NoPen);
+		painter.setBrush(m_background);
+		painter.setRenderHint(QPainter::Antialiasing);
+		painter.drawRoundedRect(rect(), m_radius, m_radius);
+		painter.end();
+		// << main background
+
+
+		QList<QImage *> images; images << &m_progressPlayingImage << &m_progressPausedImage << &m_remainingPlayingImage << &m_remainingPausedImage;
+		QList<QPainter::CompositionMode> modes; modes << m_playingComposition << m_pausedComposition << m_playingComposition << m_pausedComposition;
+		QList<QBrush> brushes; brushes << m_progressPlayingBackground << m_progressPausedBackground << m_remainingPlayingBackground << m_remainingPausedBackground;
 		for (int i = 0; i < images.size(); ++i) {
 			painter.begin(images[i]);
 			// background
 			images[i]->fill(0);
+			// + overlay
 			painter.setPen(Qt::NoPen);
 			painter.setBrush(brushes[i]);
 			painter.setRenderHint(QPainter::Antialiasing);
 			painter.drawRoundedRect(rect(), m_radius, m_radius);
-			// background + waveform
+			// + waveform
 			painter.setCompositionMode(modes[i]);
 			painter.drawImage(0, 0, waveImage);
+			painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+			painter.drawImage(0, 0, backgroundImage);
 			painter.end();
 		}
 
@@ -174,11 +194,17 @@ void NWaveformSlider::paintEvent(QPaintEvent *)
 	if (m_hasMedia) {
 		int x = qRound((qreal)value() / maximum() * width());
 
-		QRect right = rect().adjusted(x, 0, 0, 0);
-		painter.drawImage(right, m_normalImage, right);
-
 		QRect left = rect().adjusted(0, 0, x - width(), 0);
-		painter.drawImage(left, m_pausedState ? m_pausedImage : m_playingImage, left);
+		painter.drawImage(left, m_pausedState ? m_progressPausedImage : m_progressPlayingImage, left);
+
+		QRect right = rect().adjusted(x, 0, 0, 0);
+		painter.drawImage(right, m_pausedState ? m_remainingPausedImage : m_remainingPlayingImage, right);
+
+		QColor grooveColor = m_pausedState ? m_groovePausedColor : m_groovePlayingColor;
+		if (grooveColor != Qt::transparent) {
+			painter.setPen(grooveColor);
+			painter.drawLine(x, 0, x, height());
+		}
 	} else {
 		painter.setRenderHint(QPainter::Antialiasing);
 		painter.setPen(Qt::NoPen);
@@ -294,6 +320,46 @@ QBrush NWaveformSlider::progressPausedBackground()
 void NWaveformSlider::setProgressPausedBackground(QBrush brush)
 {
 	m_progressPausedBackground = brush;
+}
+
+QBrush NWaveformSlider::remainingPlayingBackground()
+{
+	return m_remainingPlayingBackground;
+}
+
+void NWaveformSlider::setRemainingPlayingBackground(QBrush brush)
+{
+	m_remainingPlayingBackground = brush;
+}
+
+QBrush NWaveformSlider::remainingPausedBackground()
+{
+	return m_remainingPausedBackground;
+}
+
+void NWaveformSlider::setRemainingPausedBackground(QBrush brush)
+{
+	m_remainingPausedBackground = brush;
+}
+
+QColor NWaveformSlider::groovePlayingColor()
+{
+	return m_groovePlayingColor;
+}
+
+void NWaveformSlider::setGroovePlayingColor(QColor color)
+{
+	m_groovePlayingColor = color;
+}
+
+QColor NWaveformSlider::groovePausedColor()
+{
+	return m_groovePausedColor;
+}
+
+void NWaveformSlider::setGroovePausedColor(QColor color)
+{
+	m_groovePausedColor = color;
 }
 
 QString NWaveformSlider::playingComposition()

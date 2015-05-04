@@ -84,18 +84,30 @@ public:
 	Q_DECLARE_OPERATORS_FOR_FLAGS(PluginTypeFlags)
 
 	enum CompositionMode {
-		Plus       = QPainter::CompositionMode_Plus,
-		Multiply   = QPainter::CompositionMode_Multiply,
-		Screen     = QPainter::CompositionMode_Screen,
-		Overlay    = QPainter::CompositionMode_Overlay,
-		Darken     = QPainter::CompositionMode_Darken,
-		Lighten    = QPainter::CompositionMode_Lighten,
-		ColorDodge = QPainter::CompositionMode_ColorDodge,
-		ColorBurn  = QPainter::CompositionMode_ColorBurn,
-		HardLight  = QPainter::CompositionMode_HardLight,
-		SoftLight  = QPainter::CompositionMode_SoftLight,
-		Difference = QPainter::CompositionMode_Difference,
-		Exclusion  = QPainter::CompositionMode_Exclusion
+		SourceOver      = QPainter::CompositionMode_SourceOver,
+		DestinationOver = QPainter::CompositionMode_DestinationOver,
+		Clear           = QPainter::CompositionMode_Clear,
+		Source          = QPainter::CompositionMode_Source,
+		Destination     = QPainter::CompositionMode_Destination,
+		SourceIn        = QPainter::CompositionMode_SourceIn,
+		DestinationIn   = QPainter::CompositionMode_DestinationIn,
+		SourceOut       = QPainter::CompositionMode_SourceOut,
+		DestinationOut  = QPainter::CompositionMode_DestinationOut,
+		SourceAtop      = QPainter::CompositionMode_SourceAtop,
+		DestinationAtop = QPainter::CompositionMode_DestinationAtop,
+		Xor             = QPainter::CompositionMode_Xor,
+		Plus            = QPainter::CompositionMode_Plus,
+		Multiply        = QPainter::CompositionMode_Multiply,
+		Screen          = QPainter::CompositionMode_Screen,
+		Overlay         = QPainter::CompositionMode_Overlay,
+		Darken          = QPainter::CompositionMode_Darken,
+		Lighten         = QPainter::CompositionMode_Lighten,
+		ColorDodge      = QPainter::CompositionMode_ColorDodge,
+		ColorBurn       = QPainter::CompositionMode_ColorBurn,
+		HardLight       = QPainter::CompositionMode_HardLight,
+		SoftLight       = QPainter::CompositionMode_SoftLight,
+		Difference      = QPainter::CompositionMode_Difference,
+		Exclusion       = QPainter::CompositionMode_Exclusion,
 	};
 
 	extern const QMetaObject staticMetaObject;
