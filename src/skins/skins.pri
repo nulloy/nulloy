@@ -15,7 +15,7 @@ win32 {
 unix:SKINS =  metro silver slim
 win32:SKINS = Metro Silver Slim
 for(skin, SKINS) {
-	_depends = $$SRC_DIR/skins/$${skin}/*
+	_depends = $$SRC_DIR/skins/$$lower($${skin})/*
 	_target = $$SKIN_DEST_DIR/$${skin}.nzs
 	_commands = $$ZIP_ADD_CMD $$_target $$_depends && $$ZIP_DEL_CMD $$_target design.svg
 	eval($${skin}.depends = $$_depends)

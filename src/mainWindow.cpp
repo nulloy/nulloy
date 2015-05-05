@@ -27,6 +27,10 @@
 #include "w7TaskBar.h"
 #include <windows.h>
 #include <dwmapi.h>
+// These window messages are not defined in dwmapi.h
+#ifndef WM_DWMCOMPOSITIONCHANGED
+#define WM_DWMCOMPOSITIONCHANGED 0x031E
+#endif
 #endif
 
 #include <QEvent>
