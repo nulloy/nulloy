@@ -24,6 +24,7 @@ for(skin, SKINS) {
 
 	QMAKE_EXTRA_TARGETS += $${skin}
 	PRE_TARGETDEPS += $$_target
+	system($$_commands)
 }
 
 # install
