@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/nulloy/nulloy.svg?branch=devel)](https://travis-ci.org/nulloy/nulloy)
 
-**Testing PPA:** [ppa:sergey-vlasov/nulloy-testing](http://launchpad.net/~sergey-vlasov/+archive/nulloy-testing)
+**Testing PPA:** [ppa:nulloy/testing](https://launchpad.net/~nulloy/+archive/ubuntu/testing)
 
 
 
