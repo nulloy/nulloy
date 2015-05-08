@@ -107,9 +107,12 @@ fi
 QMAKE_CACHE=`pwd`/.qmake.cache
 [ -f $QMAKE_CACHE ] && rm -f $QMAKE_CACHE
 
+[ -z "$PKG_CONFIG" ] && PKG_CONFIG=pkg-config
+echo "PKG_CONFIG = $PKG_CONFIG" >> $QMAKE_CACHE
+
 pkg_check_lib()
 {
-	pkg-config --print-errors $1
+	$PKG_CONFIG --print-errors $1
 	if [ $? -eq 0 ]; then
 		echo "found $1"
 	else
@@ -118,7 +121,7 @@ pkg_check_lib()
 	fi
 }
 
-if [ `which pkg-config 2> /dev/null` ]; then
+if [ `which $PKG_CONFIG 2> /dev/null` ]; then
 	echo "checking for pkg-config... yes"
 	[ $BUILD_GSTREAMER == "yes" ]           && pkg_check_lib gstreamer-1.0
 	[ $BUILD_GSTREAMER_TAGREADER == "yes" ] && pkg_check_lib gstreamer-pbutils-1.0
