@@ -20,7 +20,7 @@ system($$qms.commands)
 unix {
 	translations.files = ../i18n/*
 	mac {
-		translations.path = $${APP_NAME}.app/Contents/MacOS/i18n
+		translations.path = ../$${APP_NAME}.app/Contents/MacOS/i18n
 	} else {
 		translations.path = $$PREFIX/share/$$APP_NAME/i18n
 	}

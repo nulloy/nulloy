@@ -13,9 +13,10 @@ MOC_DIR = $$TMP_DIR
 INCLUDEPATH += .. ../.. ../../interfaces
 DEPENDPATH += ../..
 
+message($${_PRO_FILE_PWD_})
 unix {
 	mac {
-		target.path = $${APP_NAME}.app/Contents/MacOS/plugins
+		target.path = ../../../$${APP_NAME}.app/Contents/MacOS/plugins
 	} else {
 		target.path = $$PREFIX/lib/$$APP_NAME/plugins
 	}

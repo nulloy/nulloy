@@ -31,7 +31,7 @@ for(skin, SKINS) {
 unix {
 	skins.files = ../skins/*
 	mac {
-		skins.path = $${APP_NAME}.app/Contents/MacOS/skins
+		skins.path = ../$${APP_NAME}.app/Contents/MacOS/skins
 	} else {
 		skins.path = $$PREFIX/share/$$APP_NAME/skins
 	}
