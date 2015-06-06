@@ -24,6 +24,16 @@ Q_IMPORT_PLUGIN(widget_collection)
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_WS_MAC
+	// https://bugreports.qt-project.org/browse/QTBUG-32789
+	if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_8)
+		QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
+
+	// https://bugreports.qt-project.org/browse/QTBUG-40833
+	if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_9)
+		QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Helvetica Neue");
+#endif
+
 	QtSingleApplication instance(argc, argv);
 
 	// construct a message
