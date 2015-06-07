@@ -4,6 +4,7 @@ BASENAME=`basename $0`
 
 PREFIX=/usr
 DEBUG=no
+APP_NAME=nulloy
 
 HAVE_GSTREAMER=no
 HAVE_VLC=no
@@ -15,8 +16,9 @@ BUILD_TAGLIB=no
 BUILD_VLC=no
 BUILD_PHONON=no
 SUPPORT_SKINS=yes
-OSX_BUNDLE=yes
-APP_NAME=nulloy
+
+MAC_BUNDLE=yes
+MAC_UNIVERSAL=no
 
 echo_help()
 {
@@ -29,7 +31,8 @@ echo_help()
 	echo '    --no-skins                  disable skins support'
 	echo '    --force-version VERSION     overrides version.pri'
 	echo '    --prefix PREFIX             installation prefix'
-	echo '    --no-app-bundle             do not make .app, Mac OS X only'
+	echo '    --no-app-bundle             do not make .app (Mac only)'
+	echo '    --universal                 build for both i386 and x86_64 (Mac only)'
 	echo '    --debug                     build in debug mode'
 }
 
@@ -47,7 +50,7 @@ if [ ! $? -eq 4 ]; then
 	exit 1
 fi
 
-args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer no-gstreamer-tagreader vlc phonon taglib no-skins debug prefix: no-app-bundle help" -- "$@"`
+args=`getopt -n$BASENAME -o h --longoptions="force-version: no-gstreamer no-gstreamer-tagreader vlc phonon taglib no-skins debug prefix: no-app-bundle universal help" -- "$@"`
 
 if test $? != 0; then
 	echo_try; exit 1
@@ -79,7 +82,9 @@ while [ $# -gt 0 ]; do
 	elif [ $1 == "--no-skins" ]; then
 		SUPPORT_SKINS=no
 	elif [ $1 == "--no-app-bundle" ]; then
-		OSX_BUNDLE=no
+		MAC_BUNDLE=no
+	elif [ $1 == "--universal" ]; then
+		MAC_UNIVERSAL=yes
 	elif [ $1 == "--help" ]; then
 		echo_help; exit 0
 	elif [ $1 == "--" ]; then
@@ -140,7 +145,8 @@ fi
 [ $BUILD_PHONON == "yes" ]              && QMAKE_CONFIG="$QMAKE_CONFIG phonon"
 [ $BUILD_TAGLIB == "yes" ]              && QMAKE_CONFIG="$QMAKE_CONFIG taglib"
 [ $SUPPORT_SKINS == "no" ]              && QMAKE_CONFIG="$QMAKE_CONFIG no-skins"
-[ $OSX_BUNDLE == "no" ]                 && QMAKE_CONFIG="$QMAKE_CONFIG no-app-bundle"
+[ $MAC_BUNDLE == "no" ]                 && QMAKE_CONFIG="$QMAKE_CONFIG no-app-bundle"
+[ $MAC_UNIVERSAL == "yes" ]             && QMAKE_CONFIG="$QMAKE_CONFIG x86 x86_64"
 if [ $DEBUG == "yes" ]; then
 	QMAKE_CONFIG="$QMAKE_CONFIG debug"
 else
