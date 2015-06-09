@@ -23,9 +23,17 @@
 NContainerGstreamer::NContainerGstreamer(QObject *parent) : QObject(parent)
 {
 #ifdef Q_WS_WIN
-	_putenv(QString("GST_PLUGIN_PATH_1_0=" + QCoreApplication::applicationDirPath() + "/Plugins/GStreamer"         + ";" + getenv("GST_PLUGIN_PATH_1_0")).replace('/', '\\').toUtf8());
+	_putenv(QString("GST_PLUGIN_PATH=" +
+		QCoreApplication::applicationDirPath() + "/Plugins/GStreamer" + ";" +
+		getenv("GST_PLUGIN_PATH")).replace('/', '\\').toUtf8());
 #elif defined Q_WS_MAC
-	putenv( QString("GST_PLUGIN_PATH_1_0=" + QCoreApplication::applicationDirPath() + "/plugins/GStreamer/plugins" + ":" + getenv("GST_PLUGIN_PATH_1_0")).toUtf8().data());
+	QString gstPath = QCoreApplication::applicationDirPath() + "/../Frameworks/GStreamer.framework/Versions/1.0";
+	putenv(QString("GST_PLUGIN_PATH=" + gstPath + "/lib/gstreamer-1.0" + ":" +
+		getenv("GST_PLUGIN_PATH")).toUtf8().data());
+
+	QString scannerPath = gstPath + "/libexec/gstreamer-1.0/gst-plugin-scanner";
+	if (QFile(scannerPath).exists())
+		putenv(QString("GST_PLUGIN_SCANNER=" + scannerPath).toUtf8().data());
 #endif
 
 	m_plugins << new NPlaybackEngineGStreamer()
