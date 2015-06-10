@@ -47,8 +47,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 #else
 		"<span style=\"font-size:8pt;\">" +
 #endif
-			tr("Version: ") + QCoreApplication::applicationVersion() + "<br>" +
-			              (QString(_N_TIME_STAMP_).isEmpty() ? "" : tr("Build: ") + QString(_N_TIME_STAMP_)) +
+			tr("Version: ") + QCoreApplication::applicationVersion() +
 			"<br><br>" +
 			"Copyright (C) 2010-2015  Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
 		"</span>";

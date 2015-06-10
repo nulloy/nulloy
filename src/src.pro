@@ -79,8 +79,6 @@ mac:ICON = icons/icon.icns
 
 include(version.pri)
 DEFINES += _N_VERSION_=\""\\\"$${N_VERSION}\\\""\"
-win32:DEFINES += _N_TIME_STAMP_=__TIMESTAMP__
-unix:DEFINES += _N_TIME_STAMP_=\""\\\"`date +\\\"%a %b %d %T %Y\\\"`\\\""\"
 build_pass:CONFIG(static, static|shared) {
 	DEFINES += _N_STATIC_BUILD_
 } else {
