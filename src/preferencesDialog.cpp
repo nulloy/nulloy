@@ -311,7 +311,9 @@ void NPreferencesDialog::loadSettings()
 	ui.skinComboBox->clear();
 	foreach (QString str, NSkinLoader::skinIdentifiers()) {
 		QString id = str.section('/', 2);
-		ui.skinComboBox->addItem(id.replace('/', ' ').replace(" (Built-in)", tr(" (Built-in)")), id);
+		QString userData = id;
+		QString text = id.replace('/', ' ').replace(" (Built-in)", tr(" (Built-in)"));
+		ui.skinComboBox->addItem(text, userData);
 	}
 
 	if (ui.skinComboBox->count() == 1)
