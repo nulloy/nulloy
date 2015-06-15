@@ -19,8 +19,8 @@
 #include "plugin.h"
 #include "tagReaderInterface.h"
 
-#include <taglib/tag.h>
-#include <taglib/fileref.h>
+#include <tag.h>
+#include <fileref.h>
 
 class QString;
 

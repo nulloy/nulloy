@@ -19,17 +19,17 @@
 #include "plugin.h"
 #include "coverReaderInterface.h"
 
-#include <taglib/apefile.h>
-#include <taglib/apetag.h>
-#include <taglib/asffile.h>
-#include <taglib/fileref.h>
-#include <taglib/flacfile.h>
-#include <taglib/id3v2tag.h>
-#include <taglib/mpcfile.h>
-#include <taglib/mp4file.h>
-#include <taglib/mpegfile.h>
-#include <taglib/vorbisfile.h>
-#include <taglib/wavpackfile.h>
+#include <apefile.h>
+#include <apetag.h>
+#include <asffile.h>
+#include <fileref.h>
+#include <flacfile.h>
+#include <id3v2tag.h>
+#include <mpcfile.h>
+#include <mp4file.h>
+#include <mpegfile.h>
+#include <vorbisfile.h>
+#include <wavpackfile.h>
 
 class NCoverReaderTaglib : public NCoverReaderInterface, public NPlugin
 {

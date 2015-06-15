@@ -10,7 +10,7 @@ unix {
 	PKGCONFIG += taglib
 }
 win32 {
-	INCLUDEPATH += $(TAGLIB_DIR)/include
+	INCLUDEPATH += $(TAGLIB_DIR)/include/taglib
 	LIBS += -L$(TAGLIB_DIR)/lib -ltag
 	DEFINES += TAGLIB_STATIC
 }

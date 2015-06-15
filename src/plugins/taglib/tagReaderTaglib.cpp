@@ -16,13 +16,13 @@
 #include "tagReaderTaglib.h"
 #include "tagLibFileRef.h"
 
-#include <taglib/apeproperties.h>
-#include <taglib/flacproperties.h>
-#include <taglib/mp4properties.h>
-#include <taglib/wavpackproperties.h>
-#include <taglib/trueaudioproperties.h>
-#include <taglib/aiffproperties.h>
-#include <taglib/wavproperties.h>
+#include <apeproperties.h>
+#include <flacproperties.h>
+#include <mp4properties.h>
+#include <wavpackproperties.h>
+#include <trueaudioproperties.h>
+#include <aiffproperties.h>
+#include <wavproperties.h>
 
 #include <QCoreApplication>
 #include <QFileInfo>
