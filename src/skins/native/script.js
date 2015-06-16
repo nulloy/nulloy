@@ -35,11 +35,11 @@ function Main()
 			Ui.mainWindow.styleSheet = "";
 			Ui.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
 
-			Ui.playlistWidget.styleSheet = "";
+			Ui.playlistWidget.styleSheet = Ui.playlistWidget.styleSheet + "#playlistWidget QScrollBar { margin-bottom: 0; }";
 			Ui.playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
 
-			Ui.splitTop.layout().setContentsMargins(10, 7, 10, 7);
-			Ui.splitTop.layout().setSpacing(7);
+			Ui.splitTop.layout().setContentsMargins(10, 7, 10, 0);
+			Ui.splitTop.layout().setSpacing(0);
 
 			var margins = Ui.controlsContainer.layout().contentsMargins();
 			margins.right = 7;
@@ -47,8 +47,14 @@ function Main()
 
 			var buttons = new Array(Ui.playButton, Ui.stopButton, Ui.prevButton, Ui.nextButton);
 			for (var i = 0; i < buttons.length; ++i) {
-				buttons[i].minimumWidth += 15;
+				buttons[i].minimumWidth = 60;
 				buttons[i].minimumHeight = 32;
+			}
+
+			var toolButtons = new Array(Ui.repeatButton, Ui.shuffleButton);
+			for (var i = 0; i < toolButtons.length; ++i) {
+				toolButtons[i].maximumHeight = 25;
+				toolButtons[i].styleSheet = "margin-top: 4px";
 			}
 
 			Ui.line.styleSheet = "QFrame:active { background: #8e8e8e; }";
@@ -93,4 +99,3 @@ Main.prototype.on_fullScreenEnabled = function(enabled)
 	Ui.controlsContainer.setVisible(!enabled);
 	Ui.playlistContainer.setVisible(!enabled);
 }
-
