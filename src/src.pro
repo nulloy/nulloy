@@ -30,13 +30,11 @@ include(trash/trash.pri)
 win32:include(ux/w7TaskBar.pri)
 
 # zlib
-unix|unix_mingw:!mac {
+!mac {
 	CONFIG += link_pkgconfig
 	PKGCONFIG += zlib
-} else:mac {
+} else {
 	LIBS += -L/usr/lib -lz
-} else:win32 {
-	LIBS += -L$(ZLIB_DIR)/lib -lzdll
 }
 
 unix:!mac:PKGCONFIG += x11

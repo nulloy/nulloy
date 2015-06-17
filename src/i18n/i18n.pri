@@ -5,7 +5,7 @@ QMS_SRC_DIR = $$SRC_DIR/i18n
 qms.depends = $$QMS_SRC_DIR/*.ts
 
 QMS_DEST_DIR = $$SRC_DIR/../i18n
-mkdir($$QMS_DEST_DIR)
+system($$QMAKE_MKDIR $$fixSlashes($$QMS_DEST_DIR))
 qms.target = $$QMS_DEST_DIR/*.qm
 
 qms.commands = $$LRELEASE $$qms.depends && \

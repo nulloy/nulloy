@@ -153,7 +153,7 @@ else
 	QMAKE_CONFIG="$QMAKE_CONFIG release"
 fi
 
-if [ `qmake -query "QMAKE_MKSPECS" | grep -i mingw` ]; then
+if [ `$QMAKE -query "QMAKE_MKSPECS" | grep -i mingw` ]; then
 	QMAKE_CONFIG="$QMAKE_CONFIG unix_mingw"
 	APP_NAME=Nulloy
 fi

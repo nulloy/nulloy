@@ -1,7 +1,7 @@
 # build
 unix:SKIN_DEST_DIR = $$SRC_DIR/../skins
 win32:SKIN_DEST_DIR = $$SRC_DIR/../Skins
-mkdir($$SKIN_DEST_DIR)
+system($$QMAKE_MKDIR $$fixSlashes($$SKIN_DEST_DIR))
 
 unix {
 	ZIP_ADD_CMD = zip -j

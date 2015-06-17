@@ -10,32 +10,30 @@
 
 ### Prerequisites
 * Qt 4.x MinGW build http://www.qt.io/download-open-source/
-* MinGW-w64 posix dwarf release http://sourceforge.net/projects/mingw-w64/
-* GStreamer1.0-devel MSI installer http://gstreamer.freedesktop.org/download/
+* MinGW-w64 http://mingw-w64.org/
+* GStreamer 1.0 http://gstreamer.freedesktop.org/download/
+* pkg-config http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/
 * CMake http://www.cmake.org/
-* TagLib Sources http://taglib.github.io/
-* Zlib DLL http://zlib.net/
+* TagLib https://github.com/taglib/taglib/
 * 7zip http://www.7-zip.org/
 
 ### Environment Setup
 
-Extract and/or install the downloads. Create ```vars.bat``` file with:
+Extract and/or install the downloads. Move ```pkg-config.exe``` to ```C:\mingw\bin```. Create ```vars.bat``` file with:
 
 ```bat
-set QTDIR=C:\qt\
-set MINGW_DIR=C:\mingw\
-set TAGLIB_DIR=C:\taglib\
-set ZLIB_DIR=C:\zlib\
-set PATH=C:\Program Files\7-Zip\;%QTDIR%\bin\;%GSTREAMER_1_0_ROOT_X86%\bin\;%MINGW_DIR%\bin\;%ZLIB_DIR%;%PATH%
+set QTDIR=C:\qt4
+set TAGLIB_DIR=C:\taglib.git
+set PKG_CONFIG_PATH=%GSTREAMER_1_0_ROOT_X86%\lib\pkgconfig;%TAGLIB_DIR%\lib\pkgconfig
+set PATH=%QTDIR%\bin;%TAGLIB_DIR%\bin;C:\mingw\bin;C:\Program Files\7-Zip;%PATH%
 ```
-
 Create a shortcut from ```vars.bat``` and set target as ```%COMSPEC% /k "C:\vars.bat"```. Open the shortcut.
 
 ### Build TagLib
 
 ```bat
 cd %TAGLIB_DIR%
-cmake -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=%TAGLIB_DIR% -DCMAKE_RELEASE_TYPE=Release -DENABLE_STATIC=ON -DENABLE_STATIC_RUNTIME=ON .
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DZLIB_INCLUDE_DIR=%GSTREAMER_1_0_ROOT_X86%\include -DCMAKE_INSTALL_PREFIX="."
 mingw32-make
 mingw32-make install
 ```
@@ -44,7 +42,7 @@ mingw32-make install
 
 ```bat
 cd C:\nulloy.git
-configure --force-version 1-testing
+configure --taglib --force-version 1-testing
 mingw32-make
 Nulloy.exe
 ```
