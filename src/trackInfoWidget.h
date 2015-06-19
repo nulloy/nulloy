@@ -34,6 +34,9 @@ private:
 	QMap <QLabel *, QString> m_mapTick;
 	QGraphicsOpacityEffect *m_effect;
 	QPropertyAnimation *m_animation;
+#ifdef Q_WS_MAC // QTBUG-15367
+	QWidget *m_container;
+#endif
 
 	bool event(QEvent *event);
 	void enterEvent(QEvent *event);
