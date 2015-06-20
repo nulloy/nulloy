@@ -25,7 +25,7 @@
 
 #include <qtiocompressor.h>
 
-static const char _skinPrefer[] = "Metro";
+static const char _skinPrefer[] = "Slim";
 static const char _skinSuffix[] = "nzs";
 static const char _idFileName[] = "id.txt";
 static const char _formFileName[] = "form.ui";
