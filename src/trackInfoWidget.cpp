@@ -18,8 +18,8 @@
 #include "tagReaderInterface.h"
 #include "settings.h"
 #include "pluginLoader.h"
+#include "label.h"
 
-#include <QLabel>
 #include <QLayout>
 #include <QTime>
 #include <QToolTip>
@@ -45,8 +45,10 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 				QSpacerItem *hSpacer = new QSpacerItem(40, 14, QSizePolicy::Expanding, QSizePolicy::Minimum);
 				hLayout->addItem(hSpacer);
 			}
-			QLabel *label = new QLabel;
+			NLabel *label = new NLabel;
+			label->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
 			label->setObjectName(vNames.at(i) + hNames.at(j));
+			label->setAlignment(Qt::AlignHCenter);
 			hLayout->addWidget(label);
 		}
 		vLayout->addLayout(hLayout);
@@ -77,8 +79,8 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 #endif
 
 	setMouseTracking(true);
-	QList<QLabel *> labels = findChildren<QLabel *>();
-	foreach (QLabel *label, labels)
+	QList<NLabel *> labels = findChildren<NLabel *>();
+	foreach (NLabel *label, labels)
 		label->setAttribute(Qt::WA_TransparentForMouseEvents);
 
 	m_msec = 0;
@@ -129,7 +131,7 @@ void NTrackInfoWidget::updateInfo()
 		hide();
 	} else {
 		show();
-		foreach (QLabel *label, m_map.keys()) {
+		foreach (NLabel *label, m_map.keys()) {
 			QString info = tagReader->toString(m_map[label]);
 			if (!info.isEmpty()) {
 				label->setText(info);
@@ -143,7 +145,7 @@ void NTrackInfoWidget::updateInfo()
 
 void NTrackInfoWidget::readSettings()
 {
-	QList<QLabel *> labels = findChildren<QLabel *>();
+	QList<NLabel *> labels = findChildren<NLabel *>();
 	for (int i = 0; i < labels.size(); ++i) {
 		QString format = NSettings::instance()->value("TrackInfo/" + labels.at(i)->objectName()).toString();
 		if (!format.isEmpty()) {
@@ -169,7 +171,7 @@ void NTrackInfoWidget::tick(qint64 msec)
 	int hours = total / 60 / 60;
 	QTime current = QTime().addMSecs(msec);
 	QTime remaining = QTime().addMSecs(total * 1000 - msec);
-	foreach (QLabel *label, m_mapTick.keys()) {
+	foreach (NLabel *label, m_mapTick.keys()) {
 		QString text = m_mapTick[label];
 		if (hours > 0) {
 			text.replace("%T", current.toString("h:mm:ss"));

@@ -21,7 +21,7 @@
 
 class QPropertyAnimation;
 class QGraphicsOpacityEffect;
-class QLabel;
+class NLabel;
 
 class NTrackInfoWidget : public QFrame
 {
@@ -30,8 +30,8 @@ class NTrackInfoWidget : public QFrame
 private:
 	qint64 m_msec;
 	QString m_tooltipFormat;
-	QMap <QLabel *, QString> m_map;
-	QMap <QLabel *, QString> m_mapTick;
+	QMap <NLabel *, QString> m_map;
+	QMap <NLabel *, QString> m_mapTick;
 	QGraphicsOpacityEffect *m_effect;
 	QPropertyAnimation *m_animation;
 #ifdef Q_WS_MAC // QTBUG-15367
