@@ -30,7 +30,9 @@ class NCoverWidgetPopup : public QDialog
 {
 private:
 	void mousePressEvent(QMouseEvent *)	{ hide(); }
+#ifndef Q_WS_MAC
 	void changeEvent(QEvent *) { if (!isActiveWindow()) hide(); }
+#endif
 public:
 	NCoverWidgetPopup(QWidget *parent = 0) : QDialog(parent) {}
 };
@@ -145,11 +147,11 @@ void NCoverWidget::mousePressEvent(QMouseEvent *)
 	if (pixmap.height() > pixmapMaxSize.height() || pixmap.width() > pixmapMaxSize.width())
 		pixmap = pixmap.scaled(pixmapMaxSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 	m_fullsizeLabel->setPixmap(pixmap);
-	m_popup->show();
 	m_popup->setMinimumSize(QWidget::window()->size());
 	m_popup->setMaximumSize(QWidget::window()->size());
 	m_popup->setGeometry(QWidget::window()->geometry());
 	m_popup->setToolTip(QString("%1 x %2").arg(m_pixmap.width()).arg(m_pixmap.height()));
+	m_popup->show();
 }
 
 void NCoverWidget::fitToHeight(int height)
