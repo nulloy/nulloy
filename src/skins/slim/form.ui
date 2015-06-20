@@ -77,7 +77,6 @@ NTrackInfoWidget #MiddleCenter {
 	color: #b6c0c6;
 }
 #playlistWidget::item:hover {
-	border: 1 solid transparent;
 	background: #3e5268;
 }
 
@@ -111,12 +110,7 @@ QToolButton {
 
 #prevButton, #playButton, #stopButton, #nextButton {
 	background-repeat: no-repeat;
-	background-position: top center;
-	margin-top: 10px;
-}
-#prevButton:pressed, #playButton:pressed, #stopButton:pressed, #nextButton:pressed {
-	background-position: bottom center;
-	margin-bottom: 9px;
+	background-position: center center;
 }
 #prevButton {
 	background-image: url(prev.png);
@@ -157,12 +151,7 @@ QToolButton {
 
 #closeButton, #minimizeButton {
 	background-repeat: no-repeat;
-	background-position: top center;
-	margin-top: 5px;
-}
-#closeButton:pressed, #minimizeButton:pressed {
-	background-position: bottom center;
-	margin-bottom: 5px;
+	background-position: center center;
 }
 #closeButton {
 	background-image: url(close.png);
@@ -357,7 +346,7 @@ QToolButton {
          <item>
           <widget class="QToolButton" name="minimizeButton">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -393,6 +382,12 @@ QToolButton {
          </item>
          <item>
           <widget class="QToolButton" name="closeButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>25</width>
@@ -446,6 +441,24 @@ QToolButton {
              </property>
              <item>
               <widget class="QToolButton" name="prevButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>27</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>27</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="focusPolicy">
                 <enum>Qt::NoFocus</enum>
                </property>
@@ -456,6 +469,24 @@ QToolButton {
              </item>
              <item>
               <widget class="QToolButton" name="playButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>27</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>27</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="focusPolicy">
                 <enum>Qt::NoFocus</enum>
                </property>
@@ -466,6 +497,24 @@ QToolButton {
              </item>
              <item>
               <widget class="QToolButton" name="nextButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>27</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>27</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="focusPolicy">
                 <enum>Qt::NoFocus</enum>
                </property>
