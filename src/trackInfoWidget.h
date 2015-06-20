@@ -29,18 +29,18 @@ class NTrackInfoWidget : public QFrame
 
 private:
 	qint64 m_msec;
+	int m_heightThreshold;
 	QString m_tooltipFormat;
 	QMap <NLabel *, QString> m_map;
 	QMap <NLabel *, QString> m_mapTick;
 	QGraphicsOpacityEffect *m_effect;
 	QPropertyAnimation *m_animation;
-#ifdef Q_WS_MAC // QTBUG-15367
 	QWidget *m_container;
-#endif
 
 	bool event(QEvent *event);
 	void enterEvent(QEvent *event);
 	void leaveEvent(QEvent *event);
+	void resizeEvent(QResizeEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 
 public:

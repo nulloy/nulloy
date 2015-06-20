@@ -35,7 +35,11 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 	QStringList hNames = QStringList() << "Left" << "Center" << "Right";
 	QVBoxLayout *vLayout = new QVBoxLayout;
 	for (int i = 0; i < vNames.count(); ++i) {
+		QWidget *hContainer = new QWidget;
 		QHBoxLayout *hLayout = new QHBoxLayout;
+		hLayout->setContentsMargins(0, 0, 0, 0);
+		hLayout->setSpacing(0);
+		hContainer->setLayout(hLayout);
 		if (i > 0) {
 			QSpacerItem *vSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
 			vLayout->addItem(vSpacer);
@@ -51,21 +55,18 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 			label->setAlignment(Qt::AlignHCenter);
 			hLayout->addWidget(label);
 		}
-		vLayout->addLayout(hLayout);
+		vLayout->addWidget(hContainer);
 	}
 	vLayout->setContentsMargins(0, 0, 0, 0);
-	vLayout->setSpacing(1);
+	vLayout->setSpacing(0);
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-#ifdef Q_WS_MAC // QTBUG-15367
-	QHBoxLayout *cLayout = new QHBoxLayout;
-	cLayout->setContentsMargins(0, 0, 0, 0);
-	setLayout(cLayout);
+	QHBoxLayout *layout = new QHBoxLayout;
+	layout->setContentsMargins(0, 0, 0, 0);
+	setLayout(layout);
 	m_container = new QWidget;
 	m_container->setLayout(vLayout);
-	cLayout->addWidget(m_container);
-#else
-	setLayout(vLayout);
+	layout->addWidget(m_container);
 
 	m_effect = new QGraphicsOpacityEffect(this);
 	m_effect->setOpacity(1.0);
@@ -76,7 +77,6 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 	m_animation->setEasingCurve(QEasingCurve::OutQuad);
 	m_animation->setStartValue(1.0);
 	m_animation->setEndValue(0.0);
-#endif
 
 	setMouseTracking(true);
 	QList<NLabel *> labels = findChildren<NLabel *>();
@@ -84,6 +84,7 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 		label->setAttribute(Qt::WA_TransparentForMouseEvents);
 
 	m_msec = 0;
+	m_heightThreshold = minimumSizeHint().height();
 
 	readSettings();
 	updateInfo();
@@ -109,6 +110,18 @@ void NTrackInfoWidget::leaveEvent(QEvent *)
 #else
 	m_container->show();
 #endif
+}
+
+void NTrackInfoWidget::resizeEvent(QResizeEvent *event)
+{
+	QFrame::resizeEvent(event);
+	bool toShrink = (m_heightThreshold > height());
+	QVBoxLayout *vLayout = dynamic_cast<QVBoxLayout *>(m_container->layout());
+
+	vLayout->itemAt(0)->widget()->setHidden(toShrink); // top
+	vLayout->itemAt(4)->widget()->setHidden(toShrink); // bottom
+
+	QFrame::resizeEvent(event);
 }
 
 bool NTrackInfoWidget::event(QEvent *event)

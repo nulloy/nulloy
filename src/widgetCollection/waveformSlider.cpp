@@ -56,6 +56,9 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
 	m_timer->start();
 
 	setAcceptDrops(true);
+	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+	setMinimumHeight(50);
+	setMinimumWidth(150);
 
 	m_oldSize = QSize(0, 0);
 	init();
@@ -74,10 +77,6 @@ void NWaveformSlider::init()
 	m_pausedState = false;
 	m_needsUpdate = false;
 	m_hasMedia = false;
-
-	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
-	setMinimumHeight(50);
-	setMinimumWidth(150);
 }
 
 QSize NWaveformSlider::sizeHint() const

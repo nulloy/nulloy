@@ -26,6 +26,7 @@ function Main()
 		Ui.mainWindow["maximizeEnabled(bool)"].connect(this, "on_maximizeEnabled");
 
 		Ui.mainWindow.windowFlags = (Ui.mainWindow.windowFlags | Qt.FramelessWindowHint | Qt.WindowCloseButtonHint) ^ (Qt.WindowTitleHint | Qt.Dialog);
+		Ui.waveformSlider.minimumHeight = 30;
 
 		if (Q_WS == "mac") {
 			Ui.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
@@ -48,7 +49,7 @@ Main.prototype.afterShow = function()
 	if (Settings.value("PixieSkin/Splitter"))
 		Ui.splitter.setSizes(Settings.value("PixieSkin/Splitter"));
 	else
-		Ui.splitter.setSizes([50, 0]);
+		Ui.splitter.setSizes([30, 0]);
 }
 
 Main.prototype.on_splitterMoved = function(pos, index)
