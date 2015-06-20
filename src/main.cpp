@@ -56,8 +56,10 @@ int main(int argc, char *argv[])
 	QCoreApplication::setOrganizationDomain("nulloy.com");
 
 	// for Qt core plugins
-#ifdef Q_WS_WIN
+#if defined(Q_WS_WIN)
 	QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/Plugins/");
+#elif defined(Q_WS_MAC)
+	QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/plugins/");
 #endif
 
 #ifndef _N_NO_SKINS_
