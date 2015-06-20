@@ -497,15 +497,21 @@ void NPlaylistWidget::paintEvent(QPaintEvent *e)
 
 
 // DRAG & DROP >>
-bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAction action)
+bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAction)
 {
-	Q_UNUSED(action);
+	bool wasEmpty = false;
+	if (count() == 0)
+		wasEmpty = true;
+
 	foreach (QUrl url, data->urls()) {
 		foreach (QString file, NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toStringList())) {
 			insertItem(index, new NPlaylistWidgetItem(QFileInfo(file)));
 			++index;
 		}
 	}
+
+	if (wasEmpty)
+		playRow(0);
 
 	m_itemDrag = NULL;
 	return true;
