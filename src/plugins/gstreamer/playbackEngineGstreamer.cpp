@@ -250,7 +250,8 @@ QString NPlaybackEngineGStreamer::currentMedia()
 void NPlaybackEngineGStreamer::checkStatus()
 {
 	GstState gstState;
-	gst_element_get_state(m_playbin, &gstState, NULL, 0);
+	if (gst_element_get_state(m_playbin, &gstState, NULL, 0) != GST_STATE_CHANGE_SUCCESS)
+		return;
 	N::PlaybackState state = fromGstState(gstState);
 	if (m_oldState != state)
 		emit stateChanged(m_oldState = state);
