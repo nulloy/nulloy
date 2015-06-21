@@ -21,27 +21,6 @@
 
 #define NSEC_IN_MSEC 1000000
 
-static void _on_eos(GstBus *, GstMessage *, gpointer userData)
-{
-	NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
-	obj->_finish();
-}
-
-static void _on_error(GstBus *, GstMessage *msg, gpointer userData)
-{
-	gchar *debug;
-	GError *err;
-
-	gst_message_parse_error(msg, &err, &debug);
-	g_free(debug);
-
-	NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
-	obj->_emitError(err->message);
-	obj->_fail();
-
-	g_error_free(err);
-}
-
 static void _on_about_to_finish(GstElement *playbin, gpointer userData)
 {
 	NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
@@ -91,14 +70,6 @@ void NPlaybackEngineGStreamer::init()
 	m_playbin = gst_element_factory_make("playbin", NULL);
 	g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
 
-#if !defined Q_WS_WIN && !defined Q_WS_MAC
-	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
-	gst_bus_add_signal_watch(bus);
-	g_signal_connect(bus, "message::error", G_CALLBACK(_on_error), this);
-	g_signal_connect(bus, "message::eos", G_CALLBACK(_on_eos), this);
-	gst_object_unref(bus);
-#endif
-
 	m_oldVolume = -1;
 	m_oldPosition = -1;
 	m_posponedPosition = -1;
@@ -124,9 +95,7 @@ NPlaybackEngineGStreamer::~NPlaybackEngineGStreamer()
 
 void NPlaybackEngineGStreamer::setMedia(const QString &file)
 {
-#if defined Q_WS_WIN || defined Q_WS_MAC
 	qreal vol = m_oldVolume;
-#endif
 
 	if (!m_crossfading)
 		stop();
@@ -138,7 +107,7 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 	}
 
 	if (!QFile(file).exists()) {
-		_fail();
+		fail();
 		emit message(QMessageBox::Warning, file, "No such file or directory");
 		return;
 	}
@@ -150,10 +119,8 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 
 	emit mediaChanged(m_currentMedia);
 
-#if defined Q_WS_WIN || defined Q_WS_MAC
 	if (vol != -1)
 		setVolume(vol);
-#endif
 }
 
 void NPlaybackEngineGStreamer::setVolume(qreal volume)
@@ -252,6 +219,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 	GstState gstState;
 	if (gst_element_get_state(m_playbin, &gstState, NULL, 0) != GST_STATE_CHANGE_SUCCESS)
 		return;
+
 	N::PlaybackState state = fromGstState(gstState);
 	if (m_oldState != state)
 		emit stateChanged(m_oldState = state);
@@ -291,24 +259,33 @@ void NPlaybackEngineGStreamer::checkStatus()
 		emit tick(m_crossfading ? 0 : gstPos / NSEC_IN_MSEC);
 	}
 
-#if defined Q_WS_WIN || defined Q_WS_MAC
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
 	GstMessage *msg = gst_bus_pop_filtered(bus, GstMessageType(GST_MESSAGE_EOS | GST_MESSAGE_ERROR));
 	if (msg) {
 		switch (GST_MESSAGE_TYPE(msg)) {
-		case GST_MESSAGE_EOS:
-			_on_eos(bus, msg, this);
-			break;
-		case GST_MESSAGE_ERROR:
-			_on_error(bus, msg, this);
-			break;
-		default:
-			break;
+			case GST_MESSAGE_EOS: {
+				stop();
+				emit finished();
+				emit stateChanged(m_oldState = N::PlaybackStopped);
+				break;
+			}
+			case GST_MESSAGE_ERROR:
+				gchar *debug;
+				GError *err;
+				gst_message_parse_error(msg, &err, &debug);
+				g_free(debug);
+
+				emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err->message);
+				fail();
+
+				g_error_free(err);
+				break;
+			default:
+				break;
 		}
 		gst_message_unref(msg);
 	}
 	gst_object_unref(bus);
-#endif
 
 	qreal vol = volume();
 	if (qAbs(m_oldVolume - vol) > 0.0001) {
@@ -320,14 +297,7 @@ void NPlaybackEngineGStreamer::checkStatus()
 		m_timer->stop();
 }
 
-void NPlaybackEngineGStreamer::_finish()
-{
-	stop();
-	emit finished();
-	emit stateChanged(m_oldState = N::PlaybackStopped);
-}
-
-void NPlaybackEngineGStreamer::_fail()
+void NPlaybackEngineGStreamer::fail()
 {
 	if (!m_crossfading) // avoid thread deadlock
 		stop();
@@ -336,11 +306,6 @@ void NPlaybackEngineGStreamer::_fail()
 	emit mediaChanged(m_currentMedia = "");
 	emit failed();
 	emit stateChanged(m_oldState = N::PlaybackStopped);
-}
-
-void NPlaybackEngineGStreamer::_emitError(QString error)
-{
-	emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), error);
 }
 
 void NPlaybackEngineGStreamer::_emitAboutToFinish()

@@ -42,6 +42,7 @@ private:
 	bool m_crossfading;
 
 	N::PlaybackState fromGstState(GstState state);
+	void fail();
 
 public:
 	NPlaybackEngineGStreamer(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
@@ -58,10 +59,7 @@ public:
 	Q_INVOKABLE qreal position();
 	Q_INVOKABLE qint64 durationMsec();
 
-	void _finish();
 	void _emitAboutToFinish();
-	void _fail();
-	void _emitError(QString error);
 	void _crossfadingPrepare();
 	void _crossfadingCancel();
 

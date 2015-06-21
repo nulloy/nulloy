@@ -23,9 +23,7 @@
 
 #include <gst/gst.h>
 
-#if defined Q_WS_WIN || defined Q_WS_MAC
 class QTimer;
-#endif
 
 class NWaveformBuilderGstreamer : public NWaveformBuilderInterface,
                                   public NPlugin,
@@ -37,14 +35,11 @@ class NWaveformBuilderGstreamer : public NWaveformBuilderInterface,
 private:
 	GstElement *m_playbin;
 	QString m_currentFile;
+	QTimer *m_timer;
 	qreal position();
 
-#if defined Q_WS_WIN || defined Q_WS_MAC
-private:
-	QTimer *m_timer;
 private slots:
 	void update();
-#endif
 
 public:
 	NWaveformBuilderGstreamer(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
