@@ -89,7 +89,6 @@ void NCoverWidget::setSource(const QString &file)
 	if (m_coverReader) {
 		m_coverReader->setSource(file);
 		m_pixmap = QPixmap::fromImage(m_coverReader->getImage());
-		m_coverReader->setSource(""); // release the file
 	}
 
 	if (m_pixmap.isNull()){ // fallback to external file
