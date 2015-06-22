@@ -606,14 +606,14 @@ padding: 5px;</string>
        <item>
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="1" column="1">
-          <widget class="QLabel" name="shortJumpLabel">
+          <widget class="QLabel" name="jump1Label">
            <property name="text">
-            <string>Short</string>
+            <string>Jump #1</string>
            </property>
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QDoubleSpinBox" name="shortJumpDoubleSpinBox">
+          <widget class="QDoubleSpinBox" name="jump1DoubleSpinBox">
            <property name="decimals">
             <number>1</number>
            </property>
@@ -639,14 +639,14 @@ padding: 5px;</string>
           </spacer>
          </item>
          <item row="2" column="1">
-          <widget class="QLabel" name="mediumJumpLabel">
+          <widget class="QLabel" name="jump2Label">
            <property name="text">
-            <string>Medium</string>
+            <string>Jump #2</string>
            </property>
           </widget>
          </item>
          <item row="2" column="2">
-          <widget class="QDoubleSpinBox" name="mediumJumpDoubleSpinBox">
+          <widget class="QDoubleSpinBox" name="jump2DoubleSpinBox">
            <property name="decimals">
             <number>1</number>
            </property>
@@ -669,14 +669,14 @@ padding: 5px;</string>
           </spacer>
          </item>
          <item row="3" column="1">
-          <widget class="QLabel" name="LongJumpLabel">
+          <widget class="QLabel" name="jump3Label">
            <property name="text">
-            <string>Long</string>
+            <string>Jump #3</string>
            </property>
           </widget>
          </item>
          <item row="3" column="2">
-          <widget class="QDoubleSpinBox" name="longJumpDoubleSpinBox">
+          <widget class="QDoubleSpinBox" name="jump3DoubleSpinBox">
            <property name="decimals">
             <number>1</number>
            </property>

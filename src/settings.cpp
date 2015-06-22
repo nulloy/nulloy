@@ -48,12 +48,12 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("Shortcuts/PrevAction", "Z");
 	initValue("Shortcuts/NextAction", "B");
 
-	initValue("Shortcuts/ShortJumpForwardAction", "Shift+Right");
-	initValue("Shortcuts/ShortJumpBackwardsAction", "Shift+Left");
-	initValue("Shortcuts/MediumJumpForwardAction", "Right");
-	initValue("Shortcuts/MediumJumpBackwardsAction", "Left");
-	initValue("Shortcuts/LongJumpForwardAction", "Ctrl+Right");
-	initValue("Shortcuts/LongJumpBackwardsAction", "Ctrl+Left");
+	initValue("Shortcuts/Jump1ForwardAction", "Shift+Right");
+	initValue("Shortcuts/Jump1BackwardsAction", "Shift+Left");
+	initValue("Shortcuts/Jump2ForwardAction", "Right");
+	initValue("Shortcuts/Jump2BackwardsAction", "Left");
+	initValue("Shortcuts/Jump3ForwardAction", "Ctrl+Right");
+	initValue("Shortcuts/Jump3BackwardsAction", "Ctrl+Left");
 
 	initValue("Shortcuts/FullScreenAction", "F11");
 
@@ -83,9 +83,9 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("LoadNextSort", QDir::Name);
 	initValue("Volume", 0.8);
 	initValue("ShowDecibelsVolume", false);
-	initValue("ShortJump", 5);
-	initValue("MediumJump", 30);
-	initValue("LongJump", 180);
+	initValue("Jump1", 5);
+	initValue("Jump2", 30);
+	initValue("Jump3", 180);
 
 #ifdef Q_WS_WIN
 	initValue("TaskbarProgress", true);

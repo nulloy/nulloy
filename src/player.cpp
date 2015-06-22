@@ -241,35 +241,35 @@ void NPlayer::createActions()
 	// << playlist actions
 
 	// jump actions >>
-	m_shrJumpFwAction = new NAction(tr("Short Jump Forward"), this);
-	m_shrJumpFwAction->setObjectName("ShortJumpForwardAction");
-	m_shrJumpFwAction->setStatusTip(tr("Make a short jump forward"));
-	m_shrJumpFwAction->setCustomizable(true);
+	m_jump1FwAction = new NAction(tr("Jump #1 Forward"), this);
+	m_jump1FwAction->setObjectName("Jump1ForwardAction");
+	m_jump1FwAction->setStatusTip(tr("Make a jump #1 forward"));
+	m_jump1FwAction->setCustomizable(true);
 
-	m_shrJumpBwAction = new NAction(tr("Short Jump Backwards"), this);
-	m_shrJumpBwAction->setObjectName("ShortJumpBackwardsAction");
-	m_shrJumpBwAction->setStatusTip(tr("Make a short jump backwards"));
-	m_shrJumpBwAction->setCustomizable(true);
+	m_jump1BwAction = new NAction(tr("Jump #1 Backwards"), this);
+	m_jump1BwAction->setObjectName("Jump1BackwardsAction");
+	m_jump1BwAction->setStatusTip(tr("Make a jump #1 backwards"));
+	m_jump1BwAction->setCustomizable(true);
 
-	m_medJumpFwAction = new NAction(tr("Medium Jump Forward"), this);
-	m_medJumpFwAction->setObjectName("MediumJumpForwardAction");
-	m_medJumpFwAction->setStatusTip(tr("Make a medium jump forward"));
-	m_medJumpFwAction->setCustomizable(true);
+	m_jump2FwAction = new NAction(tr("Jump #2 Forward"), this);
+	m_jump2FwAction->setObjectName("Jump2ForwardAction");
+	m_jump2FwAction->setStatusTip(tr("Make a jump #2 forward"));
+	m_jump2FwAction->setCustomizable(true);
 
-	m_medJumpBwAction = new NAction(tr("Medium Jump Backwards"), this);
-	m_medJumpBwAction->setObjectName("MediumJumpBackwardsAction");
-	m_medJumpBwAction->setStatusTip(tr("Make a medium jump backwards"));
-	m_medJumpBwAction->setCustomizable(true);
+	m_jump2BwAction = new NAction(tr("Jump #2 Backwards"), this);
+	m_jump2BwAction->setObjectName("Jump2BackwardsAction");
+	m_jump2BwAction->setStatusTip(tr("Make a jump #2 backwards"));
+	m_jump2BwAction->setCustomizable(true);
 
-	m_lngJumpFwAction = new NAction(tr("Long Jump Forward"), this);
-	m_lngJumpFwAction->setObjectName("LongJumpForwardAction");
-	m_lngJumpFwAction->setStatusTip(tr("Make a long jump forward"));
-	m_lngJumpFwAction->setCustomizable(true);
+	m_jump3FwAction = new NAction(tr("Jump #3 Forward"), this);
+	m_jump3FwAction->setObjectName("Jump3ForwardAction");
+	m_jump3FwAction->setStatusTip(tr("Make a jump #3 forward"));
+	m_jump3FwAction->setCustomizable(true);
 
-	m_lngJumpBwAction = new NAction(tr("Long Jump Backwards"), this);
-	m_lngJumpBwAction->setObjectName("LongJumpBackwardsAction");
-	m_lngJumpBwAction->setStatusTip(tr("Make a long jump backwards"));
-	m_lngJumpBwAction->setCustomizable(true);
+	m_jump3BwAction = new NAction(tr("Jump #3 Backwards"), this);
+	m_jump3BwAction->setObjectName("Jump3BackwardsAction");
+	m_jump3BwAction->setStatusTip(tr("Make a jump #3 backwards"));
+	m_jump3BwAction->setCustomizable(true);
 	// << jump actions
 
 	// keyboard shortcuts
@@ -464,12 +464,12 @@ void NPlayer::connectSignals()
 	connect(m_nextFileByNameDescAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
 	connect(m_nextFileByDateAscd, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
 	connect(m_nextFileByDateDesc, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
-	connect(m_shrJumpFwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_shrJumpBwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_medJumpFwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_medJumpBwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_lngJumpFwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_lngJumpBwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_jump1FwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_jump1BwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_jump2FwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_jump2BwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_jump3FwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	connect(m_jump3BwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
 
 	connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 	connect(m_systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_trayIcon_activated(QSystemTrayIcon::ActivationReason)));
@@ -808,18 +808,18 @@ void NPlayer::on_playlistAction_triggered()
 void NPlayer::on_jumpAction_triggered()
 {
 	NAction *action = reinterpret_cast<NAction *>(QObject::sender());
-	if (action == m_shrJumpFwAction)
-		m_playbackEngine->jump(NSettings::instance()->value("ShortJump").toDouble() * 1000);
-	else if (action == m_shrJumpBwAction)
-		m_playbackEngine->jump(-NSettings::instance()->value("ShortJump").toDouble() * 1000);
-	else if (action == m_medJumpFwAction)
-		m_playbackEngine->jump(NSettings::instance()->value("MediumJump").toDouble() * 1000);
-	else if (action == m_medJumpBwAction)
-		m_playbackEngine->jump(-NSettings::instance()->value("MediumJump").toDouble() * 1000);
-	else if (action == m_lngJumpFwAction)
-		m_playbackEngine->jump(NSettings::instance()->value("LongJump").toDouble() * 1000);
-	else if (action == m_lngJumpBwAction)
-		m_playbackEngine->jump(-NSettings::instance()->value("LongJump").toDouble() * 1000);
+	if (action == m_jump1FwAction)
+		m_playbackEngine->jump(NSettings::instance()->value("Jump1").toDouble() * 1000);
+	else if (action == m_jump1BwAction)
+		m_playbackEngine->jump(-NSettings::instance()->value("Jump1").toDouble() * 1000);
+	else if (action == m_jump2FwAction)
+		m_playbackEngine->jump(NSettings::instance()->value("Jump2").toDouble() * 1000);
+	else if (action == m_jump2BwAction)
+		m_playbackEngine->jump(-NSettings::instance()->value("Jump2").toDouble() * 1000);
+	else if (action == m_jump3FwAction)
+		m_playbackEngine->jump(NSettings::instance()->value("Jump3").toDouble() * 1000);
+	else if (action == m_jump3BwAction)
+		m_playbackEngine->jump(-NSettings::instance()->value("Jump3").toDouble() * 1000);
 }
 
 void NPlayer::on_showCoverAction_toggled(bool checked)

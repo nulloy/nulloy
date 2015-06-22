@@ -89,12 +89,12 @@ private:
 	NAction *m_nextFileByNameDescAction;
 	NAction *m_nextFileByDateAscd;
 	NAction *m_nextFileByDateDesc;
-	NAction *m_shrJumpFwAction;
-	NAction *m_shrJumpBwAction;
-	NAction *m_medJumpFwAction;
-	NAction *m_medJumpBwAction;
-	NAction *m_lngJumpFwAction;
-	NAction *m_lngJumpBwAction;
+	NAction *m_jump1FwAction;
+	NAction *m_jump1BwAction;
+	NAction *m_jump2FwAction;
+	NAction *m_jump2BwAction;
+	NAction *m_jump3FwAction;
+	NAction *m_jump3BwAction;
 	void createActions();
 	void createContextMenu();
 	void createGlobalMenu();
