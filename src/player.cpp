@@ -43,6 +43,10 @@
 #include "w7TaskBar.h"
 #endif
 
+#ifdef Q_WS_MAC
+#include "macDock.h"
+#endif
+
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMenu>
@@ -108,6 +112,11 @@ NPlayer::NPlayer()
 	NW7TaskBar::instance()->setWindow(m_mainWindow);
 	NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
 	connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
+#endif
+
+#ifdef Q_WS_MAC
+	NMacDock::instance()->registerClickHandler();
+	connect(NMacDock::instance(), SIGNAL(clicked()), m_mainWindow, SLOT(show()));
 #endif
 
 	m_mainWindow->setTitle(QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion());
@@ -659,7 +668,9 @@ void NPlayer::on_mainWindow_closed()
 	if (m_settings->value("MinimizeToTray").toBool()) {
 		m_systemTray->setVisible(true);
 	} else {
+#ifndef Q_WS_MAC
 		quit();
+#endif
 	}
 }
 

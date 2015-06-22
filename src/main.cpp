@@ -69,6 +69,8 @@ int main(int argc, char *argv[])
 	NPlayer p;
 	QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
 	                 &p, SLOT(readMessage(const QString &)));
+	QObject::connect(&instance, SIGNAL(aboutToQuit()),
+	                 &p, SLOT(quit()));
 
 	if (NSettings::instance()->value("RestorePlaylist").toBool()) {
 		// try to load default playlist (will fail if msg contained files)

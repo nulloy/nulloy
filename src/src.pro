@@ -28,6 +28,7 @@ include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 include(i18n/i18n.pri)
 include(trash/trash.pri)
 win32:include(ux/w7TaskBar.pri)
+mac:include(ux/macDock.pri)
 
 # zlib
 !mac {
