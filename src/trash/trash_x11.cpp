@@ -13,30 +13,31 @@
 **
 *********************************************************************/
 
+#include "settings.h"
 #include <QProcess>
 
 int _trash(const QString &path, QString *error)
 {
-	QString cmd = "trash";
-	int res;
-
-	res = QProcess::execute("which " + cmd);
-	if (res != 0) {
-		cmd = "trash-put";
-		res = QProcess::execute("which " + cmd);
-	}
-	if (res != 0) {
-		*error = "Package <b>trash-cli</b> is not installed.";
+	bool customTrash = NSettings::instance()->value("CustomTrash").toBool();
+	if (!customTrash) {
+		*error = QString(QObject::tr("Custom Trash Command is not configured."));
 		return -1;
 	}
 
-	QProcess trash;
-	trash.start(cmd + " \"" +  path + "\"");
-	trash.waitForStarted();
-	trash.waitForFinished();
-	if (trash.readAll().startsWith("trash: cannot trash"))
+	QString cmd = NSettings::instance()->value("CustomTrashCommand").toString();
+	if (cmd.isEmpty()) {
+		*error = QString(QObject::tr("Custom Trash Command is enabled but not configured."));
 		return -1;
-	else
-		return 0;
+	}
+
+	cmd.replace("%f", path);
+
+	int res = QProcess::execute(cmd);
+	if (res != 0) {
+		*error = QString(QObject::tr("Custom Trash Command failed with exit code <b>%1</b>.")).arg(res);
+		return -1;
+	}
+
+	return 0;
 }
 

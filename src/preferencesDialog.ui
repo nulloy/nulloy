@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>610</width>
-    <height>582</height>
+    <height>611</height>
    </rect>
   </property>
   <property name="styleSheet">
@@ -51,7 +51,7 @@
             <x>0</x>
             <y>0</y>
             <width>588</width>
-            <height>500</height>
+            <height>529</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -413,6 +413,27 @@ padding: 5px;</string>
              </item>
              <item>
               <widget class="QPushButton" name="fileManagerHelpButton">
+               <property name="text">
+                <string>Help</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_15">
+             <item>
+              <widget class="QCheckBox" name="customTrashCheckBox">
+               <property name="text">
+                <string>Custom Trash Command:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="customTrashCommandLineEdit"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="customTrashHelpButton">
                <property name="text">
                 <string>Help</string>
                </property>

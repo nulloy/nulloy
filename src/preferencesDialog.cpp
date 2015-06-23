@@ -60,12 +60,19 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.restorePlaylistCheckBox, SIGNAL(toggled(bool)), ui.startPausedCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.customFileManagerCheckBox, SIGNAL(toggled(bool)), ui.customFileManagerCommandLineEdit, SLOT(setEnabled(bool)));
+	connect(ui.customTrashCheckBox, SIGNAL(toggled(bool)), ui.customTrashCommandLineEdit, SLOT(setEnabled(bool)));
 
 	setWindowTitle(QCoreApplication::applicationName() + tr(" Preferences"));
 
 #ifdef _N_NO_SKINS_
 	ui.skinLabel->hide();
 	ui.skinComboBox->hide();
+#endif
+
+#if defined Q_WS_WIN || defined Q_WS_MAC
+	ui.customTrashCheckBox->hide();
+	ui.customTrashCommandLineEdit->hide();
+	ui.customTrashHelpButton->hide();
 #endif
 
 	QPixmap pixmap = QIcon::fromTheme("dialog-warning", style()->standardIcon(QStyle::SP_MessageBoxWarning)).pixmap(16);
@@ -161,6 +168,44 @@ void NPreferencesDialog::on_fileManagerHelpButton_clicked()
 
 	dialog->show();
 	dialog->resize(640, 300);
+}
+
+void NPreferencesDialog::on_customTrashHelpButton_clicked()
+{
+#if !defined Q_WS_WIN && !defined Q_WS_MAC
+	QDialog *dialog = new QDialog(this);
+	dialog->setWindowTitle("Trash Command Configuration");
+
+	QVBoxLayout *layout = new QVBoxLayout;
+	dialog->setLayout(layout);
+
+	QTextBrowser *textBrowser = new QTextBrowser(this);
+	textBrowser->setHtml(
+		tr("Supported parameters:") +
+		"<ul>" +
+			"<li><b>%f</b> - " + tr("File path") + "</li>" +
+		"</ul>" +
+		tr("Examples:") +
+		"<ul style=\"font-family: 'Lucida Console', Monaco, monospace\">" +
+			"<li>/usr/bin/trash-put '%f'</li>" +
+			"<li>sh -c \"mv '%f' $HOME/.Trash\"</li>" +
+		"</ul>");
+	textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
+	textBrowser->setFrameShape(QFrame::NoFrame);
+
+	layout->addWidget(textBrowser);
+
+	QPushButton *closeButton = new QPushButton(tr("Close"));
+	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept()));
+	QHBoxLayout *buttonLayout = new QHBoxLayout();
+	buttonLayout->addStretch();
+	buttonLayout->addWidget(closeButton);
+	buttonLayout->addStretch();
+	layout->addLayout(buttonLayout);
+
+	dialog->show();
+	dialog->resize(640, 300);
+#endif
 }
 
 void NPreferencesDialog::on_titleFormatHelpButton_clicked()
@@ -318,6 +363,7 @@ void NPreferencesDialog::loadSettings()
 	ui.enqueueFilesCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool());
 	ui.playEnqueuedCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool() && NSettings::instance()->value("EnqueueFiles").toBool());
 	ui.customFileManagerCommandLineEdit->setEnabled(NSettings::instance()->value("CustomFileManager").toBool());
+	ui.customTrashCommandLineEdit->setEnabled(NSettings::instance()->value("CustomTrash").toBool());
 	ui.versionLabel->setText("");
 	// << general
 
