@@ -91,12 +91,13 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("TaskbarProgress", true);
 #endif
 
-	initValue("FileFilters", QStringList() << "*.m3u" << "*.m3u8"
-	                         << "*.mp3"  << "*.ogg" << "*.mp4" << "*.wma"
-	                         << "*.flac" << "*.ape" << "*.wav" << "*.wv" << "*.tta"
-	                         << "*.mpc"  << "*.spx" << "*.opus"
-	                         << "*.m4a"  << "*.aac" << "*.aiff"
-	                         << "*.xm"   << "*.s3m" << "*.it" << "*.mod");
+	initValue("FileFilters", QString(
+		"*.m3u *.m3u8 \
+		*.mp3 *.ogg *.mp4 *.wma \
+		*.flac *.ape *.wav *.wv *.tta \
+		*.mpc *.spx *.opus \
+		*.m4a *.aac *.aiff \
+		*.xm *.s3m *.it *.mod").simplified());
 
 	initValue("TrackInfo/TopLeft", "{%B kbps/|}{%s kHz|}");
 	initValue("TrackInfo/MiddleCenter", "{%a - %t|%F}");

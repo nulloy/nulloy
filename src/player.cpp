@@ -852,7 +852,7 @@ void NPlayer::showAboutMessageBox()
 
 void NPlayer::showOpenFileDialog()
 {
-	QString filters = NSettings::instance()->value("FileFilters").toStringList().join(" ");
+	QString filters = NSettings::instance()->value("FileFilters").toString();
 	QStringList files = QFileDialog::getOpenFileNames(
 	                    m_mainWindow,
 	                    qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
@@ -893,7 +893,7 @@ void NPlayer::showOpenDirDialog()
 	m_settings->setValue("LastDirectory", lastDir);
 
 	bool isEmpty = (m_playlistWidget->count() == 0);
-	m_playlistWidget->addFiles(NCore::dirListRecursive(dir, NSettings::instance()->value("FileFilters").toStringList()));
+	m_playlistWidget->addFiles(NCore::dirListRecursive(dir, NSettings::instance()->value("FileFilters").toString().split(' ')));
 	if (isEmpty)
 		m_playlistWidget->playRow(0);
 }

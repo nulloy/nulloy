@@ -433,7 +433,7 @@ void NWaveformSlider::dropEvent(QDropEvent *event)
 	if (data->hasUrls()) {
 		QStringList files;
 		foreach (QUrl url, data->urls())
-			files << NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toStringList());
+			files << NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '));
 		emit filesDropped(files);
 	}
 

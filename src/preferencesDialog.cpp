@@ -279,7 +279,6 @@ void NPreferencesDialog::loadSettings()
 	ui.startPausedCheckBox->setEnabled(NSettings::instance()->value("RestorePlaylist").toBool());
 	ui.enqueueFilesCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool());
 	ui.playEnqueuedCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool() && NSettings::instance()->value("EnqueueFiles").toBool());
-	ui.fileFiltersTextEdit->setPlainText(NSettings::instance()->value("FileFilters").toStringList().join(" "));
 	ui.versionLabel->setText("");
 	// << general
 
@@ -368,7 +367,6 @@ void NPreferencesDialog::saveSettings()
 		}
 	}
 
-	NSettings::instance()->setValue("FileFilters", ui.fileFiltersTextEdit->toPlainText().split(" "));
 #ifdef Q_WS_WIN
 	NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
 #endif

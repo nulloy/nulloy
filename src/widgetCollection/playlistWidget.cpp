@@ -330,7 +330,7 @@ void NPlaylistWidget::playNextItem()
 			QDir::SortFlag flag = (QDir::SortFlag)NSettings::instance()->value("LoadNextSort").toInt();
 			QString file = m_currentItem->data(N::PathRole).toString();
 			QString path = QFileInfo(file).path();
-			QStringList entryList = QDir(path).entryList(NSettings::instance()->value("FileFilters").toStringList(), QDir::Files | QDir::NoDotAndDotDot, flag);
+			QStringList entryList = QDir(path).entryList(NSettings::instance()->value("FileFilters").toString().split(' '), QDir::Files | QDir::NoDotAndDotDot, flag);
 			int index = entryList.indexOf(QFileInfo(file).fileName());
 			if (index != -1 && entryList.size() > index + 1) {
 				addItem(new NPlaylistWidgetItem(QFileInfo(path + "/" + entryList.at(index + 1))));
@@ -504,7 +504,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
 		wasEmpty = true;
 
 	foreach (QUrl url, data->urls()) {
-		foreach (QString file, NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toStringList())) {
+		foreach (QString file, NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '))) {
 			insertItem(index, new NPlaylistWidgetItem(QFileInfo(file)));
 			++index;
 		}
