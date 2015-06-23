@@ -51,11 +51,14 @@
 #include <QFileInfo>
 #include <QMenu>
 #include <QMetaObject>
+#include <QResizeEvent>
+#include <QMenuBar>
+
+#ifndef _N_NO_UPDATE_CHECK_
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QResizeEvent>
-#include <QMenuBar>
+#endif
 
 NPlayer::NPlayer()
 {
@@ -86,7 +89,6 @@ NPlayer::NPlayer()
 	scriptFile.close();
 	QScriptValue skinProgram = m_scriptEngine->evaluate("Main").construct();
 
-	m_versionDownloader = new QNetworkAccessManager(this);
 	m_aboutDialog = NULL;
 	m_logDialog = new NLogDialog(m_mainWindow);
 	m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
@@ -107,6 +109,12 @@ NPlayer::NPlayer()
 	createActions();
 	loadSettings();
 	connectSignals();
+
+#ifndef _N_NO_UPDATE_CHECK_
+	m_versionDownloader = new QNetworkAccessManager(this);
+	connect(m_versionDownloader, SIGNAL(finished(QNetworkReply *)), this, SLOT(on_versionDownloader_finished(QNetworkReply *)));
+	connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
+#endif
 
 #ifdef Q_WS_WIN
 	NW7TaskBar::instance()->setWindow(m_mainWindow);
@@ -391,7 +399,6 @@ void NPlayer::connectSignals()
 	connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
 
 	connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(on_preferencesDialog_settingsChanged()));
-	connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
 
 	if (m_coverWidget)
 		connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_coverWidget, SLOT(setSource(const QString &)));
@@ -437,8 +444,6 @@ void NPlayer::connectSignals()
 
 	connect(m_waveformSlider, SIGNAL(filesDropped(const QStringList &)), m_playlistWidget, SLOT(playFiles(const QStringList &)));
 	connect(m_waveformSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setPosition(qreal)));
-
-	connect(m_versionDownloader, SIGNAL(finished(QNetworkReply *)), this, SLOT(on_versionDownloader_finished(QNetworkReply *)));
 
 	connect(m_showHideAction, SIGNAL(triggered()), this, SLOT(toggleWindowVisibility()));
 	connect(m_playAction, SIGNAL(triggered()), m_playbackEngine, SLOT(play()));
@@ -588,8 +593,10 @@ void NPlayer::loadSettings()
 {
 	m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
 
+#ifndef _N_NO_UPDATE_CHECK_
 	if (m_settings->value("AutoCheckUpdates").toBool())
 		downloadVersion();
+#endif
 
 	m_showCoverAction->setChecked(m_settings->value("ShowCoverArt").toBool());
 	if (m_coverWidget)
@@ -627,6 +634,8 @@ void NPlayer::on_preferencesDialog_settingsChanged()
 	m_trackInfoWidget->updateInfo();
 }
 
+
+#ifndef _N_NO_UPDATE_CHECK_
 void NPlayer::downloadVersion()
 {
 	QString suffix;
@@ -662,6 +671,7 @@ void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
 
 	reply->deleteLater();
 }
+#endif
 
 void NPlayer::on_mainWindow_closed()
 {

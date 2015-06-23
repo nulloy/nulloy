@@ -75,6 +75,12 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	ui.customTrashHelpButton->hide();
 #endif
 
+#ifdef _N_NO_UPDATE_CHECK_
+	ui.autoCheckUpdatesCheckBox->hide();
+	ui.versionCheckButton->hide();
+	ui.versionLabel->hide();
+#endif
+
 	QPixmap pixmap = QIcon::fromTheme("dialog-warning", style()->standardIcon(QStyle::SP_MessageBoxWarning)).pixmap(16);
 	QByteArray byteArray;
 	QBuffer buffer(&byteArray);
@@ -122,6 +128,7 @@ void NPreferencesDialog::showEvent(QShowEvent *event)
 	QDialog::showEvent(event);
 }
 
+#ifndef _N_NO_UPDATE_CHECK_
 void NPreferencesDialog::setVersionLabel(QString text)
 {
 	ui.versionLabel->setText(text);
@@ -132,6 +139,7 @@ void NPreferencesDialog::on_versionCheckButton_clicked()
 	ui.versionLabel->setText("Checking...");
 	emit versionRequested();
 }
+#endif
 
 void NPreferencesDialog::on_fileManagerHelpButton_clicked()
 {

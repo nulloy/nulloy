@@ -75,6 +75,7 @@ RESOURCES += icons/icons.qrc
 win32:RC_FILE = icons/icon.rc
 mac:ICON = icons/icon.icns
 
+no-update-check:DEFINES += _N_NO_UPDATE_CHECK_
 
 include(version.pri)
 DEFINES += _N_VERSION_=\""\\\"$${N_VERSION}\\\""\"

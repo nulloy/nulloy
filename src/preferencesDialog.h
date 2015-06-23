@@ -39,13 +39,9 @@ public:
 	NPreferencesDialog(QWidget *parent = 0);
 	~NPreferencesDialog();
 
-public slots:
-	void setVersionLabel(QString text);
-
 private slots:
 	void loadSettings();
 	void saveSettings();
-	void on_versionCheckButton_clicked();
 	void on_fileManagerHelpButton_clicked();
 	void on_customTrashHelpButton_clicked();
 	void on_titleFormatHelpButton_clicked();
@@ -53,7 +49,17 @@ private slots:
 
 signals:
 	void settingsChanged();
+
+#ifndef _N_NO_UPDATE_CHECK_
+public slots:
+	void setVersionLabel(QString text);
+
+private slots:
+	void on_versionCheckButton_clicked();
+
+signals:
 	void versionRequested();
+#endif
 };
 
 #endif

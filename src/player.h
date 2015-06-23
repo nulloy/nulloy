@@ -33,10 +33,13 @@ class NSettings;
 class NTrackInfoWidget;
 class QMenu;
 class NAction;
-class QNetworkAccessManager;
-class QNetworkReply;
 class QString;
 class QTimer;
+
+#ifndef _N_NO_UPDATE_CHECK_
+class QNetworkAccessManager;
+class QNetworkReply;
+#endif
 
 class NPlayer : public QWidget
 {
@@ -58,7 +61,6 @@ private:
 	NPlaylistWidget *m_playlistWidget;
 	NTrackInfoWidget *m_trackInfoWidget;
 	NLogDialog *m_logDialog;
-	QNetworkAccessManager *m_versionDownloader;
 	QSystemTrayIcon *m_systemTray;
 	QTimer *m_trayClickTimer;
 	bool m_trayIconDoubleClickCheck;
@@ -121,8 +123,6 @@ private slots:
 	void on_showCoverAction_toggled(bool checked);
 	void on_playButton_clicked();
 	void on_playbackEngine_failed();
-	void downloadVersion();
-	void on_versionDownloader_finished(QNetworkReply *reply);
 	void on_playlistAction_triggered();
 	void on_jumpAction_triggered();
 
@@ -131,6 +131,15 @@ private slots:
 	void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
 	void on_trayClickTimer_timeout();
 	void trayIconCountClicks(int clicks);
+
+#ifndef _N_NO_UPDATE_CHECK_
+private:
+	QNetworkAccessManager *m_versionDownloader;
+
+private slots:
+	void downloadVersion();
+	void on_versionDownloader_finished(QNetworkReply *reply);
+#endif
 
 public slots:
 	void quit();
