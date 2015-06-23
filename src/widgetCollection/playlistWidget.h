@@ -54,6 +54,7 @@ private:
 	void contextMenuEvent(QContextMenuEvent *event);
 	void setCurrentItem(NPlaylistWidgetItem *item);
 	void activateItem(NPlaylistWidgetItem *item);
+	bool revealInFileManager(const QString &file, QString *error);
 
 protected:
 	void wheelEvent(QWheelEvent *event);

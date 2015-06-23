@@ -15,8 +15,6 @@
 
 #include "common.h"
 
-#include "settings.h"
-
 #include <QtCore>
 #include <QCoreApplication>
 #include <QDir>
@@ -103,7 +101,6 @@ QString NCore::rcDir()
 	return _rcDir;
 }
 
-
 QStringList NCore::_processPath(const QString &path, const QStringList &nameFilters)
 {
 	QStringList list;
@@ -128,44 +125,3 @@ QStringList NCore::dirListRecursive(const QString &path, const QStringList &name
 {
 	return _processPath(path, nameFilters);
 }
-
-bool NCore::revealInFileManager(const QString &file, QString *error)
-{
-	QFileInfo fileInfo(file);
-
-	if (!fileInfo.exists()) {
-		*error = QString(QObject::tr("File doesn't exist: <b>%1</b>")).arg(QFileInfo(file).fileName());
-		return false;
-	}
-
-	QString cmd;
-
-	bool customFileManager = NSettings::instance()->value("CustomFileManager").toBool();
-	if (customFileManager) {
-		cmd = NSettings::instance()->value("CustomFileManagerCommand").toString();
-		if (cmd.isEmpty()) {
-			*error = QString(QObject::tr("Custom File Manager is enabled but not configured."));
-			return false;
-		}
-		cmd.replace("%f", fileInfo.fileName());
-		cmd.replace("%d", fileInfo.canonicalPath());
-	} else {
-		QString path = fileInfo.canonicalFilePath();
-#if defined Q_WS_WIN
-		cmd = "explorer.exe /n,/select,\"" + path.replace('/', '\\') + "\"";
-#elif defined Q_WS_X11
-		cmd = "xdg-open \"" + fileInfo.canonicalPath() + "\"";
-#elif defined Q_WS_MAC
-		cmd = "open -R \"" + path + "\"";
-#endif
-	}
-
-	int res = QProcess::execute(cmd);
-	if (res != 0) {
-		*error = QString(QObject::tr("Custom File Manager command failed with exit code <b>%1</b>.")).arg(res);
-		return false;
-	}
-
-	return true;
-}
-

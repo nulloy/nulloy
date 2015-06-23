@@ -150,7 +150,7 @@ void NPreferencesDialog::on_fileManagerHelpButton_clicked()
 		"</ul>" +
 		tr("Examples:") +
 		"<ul style=\"font-family: 'Lucida Console', Monaco, monospace\">" +
-			"<li>open -a '/Applications/Path Finder.app' '%d/%f'</li>" +
+			"<li>sh -c \"open -a '/Applications/Path Finder.app' '%d/%f'\"</li>" +
 			"<li>sh -c \"/usr/bin/pcmanfm -n '%d' && sleep 0.1 && xdotool type '%f' && xdotool key Escape\"</li>" +
 		"</ul>");
 	textBrowser->setStyleSheet("QTextBrowser { background: transparent }");

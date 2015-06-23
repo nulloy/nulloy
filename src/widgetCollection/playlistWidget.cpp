@@ -145,8 +145,48 @@ void NPlaylistWidget::on_removeAction_triggered()
 void NPlaylistWidget::on_revealAction_triggered()
 {
 	QString error;
-	if (!NCore::revealInFileManager(selectedItems().first()->data(N::PathRole).toString(), &error))
+	if (!revealInFileManager(selectedItems().first()->data(N::PathRole).toString(), &error))
 		QMessageBox::warning(this, QObject::tr("Reveal in File Manager Error"), error, QMessageBox::Close);
+}
+
+bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error)
+{
+	QFileInfo fileInfo(file);
+
+	if (!fileInfo.exists()) {
+		*error = QString(QObject::tr("File doesn't exist: <b>%1</b>")).arg(QFileInfo(file).fileName());
+		return false;
+	}
+
+	QString cmd;
+
+	bool customFileManager = NSettings::instance()->value("CustomFileManager").toBool();
+	if (customFileManager) {
+		cmd = NSettings::instance()->value("CustomFileManagerCommand").toString();
+		if (cmd.isEmpty()) {
+			*error = QString(QObject::tr("Custom File Manager is enabled but not configured."));
+			return false;
+		}
+		cmd.replace("%f", fileInfo.fileName());
+		cmd.replace("%d", fileInfo.canonicalPath());
+	} else {
+		QString path = fileInfo.canonicalFilePath();
+#if defined Q_WS_WIN
+		cmd = "explorer.exe /n,/select,\"" + path.replace('/', '\\') + "\"";
+#elif defined Q_WS_X11
+		cmd = "xdg-open \"" + fileInfo.canonicalPath() + "\"";
+#elif defined Q_WS_MAC
+		cmd = "open -R \"" + path + "\"";
+#endif
+	}
+
+	int res = QProcess::execute(cmd);
+	if (res != 0) {
+		*error = QString(QObject::tr("Custom File Manager command failed with exit code <b>%1</b>.")).arg(res);
+		return false;
+	}
+
+	return true;
 }
 
 NPlaylistWidget::~NPlaylistWidget() {}
