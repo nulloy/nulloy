@@ -46,6 +46,7 @@ private slots:
 	void loadSettings();
 	void saveSettings();
 	void on_versionCheckButton_clicked();
+	void on_fileManagerHelpButton_clicked();
 	void on_titleFormatHelpButton_clicked();
 	void on_languageComboBox_activated(int index);
 

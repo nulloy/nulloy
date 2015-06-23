@@ -400,6 +400,27 @@ padding: 5px;</string>
             </layout>
            </item>
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_14">
+             <item>
+              <widget class="QCheckBox" name="customFileManagerCheckBox">
+               <property name="text">
+                <string>Custom File Manager:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="customFileManagerCommandLineEdit"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="fileManagerHelpButton">
+               <property name="text">
+                <string>Help</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
               <widget class="QLabel" name="fileFiltersLabel">

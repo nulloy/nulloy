@@ -59,6 +59,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	connect(ui.enqueueFilesCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
 	connect(ui.restorePlaylistCheckBox, SIGNAL(toggled(bool)), ui.startPausedCheckBox, SLOT(setEnabled(bool)));
+	connect(ui.customFileManagerCheckBox, SIGNAL(toggled(bool)), ui.customFileManagerCommandLineEdit, SLOT(setEnabled(bool)));
 
 	setWindowTitle(QCoreApplication::applicationName() + tr(" Preferences"));
 
@@ -123,6 +124,43 @@ void NPreferencesDialog::on_versionCheckButton_clicked()
 {
 	ui.versionLabel->setText("Checking...");
 	emit versionRequested();
+}
+
+void NPreferencesDialog::on_fileManagerHelpButton_clicked()
+{
+	QDialog *dialog = new QDialog(this);
+	dialog->setWindowTitle("File Manager Configuration");
+
+	QVBoxLayout *layout = new QVBoxLayout;
+	dialog->setLayout(layout);
+
+	QTextBrowser *textBrowser = new QTextBrowser(this);
+	textBrowser->setHtml(
+		tr("Supported parameters:") +
+		"<ul>" +
+			"<li><b>%f</b> - " + tr("File name") + "</li>" +
+			"<li><b>%d</b> - " + tr("Directory path") + "</li>" +
+		"</ul>" +
+		tr("Examples:") +
+		"<ul style=\"font-family: 'Lucida Console', Monaco, monospace\">" +
+			"<li>open -a '/Applications/Path Finder.app' '%d/%f'</li>" +
+			"<li>sh -c \"/usr/bin/pcmanfm -n '%d' && sleep 0.1 && xdotool type '%f' && xdotool key Escape\"</li>" +
+		"</ul>");
+	textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
+	textBrowser->setFrameShape(QFrame::NoFrame);
+
+	layout->addWidget(textBrowser);
+
+	QPushButton *closeButton = new QPushButton(tr("Close"));
+	connect(closeButton, SIGNAL(clicked()), dialog, SLOT(accept()));
+	QHBoxLayout *buttonLayout = new QHBoxLayout();
+	buttonLayout->addStretch();
+	buttonLayout->addWidget(closeButton);
+	buttonLayout->addStretch();
+	layout->addLayout(buttonLayout);
+
+	dialog->show();
+	dialog->resize(640, 300);
 }
 
 void NPreferencesDialog::on_titleFormatHelpButton_clicked()
@@ -279,6 +317,7 @@ void NPreferencesDialog::loadSettings()
 	ui.startPausedCheckBox->setEnabled(NSettings::instance()->value("RestorePlaylist").toBool());
 	ui.enqueueFilesCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool());
 	ui.playEnqueuedCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool() && NSettings::instance()->value("EnqueueFiles").toBool());
+	ui.customFileManagerCommandLineEdit->setEnabled(NSettings::instance()->value("CustomFileManager").toBool());
 	ui.versionLabel->setText("");
 	// << general
 

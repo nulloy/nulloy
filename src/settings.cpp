@@ -91,6 +91,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("TaskbarProgress", true);
 #endif
 
+	initValue("CustomFileManager", false);
 	initValue("FileFilters", QString(
 		"*.m3u *.m3u8 \
 		*.mp3 *.ogg *.mp4 *.wma \

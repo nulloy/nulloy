@@ -15,6 +15,8 @@
 
 #include "common.h"
 
+#include "settings.h"
+
 #include <QtCore>
 #include <QCoreApplication>
 #include <QDir>
@@ -136,41 +138,33 @@ bool NCore::revealInFileManager(const QString &file, QString *error)
 		return false;
 	}
 
-	QString fileManagerCommand;
-	QStringList arguments;
-	QString path = fileInfo.canonicalFilePath();
-#if defined Q_WS_WIN
-	fileManagerCommand = "explorer.exe";
-	arguments << "/n,/select,";
-	path = path.replace('/', '\\');
-#elif defined Q_WS_X11
-	QProcess xdg;
-	xdg.start("xdg-mime query default inode/directory");
-	xdg.waitForStarted();
-	xdg.waitForFinished();
+	QString cmd;
 
-	fileManagerCommand = QString::fromUtf8(xdg.readAll()).simplified().remove(".desktop");
-	if (QProcess::execute("which " + fileManagerCommand) != 0) {
-		*error = QString(QObject::tr("Default file manager is set to <b>%1</b> but it's not available.")).arg(fileManagerCommand);
+	bool customFileManager = NSettings::instance()->value("CustomFileManager").toBool();
+	if (customFileManager) {
+		cmd = NSettings::instance()->value("CustomFileManagerCommand").toString();
+		if (cmd.isEmpty()) {
+			*error = QString(QObject::tr("Custom File Manager is enabled but not configured."));
+			return false;
+		}
+		cmd.replace("%f", fileInfo.fileName());
+		cmd.replace("%d", fileInfo.canonicalPath());
+	} else {
+		QString path = fileInfo.canonicalFilePath();
+#if defined Q_WS_WIN
+		cmd = "explorer.exe /n,/select,\"" + path.replace('/', '\\') + "\"";
+#elif defined Q_WS_X11
+		cmd = "xdg-open \"" + fileInfo.canonicalPath() + "\"";
+#elif defined Q_WS_MAC
+		cmd = "open -R \"" + path + "\"";
+#endif
+	}
+
+	int res = QProcess::execute(cmd);
+	if (res != 0) {
+		*error = QString(QObject::tr("Custom File Manager command failed with exit code <b>%1</b>.")).arg(res);
 		return false;
 	}
-
-	if (fileManagerCommand == "dolphin") {
-		arguments << "--select";
-	} else if (fileManagerCommand != "nautilus") {
-		path = fileInfo.canonicalPath();
-	}
-#elif defined Q_WS_MAC
-	fileManagerCommand = "open";
-	arguments << "-R";
-#endif
-
-	arguments << path;
-
-	QProcess reveal;
-	reveal.start(fileManagerCommand, arguments);
-	reveal.waitForStarted();
-	reveal.waitForFinished();
 
 	return true;
 }
