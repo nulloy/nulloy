@@ -135,45 +135,42 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 
 	QTextBrowser *textBrowser = new QTextBrowser(this);
 	textBrowser->setHtml(
-		"<table width=\"100%\">"
-			"<tr><td><b>%a</b></td><td>" + tr("Artist") + "</td></tr>"
-			"<tr><td><b>%t</b></td><td>" + tr("Title") + "</td></tr>"
-			"<tr><td><b>%A</b></td><td>" + tr("Album") + "</td></tr>"
-			"<tr><td><b>%c</b></td><td>" + tr("Comment") + "</td></tr>"
-			"<tr><td><b>%g</b></td><td>" + tr("Genre") + "</td></tr>"
-			"<tr><td><b>%y</b></td><td>" + tr("Year") + "</td></tr>"
-			"<tr><td><b>%n</b></td><td>" + tr("Track number") + "</td></tr>"
-			"<tr><td></td><td></td></tr>"
-			"<tr><td><b>%T</b></td><td>" + tr("Current time position (Waveform only)") + "</td></tr>"
-			"<tr><td><b>%r</b></td><td>" + tr("Remaining time (Waveform only)") + "</td></tr>"
-			"<tr><td></td><td></td></tr>"
-			"<tr><td><b>%C</b></td><td>" + tr("Time position under cursor (Tooltip only)") + "</td></tr>"
-			"<tr><td><b>%o</b></td><td>" + tr("Time offset under cursor (Tooltip only)") + "</td></tr>"
-			"<tr><td></td><td></td></tr>"
-			"<tr><td><b>%d</b></td><td>" + tr("Duration in format hh:mm:ss") + "</td></tr>"
-			"<tr><td><b>%d</b></td><td>" + tr("Duration in seconds") + "</td></tr>"
-			"<tr><td><b>%b</b></td><td>" + tr("Bit depth") + "</td></tr>"
-			"<tr><td><b>%B</b></td><td>" + tr("Bitrate in Kbps") + "</td></tr>"
-			"<tr><td><b>%s</b></td><td>" + tr("Sample rate in kHz") + "</td></tr>"
-			"<tr><td><b>%c</b></td><td>" + tr("Number of channels") + "</td></tr>"
-			"<tr><td></td><td></td></tr>"
-			"<tr><td><b>%f</b></td><td>" + tr("File name without extension") + "</td></tr>"
-			"<tr><td><b>%F</b></td><td>" + tr("File name") + "</td></tr>"
-			"<tr><td><b>%p</b></td><td>" + tr("File name including absolute path") + "</td></tr>"
-			"<tr><td><b>%e</b></td><td>" + tr("File name extension") + "</td></tr>"
-			"<tr><td><b>%E</b></td><td>" + tr("File name extension, uppercased") + "</td></tr>"
-			"<tr><td></td><td></td></tr>"
-			"<tr><td><b>%v</b></td><td>" + tr("Version number") + "</td></tr>"
-			"<tr><td><b>%%</b></td><td>" + tr("\'%\' character") + "</td></tr>"
-			"<tr><td></td><td></td></tr>"
-			"<tr><td>" + tr("Conditions:") + "</td><td></td></tr>"
-			"<tr><td><b>{</b><i>" + tr("true") + "</i><b>|</b><i>" + tr("false") + "</i><b>}</b></td><td>" + tr("if...else: evaluate for <i>true</i> or <i>false</i> case. Note: nesting conditions is not supported yet.") + "</td></tr>"
-			"<tr><td></td><td></td></tr>"
-			"<tr><td>" + tr("Examples:") + "</td><td></td></tr>"
-			"<tr><td><b>{%a - %t|%F}&nbsp;&nbsp;</b></td><td>" + tr("Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.") + "</td></tr>"
-			"<tr><td></td><td></td></tr>"
-			"<tr><td><b>{%g|}</b></td><td>" + tr("Print Genre. If not available, print nothing.") + "</td></tr>"
-		"</table><br>");
+		tr("Supported parameters:") +
+		"<ul>" +
+			"<li><b>%a</b> - " + tr("Artist") + "</li>" +
+			"<li><b>%t</b> - " + tr("Title") + "</li>" +
+			"<li><b>%A</b> - " + tr("Album") + "</li>" +
+			"<li><b>%c</b> - " + tr("Comment") + "</li>" +
+			"<li><b>%g</b> - " + tr("Genre") + "</li>" +
+			"<li><b>%y</b> - " + tr("Year") + "</li>" +
+			"<li><b>%n</b> - " + tr("Track number") + "</li>" +
+			"<li><b>%T</b> - " + tr("Current time position (Waveform only)") + "</li>" +
+			"<li><b>%r</b> - " + tr("Remaining time (Waveform only)") + "</li>" +
+			"<li><b>%C</b> - " + tr("Time position under cursor (Tooltip only)") + "</li>" +
+			"<li><b>%o</b> - " + tr("Time offset under cursor (Tooltip only)") + "</li>" +
+			"<li><b>%d</b> - " + tr("Duration in format hh:mm:ss") + "</li>" +
+			"<li><b>%d</b> - " + tr("Duration in seconds") + "</li>" +
+			"<li><b>%b</b> - " + tr("Bit depth") + "</li>" +
+			"<li><b>%B</b> - " + tr("Bitrate in Kbps") + "</li>" +
+			"<li><b>%s</b> - " + tr("Sample rate in kHz") + "</li>" +
+			"<li><b>%c</b> - " + tr("Number of channels") + "</li>" +
+			"<li><b>%f</b> - " + tr("File name without extension") + "</li>" +
+			"<li><b>%F</b> - " + tr("File name") + "</li>" +
+			"<li><b>%p</b> - " + tr("File name including absolute path") + "</li>" +
+			"<li><b>%e</b> - " + tr("File name extension") + "</li>" +
+			"<li><b>%E</b> - " + tr("File name extension, uppercased") + "</li>" +
+			"<li><b>%v</b> - " + tr("Version number") + "</li>" +
+			"<li><b>%%</b> - " + tr("\'%\' character") + "</li>" +
+		"</ul>" +
+		tr("Conditions:") +
+		"<ul>" +
+			"<li><b>{<i>" + tr("true") + "</i>|<i>" + tr("false") + "</i>}</b> - " + tr("Evaluate for <b><i>true</i></b> or <b><i>false</i></b> case. Note: nesting conditions is not supported yet.") + "</li>"
+		"</ul>" +
+		tr("Examples:") +
+		"<ul>" +
+			"<li><b>{%a - %t|%F}</b> - " + tr("Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.") + "</li>"
+			"<li><b>{%g|}</b> - " + tr("Print Genre. If not available, print nothing.") + "</li>"
+		"</ul>");
 	textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
 	textBrowser->setFrameShape(QFrame::NoFrame);
 
@@ -188,7 +185,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 	layout->addLayout(buttonLayout);
 
 	dialog->show();
-	dialog->resize(400, 400);
+	dialog->resize(640, 480);
 }
 
 QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
