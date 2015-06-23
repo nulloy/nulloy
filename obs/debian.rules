@@ -17,7 +17,7 @@ endif
 build: build-stamp
 build-stamp:
 	dh_testdir
-	QMAKE=qmake-qt4 LRELEASE=lrelease-qt4 ./configure --prefix=/usr --taglib $(CONFIG_FLAGS)
+	QMAKE=qmake-qt4 LRELEASE=lrelease-qt4 ./configure --taglib --no-update-check --prefix=/usr $(CONFIG_FLAGS)
 	make
 	touch build-stamp
 
