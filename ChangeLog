@@ -1,3 +1,17 @@
+* 0.8, Tue Jul 7 2015
+- Upgraded to GStreamer 1.0
+- Lower CPU usage
+- New Slim skin
+- Gappless playback
+- Jump shortcuts
+- Media keys support
+- Fancy Cover Art popup
+- Support for external Cover Art files
+- Custom file manager support
+- Linux: custom trash command support
+- Mac: allow running on background when window closed
+- Many other bug fixes and improvements
+
 * 0.7.5, Thu Aug 7 2014
 - Search Cover Art in same directory
 - Fix: broken standard shortcuts
