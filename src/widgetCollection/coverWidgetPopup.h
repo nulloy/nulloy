@@ -13,36 +13,35 @@
 **
 *********************************************************************/
 
-#ifndef N_COVER_WIDGET_H
-#define N_COVER_WIDGET_H
+#ifndef N_COVER_WIDGET_POPUP_H
+#define N_COVER_WIDGET_POPUP_H
 
 #include <QLabel>
 
-class NCoverReaderInterface;
-class NCoverWidgetPopup;
+class QPropertyAnimation;
+class QGraphicsOpacityEffect;
 
-class NCoverWidget : public QLabel
+#define MARGIN 50
+
+class NCoverWidgetPopup : public QWidget
 {
 	Q_OBJECT
 
 private:
-	NCoverReaderInterface *m_coverReader;
-	QPixmap m_pixmap;
-	NCoverWidgetPopup *m_popup;
-
-	void resizeEvent(QResizeEvent *event);
-	void mousePressEvent(QMouseEvent *event);
-	void changeEvent(QEvent *event);
-	void fitToHeight(int height);
-	void init();
+	QGraphicsOpacityEffect *m_effect;
+	QPropertyAnimation *m_animation;
+	QLabel *m_pixmapLabel;
+	void mousePressEvent(QMouseEvent *);
 
 public:
-	NCoverWidget(QWidget *parent = 0);
-	~NCoverWidget();
+	void setPixmap(QPixmap pixmap);
+	NCoverWidgetPopup(QWidget *parent = 0);
+
+private slots:
+	void on_animation_finished();
 
 public slots:
-	void setSource(const QString &file);
+	void show();
 };
 
 #endif
-
