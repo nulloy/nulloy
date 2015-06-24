@@ -249,35 +249,19 @@ void NPlayer::createActions()
 	// << playlist actions
 
 	// jump actions >>
-	m_jump1FwAction = new NAction(tr("Jump #1 Forward"), this);
-	m_jump1FwAction->setObjectName("Jump1ForwardAction");
-	m_jump1FwAction->setStatusTip(tr("Make a jump #1 forward"));
-	m_jump1FwAction->setCustomizable(true);
+	for (int i = 1; i <= 3; ++i) {
+		QString num = QString::number(i);
 
-	m_jump1BwAction = new NAction(tr("Jump #1 Backwards"), this);
-	m_jump1BwAction->setObjectName("Jump1BackwardsAction");
-	m_jump1BwAction->setStatusTip(tr("Make a jump #1 backwards"));
-	m_jump1BwAction->setCustomizable(true);
+		NAction *jumpFwAction = new NAction(QString(tr("Jump #%1 Forward")).arg(num), this);
+		jumpFwAction->setObjectName(QString("Jump%1ForwardAction").arg(num));
+		jumpFwAction->setStatusTip(QString(tr("Make a jump #%1 forward")).arg(num));
+		jumpFwAction->setCustomizable(true);
 
-	m_jump2FwAction = new NAction(tr("Jump #2 Forward"), this);
-	m_jump2FwAction->setObjectName("Jump2ForwardAction");
-	m_jump2FwAction->setStatusTip(tr("Make a jump #2 forward"));
-	m_jump2FwAction->setCustomizable(true);
-
-	m_jump2BwAction = new NAction(tr("Jump #2 Backwards"), this);
-	m_jump2BwAction->setObjectName("Jump2BackwardsAction");
-	m_jump2BwAction->setStatusTip(tr("Make a jump #2 backwards"));
-	m_jump2BwAction->setCustomizable(true);
-
-	m_jump3FwAction = new NAction(tr("Jump #3 Forward"), this);
-	m_jump3FwAction->setObjectName("Jump3ForwardAction");
-	m_jump3FwAction->setStatusTip(tr("Make a jump #3 forward"));
-	m_jump3FwAction->setCustomizable(true);
-
-	m_jump3BwAction = new NAction(tr("Jump #3 Backwards"), this);
-	m_jump3BwAction->setObjectName("Jump3BackwardsAction");
-	m_jump3BwAction->setStatusTip(tr("Make a jump #3 backwards"));
-	m_jump3BwAction->setCustomizable(true);
+		NAction *jumpBwAction = new NAction(QString(tr("Jump #%1 Backwards")).arg(num), this);
+		jumpBwAction->setObjectName(QString("Jump%1BackwardsAction").arg(num));
+		jumpBwAction->setStatusTip(QString(tr("Make a jump #%1 backwards")).arg(num));
+		jumpBwAction->setCustomizable(true);
+	}
 	// << jump actions
 
 	// keyboard shortcuts
@@ -469,12 +453,11 @@ void NPlayer::connectSignals()
 	connect(m_nextFileByNameDescAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
 	connect(m_nextFileByDateAscd, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
 	connect(m_nextFileByDateDesc, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
-	connect(m_jump1FwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_jump1BwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_jump2FwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_jump2BwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_jump3FwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
-	connect(m_jump3BwAction, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+
+	foreach (NAction *action, findChildren<NAction *>()) {
+		if (action->objectName().startsWith("Jump"))
+			connect(action, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+	}
 
 	connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 	connect(m_systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_trayIcon_activated(QSystemTrayIcon::ActivationReason)));
@@ -818,18 +801,9 @@ void NPlayer::on_playlistAction_triggered()
 void NPlayer::on_jumpAction_triggered()
 {
 	NAction *action = reinterpret_cast<NAction *>(QObject::sender());
-	if (action == m_jump1FwAction)
-		m_playbackEngine->jump(NSettings::instance()->value("Jump1").toDouble() * 1000);
-	else if (action == m_jump1BwAction)
-		m_playbackEngine->jump(-NSettings::instance()->value("Jump1").toDouble() * 1000);
-	else if (action == m_jump2FwAction)
-		m_playbackEngine->jump(NSettings::instance()->value("Jump2").toDouble() * 1000);
-	else if (action == m_jump2BwAction)
-		m_playbackEngine->jump(-NSettings::instance()->value("Jump2").toDouble() * 1000);
-	else if (action == m_jump3FwAction)
-		m_playbackEngine->jump(NSettings::instance()->value("Jump3").toDouble() * 1000);
-	else if (action == m_jump3BwAction)
-		m_playbackEngine->jump(-NSettings::instance()->value("Jump3").toDouble() * 1000);
+	QRegExp regex("(\\w+\\d)(\\w+)Action");
+	regex.indexIn(action->objectName());
+	m_playbackEngine->jump((regex.cap(2) == "Forward" ? 1 : -1) * NSettings::instance()->value(regex.cap(1)).toDouble() * 1000);
 }
 
 void NPlayer::on_showCoverAction_toggled(bool checked)

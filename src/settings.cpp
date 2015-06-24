@@ -54,6 +54,9 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("Shortcuts/Jump2BackwardsAction", "Left");
 	initValue("Shortcuts/Jump3ForwardAction", "Ctrl+Right");
 	initValue("Shortcuts/Jump3BackwardsAction", "Ctrl+Left");
+	initValue("Jump1", 5);
+	initValue("Jump2", 30);
+	initValue("Jump3", 180);
 
 	initValue("Shortcuts/FullScreenAction", "F11");
 
@@ -83,9 +86,6 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("LoadNextSort", QDir::Name);
 	initValue("Volume", 0.8);
 	initValue("ShowDecibelsVolume", false);
-	initValue("Jump1", 5);
-	initValue("Jump2", 30);
-	initValue("Jump3", 180);
 
 #ifdef Q_WS_WIN
 	initValue("TaskbarProgress", true);
