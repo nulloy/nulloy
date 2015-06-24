@@ -100,8 +100,13 @@ void NCoverWidget::resizeEvent(QResizeEvent *event)
 	fitToHeight(event->size().height());
 }
 
-void NCoverWidget::mousePressEvent(QMouseEvent *)
+void NCoverWidget::mousePressEvent(QMouseEvent *event)
 {
+	if (event->button() != Qt::LeftButton) {
+		event->ignore();
+		return;
+	}
+
 	if (!m_popup)
 		m_popup = new NCoverWidgetPopup(QWidget::window());
 	m_popup->setPixmap(m_pixmap);

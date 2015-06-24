@@ -17,6 +17,7 @@
 
 #include <QGraphicsDropShadowEffect>
 #include <QPropertyAnimation>
+#include <QMouseEvent>
 #include <QBoxLayout>
 
 #define MARGIN 50
@@ -58,8 +59,13 @@ NCoverWidgetPopup::NCoverWidgetPopup(QWidget *parent) : QWidget(parent)
 	m_animation->setEndValue(1.0);
 }
 
-void NCoverWidgetPopup::mousePressEvent(QMouseEvent *)
+void NCoverWidgetPopup::mousePressEvent(QMouseEvent *event)
 {
+	if (event->button() != Qt::LeftButton) {
+		event->ignore();
+		return;
+	}
+
 #ifndef Q_WS_MAC // QTBUG-15367
 	m_animation->setDirection(QAbstractAnimation::Backward);
 	if (m_animation->state() == QAbstractAnimation::Stopped)
