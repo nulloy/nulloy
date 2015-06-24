@@ -111,7 +111,7 @@ void NPlaylistWidget::wheelEvent(QWheelEvent *event)
 
 void NPlaylistWidget::contextMenuEvent(QContextMenuEvent *event)
 {
-	if (selectedItems().size() != 0)
+	if (selectedItems().size() != 0 && itemAt(event->pos()))
 		m_contextMenu->exec(mapToGlobal(event->pos()));
 	else
 		QListWidget::contextMenuEvent(event);
