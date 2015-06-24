@@ -106,15 +106,15 @@ NPlayer::NPlayer()
 	m_waveformSlider = qFindChild<NWaveformSlider *>(m_mainWindow, "waveformSlider");
 	m_waveformSlider->setLayout(trackInfoLayout);
 
-	createActions();
-	loadSettings();
-	connectSignals();
-
 #ifndef _N_NO_UPDATE_CHECK_
 	m_versionDownloader = new QNetworkAccessManager(this);
 	connect(m_versionDownloader, SIGNAL(finished(QNetworkReply *)), this, SLOT(on_versionDownloader_finished(QNetworkReply *)));
 	connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
 #endif
+
+	createActions();
+	loadSettings();
+	connectSignals();
 
 #ifdef Q_WS_WIN
 	NW7TaskBar::instance()->setWindow(m_mainWindow);
