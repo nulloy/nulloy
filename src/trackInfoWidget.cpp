@@ -36,6 +36,7 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 	QVBoxLayout *vLayout = new QVBoxLayout;
 	for (int i = 0; i < vNames.count(); ++i) {
 		QWidget *hContainer = new QWidget;
+		hContainer->setAttribute(Qt::WA_TransparentForMouseEvents);
 		QHBoxLayout *hLayout = new QHBoxLayout;
 		hLayout->setContentsMargins(0, 0, 0, 0);
 		hLayout->setSpacing(0);
@@ -65,6 +66,7 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 	layout->setContentsMargins(0, 0, 0, 0);
 	setLayout(layout);
 	m_container = new QWidget;
+	m_container->setAttribute(Qt::WA_TransparentForMouseEvents);
 	m_container->setLayout(vLayout);
 	layout->addWidget(m_container);
 
@@ -73,7 +75,7 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 	setGraphicsEffect(m_effect);
 
 	m_animation = new QPropertyAnimation(m_effect, "opacity", this);
-	m_animation->setDuration(100);
+	m_animation->setDuration(150);
 	m_animation->setEasingCurve(QEasingCurve::OutQuad);
 	m_animation->setStartValue(1.0);
 	m_animation->setEndValue(0.0);
@@ -103,13 +105,10 @@ void NTrackInfoWidget::enterEvent(QEvent *)
 
 void NTrackInfoWidget::leaveEvent(QEvent *)
 {
-#ifndef Q_WS_MAC // QTBUG-15367
+	m_container->show();
 	m_animation->setDirection(QAbstractAnimation::Backward);
 	if (m_animation->state() == QAbstractAnimation::Stopped)
 		m_animation->start();
-#else
-	m_container->show();
-#endif
 }
 
 void NTrackInfoWidget::resizeEvent(QResizeEvent *event)
