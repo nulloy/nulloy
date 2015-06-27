@@ -23,9 +23,8 @@
 NContainerGstreamer::NContainerGstreamer(QObject *parent) : QObject(parent)
 {
 #ifdef Q_WS_WIN
-	_putenv(QString("GST_PLUGIN_PATH=" +
-		QCoreApplication::applicationDirPath() + "/Plugins/GStreamer" + ";" +
-		getenv("GST_PLUGIN_PATH")).replace('/', '\\').toUtf8());
+	_putenv(QString("GST_REGISTRY=NUL").toUtf8());
+	_putenv(QString("GST_REGISTRY_UPDATE=no").toUtf8());
 #endif
 
 	m_plugins << new NPlaybackEngineGStreamer()
