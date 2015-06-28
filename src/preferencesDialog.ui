@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
-    <height>611</height>
+    <width>700</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="styleSheet">
@@ -50,8 +50,6 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>588</width>
-            <height>529</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -112,7 +110,7 @@ padding: 5px;</string>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>40</width>
-                 <height>20</height>
+                 <height>0</height>
                 </size>
                </property>
               </spacer>
@@ -172,7 +170,7 @@ padding: 5px;</string>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>40</width>
-                 <height>20</height>
+                 <height>0</height>
                 </size>
                </property>
               </spacer>
@@ -225,7 +223,7 @@ padding: 5px;</string>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>10</height>
+                 <height>0</height>
                 </size>
                </property>
               </spacer>
@@ -263,7 +261,7 @@ padding: 5px;</string>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>10</height>
+                 <height>0</height>
                 </size>
                </property>
               </spacer>
@@ -290,7 +288,7 @@ padding: 5px;</string>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>40</width>
-                 <height>10</height>
+                 <height>0</height>
                 </size>
                </property>
               </spacer>
@@ -316,15 +314,20 @@ padding: 5px;</string>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
-             <item>
-              <widget class="QCheckBox" name="taskbarProgressCheckBox">
-               <property name="text">
-                <string>Show progress on taskbar (Windows 7+ only)</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QWidget" name="taskbarProgressContainer" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="taskbarProgressCheckBox">
+                <property name="text">
+                 <string>Show progress on taskbar (Windows 7+ only)</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -338,66 +341,65 @@ padding: 5px;</string>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QCheckBox" name="autoCheckUpdatesCheckBox">
-               <property name="text">
-                <string>Automatically check for updates</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="versionCheckButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Check now</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="versionLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>90</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="text">
-                <string notr="true">Latest: x.x</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>10</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
+            <widget class="QWidget" name="autoCheckUpdatesContainer" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="autoCheckUpdatesCheckBox">
+                <property name="text">
+                 <string>Automatically check for updates</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="versionCheckButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Check now</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="versionLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>90</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string notr="true">Latest: x.x</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_14">
@@ -421,25 +423,30 @@ padding: 5px;</string>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_15">
-             <item>
-              <widget class="QCheckBox" name="customTrashCheckBox">
-               <property name="text">
-                <string>Custom Trash Command:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="customTrashCommandLineEdit"/>
-             </item>
-             <item>
-              <widget class="QPushButton" name="customTrashHelpButton">
-               <property name="text">
-                <string>Help</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QWidget" name="customTrashContainer" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="customTrashCheckBox">
+                <property name="text">
+                 <string>Custom Trash Command:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="customTrashCommandLineEdit"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="customTrashHelpButton">
+                <property name="text">
+                 <string>Help</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -564,6 +571,12 @@ padding: 5px;</string>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::SingleSelection</enum>
          </property>
@@ -671,7 +684,7 @@ padding: 5px;</string>
            <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
-             <height>10</height>
+             <height>0</height>
             </size>
            </property>
           </spacer>
@@ -701,7 +714,7 @@ padding: 5px;</string>
            <property name="sizeHint" stdset="0">
             <size>
              <width>248</width>
-             <height>20</height>
+             <height>0</height>
             </size>
            </property>
           </spacer>

@@ -69,16 +69,16 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	ui.skinComboBox->hide();
 #endif
 
-#if defined Q_WS_WIN || defined Q_WS_MAC
-	ui.customTrashCheckBox->hide();
-	ui.customTrashCommandLineEdit->hide();
-	ui.customTrashHelpButton->hide();
+#ifndef Q_WS_WIN
+	ui.taskbarProgressContainer->hide();
 #endif
 
 #ifdef _N_NO_UPDATE_CHECK_
-	ui.autoCheckUpdatesCheckBox->hide();
-	ui.versionCheckButton->hide();
-	ui.versionLabel->hide();
+	ui.autoCheckUpdatesContainer->hide();
+#endif
+
+#if defined Q_WS_WIN || defined Q_WS_MAC
+	ui.customTrashContainer->hide();
 #endif
 
 	QPixmap pixmap = QIcon::fromTheme("dialog-warning", style()->standardIcon(QStyle::SP_MessageBoxWarning)).pixmap(16);
@@ -114,10 +114,6 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 	ui.skinRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.skinRestartLabel->text());
 	ui.skinRestartLabel->setVisible(false);
 	connect(ui.skinComboBox, SIGNAL(activated(int)), ui.skinRestartLabel, SLOT(show()));
-
-#ifndef Q_WS_WIN
-	delete ui.taskbarProgressCheckBox;
-#endif
 
 	ui.waveformTrackInfoTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 }
