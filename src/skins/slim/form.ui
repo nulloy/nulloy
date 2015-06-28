@@ -64,17 +64,17 @@ NTrackInfoWidget #MiddleCenter {
 	background: #242b2f;
 	border: 1px solid #13181c;
 	color: #b6c0c6;
+	qproperty-current_text_color: #e9f2f7;
+	qproperty-failed_text_color: #555961;
 	qproperty-file_drop_border_color: #E0A500;
 	qproperty-file_drop_background: rgba(224, 165, 0, 50);
 }
 
 #playlistWidget::item {
-	color: #b6c0c6;
 	background: transparent;
 }
 #playlistWidget::item:selected {
 	background: #3E484F;
-	color: #b6c0c6;
 }
 #playlistWidget::item:hover {
 	background: #3e5268;
@@ -201,9 +201,9 @@ QToolButton {
 	qproperty-wave_background: white;
 	qproperty-wave_border_color: transparent;
 	qproperty-progress_playing_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #fff657, stop:1 #ffa519);
-	qproperty-remaining_playing_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #c0cacd, stop:1 #9dabb1);
+	qproperty-remaining_playing_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #c0cacd, stop:1 #919ca1);
 	qproperty-progress_paused_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #9BA0AA, stop:1 #686E79);
-	qproperty-remaining_paused_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #7E838D, stop:1 #5C6169);
+	qproperty-remaining_paused_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #6d717b, stop:1 #545860);
 	qproperty-groove_playing_background: #ff7b00;
 	qproperty-groove_paused_background: #B0B5BF;
 	qproperty-playing_composition: DestinationIn;
