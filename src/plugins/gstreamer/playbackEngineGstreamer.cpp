@@ -216,6 +216,34 @@ QString NPlaybackEngineGStreamer::currentMedia()
 
 void NPlaybackEngineGStreamer::checkStatus()
 {
+	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
+	GstMessage *msg = gst_bus_pop_filtered(bus, GstMessageType(GST_MESSAGE_EOS | GST_MESSAGE_ERROR));
+	if (msg) {
+		switch (GST_MESSAGE_TYPE(msg)) {
+			case GST_MESSAGE_EOS: {
+				stop();
+				emit finished();
+				emit stateChanged(m_oldState = N::PlaybackStopped);
+				break;
+			}
+			case GST_MESSAGE_ERROR:
+				gchar *debug;
+				GError *err;
+				gst_message_parse_error(msg, &err, &debug);
+				g_free(debug);
+
+				emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err->message);
+				fail();
+
+				g_error_free(err);
+				break;
+			default:
+				break;
+		}
+		gst_message_unref(msg);
+	}
+	gst_object_unref(bus);
+
 	GstState gstState;
 	if (gst_element_get_state(m_playbin, &gstState, NULL, 0) != GST_STATE_CHANGE_SUCCESS)
 		return;
@@ -258,34 +286,6 @@ void NPlaybackEngineGStreamer::checkStatus()
 
 		emit tick(m_crossfading ? 0 : gstPos / NSEC_IN_MSEC);
 	}
-
-	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
-	GstMessage *msg = gst_bus_pop_filtered(bus, GstMessageType(GST_MESSAGE_EOS | GST_MESSAGE_ERROR));
-	if (msg) {
-		switch (GST_MESSAGE_TYPE(msg)) {
-			case GST_MESSAGE_EOS: {
-				stop();
-				emit finished();
-				emit stateChanged(m_oldState = N::PlaybackStopped);
-				break;
-			}
-			case GST_MESSAGE_ERROR:
-				gchar *debug;
-				GError *err;
-				gst_message_parse_error(msg, &err, &debug);
-				g_free(debug);
-
-				emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err->message);
-				fail();
-
-				g_error_free(err);
-				break;
-			default:
-				break;
-		}
-		gst_message_unref(msg);
-	}
-	gst_object_unref(bus);
 
 	qreal vol = volume();
 	if (qAbs(m_oldVolume - vol) > 0.0001) {
