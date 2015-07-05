@@ -217,8 +217,8 @@ QString NPlaybackEngineGStreamer::currentMedia()
 void NPlaybackEngineGStreamer::checkStatus()
 {
 	GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
-	GstMessage *msg = gst_bus_pop_filtered(bus, GstMessageType(GST_MESSAGE_EOS | GST_MESSAGE_ERROR));
-	if (msg) {
+	GstMessage *msg;
+	while ((msg = gst_bus_pop_filtered(bus, GstMessageType(GST_MESSAGE_EOS | GST_MESSAGE_ERROR))) != NULL) {
 		switch (GST_MESSAGE_TYPE(msg)) {
 			case GST_MESSAGE_EOS: {
 				stop();
