@@ -3,6 +3,7 @@ Section: sound
 Priority: extra
 Maintainer: Sergey Vlasov <sergey@vlasov.me>
 Homepage: http://nulloy.com
+Standards-Version: 3.9.4
 
 Package: nulloy
 Architecture: any
