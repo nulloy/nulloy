@@ -31,7 +31,7 @@ QMAKE=%{QMAKE} LRELEASE=%{LRELEASE} ./configure --taglib --no-update-check --pre
 make
 
 %install
-%makeinstall
+make install
 
 %files
 %defattr(-,root,root)
@@ -48,7 +48,7 @@ Requires: nulloy
 GStreamer backend for Nulloy.
 %files gstreamer
 %defattr(-,root,root)
-%{_libdir}/%{name}/plugins/libplugin_gstreamer.so
+%{_prefix}/lib/%{name}/plugins/libplugin_gstreamer.so
 
 %package  taglib
 Summary:  TagLib backend for Nulloy
@@ -57,7 +57,7 @@ Requires: nulloy
 TagLib backend for Nulloy.
 %files taglib
 %defattr(-,root,root)
-%{_libdir}/%{name}/plugins/libplugin_taglib.so
+%{_prefix}/lib/%{name}/plugins/libplugin_taglib.so
 
 %changelog
 
