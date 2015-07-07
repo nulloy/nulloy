@@ -9,11 +9,6 @@
         <translation>Version: </translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>Build: </source>
-        <translation>Compilé le: </translation>
-    </message>
-    <message>
         <location line="+16"/>
         <source>Common</source>
         <translation>Commun</translation>
@@ -42,7 +37,7 @@
 <context>
     <name>NPlayer</name>
     <message>
-        <location filename="../player.cpp" line="+177"/>
+        <location filename="../player.cpp" line="+148"/>
         <source>Show / Hide</source>
         <translation>Afficher / Enlever</translation>
     </message>
@@ -52,7 +47,7 @@
         <translation>Afficher ou masquer la fenêtre de Nulloy</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Play / Pause</source>
         <translation>Play / Pause</translation>
     </message>
@@ -62,7 +57,7 @@
         <translation>Lancer ou stopper la lecture</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Stop</source>
         <translation>Arrêter la lecture</translation>
     </message>
@@ -72,7 +67,7 @@
         <translation>Arrêter la lecture</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Previous</source>
         <translation>Précédent</translation>
     </message>
@@ -82,7 +77,7 @@
         <translation>Lire le morceau précédent de la playlist</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
@@ -92,52 +87,52 @@
         <translation>Lire le morceau suivant de la playlist</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+3"/>
         <source>Preferences...</source>
         <translation>Préférences...</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+3"/>
         <source>Exit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+3"/>
         <source>Add Files...</source>
         <translation>Ajouter des fichiers...</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Add Directory...</source>
         <translation>Ajouter un dossier...</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+3"/>
         <source>Save Playlist...</source>
         <translation>Enregistrer la playlist...</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+3"/>
         <source>Show Cover Art</source>
         <translation>Afficher l&apos;image de l&apos;album</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+4"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+2"/>
         <source>On Top During Playback</source>
         <translation>Au premier plan durant la lecture</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
         <source>Always On Top</source>
         <translation>Toujours au premier plan</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
         <source>Fullscreen Mode</source>
         <translation>Mode plein écran</translation>
     </message>
@@ -147,34 +142,74 @@
         <translation>Enlever tous les contrôles exepté la forme d&apos;onde</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+5"/>
+        <source>Shuffle</source>
+        <translation>Aléatoire</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Toggle playlist shuffle</source>
+        <translation>Basculer playlist aléatoire</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Toggle current item repeat</source>
+        <translation>Basculer le mode répéter</translation>
+    </message>
+    <message>
+        <location line="-3"/>
+        <source>Repeat</source>
+        <translation>Répéter</translation>
+    </message>
+    <message>
+        <location line="+6"/>
         <source>Loop playlist</source>
         <translation>Boucle playlist</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
         <source>Load next file in directory when finished</source>
         <translation>Charger le fichier suivant du répertoire une fois la lecture terminée</translation>
     </message>
     <message>
-        <location line="+5"/>
-        <location line="+5"/>
+        <location line="+4"/>
+        <location line="+4"/>
         <source>By Name</source>
         <translation>Par Nom</translation>
     </message>
     <message>
-        <location line="+5"/>
-        <location line="+5"/>
+        <location line="+4"/>
+        <location line="+4"/>
         <source>By Date</source>
         <translation>Par Date</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+15"/>
+        <source>Jump Forward #%1</source>
+        <translation>Avant court #%1</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Make a jump forward #%1</source>
+        <translation>Faites un avant court #%1</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Jump Backwards #%1</source>
+        <translation>Arrière court #%1</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Make a jump backwards #%1</source>
+        <translation>Faites un arrière court #%1</translation>
+    </message>
+    <message>
+        <location line="+38"/>
         <source>Playlist</source>
         <translation>Playlist</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+28"/>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
@@ -184,12 +219,12 @@
         <translation>Contrôles</translation>
     </message>
     <message>
-        <location line="+227"/>
+        <location line="+307"/>
         <source>Latest: </source>
         <translation>Dernière version: </translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+5"/>
         <source> Update</source>
         <translation> Mise-à-jour</translation>
     </message>
@@ -199,7 +234,7 @@
         <translation>Une nouvelle version est disponible: </translation>
     </message>
     <message>
-        <location line="+185"/>
+        <location line="+195"/>
         <source>All supported</source>
         <translation>Toutes les extensions supportées</translation>
     </message>
@@ -209,7 +244,7 @@
         <translation>Tous les fichiers</translation>
     </message>
     <message>
-        <location line="+47"/>
+        <location line="+46"/>
         <source>M3U Playlist</source>
         <translation>Playlist M3U</translation>
     </message>
@@ -219,8 +254,7 @@
         <translation>Playlist M3U étendue</translation>
     </message>
     <message>
-        <location line="-507"/>
-        <location line="+49"/>
+        <location line="-599"/>
         <source>Window</source>
         <translation>Fenêtre</translation>
     </message>
@@ -243,7 +277,7 @@
         <translation>Déplacer dans la corbeille</translation>
     </message>
     <message>
-        <location line="+396"/>
+        <location line="+436"/>
         <source>Drop media here</source>
         <translation>Déposer des médias ici</translation>
     </message>
@@ -266,12 +300,29 @@
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+9"/>
         <source> Preferences</source>
         <translation> Préférences</translation>
     </message>
     <message>
-        <location line="+76"/>
+        <location line="+85"/>
+        <location line="+38"/>
+        <location line="+37"/>
+        <source>Supported parameters:</source>
+        <translation>Paramètres pris en charge:</translation>
+    </message>
+    <message>
+        <location line="-72"/>
+        <source>Directory path</source>
+        <translation>Dossier</translation>
+    </message>
+    <message>
+        <location line="+37"/>
+        <source>File path</source>
+        <translation>Fichier</translation>
+    </message>
+    <message>
+        <location line="+37"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
@@ -306,7 +357,7 @@
         <translation>Numéro de piste</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Current time position (Waveform only)</source>
         <translation>Тemps écoulé (Seulement sur la forme d&apos;onde)</translation>
     </message>
@@ -316,7 +367,7 @@
         <translation>Temps restant (Seulement sur la forme d&apos;onde)</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Time position under cursor (Tooltip only)</source>
         <translation>Temps sous le curseur (Tooltip seulement)</translation>
     </message>
@@ -326,7 +377,7 @@
         <translation>Décalage horaire sous le curseur (Tooltip seulement)</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Duration in format hh:mm:ss</source>
         <translation>Durée au format hh:mm:ss</translation>
     </message>
@@ -356,12 +407,13 @@
         <translation>Nombre de cannaux</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>File name without extension</source>
         <translation>Nom du fichier sans son extension</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-92"/>
+        <location line="+93"/>
         <source>File name</source>
         <translation>Nom du fichier</translation>
     </message>
@@ -381,7 +433,7 @@
         <translation>Nom d&apos;extension du fichier (en majuscule)</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Version number</source>
         <translation>Numéro de version</translation>
     </message>
@@ -396,7 +448,7 @@
         <translation>Conditions:</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>true</source>
         <translation>true</translation>
     </message>
@@ -406,32 +458,36 @@
         <translation>false</translation>
     </message>
     <message>
-        <location line="+0"/>
-        <source>if...else: evaluate for &lt;i&gt;true&lt;/i&gt; or &lt;i&gt;false&lt;/i&gt; case. Note: nesting conditions is not supported yet.</source>
-        <translation>if...else: teste les valeurs &lt;i&gt;true&lt;/i&gt; ou &lt;i&gt;false&lt;/i&gt;. Note: les conditions imbriquées ne sont pour le moment pas supportées..</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location line="-99"/>
+        <location line="+37"/>
+        <location line="+64"/>
         <source>Examples:</source>
         <translation>Exemples:</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-2"/>
+        <source>Evaluate for &lt;b&gt;&lt;i&gt;true&lt;/i&gt;&lt;/b&gt; or &lt;b&gt;&lt;i&gt;false&lt;/i&gt;&lt;/b&gt; case. Note: nesting conditions is not supported yet.</source>
+        <translation>Teste les valeurs fichier &lt;b&gt;&lt;i&gt;true&lt;/i&gt;&lt;/b&gt; ou &lt;b&gt;&lt;i&gt;false&lt;/i&gt;&lt;/b&gt;. Note: les conditions imbriquées ne sont pour le moment pas supportées.</translation>
+    </message>
+    <message>
+        <location line="+4"/>
         <source>Print Artist and Title, separated with &quot;-&quot;. If either of the tags is not available, print file name instead.</source>
         <translation>Afficher l&apos;Artiste et le Titre, séparés par un &quot;-&quot;. Si aucun de ces tags n&apos;est renseigné, affichera le nom du fichier.</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Print Genre. If not available, print nothing.</source>
         <translation>Afficher le Genre. Si non disponible, n&apos;affichera rien.</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-94"/>
+        <location line="+37"/>
+        <location line="+64"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
     <message>
-        <location line="+127"/>
+        <location line="+134"/>
         <source> (Built-in)</source>
         <translation> (Encastré)</translation>
     </message>
@@ -476,7 +532,7 @@
         <translation>Général</translation>
     </message>
     <message>
-        <location line="+92"/>
+        <location line="+90"/>
         <source>Skin:</source>
         <translation>Thème:</translation>
     </message>
@@ -516,12 +572,12 @@
         <translation>Démarrer la lecture des nouveaux fichiers dès leur ajout à la playlist</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+38"/>
         <source>Display log dialog in case of errors</source>
         <translation>Afficher la fenêtre de logs en cas d&apos;erreur</translation>
     </message>
     <message>
-        <location line="-22"/>
+        <location line="-27"/>
         <source>Show volume in decibels (using Stevens&apos; law)</source>
         <translation>Afficher le volume en décibels (utilise la loi de Stevens)</translation>
     </message>
@@ -541,12 +597,12 @@
         <translation>Restaurer playlist après le redémarrage</translation>
     </message>
     <message>
-        <location line="+114"/>
+        <location line="+118"/>
         <source>Show progress on taskbar (Windows 7+ only)</source>
         <translation>Montrer les progrès réalisés dans la barre des tâches (Windows 7 + uniquement)</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="+27"/>
         <source>Automatically check for updates</source>
         <translation>Chercher automatiquement des mises-à-jour</translation>
     </message>
@@ -556,12 +612,22 @@
         <translation>Vérifier manuellement</translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+44"/>
+        <source>Custom File Manager:</source>
+        <translation>Gestionnaire de fichiers personnalisée:</translation>
+    </message>
+    <message>
+        <location line="+25"/>
+        <source>Custom Trash Command:</source>
+        <translation>Corbeille commande:</translation>
+    </message>
+    <message>
+        <location line="+22"/>
         <source>File filters:</source>
         <translation>Filtrage des fichiers:</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+30"/>
         <source>Track Information</source>
         <translation>Affichage</translation>
     </message>
@@ -581,17 +647,19 @@
         <translation>Tooltip:</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="-95"/>
+        <location line="+25"/>
+        <location line="+92"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+26"/>
         <source>Waveform sections:</source>
         <translation>Personnalisation des sections de la forme d&apos;onde:</translation>
     </message>
     <message>
-        <location line="+17"/>
+        <location line="+23"/>
         <source>Top</source>
         <translation>Haut</translation>
     </message>
@@ -626,7 +694,27 @@
         <translation>Clavier</translation>
     </message>
     <message>
-        <location line="+39"/>
+        <location line="+27"/>
+        <source>Jump #1</source>
+        <translation>Aller #1</translation>
+    </message>
+    <message>
+        <location line="+33"/>
+        <source>Jump #2</source>
+        <translation>Aller #2</translation>
+    </message>
+    <message>
+        <location line="+30"/>
+        <source>Jump #3</source>
+        <translation>Aller #3</translation>
+    </message>
+    <message>
+        <location line="+17"/>
+        <source>Jumps (in seconds):</source>
+        <translation>Aller (en secondes):</translation>
+    </message>
+    <message>
+        <location line="+10"/>
         <source>Plugins</source>
         <translation>Plugins</translation>
     </message>
@@ -636,7 +724,7 @@
         <translation>Changer de plugin necessite un redémarrage de Nulloy</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-265"/>
+        <location filename="../preferencesDialog.cpp" line="-356"/>
         <source>English</source>
         <translation>Français</translation>
     </message>
@@ -649,14 +737,19 @@
         <translation>À propos </translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="+135"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-355"/>
         <source>File doesn&apos;t exist: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Fichier inexistant: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
-        <location line="+19"/>
-        <source>Default file manager is set to &lt;b&gt;%1&lt;/b&gt; but it&apos;s not available.</source>
-        <translation>По умолчанию файловый менеджер установлен как &lt;b&gt;%1&lt;/b&gt;, но его не удалось запустить.</translation>
+        <location line="+10"/>
+        <source>Custom File Manager is enabled but not configured.</source>
+        <translation>Gestionnaire de fichiers personnalisée est activé mais non configuré.</translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>Custom File Manager command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
+        <translation>Gestionnaire de fichiers personnalisée &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../pluginLoader.cpp" line="+155"/>
@@ -685,12 +778,12 @@
         <translation>Plugin introuvage (TagReader).</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+369"/>
+        <location filename="../preferencesDialog.cpp" line="+465"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>L&apos;affichage dans une zone de notification n&apos;est pas disponible pour ce système.</translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-323"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-36"/>
         <source>Reveal in File Manager Error</source>
         <translation>Reveal in File Manager Error</translation>
     </message>
@@ -704,25 +797,43 @@
         <source>No skins found.</source>
         <translation>Aucun thème trouvé.</translation>
     </message>
+    <message>
+        <location filename="../trash/trash_x11.cpp" line="+23"/>
+        <source>Custom Trash Command is not configured.</source>
+        <translation>Corbeille commande est non configuré.</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Custom Trash Command is enabled but not configured.</source>
+        <translation>Corbeille commande est activé mais non configuré.</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Custom Trash Command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
+        <translation>Corbeille commande échoué avec l&apos;erreur &lt;b&gt;%1&lt;/b&gt;.</translation>
+    </message>
 </context>
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="+420"/>
-        <location filename="../skins/silver/form.ui" line="+459"/>
+        <location filename="../skins/metro/form.ui" line="+423"/>
+        <location filename="../skins/silver/form.ui" line="+463"/>
+        <location filename="../skins/slim/form.ui" line="+373"/>
         <source>Minimize</source>
         <translation>Réduire</translation>
     </message>
     <message>
         <location line="+22"/>
         <location filename="../skins/silver/form.ui" line="+55"/>
+        <location filename="../skins/slim/form.ui" line="+31"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
     <message>
         <location line="+122"/>
-        <location filename="../skins/native/form.ui" line="+176"/>
+        <location filename="../skins/native/form.ui" line="+172"/>
         <location filename="../skins/silver/form.ui" line="+137"/>
+        <location filename="../skins/slim/form.ui" line="+59"/>
         <source>Previous</source>
         <translation>Précédent</translation>
     </message>
@@ -730,6 +841,7 @@
         <location line="+50"/>
         <location filename="../skins/native/form.ui" line="+33"/>
         <location filename="../skins/silver/form.ui" line="+16"/>
+        <location filename="../skins/slim/form.ui" line="+28"/>
         <source>Play / Pause</source>
         <translation>Play / Pause</translation>
     </message>
@@ -744,6 +856,7 @@
         <location line="+44"/>
         <location filename="../skins/native/form.ui" line="+27"/>
         <location filename="../skins/silver/form.ui" line="+16"/>
+        <location filename="../skins/slim/form.ui" line="+28"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
@@ -770,6 +883,7 @@
         <location line="+44"/>
         <location filename="../skins/native/form.ui" line="+52"/>
         <location filename="../skins/silver/form.ui" line="+126"/>
+        <location filename="../skins/slim/form.ui" line="+54"/>
         <source>Volume</source>
         <translation>Volume</translation>
     </message>

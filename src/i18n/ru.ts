@@ -9,11 +9,6 @@
         <translation>Версия: </translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>Build: </source>
-        <translation>Билд: </translation>
-    </message>
-    <message>
         <location line="+16"/>
         <source>Common</source>
         <translation>Общие</translation>
@@ -42,7 +37,7 @@
 <context>
     <name>NPlayer</name>
     <message>
-        <location filename="../player.cpp" line="+177"/>
+        <location filename="../player.cpp" line="+148"/>
         <source>Show / Hide</source>
         <translation>Скрыть / показать</translation>
     </message>
@@ -52,7 +47,7 @@
         <translation>Скрыть или показать главное окно</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Play / Pause</source>
         <translation>Старт / пауза</translation>
     </message>
@@ -62,7 +57,7 @@
         <translation>Старт или поставить на паузу</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Stop</source>
         <translation>Стоп</translation>
     </message>
@@ -72,7 +67,7 @@
         <translation>Остановить проигрывание</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Previous</source>
         <translation>Предыдущий</translation>
     </message>
@@ -82,7 +77,7 @@
         <translation>Переключить на предыдущий трек в плейлисте</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Next</source>
         <translation>Следующий</translation>
     </message>
@@ -92,52 +87,52 @@
         <translation>Переключить на следующий трек в плейлисте</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+3"/>
         <source>Preferences...</source>
         <translation>Настройки...</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+3"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+3"/>
         <source>Add Files...</source>
         <translation>Добавить файлы...</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Add Directory...</source>
         <translation>Добавить директорию...</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+3"/>
         <source>Save Playlist...</source>
         <translation>Сохранить плейлист...</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+3"/>
         <source>Show Cover Art</source>
         <translation>Показывать обложку</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+4"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+2"/>
         <source>On Top During Playback</source>
         <translation>Поверх всех окон во время проигрывания</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
         <source>Always On Top</source>
         <translation>Всегда поверх всех окон</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
         <source>Fullscreen Mode</source>
         <translation>Полноэкранный режим</translation>
     </message>
@@ -147,34 +142,74 @@
         <translation>Скрыть все элементы управления</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+5"/>
+        <source>Shuffle</source>
+        <translation>Случайный порядок</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Toggle playlist shuffle</source>
+        <translation>Включить случайный порядок плейлиста</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Toggle current item repeat</source>
+        <translation>Включить повтор текущего трека</translation>
+    </message>
+    <message>
+        <location line="-3"/>
+        <source>Repeat</source>
+        <translation>На повторе</translation>
+    </message>
+    <message>
+        <location line="+6"/>
         <source>Loop playlist</source>
         <translation>Зациклить плейлист</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
         <source>Load next file in directory when finished</source>
         <translation>Загрузить следующий файл из директории</translation>
     </message>
     <message>
-        <location line="+5"/>
-        <location line="+5"/>
+        <location line="+4"/>
+        <location line="+4"/>
         <source>By Name</source>
         <translation>Сортировать по имени</translation>
     </message>
     <message>
-        <location line="+5"/>
-        <location line="+5"/>
+        <location line="+4"/>
+        <location line="+4"/>
         <source>By Date</source>
         <translation>Сортировать по дате</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+15"/>
+        <source>Jump Forward #%1</source>
+        <translation>Прыжок вперед #%1</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Make a jump forward #%1</source>
+        <translation>Сделать прыжок вперед #%1</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Jump Backwards #%1</source>
+        <translation>Прыжок назад #%1</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Make a jump backwards #%1</source>
+        <translation>Сделать прыжок назад #%1</translation>
+    </message>
+    <message>
+        <location line="+38"/>
         <source>Playlist</source>
         <translation>Плейлист</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+28"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
@@ -184,12 +219,12 @@
         <translation>Управление</translation>
     </message>
     <message>
-        <location line="+227"/>
+        <location line="+307"/>
         <source>Latest: </source>
         <translation>Последняя: </translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+5"/>
         <source> Update</source>
         <translation> Обновление</translation>
     </message>
@@ -199,7 +234,7 @@
         <translation>Новое обновление доступно: </translation>
     </message>
     <message>
-        <location line="+185"/>
+        <location line="+195"/>
         <source>All supported</source>
         <translation>Все поддерживаемые</translation>
     </message>
@@ -209,7 +244,7 @@
         <translation>Все файлы</translation>
     </message>
     <message>
-        <location line="+47"/>
+        <location line="+46"/>
         <source>M3U Playlist</source>
         <translation>M3U Плейлист</translation>
     </message>
@@ -219,8 +254,7 @@
         <translation>Расширенный M3U Плейлист</translation>
     </message>
     <message>
-        <location line="-507"/>
-        <location line="+49"/>
+        <location line="-599"/>
         <source>Window</source>
         <translation>Окно</translation>
     </message>
@@ -243,7 +277,7 @@
         <translation>Переместить в корзину</translation>
     </message>
     <message>
-        <location line="+396"/>
+        <location line="+436"/>
         <source>Drop media here</source>
         <translation>Перетащите файл сюда</translation>
     </message>
@@ -266,12 +300,29 @@
         <translation>Принять</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+9"/>
         <source> Preferences</source>
         <translation> Настройки</translation>
     </message>
     <message>
-        <location line="+76"/>
+        <location line="+85"/>
+        <location line="+38"/>
+        <location line="+37"/>
+        <source>Supported parameters:</source>
+        <translation>Поддерживаемые параметры:</translation>
+    </message>
+    <message>
+        <location line="-72"/>
+        <source>Directory path</source>
+        <translation>Путь к директории</translation>
+    </message>
+    <message>
+        <location line="+37"/>
+        <source>File path</source>
+        <translation>Путь к файлу</translation>
+    </message>
+    <message>
+        <location line="+37"/>
         <source>Artist</source>
         <translation>Имя артиста</translation>
     </message>
@@ -306,7 +357,7 @@
         <translation>Номер</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Current time position (Waveform only)</source>
         <translation>Текущее время проигрывания (только для звуковой волны)</translation>
     </message>
@@ -316,7 +367,7 @@
         <translation>Оставшееся время проигрывания (только для звуковой волны)</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Time position under cursor (Tooltip only)</source>
         <translation>Время проигрывания под курсором (только для всплывающей подсказки)</translation>
     </message>
@@ -326,7 +377,7 @@
         <translation>Разница времени проигрывания под курсором (только для всплывающей подсказки)</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Duration in format hh:mm:ss</source>
         <translation>Продолжительность в формате чч:мм:сс</translation>
     </message>
@@ -356,12 +407,13 @@
         <translation>Количество каналов</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>File name without extension</source>
         <translation>Имя файла без расширения</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-92"/>
+        <location line="+93"/>
         <source>File name</source>
         <translation>Имя файла</translation>
     </message>
@@ -381,7 +433,7 @@
         <translation>Расширение имени файла заглавными буквами</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Version number</source>
         <translation>Номер версии</translation>
     </message>
@@ -396,7 +448,7 @@
         <translation>Условия:</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>true</source>
         <translation>истина</translation>
     </message>
@@ -406,32 +458,36 @@
         <translation>ложь</translation>
     </message>
     <message>
-        <location line="+0"/>
-        <source>if...else: evaluate for &lt;i&gt;true&lt;/i&gt; or &lt;i&gt;false&lt;/i&gt; case. Note: nesting conditions is not supported yet.</source>
-        <translation>Выражение if...else (если...иначе): в случае истинности левой части, вывести ее; иначе вывести правую часть.</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location line="-99"/>
+        <location line="+37"/>
+        <location line="+64"/>
         <source>Examples:</source>
         <translation>Примеры:</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-2"/>
+        <source>Evaluate for &lt;b&gt;&lt;i&gt;true&lt;/i&gt;&lt;/b&gt; or &lt;b&gt;&lt;i&gt;false&lt;/i&gt;&lt;/b&gt; case. Note: nesting conditions is not supported yet.</source>
+        <translation>В случае истинности &lt;b&gt;&lt;i&gt;true&lt;/i&gt;&lt;/b&gt; части, вывести ее; иначе вывести &lt;b&gt;&lt;i&gt;false&lt;/i&gt;&lt;/b&gt; часть. Прим.: вложенные условия пока не поддерживаются.</translation>
+    </message>
+    <message>
+        <location line="+4"/>
         <source>Print Artist and Title, separated with &quot;-&quot;. If either of the tags is not available, print file name instead.</source>
         <translation>Вывести имя артиста и название через тире. Если либо  имя артиста либо название не прописаны, то вывести имя файла.</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Print Genre. If not available, print nothing.</source>
         <translation>Вывести название жанра. Если не доступно, ничего не выводить.</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-94"/>
+        <location line="+37"/>
+        <location line="+64"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location line="+127"/>
+        <location line="+134"/>
         <source> (Built-in)</source>
         <translation> (Встроенный)</translation>
     </message>
@@ -476,7 +532,7 @@
         <translation>Главные</translation>
     </message>
     <message>
-        <location line="+92"/>
+        <location line="+90"/>
         <source>Skin:</source>
         <translation>Скин:</translation>
     </message>
@@ -516,12 +572,12 @@
         <translation>При добавлении проигрывать сразу же</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+38"/>
         <source>Display log dialog in case of errors</source>
         <translation>Показывать диалог в случае ошибок</translation>
     </message>
     <message>
-        <location line="-22"/>
+        <location line="-27"/>
         <source>Show volume in decibels (using Stevens&apos; law)</source>
         <translation>Отображать громкость в децибелах (по формуле Стивенса)</translation>
     </message>
@@ -541,12 +597,12 @@
         <translation>Восстановить предыдущий плейлист после перезагрузки</translation>
     </message>
     <message>
-        <location line="+114"/>
+        <location line="+118"/>
         <source>Show progress on taskbar (Windows 7+ only)</source>
         <translation>Отображать состояние проигрывания на панели задач (только для Windows 7+)</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="+27"/>
         <source>Automatically check for updates</source>
         <translation>Автоматическая проверка обновлений</translation>
     </message>
@@ -556,12 +612,22 @@
         <translation>Проверить сейчас</translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+44"/>
+        <source>Custom File Manager:</source>
+        <translation>Команда файлового менеджера:</translation>
+    </message>
+    <message>
+        <location line="+25"/>
+        <source>Custom Trash Command:</source>
+        <translation>Команда удаления в корзину:</translation>
+    </message>
+    <message>
+        <location line="+22"/>
         <source>File filters:</source>
         <translation>Фильтр файлов:</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+30"/>
         <source>Track Information</source>
         <translation>Информация о треке</translation>
     </message>
@@ -581,17 +647,19 @@
         <translation>Вслывающая подсказка:</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="-95"/>
+        <location line="+25"/>
+        <location line="+92"/>
         <source>Help</source>
         <translation>Помощь</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+26"/>
         <source>Waveform sections:</source>
         <translation>Участки звуковой волны:</translation>
     </message>
     <message>
-        <location line="+17"/>
+        <location line="+23"/>
         <source>Top</source>
         <translation>Верхний</translation>
     </message>
@@ -626,7 +694,27 @@
         <translation>Горячие клавиши</translation>
     </message>
     <message>
-        <location line="+39"/>
+        <location line="+27"/>
+        <source>Jump #1</source>
+        <translation>Прыжок #1</translation>
+    </message>
+    <message>
+        <location line="+33"/>
+        <source>Jump #2</source>
+        <translation>Прыжок #2</translation>
+    </message>
+    <message>
+        <location line="+30"/>
+        <source>Jump #3</source>
+        <translation>Прыжок #3</translation>
+    </message>
+    <message>
+        <location line="+17"/>
+        <source>Jumps (in seconds):</source>
+        <translation>Прыжок (в секундах):</translation>
+    </message>
+    <message>
+        <location line="+10"/>
         <source>Plugins</source>
         <translation>Плагины</translation>
     </message>
@@ -636,7 +724,7 @@
         <translation>Переключение плагинов требует перезапуска</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-265"/>
+        <location filename="../preferencesDialog.cpp" line="-356"/>
         <source>English</source>
         <translation>Русский</translation>
     </message>
@@ -649,14 +737,19 @@
         <translation>О программе </translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="+135"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-355"/>
         <source>File doesn&apos;t exist: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Такого файла не существует: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
-        <location line="+19"/>
-        <source>Default file manager is set to &lt;b&gt;%1&lt;/b&gt; but it&apos;s not available.</source>
-        <translation>По умолчанию файловый менеджер установлен как &lt;b&gt;%1&lt;/b&gt;, но его не удалось запустить.</translation>
+        <location line="+10"/>
+        <source>Custom File Manager is enabled but not configured.</source>
+        <translation>Команда файлового менеджера включена, но не настроена.</translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>Custom File Manager command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
+        <translation>Команда файлового менеджера завершилась с ошибкой &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../pluginLoader.cpp" line="+155"/>
@@ -685,12 +778,12 @@
         <translation>TagReader плагин отсутствует.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+369"/>
+        <location filename="../preferencesDialog.cpp" line="+465"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Системный лоток (область уведомлений) на этой системе не доступна.</translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-323"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-36"/>
         <source>Reveal in File Manager Error</source>
         <translation>Ошибка файлового менеджера</translation>
     </message>
@@ -704,25 +797,43 @@
         <source>No skins found.</source>
         <translation>Скинов не обнаружено.</translation>
     </message>
+    <message>
+        <location filename="../trash/trash_x11.cpp" line="+23"/>
+        <source>Custom Trash Command is not configured.</source>
+        <translation>Команда удаления в корзину не настроена.</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Custom Trash Command is enabled but not configured.</source>
+        <translation>Команда удаления в корзину включена, но не настроена.</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Custom Trash Command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
+        <translation>Команда удаления в корзину завершилась с ошибкой &lt;b&gt;%1&lt;/b&gt;.</translation>
+    </message>
 </context>
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="+420"/>
-        <location filename="../skins/silver/form.ui" line="+459"/>
+        <location filename="../skins/metro/form.ui" line="+423"/>
+        <location filename="../skins/silver/form.ui" line="+463"/>
+        <location filename="../skins/slim/form.ui" line="+373"/>
         <source>Minimize</source>
         <translation>Минимизировать</translation>
     </message>
     <message>
         <location line="+22"/>
         <location filename="../skins/silver/form.ui" line="+55"/>
+        <location filename="../skins/slim/form.ui" line="+31"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
         <location line="+122"/>
-        <location filename="../skins/native/form.ui" line="+176"/>
+        <location filename="../skins/native/form.ui" line="+172"/>
         <location filename="../skins/silver/form.ui" line="+137"/>
+        <location filename="../skins/slim/form.ui" line="+59"/>
         <source>Previous</source>
         <translation>Предыдущий</translation>
     </message>
@@ -730,6 +841,7 @@
         <location line="+50"/>
         <location filename="../skins/native/form.ui" line="+33"/>
         <location filename="../skins/silver/form.ui" line="+16"/>
+        <location filename="../skins/slim/form.ui" line="+28"/>
         <source>Play / Pause</source>
         <translation>Старт / Пауза</translation>
     </message>
@@ -744,6 +856,7 @@
         <location line="+44"/>
         <location filename="../skins/native/form.ui" line="+27"/>
         <location filename="../skins/silver/form.ui" line="+16"/>
+        <location filename="../skins/slim/form.ui" line="+28"/>
         <source>Next</source>
         <translation>Следующий</translation>
     </message>
@@ -770,6 +883,7 @@
         <location line="+44"/>
         <location filename="../skins/native/form.ui" line="+52"/>
         <location filename="../skins/silver/form.ui" line="+126"/>
+        <location filename="../skins/slim/form.ui" line="+54"/>
         <source>Volume</source>
         <translation>Громкость</translation>
     </message>

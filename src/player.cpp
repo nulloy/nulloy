@@ -208,13 +208,13 @@ void NPlayer::createActions()
 	m_shufflePlaylistAction = new NAction(tr("Shuffle"), this);
 	m_shufflePlaylistAction->setCheckable(true);
 	m_shufflePlaylistAction->setObjectName("ShufflePlaylistAction");
-	m_shufflePlaylistAction->setStatusTip(tr("Shuffle playlist"));
+	m_shufflePlaylistAction->setStatusTip(tr("Toggle playlist shuffle"));
 	m_shufflePlaylistAction->setCustomizable(true);
 
 	m_repeatPlaylistAction = new NAction(tr("Repeat"), this);
 	m_repeatPlaylistAction->setCheckable(true);
 	m_repeatPlaylistAction->setObjectName("RepeatPlaylistAction");
-	m_repeatPlaylistAction->setStatusTip(tr("Repeat playlist"));
+	m_repeatPlaylistAction->setStatusTip(tr("Toggle current item repeat"));
 	m_repeatPlaylistAction->setCustomizable(true);
 
 	m_loopPlaylistAction = new NAction(tr("Loop playlist"), this);
@@ -252,14 +252,14 @@ void NPlayer::createActions()
 	for (int i = 1; i <= 3; ++i) {
 		QString num = QString::number(i);
 
-		NAction *jumpFwAction = new NAction(QString(tr("Jump #%1 Forward")).arg(num), this);
+		NAction *jumpFwAction = new NAction(QString(tr("Jump Forward #%1")).arg(num), this);
 		jumpFwAction->setObjectName(QString("Jump%1ForwardAction").arg(num));
-		jumpFwAction->setStatusTip(QString(tr("Make a jump #%1 forward")).arg(num));
+		jumpFwAction->setStatusTip(QString(tr("Make a jump forward #%1")).arg(num));
 		jumpFwAction->setCustomizable(true);
 
-		NAction *jumpBwAction = new NAction(QString(tr("Jump #%1 Backwards")).arg(num), this);
+		NAction *jumpBwAction = new NAction(QString(tr("Jump Backwards #%1")).arg(num), this);
 		jumpBwAction->setObjectName(QString("Jump%1BackwardsAction").arg(num));
-		jumpBwAction->setStatusTip(QString(tr("Make a jump #%1 backwards")).arg(num));
+		jumpBwAction->setStatusTip(QString(tr("Make a jump backwards #%1")).arg(num));
 		jumpBwAction->setCustomizable(true);
 	}
 	// << jump actions
