@@ -1,5 +1,6 @@
 * 0.8, Tue Jul 7 2015
 - Upgraded to GStreamer 1.0
+- More audio codecs
 - Lower CPU usage
 - New Slim skin
 - Gappless playback
@@ -7,6 +8,7 @@
 - Media keys support
 - Fancy Cover Art popup
 - Support for external Cover Art files
+- Window resize from any corner
 - Custom file manager support
 - Linux: custom trash command support
 - Mac: allow running on background when window closed
