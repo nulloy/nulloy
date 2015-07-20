@@ -31,10 +31,12 @@ void NTagReaderGstreamer::init()
 
 	int argc;
 	const char **argv;
-	GError *init_err;
+	GError *err = NULL;
 	NCore::cArgs(&argc, &argv);
-	if (!gst_init_check(&argc, (char ***)&argv, &init_err)) {
-		g_error("NTagReaderGstreamer :: error: %s", init_err->message);
+	if (!gst_init_check(&argc, (char ***)&argv, &err)) {
+		qWarning() << "NTagReaderGstreamer :: gst_init_check error ::" << (err ? QString::fromUtf8(err->message) : "unknown error");
+		if (err)
+			g_error_free(err);
 		return;
 	}
 
@@ -59,8 +61,9 @@ void NTagReaderGstreamer::setSource(const QString &file)
 	GError *err = NULL;
 	GstDiscoverer *discoverer = gst_discoverer_new(GST_SECOND * 60, &err);
 	if (discoverer == NULL) {
-		qWarning() << "NTagReaderGstreamer :: GstDiscoverer error ::" << err->message;
-		g_error_free(err);
+		qWarning() << "NTagReaderGstreamer :: GstDiscoverer error ::" << (err ? QString::fromUtf8(err->message) : "unknown error");
+		if (err)
+			g_error_free(err);
 		return;
 	}
 

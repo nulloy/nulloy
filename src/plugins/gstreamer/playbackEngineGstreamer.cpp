@@ -59,12 +59,14 @@ void NPlaybackEngineGStreamer::init()
 
 	int argc;
 	const char **argv;
-	GError *err;
+	GError *err = NULL;
 	NCore::cArgs(&argc, &argv);
 	gst_init(&argc, (char ***)&argv);
 	if (!gst_init_check(&argc, (char ***)&argv, &err)) {
-		emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err->message);
+		emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err ? QString::fromUtf8(err->message) : "unknown error");
 		emit failed();
+		if (err)
+			g_error_free(err);
 	}
 
 	m_playbin = gst_element_factory_make("playbin", NULL);
@@ -226,17 +228,19 @@ void NPlaybackEngineGStreamer::checkStatus()
 				emit stateChanged(m_oldState = N::PlaybackStopped);
 				break;
 			}
-			case GST_MESSAGE_ERROR:
+			case GST_MESSAGE_ERROR: {
 				gchar *debug;
-				GError *err;
+				GError *err = NULL;
 				gst_message_parse_error(msg, &err, &debug);
 				g_free(debug);
 
-				emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err->message);
+				emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err ? QString::fromUtf8(err->message) : "unknown error");
 				fail();
 
-				g_error_free(err);
+				if (err)
+					g_error_free(err);
 				break;
+			}
 			default:
 				break;
 		}
