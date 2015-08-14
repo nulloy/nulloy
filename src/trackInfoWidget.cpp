@@ -209,7 +209,7 @@ void NTrackInfoWidget::showToolTip(int x, int y)
 	NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
 	QString text = m_tooltipFormat;
 
-	if (m_tooltipFormat.contains("%C") || m_tooltipFormat.contains("%a")) {
+	if (m_tooltipFormat.contains("%C") || m_tooltipFormat.contains("%o")) {
 		int durationSec = tagReader->toString("%D").toInt();
 		float posAtX = (float)x / width();
 		int secAtX = durationSec * posAtX;
