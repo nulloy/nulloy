@@ -2,34 +2,29 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Encoding=UTF-8
 Name=Nulloy
 GenericName=Audio Player
 Comment=Music player with a waveform progress bar
 Categories=AudioVideo;Audio;Player;
 Terminal=false
-MimeType=x-content/audio-player;audio/basic/audio/mp3;audio/flac;audio/wav;audio/ogg;audio/mpeg;audio/ape;audio/x-wavpack;audio/wv;audio/x-musepack;audio/mp4;audio/x-ms-wma;audio/x-ape;audio/x-tta;audio/x-m4a;audio/x-aiff;
+MimeType=x-content/audio-player;audio/basic;audio/mpeg3;audio/x-mpeg-3;audio/flac;audio/wav;audio/ogg;audio/mpeg;audio/ape;audio/x-wavpack;audio/wv;audio/x-musepack;audio/mp4;audio/x-ms-wma;audio/x-ape;audio/x-tta;audio/x-m4a;audio/x-aiff;audio/x-matroska;
 Icon=nulloy
 Exec=nulloy %F
 
-X-Ayatana-Desktop-Shortcuts=Pause;Stop;Next;Previous
+Actions=PlayPause;Stop;Next;Previous
 
-[Pause Shortcut Group]
+[Desktop Action PlayPause]
 Name=Play / Pause
 Exec=nulloy --pause
-TargetEnvironment=Unity
 
-[Stop Shortcut Group]
+[Desktop Action Stop]
 Name=Stop
 Exec=nulloy --stop
-TargetEnvironment=Unity
 
-[Next Shortcut Group]
+[Desktop Action Next]
 Name=Next
 Exec=nulloy --next
-TargetEnvironment=Unity
 
-[Previous Shortcut Group]
+[Desktop Action Previous]
 Name=Previous
 Exec=nulloy --prev
-TargetEnvironment=Unity
