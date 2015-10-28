@@ -16,16 +16,16 @@
 #include "playbackEnginePhonon.h"
 #include <QtGlobal>
 
-static NPlaybackEngineInterface::State fromPhononState(Phonon::State state)
+static N::PlaybackState fromPhononState(Phonon::State state)
 {
 	switch (state) {
 		case Phonon::PlayingState:
 		case Phonon::BufferingState:
-			return NPlaybackEngineInterface::Playing;
+			return N::PlaybackPlaying;
 		case Phonon::PausedState:
-			return NPlaybackEngineInterface::Paused;
+			return N::PlaybackPaused;
 		default:
-			return NPlaybackEngineInterface::Stopped;
+			return N::PlaybackStopped;
 	}
 }
 
@@ -165,8 +165,18 @@ void NPlaybackEnginePhonon::on_stateChanged(Phonon::State newState)
 	emit stateChanged(fromPhononState(newState));
 }
 
-int NPlaybackEnginePhonon::state()
+N::PlaybackState NPlaybackEnginePhonon::state()
 {
 	return fromPhononState(m_mediaObject->state());
 }
 
+qint64 NPlaybackEnginePhonon::durationMsec()
+{
+	return m_mediaObject->totalTime();
+}
+
+void NPlaybackEnginePhonon::jump(qint64 msec)
+{
+	if (hasMedia() && m_mediaObject->isSeekable())
+		m_mediaObject->seek(msec);
+}

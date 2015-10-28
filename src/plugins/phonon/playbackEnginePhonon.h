@@ -37,19 +37,21 @@ public:
 	~NPlaybackEnginePhonon();
 	void init();
 	QString interfaceString() { return NPlaybackEngineInterface::interfaceString(); }
-	PluginType type() { return PlaybackEngine; }
+	N::PluginType type() { return N::PlaybackEngine; }
 
 	Q_INVOKABLE bool hasMedia();
 	Q_INVOKABLE QString currentMedia();
-	Q_INVOKABLE int state();
+	Q_INVOKABLE N::PlaybackState state();
 
 	Q_INVOKABLE qreal volume();
 	Q_INVOKABLE qreal position();
+	Q_INVOKABLE qint64 durationMsec();
 
 public slots:
 	Q_INVOKABLE void setMedia(const QString &file);
 	Q_INVOKABLE void setVolume(qreal volume);
 	Q_INVOKABLE void setPosition(qreal pos);
+	Q_INVOKABLE void jump(qint64 msec);
 
 	Q_INVOKABLE void play();
 	Q_INVOKABLE void stop();
@@ -67,7 +69,8 @@ signals:
 	void mediaChanged(const QString &file);
 	void finished();
 	void failed();
-	void stateChanged(int state);
+	void stateChanged(N::PlaybackState state);
+	void tick(qint64 msec);
 };
 
 #endif

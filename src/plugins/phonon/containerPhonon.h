@@ -31,7 +31,7 @@ public:
 	~NContainerPhonon();
 	QList<NPlugin *> plugins();
 	QString name() { return "Phonon"; }
-	QString version() { return "0.5.5"; }
+	QString version() { return "0.8"; }
 };
 
 #endif
