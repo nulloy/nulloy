@@ -234,7 +234,7 @@
         <translation>Una nueva versión disponible: </translation>
     </message>
     <message>
-        <location line="+195"/>
+        <location line="+196"/>
         <source>All supported</source>
         <translation>Extensiones Soportadas</translation>
     </message>
@@ -254,7 +254,7 @@
         <translation>Lista de reproducción M3U extendido</translation>
     </message>
     <message>
-        <location line="-599"/>
+        <location line="-600"/>
         <source>Window</source>
         <translation>Ventana</translation>
     </message>
@@ -285,7 +285,7 @@
 <context>
     <name>NPreferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+54"/>
+        <location filename="../preferencesDialog.cpp" line="+55"/>
         <source>Ok</source>
         <translation>ОK</translation>
     </message>
@@ -305,7 +305,7 @@
         <translation> Preferencias</translation>
     </message>
     <message>
-        <location line="+85"/>
+        <location line="+90"/>
         <location line="+38"/>
         <location line="+37"/>
         <source>Supported parameters:</source>
@@ -487,7 +487,7 @@
         <translation>Cerrar</translation>
     </message>
     <message>
-        <location line="+134"/>
+        <location line="+143"/>
         <source> (Built-in)</source>
         <translation> (Incorporado)</translation>
     </message>
@@ -532,7 +532,7 @@
         <translation>General</translation>
     </message>
     <message>
-        <location line="+90"/>
+        <location line="+92"/>
         <source>Skin:</source>
         <translation>Skin(Tema):</translation>
     </message>
@@ -649,12 +649,17 @@
     <message>
         <location line="-95"/>
         <location line="+25"/>
-        <location line="+92"/>
+        <location line="+109"/>
         <source>Help</source>
         <translation>Ayuda</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="-32"/>
+        <source>Encoding:</source>
+        <translation type="unfinished">Codificación:</translation>
+    </message>
+    <message>
+        <location line="+58"/>
         <source>Waveform sections:</source>
         <translation>Foma de Onda:</translation>
     </message>
@@ -724,7 +729,7 @@
         <translation>Cambiar plugins requiere reiniciar</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-356"/>
+        <location filename="../preferencesDialog.cpp" line="-370"/>
         <source>English</source>
         <translation>Español</translation>
     </message>
@@ -778,7 +783,7 @@
         <translation>No plugin de TagReader encontró.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+465"/>
+        <location filename="../preferencesDialog.cpp" line="+482"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Bandeja del sistema (área de notificación) no está disponible en su sistema.</translation>
     </message>

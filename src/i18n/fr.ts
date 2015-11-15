@@ -234,7 +234,7 @@
         <translation>Une nouvelle version est disponible: </translation>
     </message>
     <message>
-        <location line="+195"/>
+        <location line="+196"/>
         <source>All supported</source>
         <translation>Toutes les extensions supportées</translation>
     </message>
@@ -254,7 +254,7 @@
         <translation>Playlist M3U étendue</translation>
     </message>
     <message>
-        <location line="-599"/>
+        <location line="-600"/>
         <source>Window</source>
         <translation>Fenêtre</translation>
     </message>
@@ -285,7 +285,7 @@
 <context>
     <name>NPreferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+54"/>
+        <location filename="../preferencesDialog.cpp" line="+55"/>
         <source>Ok</source>
         <translation>ОK</translation>
     </message>
@@ -305,7 +305,7 @@
         <translation> Préférences</translation>
     </message>
     <message>
-        <location line="+85"/>
+        <location line="+90"/>
         <location line="+38"/>
         <location line="+37"/>
         <source>Supported parameters:</source>
@@ -487,7 +487,7 @@
         <translation>Fermer</translation>
     </message>
     <message>
-        <location line="+134"/>
+        <location line="+143"/>
         <source> (Built-in)</source>
         <translation> (Encastré)</translation>
     </message>
@@ -532,7 +532,7 @@
         <translation>Général</translation>
     </message>
     <message>
-        <location line="+90"/>
+        <location line="+92"/>
         <source>Skin:</source>
         <translation>Thème:</translation>
     </message>
@@ -649,12 +649,17 @@
     <message>
         <location line="-95"/>
         <location line="+25"/>
-        <location line="+92"/>
+        <location line="+109"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="-32"/>
+        <source>Encoding:</source>
+        <translation type="unfinished">Encodage:</translation>
+    </message>
+    <message>
+        <location line="+58"/>
         <source>Waveform sections:</source>
         <translation>Personnalisation des sections de la forme d&apos;onde:</translation>
     </message>
@@ -724,7 +729,7 @@
         <translation>Changer de plugin necessite un redémarrage de Nulloy</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-356"/>
+        <location filename="../preferencesDialog.cpp" line="-370"/>
         <source>English</source>
         <translation>Français</translation>
     </message>
@@ -778,7 +783,7 @@
         <translation>Plugin introuvage (TagReader).</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+465"/>
+        <location filename="../preferencesDialog.cpp" line="+482"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>L&apos;affichage dans une zone de notification n&apos;est pas disponible pour ce système.</translation>
     </message>

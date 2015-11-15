@@ -234,7 +234,7 @@
         <translation>Dostępna nowa wersja: </translation>
     </message>
     <message>
-        <location line="+195"/>
+        <location line="+196"/>
         <source>All supported</source>
         <translation>Pełne wsparcie</translation>
     </message>
@@ -254,7 +254,7 @@
         <translation>Rozszerzona lista odtwarzania M3U</translation>
     </message>
     <message>
-        <location line="-599"/>
+        <location line="-600"/>
         <source>Window</source>
         <translation>Okno</translation>
     </message>
@@ -285,7 +285,7 @@
 <context>
     <name>NPreferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+54"/>
+        <location filename="../preferencesDialog.cpp" line="+55"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
@@ -305,7 +305,7 @@
         <translation> Opcje</translation>
     </message>
     <message>
-        <location line="+85"/>
+        <location line="+90"/>
         <location line="+38"/>
         <location line="+37"/>
         <source>Supported parameters:</source>
@@ -487,7 +487,7 @@
         <translation>Zamknij</translation>
     </message>
     <message>
-        <location line="+134"/>
+        <location line="+143"/>
         <source> (Built-in)</source>
         <translation> (Wbudowany)</translation>
     </message>
@@ -532,7 +532,7 @@
         <translation>Ogólne</translation>
     </message>
     <message>
-        <location line="+90"/>
+        <location line="+92"/>
         <source>Skin:</source>
         <translation>Skórka:</translation>
     </message>
@@ -649,12 +649,17 @@
     <message>
         <location line="-95"/>
         <location line="+25"/>
-        <location line="+92"/>
+        <location line="+109"/>
         <source>Help</source>
         <translation>Pomoc</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="-32"/>
+        <source>Encoding:</source>
+        <translation type="unfinished">Kodowanie:</translation>
+    </message>
+    <message>
+        <location line="+58"/>
         <source>Waveform sections:</source>
         <translation>Odcinki Widma dźwiękowego:</translation>
     </message>
@@ -724,7 +729,7 @@
         <translation>Zmiana wtyczek wymaga restartu</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-356"/>
+        <location filename="../preferencesDialog.cpp" line="-370"/>
         <source>English</source>
         <translation>Polski</translation>
     </message>
@@ -778,7 +783,7 @@
         <translation>Nie znaleziono wtyczki odczytującej tagi utworów muzycznych (TagReader).</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+465"/>
+        <location filename="../preferencesDialog.cpp" line="+482"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Tacka systemowa (Obszar powiadomień) jest niedostępny w twoim systemie.</translation>
     </message>

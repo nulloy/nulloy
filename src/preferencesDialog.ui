@@ -50,6 +50,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
+            <width>666</width>
+            <height>498</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -515,6 +517,13 @@ padding: 5px;</string>
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QLabel" name="encodingTrackInfoLabel">
+              <property name="text">
+               <string>Encoding:</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
@@ -527,6 +536,16 @@ padding: 5px;</string>
             </item>
             <item>
              <widget class="QLineEdit" name="tooltipTrackInfoLineEdit"/>
+            </item>
+            <item>
+             <widget class="QComboBox" name="encodingTrackInfoComboBox">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -771,8 +790,8 @@ padding: 5px;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>588</width>
-            <height>474</height>
+            <width>678</width>
+            <height>446</height>
            </rect>
           </property>
          </widget>

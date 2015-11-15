@@ -63,6 +63,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 	initValue("PlaylistTrackInfo", "%F (%d)");
 	initValue("WindowTitleTrackInfo","\"{%a - %t|%F}\" - " + QCoreApplication::applicationName() + " %v");
 	initValue("TooltipTrackInfo", "%C");
+	initValue("EncodingTrackInfo", "UTF-8");
 
 	initValue("Shuffle", false);
 	initValue("Repeat", false);

@@ -27,6 +27,7 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QString>
+#include <QTextCodec>
 
 TagLib::FileRef *NTaglib::_tagRef;
 QString NTaglib::_filePath;
@@ -66,13 +67,13 @@ NTagReaderTaglib::~NTagReaderTaglib()
 	}
 }
 
-QString NTagReaderTaglib::toString(const QString &format)
+QString NTagReaderTaglib::toString(const QString &format, const QString &encoding)
 {
 	bool res;
-	return parse(format, &res);
+	return parse(format, &res, encoding);
 }
 
-QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopOnFail)
+QString NTagReaderTaglib::parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail)
 {
 	if (format.isEmpty())
 		return "";
@@ -88,27 +89,28 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 	int seconds_total = ap->length();
 
 	QString res;
+	QTextCodec *codec = QTextCodec::codecForName(encoding.toUtf8());
 	for (int i = 0; i < format.size(); ++i) {
 		if (format.at(i) == '%') {
 			++i;
 			QChar ch = format.at(i);
 			if (ch == 'a') {
-				QString str = TStringToQString(tag->artist());
+				QString str = codec->toUnicode(tag->artist().toCString(false));
 				if (!(*success = !str.isEmpty()))
 					str = "<Unknown artist>";
 				res += str;
 			} else if (ch == 't') {
-				QString str = TStringToQString(tag->title());
+				QString str = codec->toUnicode(tag->title().toCString(false));
 				if (!(*success = !str.isEmpty()))
 					str = "<Unknown title>";
 				res += str;
 			} else if (ch == 'A') {
-				QString str = TStringToQString(tag->album());
+				QString str = codec->toUnicode(tag->album().toCString(false));
 				if (!(*success = !str.isEmpty()))
 					str = "<Unknown album>";
 				res += str;
 			} else if (ch == 'c') {
-				QString str = TStringToQString(tag->comment());
+				QString str = codec->toUnicode(tag->comment().toCString(false));
 				if (!(*success = !str.isEmpty()))
 					str = "<Empty comment>";
 				res += str;
@@ -249,11 +251,11 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, bool stopO
 			}
 
 			bool cond_res;
-			QString cond_true = parse(values.at(0), &cond_res, true);
+			QString cond_true = parse(values.at(0), &cond_res, encoding, true);
 			if (cond_res) {
 				res += cond_true;
 			} else {
-				res += parse(values.at(1), &cond_res);
+				res += parse(values.at(1), &cond_res, encoding);
 			}
 			i = matchedAt;
 		} else {

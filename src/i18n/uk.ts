@@ -234,7 +234,7 @@
         <translation>Наявна більш нова версія: </translation>
     </message>
     <message>
-        <location line="+195"/>
+        <location line="+196"/>
         <source>All supported</source>
         <translation>Всі, які підтримуються</translation>
     </message>
@@ -254,7 +254,7 @@
         <translation>Розширений M3U плейлист</translation>
     </message>
     <message>
-        <location line="-599"/>
+        <location line="-600"/>
         <source>Window</source>
         <translation>Вікно</translation>
     </message>
@@ -285,7 +285,7 @@
 <context>
     <name>NPreferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+54"/>
+        <location filename="../preferencesDialog.cpp" line="+55"/>
         <source>Ok</source>
         <translation>Добре</translation>
     </message>
@@ -305,7 +305,7 @@
         <translation> Налаштування</translation>
     </message>
     <message>
-        <location line="+85"/>
+        <location line="+90"/>
         <location line="+38"/>
         <location line="+37"/>
         <source>Supported parameters:</source>
@@ -467,7 +467,7 @@
     <message>
         <location line="-2"/>
         <source>Evaluate for &lt;b&gt;&lt;i&gt;true&lt;/i&gt;&lt;/b&gt; or &lt;b&gt;&lt;i&gt;false&lt;/i&gt;&lt;/b&gt; case. Note: nesting conditions is not supported yet.</source>
-        <translation>Якщо дійсна перша частина ("&lt;b&gt;&lt;i&gt;істина&lt;/i&gt;&lt;/b&gt;"), то відобразити її; якщо ні - вивести альтернативне значення ("&lt;b&gt;&lt;i&gt;хибно&lt;/i&gt;&lt;/b&gt;"). Примітка: вкладені умови поки не підтримуються.</translation>
+        <translation>Якщо дійсна перша частина (&quot;&lt;b&gt;&lt;i&gt;істина&lt;/i&gt;&lt;/b&gt;&quot;), то відобразити її; якщо ні - вивести альтернативне значення (&quot;&lt;b&gt;&lt;i&gt;хибно&lt;/i&gt;&lt;/b&gt;&quot;). Примітка: вкладені умови поки не підтримуються.</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -487,7 +487,7 @@
         <translation>Закрити</translation>
     </message>
     <message>
-        <location line="+134"/>
+        <location line="+143"/>
         <source> (Built-in)</source>
         <translation> (Вбудований)</translation>
     </message>
@@ -532,7 +532,7 @@
         <translation>Загальне</translation>
     </message>
     <message>
-        <location line="+90"/>
+        <location line="+92"/>
         <source>Skin:</source>
         <translation>Тема:</translation>
     </message>
@@ -649,12 +649,17 @@
     <message>
         <location line="-95"/>
         <location line="+25"/>
-        <location line="+92"/>
+        <location line="+109"/>
         <source>Help</source>
         <translation>Допомога</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="-32"/>
+        <source>Encoding:</source>
+        <translation type="unfinished">Кодування:</translation>
+    </message>
+    <message>
+        <location line="+58"/>
         <source>Waveform sections:</source>
         <translation>Ділянки звукової хвилі:</translation>
     </message>
@@ -724,7 +729,7 @@
         <translation>Зміна плагіну потребує перезапуску</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-356"/>
+        <location filename="../preferencesDialog.cpp" line="-370"/>
         <source>English</source>
         <translation>Українська</translation>
     </message>
@@ -778,7 +783,7 @@
         <translation>Не знайдено плагін TagReader.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+465"/>
+        <location filename="../preferencesDialog.cpp" line="+482"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Системний лоток (Область повідомлень) на даній системі не доступний (-на).</translation>
     </message>
