@@ -138,7 +138,7 @@
     </message>
     <message>
         <location line="+1"/>
-        <source>Hide all controll except waveform</source>
+        <source>Hide all controls except waveform</source>
         <translation>Steuerelemente ausblenden</translation>
     </message>
     <message>
@@ -568,7 +568,7 @@
     </message>
     <message>
         <location line="+27"/>
-        <source>Play enqueued files immidiately</source>
+        <source>Play enqueued files immediately</source>
         <translation>Beim Hinzufügen wiedergeben</translation>
     </message>
     <message>

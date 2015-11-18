@@ -200,7 +200,7 @@ void NPlayer::createActions()
 	m_alwaysOnTopAction->setObjectName("AlwaysOnTopAction");
 
 	m_fullScreenAction = new NAction(tr("Fullscreen Mode"), this);
-	m_fullScreenAction->setStatusTip(tr("Hide all controll except waveform"));
+	m_fullScreenAction->setStatusTip(tr("Hide all controls except waveform"));
 	m_fullScreenAction->setObjectName("FullScreenAction");
 	m_fullScreenAction->setCustomizable(true);
 
