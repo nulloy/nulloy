@@ -72,10 +72,8 @@ int main(int argc, char *argv[])
 	QObject::connect(&instance, SIGNAL(aboutToQuit()),
 	                 &p, SLOT(quit()));
 
-	if (NSettings::instance()->value("RestorePlaylist").toBool()) {
-		// try to load default playlist (will fail if msg contained files)
+	if (NSettings::instance()->value("RestorePlaylist").toBool())
 		p.loadDefaultPlaylist();
-	}
 
 	// manually read the message
 	if (!msg.isEmpty())

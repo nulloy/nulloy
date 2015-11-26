@@ -518,6 +518,7 @@ void NPlayer::readMessage(const QString &str)
 			m_playlistWidget->addFiles(files);
 			if (m_playbackEngine->state() == N::PlaybackStopped || NSettings::instance()->value("PlayEnqueued").toBool())
 				m_playlistWidget->playRow(lastRow);
+				m_playbackEngine->setPosition(0); // overrides setPosition() in loadDefaultPlaylist()
 		} else {
 			m_playlistWidget->playFiles(files);
 		}
@@ -528,12 +529,8 @@ void NPlayer::readMessage(const QString &str)
 
 void NPlayer::loadDefaultPlaylist()
 {
-	if (m_playlistWidget->count() > 0 || // files were added by calling message() directly in main()
-	    !QFileInfo(NCore::defaultPlaylistPath()).exists() ||
-	    !m_playlistWidget->setPlaylist(NCore::defaultPlaylistPath()))
-	{
+	if (!QFileInfo(NCore::defaultPlaylistPath()).exists() || !m_playlistWidget->setPlaylist(NCore::defaultPlaylistPath()))
 		return;
-	}
 
 	QStringList playlistRowValues = m_settings->value("PlaylistRow").toStringList();
 	if (!playlistRowValues.isEmpty()) {
@@ -541,7 +538,7 @@ void NPlayer::loadDefaultPlaylist()
 		qreal pos = playlistRowValues.at(1).toFloat();
 		if (pos > 0 && pos < 1) {
 			m_playlistWidget->playRow(row);
-			m_playbackEngine->setPosition(pos);
+			m_playbackEngine->setPosition(pos); // postponed till file duration is available
 			if (m_settings->value("StartPaused").toBool())
 				m_playbackEngine->pause();
 		} else {
