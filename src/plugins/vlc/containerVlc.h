@@ -31,7 +31,7 @@ public:
 	~NContainerVlc();
 	QList<NPlugin *> plugins();
 	QString name() { return "VLC"; }
-	QString version() { return "0.5.5"; }
+	QString version() { return "0.8"; }
 };
 
 #endif

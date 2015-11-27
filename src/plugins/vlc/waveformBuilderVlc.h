@@ -44,7 +44,7 @@ public:
 	~NWaveformBuilderVlc();
 	void init();
 	QString interfaceString() { return NWaveformBuilderInterface::interfaceString(); }
-	PluginType type() { return WaveformBuilder; }
+	N::PluginType type() { return N::WaveformBuilder; }
 
 	void start(const QString &file);
 	void stop();

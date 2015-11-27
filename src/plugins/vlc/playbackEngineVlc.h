@@ -35,7 +35,7 @@ private:
 	QTimer *m_timer;
 	qreal m_oldVolume;
 	qreal m_oldPosition;
-	State m_oldState;
+	N::PlaybackState m_oldState;
 	QString m_currentMedia;
 
 public:
@@ -43,19 +43,21 @@ public:
 	~NPlaybackEngineVlc();
 	void init();
 	QString interfaceString() { return NPlaybackEngineInterface::interfaceString(); }
-	PluginType type() { return PlaybackEngine; }
+	N::PluginType type() { return N::PlaybackEngine; }
 
 	Q_INVOKABLE bool hasMedia();
 	Q_INVOKABLE QString currentMedia();
-	Q_INVOKABLE int state() { return m_oldState; }
+	Q_INVOKABLE N::PlaybackState state() { return m_oldState; }
 
 	Q_INVOKABLE qreal volume();
 	Q_INVOKABLE qreal position();
+	Q_INVOKABLE qint64 durationMsec();
 
 public slots:
 	Q_INVOKABLE void setMedia(const QString &file);
 	Q_INVOKABLE void setVolume(qreal volume);
 	Q_INVOKABLE void setPosition(qreal pos);
+	Q_INVOKABLE void jump(qint64 msec);
 
 	Q_INVOKABLE void play();
 	Q_INVOKABLE void stop();
@@ -73,7 +75,8 @@ signals:
 	void mediaChanged(const QString &file);
 	void finished();
 	void failed();
-	void stateChanged(int state);
+	void stateChanged(N::PlaybackState state);
+	void tick(qint64 msec);
 };
 
 #endif
