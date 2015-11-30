@@ -153,6 +153,7 @@ void NPlaybackEnginePhonon::on_tick(qint64 ms)
 	}
 
 	emit positionChanged((qreal)ms / m_mediaObject->totalTime());
+	emit tick(m_mediaObject->currentTime());
 }
 
 void NPlaybackEnginePhonon::on_volumeChanged(qreal volume)
@@ -178,5 +179,5 @@ qint64 NPlaybackEnginePhonon::durationMsec()
 void NPlaybackEnginePhonon::jump(qint64 msec)
 {
 	if (hasMedia() && m_mediaObject->isSeekable())
-		m_mediaObject->seek(msec);
+		m_mediaObject->seek(m_mediaObject->currentTime() + msec);
 }
