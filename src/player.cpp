@@ -907,6 +907,7 @@ void NPlayer::showSavePlaylistDialog()
 
 void NPlayer::showContextMenu(QPoint pos)
 {
-	m_contextMenu->exec(m_mainWindow->mapToGlobal(pos));
+	// (1, 1) offset to avoid accidental item activation
+	m_contextMenu->exec(m_mainWindow->mapToGlobal(pos) + QPoint(1, 1));
 }
 
