@@ -89,7 +89,7 @@ while [ $# -gt 0 ]; do
 		MAC_BUNDLE=no
 	elif [ $1 == "--universal" ]; then
 		MAC_UNIVERSAL=yes
-	elif [ $1 == "--help" ]; then
+	elif [[ $1 == "--help" || $1 == "-h" ]]; then
 		echo_help; exit 0
 	elif [ $1 == "--" ]; then
 		shift
