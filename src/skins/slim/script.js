@@ -46,15 +46,15 @@ function Main()
 
 Main.prototype.afterShow = function()
 {
-	if (Settings.value("PixieSkin/Splitter"))
-		Ui.splitter.setSizes(Settings.value("PixieSkin/Splitter"));
+	if (Settings.value("SlimSkin/Splitter"))
+		Ui.splitter.setSizes(Settings.value("SlimSkin/Splitter"));
 	else
 		Ui.splitter.setSizes([30, 0]);
 }
 
 Main.prototype.on_splitterMoved = function(pos, index)
 {
-	Settings.setValue("PixieSkin/Splitter", Ui.splitter.sizes());
+	Settings.setValue("SlimSkin/Splitter", Ui.splitter.sizes());
 }
 
 Main.prototype.setTitle = function(title)
