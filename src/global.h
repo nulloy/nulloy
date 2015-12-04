@@ -73,10 +73,10 @@ public:
 
 	enum PluginType {
 		OtherPlugin     = 0,
-		PlaybackEngine  = (1<<0),
-		WaveformBuilder = (1<<1),
-		TagReader       = (1<<2),
-		CoverReader     = (1<<3),
+		PlaybackEngine  = (1<<0), // 1
+		WaveformBuilder = (1<<1), // 2
+		TagReader       = (1<<2), // 4
+		CoverReader     = (1<<3), // 8
 		MaxPlugin       = (1<<4) - 1
 	};
 

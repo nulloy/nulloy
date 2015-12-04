@@ -142,8 +142,10 @@ void NPluginLoader::_init()
 			QObject *instance = loader->instance();
 			NPluginContainer *container = qobject_cast<NPluginContainer *>(instance);
 			if (container) {
+				qDebug() << "found container" << container->name() << ":";
 				QList<NPlugin *> _plugins = container->plugins();
 				foreach (NPlugin *plugin, _plugins) {
+					qDebug() << "*" << ENUM_TO_STR(N, PluginType, plugin->type());
 					Descriptor d;
 					d[TypeRole] = plugin->type();
 					d[ContainerNameRole] = container->name();
@@ -165,11 +167,14 @@ void NPluginLoader::_init()
 		iter.next();
 		N::PluginType type = iter.value();
 		_usedPlugins[type] = _findPlugin(type);
+		qDebug() << "registering plugin:" << _usedPlugins[type]->name();
 	}
 
 	// unload non-used
-	foreach(QPluginLoader *loader, _usedLoaders.keys(false))
+	foreach(QPluginLoader *loader, _usedLoaders.keys(false)) {
+		qDebug() << "unloading non-used container:" << (qobject_cast<NPluginContainer *>(loader->instance()))->name();
 		loader->unload();
+	}
 
 	if (!_usedPlugins[N::WaveformBuilder] ||
 	    !_usedPlugins[N::PlaybackEngine] ||
