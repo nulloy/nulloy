@@ -168,13 +168,10 @@ void NWaveformBuilderGstreamer::update()
 		switch (GST_MESSAGE_TYPE(msg)) {
 			case GST_MESSAGE_EOS:
 				peaks()->complete();
-#if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
 				qDebug() <<  "WaveformBuilder ::" << "completed" << peaks()->size();
-#endif
 				stop();
 				break;
-			case GST_MESSAGE_ERROR:
-#if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
+			case GST_MESSAGE_ERROR: {
 				gchar *debug;
 				GError *err = NULL;
 
@@ -184,8 +181,8 @@ void NWaveformBuilderGstreamer::update()
 				qWarning() << "WaveformBuilder :: error ::" << QString::fromUtf8(err->message);
 				if (err)
 					g_error_free(err);
-#endif
 				break;
+			}
 			default:
 				break;
 		}
