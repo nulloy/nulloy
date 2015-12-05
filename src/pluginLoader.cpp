@@ -167,7 +167,8 @@ void NPluginLoader::_init()
 		iter.next();
 		N::PluginType type = iter.value();
 		_usedPlugins[type] = _findPlugin(type);
-		qDebug() << "registering plugin:" << _usedPlugins[type]->name();
+		if (_usedPlugins[type])
+			qDebug() << "registering plugin:" << _usedPlugins[type]->name();
 	}
 
 	// unload non-used
