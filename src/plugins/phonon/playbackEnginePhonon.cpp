@@ -178,6 +178,9 @@ qint64 NPlaybackEnginePhonon::durationMsec()
 
 void NPlaybackEnginePhonon::jump(qint64 msec)
 {
-	if (hasMedia() && m_mediaObject->isSeekable())
-		m_mediaObject->seek(m_mediaObject->currentTime() + msec);
+	if (!hasMedia() || !m_mediaObject->isSeekable())
+		return;
+
+	qint64 posMsec = qBound(0LL, m_mediaObject->currentTime() + msec, durationMsec() - 1000); // 1000 msec gap to avoid phonon freeze
+	m_mediaObject->seek(posMsec);
 }

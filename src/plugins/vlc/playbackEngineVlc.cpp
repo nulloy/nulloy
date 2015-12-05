@@ -133,8 +133,11 @@ qreal NPlaybackEngineVlc::position()
 
 void NPlaybackEngineVlc::jump(qint64 msec)
 {
-	if (hasMedia() && libvlc_media_player_is_seekable(m_mediaPlayer))
-		libvlc_media_player_set_time(m_mediaPlayer, libvlc_media_player_get_time(m_mediaPlayer) + msec);
+	if (!hasMedia() || !libvlc_media_player_is_seekable(m_mediaPlayer))
+		return;
+
+	qint64 posMsec = qBound(0LL, libvlc_media_player_get_time(m_mediaPlayer) + msec, durationMsec());
+	libvlc_media_player_set_time(m_mediaPlayer, posMsec);
 }
 
 qint64 NPlaybackEngineVlc::durationMsec()
