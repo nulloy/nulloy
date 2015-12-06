@@ -1,3 +1,10 @@
+* 0.8.1, Sun Dec 6 2015
+- Added Spanish, Ukrainian and Lithuanian translations
+- Setting tags encoding
+- Fix/Mac: Problem with external sound cards
+- Fix/Mac: Problem with wav files
+- Fix/Win: Custom file manager failed with exit code 1
+
 * 0.8, Tue Jul 7 2015
 - Upgraded to GStreamer 1.0
 - More audio codecs
