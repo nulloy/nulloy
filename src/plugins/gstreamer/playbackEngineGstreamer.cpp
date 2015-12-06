@@ -156,7 +156,7 @@ void NPlaybackEngineGStreamer::jump(qint64 msec)
 	if (!hasMedia())
 		return;
 
-	gint64 posNsec = qBound(0L, (gint64)qRound64(position() * m_durationNsec + msec * NSEC_IN_MSEC), m_durationNsec);
+	gint64 posNsec = qBound((gint64)0, (gint64)qRound64(position() * m_durationNsec + msec * NSEC_IN_MSEC), m_durationNsec);
 	gst_element_seek_simple(m_playbin, GST_FORMAT_TIME,
 	                        GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
 	                        posNsec);
