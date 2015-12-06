@@ -167,8 +167,14 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error)
 			*error = QString(QObject::tr("Custom File Manager is enabled but not configured."));
 			return false;
 		}
-		cmd.replace("%f", fileInfo.fileName());
-		cmd.replace("%d", fileInfo.canonicalPath());
+		QString fileName = fileInfo.fileName();
+		QString canonicalPath = fileInfo.canonicalPath();
+#if defined Q_WS_WIN
+		fileName.replace('/', '\\');
+		canonicalPath.replace('/', '\\');
+#endif
+		cmd.replace("%f", fileName);
+		cmd.replace("%d", canonicalPath);
 	} else {
 		QString path = fileInfo.canonicalFilePath();
 #if defined Q_WS_WIN
@@ -179,12 +185,7 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error)
 		cmd = "open -R \"" + path + "\"";
 #endif
 	}
-
-	int res = QProcess::execute(cmd);
-	if (res != 0) {
-		*error = QString(QObject::tr("Custom File Manager command failed with exit code <b>%1</b>.")).arg(res);
-		return false;
-	}
+	QProcess::execute(cmd);
 
 	return true;
 }
