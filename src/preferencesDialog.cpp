@@ -118,10 +118,14 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 
 	ui.waveformTrackInfoTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
+	int i = 0;
 	foreach (int mib, QTextCodec::availableMibs()) {
-		ui.encodingTrackInfoComboBox->addItem(QTextCodec::codecForMib(mib)->name(), mib);
+		QString codecName = QTextCodec::codecForMib(mib)->name();
+		ui.encodingTrackInfoComboBox->addItem(codecName, mib);
+		if (codecName == "UTF-8")
+			ui.encodingTrackInfoComboBox->setCurrentIndex(i);
+		++i;
 	}
-	ui.encodingTrackInfoComboBox->removeItem(0); // "System"
 }
 
 void NPreferencesDialog::showEvent(QShowEvent *event)
