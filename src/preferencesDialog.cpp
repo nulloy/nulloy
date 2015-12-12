@@ -165,7 +165,7 @@ void NPreferencesDialog::on_fileManagerHelpButton_clicked()
 		tr("Examples:") +
 		"<ul style=\"font-family: 'Lucida Console', Monaco, monospace\">" +
 			"<li>sh -c \"open -a '/Applications/Path Finder.app' '%d/%f'\"</li>" +
-			"<li>sh -c \"/usr/bin/pcmanfm -n '%d' && sleep 0.1 && xdotool type '%f' && xdotool key Escape\"</li>" +
+			"<li>sh -c \"/usr/bin/pcmanfm -n '%d' & sleep 1.5 && xdotool type '%f' && xdotool key Escape\"</li>" +
 		"</ul>");
 	textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
 	textBrowser->setFrameShape(QFrame::NoFrame);
@@ -201,7 +201,7 @@ void NPreferencesDialog::on_customTrashHelpButton_clicked()
 		"</ul>" +
 		tr("Examples:") +
 		"<ul style=\"font-family: 'Lucida Console', Monaco, monospace\">" +
-			"<li>/usr/bin/trash-put '%f'</li>" +
+			"<li>/usr/bin/trash-put \"%f\"</li>" +
 			"<li>sh -c \"mv '%f' $HOME/.Trash\"</li>" +
 		"</ul>");
 	textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
