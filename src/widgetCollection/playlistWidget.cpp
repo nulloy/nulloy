@@ -170,11 +170,13 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error)
 		QString fileName = fileInfo.fileName();
 		QString canonicalPath = fileInfo.canonicalPath();
 #if defined Q_WS_WIN
+		file.replace('/', '\\');
 		fileName.replace('/', '\\');
 		canonicalPath.replace('/', '\\');
 #endif
-		cmd.replace("%f", fileName);
-		cmd.replace("%d", canonicalPath);
+		cmd.replace("%p", file);
+		cmd.replace("%F", fileName);
+		cmd.replace("%P", canonicalPath);
 	} else {
 		QString path = fileInfo.canonicalFilePath();
 #if defined Q_WS_WIN

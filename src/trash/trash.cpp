@@ -20,7 +20,7 @@
 #include <QFile>
 #include <QFileInfo>
 
-int _trash(const QString &path, QString *error);
+int _trash(const QString &file, QString *error);
 
 QStringList NTrash::moveToTrash(QStringList files)
 {

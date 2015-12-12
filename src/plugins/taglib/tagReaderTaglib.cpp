@@ -217,6 +217,8 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
 				res += QFileInfo(NTaglib::_filePath).fileName();
 			} else if (ch == 'p') {
 				res += QFileInfo(NTaglib::_filePath).absoluteFilePath();
+			} else if (ch == 'P') {
+				res += QFileInfo(NTaglib::_filePath).canonicalPath();
 			} else if (ch == 'e') {
 				res += QFileInfo(NTaglib::_filePath).suffix();
 			} else if (ch == 'E') {

@@ -23,10 +23,10 @@ static inline NSString* fromQString(const QString &string)
 	return [[NSString alloc] initWithUTF8String:cString];
 }
 
-int _trash(const QString &path, QString *error)
+int _trash(const QString &file, QString *error)
 {
 	/*NSMutableArray *urls = [[NSMutableArray alloc] init];
-	NSString *string = fromQString(path);
+	NSString *string = fromQString(file);
 	NSLog(@"%@", string);
 	[urls addObject:[NSURL fileURLWithPath:string]];
 	[[NSWorkspace sharedWorkspace] recycleURLs:urls comletionHandlerL:nil];*/
@@ -38,8 +38,8 @@ int _trash(const QString &path, QString *error)
 	                                                  tag:nil];*/
 
 	FSRef fsRef;
-	NSString *string = fromQString(path);
-	FSPathMakeRefWithOptions((const UInt8 *)[string fileSystemRepresentation],
+	NSString *file_ns = fromQString(file);
+	FSPathMakeRefWithOptions((const UInt8 *)[file_ns fileSystemRepresentation],
 	                         kFSPathMakeRefDoNotFollowLeafSymlink, &fsRef, NULL);
 	return FSMoveObjectToTrashSync(&fsRef, NULL, kFSFileOperationDefaultOptions);;
 }

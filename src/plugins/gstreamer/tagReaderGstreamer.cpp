@@ -222,6 +222,8 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
 				res += QFileInfo(m_path).fileName();
 			} else if (ch == 'p') {
 				res += QFileInfo(m_path).absoluteFilePath();
+			} else if (ch == 'P') {
+				res += QFileInfo(m_path).canonicalPath();
 			} else if (ch == 'e') {
 				res += QFileInfo(m_path).suffix();
 			} else if (ch == 'E') {

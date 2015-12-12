@@ -159,13 +159,14 @@ void NPreferencesDialog::on_fileManagerHelpButton_clicked()
 	textBrowser->setHtml(
 		tr("Supported parameters:") +
 		"<ul>" +
-			"<li><b>%f</b> - " + tr("File name") + "</li>" +
-			"<li><b>%d</b> - " + tr("Directory path") + "</li>" +
+			"<li><b>%F</b> - " + tr("File name") + "</li>" +
+			"<li><b>%p</b> - " + tr("File name including absolute path") + "</li>" +
+			"<li><b>%P</b> - " + tr("Directory path without file name") + "</li>" +
 		"</ul>" +
 		tr("Examples:") +
 		"<ul style=\"font-family: 'Lucida Console', Monaco, monospace\">" +
-			"<li>sh -c \"open -a '/Applications/Path Finder.app' '%d/%f'\"</li>" +
-			"<li>sh -c \"/usr/bin/pcmanfm -n '%d' & sleep 1.5 && xdotool type '%f' && xdotool key Escape\"</li>" +
+			"<li>sh -c \"open -a '/Applications/Path Finder.app' '%p'\"</li>" +
+			"<li>sh -c \"/usr/bin/pcmanfm -n '%P' & sleep 1.5 && xdotool type '%F' && xdotool key Escape\"</li>" +
 		"</ul>");
 	textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
 	textBrowser->setFrameShape(QFrame::NoFrame);
@@ -197,12 +198,14 @@ void NPreferencesDialog::on_customTrashHelpButton_clicked()
 	textBrowser->setHtml(
 		tr("Supported parameters:") +
 		"<ul>" +
-			"<li><b>%f</b> - " + tr("File path") + "</li>" +
+			"<li><b>%F</b> - " + tr("File name") + "</li>" +
+			"<li><b>%p</b> - " + tr("File name including absolute path") + "</li>" +
+			"<li><b>%P</b> - " + tr("Directory path without file name") + "</li>" +
 		"</ul>" +
 		tr("Examples:") +
 		"<ul style=\"font-family: 'Lucida Console', Monaco, monospace\">" +
-			"<li>/usr/bin/trash-put \"%f\"</li>" +
-			"<li>sh -c \"mv '%f' $HOME/.Trash\"</li>" +
+			"<li>/usr/bin/trash-put \"%p\"</li>" +
+			"<li>sh -c \"mv '%p' $HOME/.Trash\"</li>" +
 		"</ul>");
 	textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
 	textBrowser->setFrameShape(QFrame::NoFrame);
@@ -254,6 +257,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 			"<li><b>%f</b> - " + tr("File name without extension") + "</li>" +
 			"<li><b>%F</b> - " + tr("File name") + "</li>" +
 			"<li><b>%p</b> - " + tr("File name including absolute path") + "</li>" +
+			"<li><b>%P</b> - " + tr("Directory path without file name") + "</li>" +
 			"<li><b>%e</b> - " + tr("File name extension") + "</li>" +
 			"<li><b>%E</b> - " + tr("File name extension, uppercased") + "</li>" +
 			"<li><b>%v</b> - " + tr("Version number") + "</li>" +

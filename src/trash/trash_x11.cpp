@@ -15,8 +15,9 @@
 
 #include "settings.h"
 #include <QProcess>
+#include <QFileInfo>
 
-int _trash(const QString &path, QString *error)
+int _trash(const QString &file, QString *error)
 {
 	bool customTrash = NSettings::instance()->value("CustomTrash").toBool();
 	if (!customTrash) {
@@ -30,7 +31,11 @@ int _trash(const QString &path, QString *error)
 		return -1;
 	}
 
-	cmd.replace("%f", path);
+	cmd.replace("%p", file);
+
+	QFileInfo fileInfo(file);
+	cmd.replace("%F", fileInfo.fileName());
+	cmd.replace("%P", fileInfo.canonicalPath());
 
 	int res = QProcess::execute(cmd);
 	if (res != 0) {
