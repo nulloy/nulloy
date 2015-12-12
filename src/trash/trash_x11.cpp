@@ -16,6 +16,7 @@
 #include "settings.h"
 #include <QProcess>
 #include <QFileInfo>
+#include <QDebug>
 
 int _trash(const QString &file, QString *error)
 {
@@ -37,6 +38,7 @@ int _trash(const QString &file, QString *error)
 	cmd.replace("%F", fileInfo.fileName());
 	cmd.replace("%P", fileInfo.canonicalPath());
 
+	qDebug() << cmd;
 	int res = QProcess::execute(cmd);
 	if (res != 0) {
 		*error = QString(QObject::tr("Custom Trash Command failed with exit code <b>%1</b>.")).arg(res);

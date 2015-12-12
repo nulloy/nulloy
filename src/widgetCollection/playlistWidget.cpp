@@ -187,8 +187,14 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error)
 		cmd = "open -R \"" + path + "\"";
 #endif
 	}
-	QProcess::execute(cmd);
-
+	qDebug() << cmd;
+	int res = QProcess::execute(cmd);
+#if !defined Q_WS_WIN
+	if (res != 0 && customFileManager) {
+		*error = QString(QObject::tr("Custom File Manager command failed with exit code <b>%1</b>.")).arg(res);
+		return false;
+	}
+#endif
 	return true;
 }
 
