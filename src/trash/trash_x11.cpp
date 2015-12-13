@@ -32,14 +32,22 @@ int _trash(const QString &file, QString *error)
 		return -1;
 	}
 
-	cmd.replace("%p", file);
-
 	QFileInfo fileInfo(file);
-	cmd.replace("%F", fileInfo.fileName());
-	cmd.replace("%P", fileInfo.canonicalPath());
+	QString filePath = file;
+	QString fileName = fileInfo.fileName();
+	QString canonicalPath = fileInfo.canonicalPath();
 
-	qDebug() << cmd;
-	int res = QProcess::execute(cmd);
+	// escape single quote
+	filePath.replace("'", "'\\''");
+	fileName.replace("'", "'\\''");
+	canonicalPath.replace("'", "'\\''");
+
+	cmd.replace("%p", filePath);
+	cmd.replace("%F", fileName);
+	cmd.replace("%P", canonicalPath);
+
+	qDebug() << qPrintable(cmd);
+	int res = QProcess::execute("sh", QStringList() << "-c" << cmd);
 	if (res != 0) {
 		*error = QString(QObject::tr("Custom Trash Command failed with exit code <b>%1</b>.")).arg(res);
 		return -1;

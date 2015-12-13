@@ -167,14 +167,20 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error)
 			*error = QString(QObject::tr("Custom File Manager is enabled but not configured."));
 			return false;
 		}
+		QString filePath = file;
 		QString fileName = fileInfo.fileName();
 		QString canonicalPath = fileInfo.canonicalPath();
 #if defined Q_WS_WIN
-		file.replace('/', '\\');
+		filePath.replace('/', '\\');
 		fileName.replace('/', '\\');
 		canonicalPath.replace('/', '\\');
+#else
+		// escape single quote
+		filePath.replace("'", "'\\''");
+		fileName.replace("'", "'\\''");
+		canonicalPath.replace("'", "'\\''");
 #endif
-		cmd.replace("%p", file);
+		cmd.replace("%p", filePath);
 		cmd.replace("%F", fileName);
 		cmd.replace("%P", canonicalPath);
 	} else {
@@ -182,18 +188,21 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error)
 #if defined Q_WS_WIN
 		cmd = "explorer.exe /n,/select,\"" + path.replace('/', '\\') + "\"";
 #elif defined Q_WS_X11
-		cmd = "xdg-open \"" + fileInfo.canonicalPath() + "\"";
+		cmd = "xdg-open \"" + fileInfo.canonicalPath().replace("'", "'\\''") + "\"";
 #elif defined Q_WS_MAC
-		cmd = "open -R \"" + path + "\"";
+		cmd = "open -R \"" + path.replace("'", "'\\''") + "\"";
 #endif
 	}
-	qDebug() << cmd;
-	int res = QProcess::execute(cmd);
+
+	qDebug() << qPrintable(cmd);
 #if !defined Q_WS_WIN
+	int res = QProcess::execute("sh", QStringList() << "-c" << cmd);
 	if (res != 0 && customFileManager) {
 		*error = QString(QObject::tr("Custom File Manager command failed with exit code <b>%1</b>.")).arg(res);
 		return false;
 	}
+#else
+	QProcess::execute(cmd);
 #endif
 	return true;
 }
