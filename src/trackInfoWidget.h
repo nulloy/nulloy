@@ -31,8 +31,8 @@ private:
     qint64 m_msec;
     int m_heightThreshold;
     QString m_tooltipFormat;
-    QMap <NLabel *, QString> m_map;
-    QMap <NLabel *, QString> m_mapTick;
+    QMap <NLabel *, QString> m_staticFormatsMap;
+    QMap <NLabel *, QString> m_dynamicFormatsMap;
     QGraphicsOpacityEffect *m_effect;
     QPropertyAnimation *m_animation;
     QWidget *m_container;
@@ -48,8 +48,8 @@ public:
     ~NTrackInfoWidget();
 
 public slots:
-    void updateInfo();
-    void readSettings();
+    void updateStaticTags();
+    void loadSettings();
     void tick(qint64 msec);
 
 private slots:

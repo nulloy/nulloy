@@ -88,8 +88,8 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
     m_msec = 0;
     m_heightThreshold = minimumSizeHint().height();
 
-    readSettings();
-    updateInfo();
+    loadSettings();
+    updateStaticTags();
 }
 
 void NTrackInfoWidget::enterEvent(QEvent *)
@@ -136,7 +136,7 @@ void NTrackInfoWidget::mouseMoveEvent(QMouseEvent *event)
     showToolTip(event->x(), event->y());
 }
 
-void NTrackInfoWidget::updateInfo()
+void NTrackInfoWidget::updateStaticTags()
 {
     NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
     QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
@@ -144,32 +144,28 @@ void NTrackInfoWidget::updateInfo()
         hide();
     } else {
         show();
-        foreach (NLabel *label, m_map.keys()) {
-            QString info = tagReader->toString(m_map[label], encoding);
-            if (!info.isEmpty()) {
-                label->setText(info);
-                label->show();
-            } else {
-                label->hide();
-            }
+        foreach (NLabel *label, m_staticFormatsMap.keys()) {
+            QString text = tagReader->toString(m_staticFormatsMap[label], encoding);
+            label->setText(text);
+            label->setVisible(!text.isEmpty());
         }
     }
 }
 
-void NTrackInfoWidget::readSettings()
+void NTrackInfoWidget::loadSettings()
 {
+    m_staticFormatsMap.clear();
+    m_dynamicFormatsMap.clear();
+
     QList<NLabel *> labels = findChildren<NLabel *>();
     for (int i = 0; i < labels.size(); ++i) {
-        QString format = NSettings::instance()->value("TrackInfo/" + labels.at(i)->objectName()).toString();
-        if (!format.isEmpty()) {
-            if (!format.contains("%T") && !format.contains("%r"))
-                m_map[labels.at(i)] = format;
-            else
-                m_mapTick[labels.at(i)] = format;
-            labels.at(i)->show();
-        } else {
-            labels.at(i)->hide();
-        }
+        NLabel *label = labels.at(i);
+        QString format = NSettings::instance()->value("TrackInfo/" + label->objectName()).toString();
+        if (format.contains("%T") || format.contains("%r"))
+            m_dynamicFormatsMap[label] = format;
+        else
+            m_staticFormatsMap[label] = format;
+        label->setVisible(!format.isEmpty());
     }
 
     m_tooltipFormat = NSettings::instance()->value("TooltipTrackInfo").toString();
@@ -185,8 +181,8 @@ void NTrackInfoWidget::tick(qint64 msec)
     int hours = total / 60 / 60;
     QTime current = QTime().addMSecs(msec);
     QTime remaining = QTime().addMSecs(total * 1000 - msec);
-    foreach (NLabel *label, m_mapTick.keys()) {
-        QString text = m_mapTick[label];
+    foreach (NLabel *label, m_dynamicFormatsMap.keys()) {
+        QString text = m_dynamicFormatsMap[label];
         if (hours > 0) {
             text.replace("%T", current.toString("h:mm:ss"));
             text.replace("%r", remaining.toString("h:mm:ss"));
@@ -197,7 +193,7 @@ void NTrackInfoWidget::tick(qint64 msec)
         if (text.contains("%"))
             text = tagReader->toString(text, encoding);
         label->setText(text);
-        label->show();
+        label->setVisible(!text.isEmpty());
     }
 }
 

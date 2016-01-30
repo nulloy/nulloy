@@ -610,8 +610,8 @@ void NPlayer::saveSettings()
 void NPlayer::on_preferencesDialog_settingsChanged()
 {
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
-    m_trackInfoWidget->readSettings();
-    m_trackInfoWidget->updateInfo();
+    m_trackInfoWidget->loadSettings();
+    m_trackInfoWidget->updateStaticTags();
 }
 
 
@@ -734,7 +734,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
     }
     m_mainWindow->setTitle(title);
     m_systemTray->setToolTip(title);
-    m_trackInfoWidget->updateInfo();
+    m_trackInfoWidget->updateStaticTags();
 }
 
 void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
