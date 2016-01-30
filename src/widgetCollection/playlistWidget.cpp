@@ -239,7 +239,8 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
     // trying to read tags
     m_tagReader->setSource(file);
     if (m_tagReader->isValid()) {
-        item->setText(m_tagReader->toString(NSettings::instance()->value("PlaylistTrackInfo").toString()));
+        QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
+        item->setText(m_tagReader->toString(NSettings::instance()->value("PlaylistTrackInfo").toString(), encoding));
         item->setData(N::DurationRole, m_tagReader->toString("%D").toInt());
     } else {
         item->setText(QFileInfo(file).fileName());
