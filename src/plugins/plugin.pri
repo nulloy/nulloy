@@ -14,10 +14,10 @@ INCLUDEPATH += .. ../.. ../../interfaces
 DEPENDPATH += ../..
 
 unix {
-	mac {
-		target.path = ../../../$${APP_NAME}.app/Contents/MacOS/plugins
-	} else {
-		target.path = $$PREFIX/lib/$$APP_NAME/plugins
-	}
-	INSTALLS += target
+    mac {
+        target.path = ../../../$${APP_NAME}.app/Contents/MacOS/plugins
+    } else {
+        target.path = $$PREFIX/lib/$$APP_NAME/plugins
+    }
+    INSTALLS += target
 }

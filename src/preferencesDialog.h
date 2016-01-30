@@ -26,39 +26,39 @@ class QRadioButton;
 
 class NPreferencesDialog : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 private:
-	Ui::PreferencesDialog ui;
-	void showEvent(QShowEvent *event);
-	QGroupBox* createGroupBox(N::PluginType type);
-	QString selectedContainer(N::PluginType type);
-	QMap<QRadioButton *, NPluginLoader::Descriptor> m_radioButtons;
+    Ui::PreferencesDialog ui;
+    void showEvent(QShowEvent *event);
+    QGroupBox* createGroupBox(N::PluginType type);
+    QString selectedContainer(N::PluginType type);
+    QMap<QRadioButton *, NPluginLoader::Descriptor> m_radioButtons;
 
 public:
-	NPreferencesDialog(QWidget *parent = 0);
-	~NPreferencesDialog();
+    NPreferencesDialog(QWidget *parent = 0);
+    ~NPreferencesDialog();
 
 private slots:
-	void loadSettings();
-	void saveSettings();
-	void on_fileManagerHelpButton_clicked();
-	void on_customTrashHelpButton_clicked();
-	void on_titleFormatHelpButton_clicked();
-	void on_languageComboBox_activated(int index);
+    void loadSettings();
+    void saveSettings();
+    void on_fileManagerHelpButton_clicked();
+    void on_customTrashHelpButton_clicked();
+    void on_titleFormatHelpButton_clicked();
+    void on_languageComboBox_activated(int index);
 
 signals:
-	void settingsChanged();
+    void settingsChanged();
 
 #ifndef _N_NO_UPDATE_CHECK_
 public slots:
-	void setVersionLabel(QString text);
+    void setVersionLabel(QString text);
 
 private slots:
-	void on_versionCheckButton_clicked();
+    void on_versionCheckButton_clicked();
 
 signals:
-	void versionRequested();
+    void versionRequested();
 #endif
 };
 

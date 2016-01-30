@@ -23,147 +23,147 @@
 
 NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(parent)
 {
-	setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-	setColumnCount(4);
-	setHorizontalHeaderLabels(QStringList() << tr("Action") << tr("Description") << tr("Shortcut") << tr("Global Shortcut"));
+    setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setColumnCount(4);
+    setHorizontalHeaderLabels(QStringList() << tr("Action") << tr("Description") << tr("Shortcut") << tr("Global Shortcut"));
 
-	verticalHeader()->setVisible(false);
+    verticalHeader()->setVisible(false);
 
-	setEditTriggers(QAbstractItemView::NoEditTriggers);
-	setSelectionMode(QAbstractItemView::SingleSelection);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setSelectionMode(QAbstractItemView::SingleSelection);
 
-	setStyleSheet("QTableView::item:disabled { color: black; }");
+    setStyleSheet("QTableView::item:disabled { color: black; }");
 
-	m_init = false;
+    m_init = false;
 }
 
 NShortcutEditorWidget::~NShortcutEditorWidget() {}
 
 void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 {
-	if (m_init)
-		return;
-	m_init = true;
+    if (m_init)
+        return;
+    m_init = true;
 
-	m_actionList = actionList;
-	setRowCount(m_actionList.size());
-	for (int i = 0; i < m_actionList.size(); ++i) {
-		NAction *action = m_actionList.at(i);
+    m_actionList = actionList;
+    setRowCount(m_actionList.size());
+    for (int i = 0; i < m_actionList.size(); ++i) {
+        NAction *action = m_actionList.at(i);
 
-		QTableWidgetItem *nameItem = new QTableWidgetItem(action->text());
-		nameItem->setFlags(Qt::NoItemFlags);
-		nameItem->setData(Qt::UserRole, action->objectName());
-		setItem(i, Name, nameItem);
+        QTableWidgetItem *nameItem = new QTableWidgetItem(action->text());
+        nameItem->setFlags(Qt::NoItemFlags);
+        nameItem->setData(Qt::UserRole, action->objectName());
+        setItem(i, Name, nameItem);
 
-		QTableWidgetItem *descriptionItem = new QTableWidgetItem(action->statusTip());
-		descriptionItem->setFlags(Qt::NoItemFlags);
-		setItem(i, Description, descriptionItem);
+        QTableWidgetItem *descriptionItem = new QTableWidgetItem(action->statusTip());
+        descriptionItem->setFlags(Qt::NoItemFlags);
+        setItem(i, Description, descriptionItem);
 
-		QList<QKeySequence> shortcut = action->shortcuts();
-		QStringList shortcutStr;
-		foreach (QKeySequence seq, shortcut)
-			shortcutStr << seq.toString();
-		QTableWidgetItem *shortcutItem = new QTableWidgetItem(shortcutStr.join(", "));
-		setItem(i, Shortcut, shortcutItem);
+        QList<QKeySequence> shortcut = action->shortcuts();
+        QStringList shortcutStr;
+        foreach (QKeySequence seq, shortcut)
+            shortcutStr << seq.toString();
+        QTableWidgetItem *shortcutItem = new QTableWidgetItem(shortcutStr.join(", "));
+        setItem(i, Shortcut, shortcutItem);
 
-		QList<QKeySequence> globalShortcut = action->globalShortcuts();
-		QStringList globalShortcutStr;
-		foreach (QKeySequence seq, globalShortcut)
-			globalShortcutStr << seq.toString();
-		QTableWidgetItem *globalShortcutItem = new QTableWidgetItem(globalShortcutStr.join(", "));
-		setItem(i, GlobalShortcut, globalShortcutItem);
-	}
+        QList<QKeySequence> globalShortcut = action->globalShortcuts();
+        QStringList globalShortcutStr;
+        foreach (QKeySequence seq, globalShortcut)
+            globalShortcutStr << seq.toString();
+        QTableWidgetItem *globalShortcutItem = new QTableWidgetItem(globalShortcutStr.join(", "));
+        setItem(i, GlobalShortcut, globalShortcutItem);
+    }
 
-	resizeColumnToContents(Name);
-	resizeColumnToContents(Description);
-	horizontalHeader()->setResizeMode(Name, QHeaderView::Fixed);
-	horizontalHeader()->setResizeMode(Description, QHeaderView::Fixed);
-	horizontalHeader()->setResizeMode(Shortcut, QHeaderView::Stretch);
-	horizontalHeader()->setResizeMode(GlobalShortcut, QHeaderView::Stretch);
-	horizontalHeader()->setStretchLastSection(true);
+    resizeColumnToContents(Name);
+    resizeColumnToContents(Description);
+    horizontalHeader()->setResizeMode(Name, QHeaderView::Fixed);
+    horizontalHeader()->setResizeMode(Description, QHeaderView::Fixed);
+    horizontalHeader()->setResizeMode(Shortcut, QHeaderView::Stretch);
+    horizontalHeader()->setResizeMode(GlobalShortcut, QHeaderView::Stretch);
+    horizontalHeader()->setStretchLastSection(true);
 }
 
 void NShortcutEditorWidget::applyShortcuts()
 {
-	for (int i = 0; i < rowCount(); ++i) {
-		QString objectName = item(i, Name)->data(Qt::UserRole).toString();
-		foreach (NAction *action, m_actionList) {
-			if (objectName != action->objectName())
-				continue;
+    for (int i = 0; i < rowCount(); ++i) {
+        QString objectName = item(i, Name)->data(Qt::UserRole).toString();
+        foreach (NAction *action, m_actionList) {
+            if (objectName != action->objectName())
+                continue;
 
-			QList<QKeySequence> localShortcuts;
-			QString localText = item(i, Shortcut)->text();
-			if (!localText.isEmpty()) {
-				QStringList localsList = localText.split(", ");
-				foreach (QString str, localsList)
-					localShortcuts << QKeySequence(str);
-			}
-			action->setShortcuts(localShortcuts);
+            QList<QKeySequence> localShortcuts;
+            QString localText = item(i, Shortcut)->text();
+            if (!localText.isEmpty()) {
+                QStringList localsList = localText.split(", ");
+                foreach (QString str, localsList)
+                    localShortcuts << QKeySequence(str);
+            }
+            action->setShortcuts(localShortcuts);
 
-			QList<QKeySequence> globalShortcuts;
-			QString globalText = item(i, GlobalShortcut)->text();
-			if (!globalText.isEmpty()) {
-				QStringList globalsList = globalText.split(", ");
-				foreach (QString str, globalsList)
-					globalShortcuts << QKeySequence(str);
-			}
-			action->setGlobalShortcuts(globalShortcuts);
-		}
-	}
+            QList<QKeySequence> globalShortcuts;
+            QString globalText = item(i, GlobalShortcut)->text();
+            if (!globalText.isEmpty()) {
+                QStringList globalsList = globalText.split(", ");
+                foreach (QString str, globalsList)
+                    globalShortcuts << QKeySequence(str);
+            }
+            action->setGlobalShortcuts(globalShortcuts);
+        }
+    }
 }
 
 QString NShortcutEditorWidget::keyEventToString(QKeyEvent *e)
 {
-	int keyInt = e->key();
-	QString seqStr = QKeySequence(e->key()).toString();
+    int keyInt = e->key();
+    QString seqStr = QKeySequence(e->key()).toString();
 
-	if (seqStr.isEmpty() ||
-	    keyInt == Qt::Key_Control ||
-	    keyInt == Qt::Key_Alt || keyInt == Qt::Key_AltGr ||
-	    keyInt == Qt::Key_Meta ||
-	    keyInt == Qt::Key_Shift)
-	{
-		return "";
-	}
+    if (seqStr.isEmpty() ||
+        keyInt == Qt::Key_Control ||
+        keyInt == Qt::Key_Alt || keyInt == Qt::Key_AltGr ||
+        keyInt == Qt::Key_Meta ||
+        keyInt == Qt::Key_Shift)
+    {
+        return "";
+    }
 
-	QStringList strSequence;
-	if (e->modifiers() & Qt::ControlModifier)
-		strSequence << "Ctrl";
-	if (e->modifiers() & Qt::AltModifier)
-		strSequence << "Alt";
-	if (e->modifiers() & Qt::ShiftModifier)
-		strSequence << "Shift";
-	if (e->modifiers() & Qt::MetaModifier)
-		strSequence << "Meta";
+    QStringList strSequence;
+    if (e->modifiers() & Qt::ControlModifier)
+        strSequence << "Ctrl";
+    if (e->modifiers() & Qt::AltModifier)
+        strSequence << "Alt";
+    if (e->modifiers() & Qt::ShiftModifier)
+        strSequence << "Shift";
+    if (e->modifiers() & Qt::MetaModifier)
+        strSequence << "Meta";
 
-	return strSequence.join("+") + (strSequence.isEmpty() ? "" : "+") + seqStr;
+    return strSequence.join("+") + (strSequence.isEmpty() ? "" : "+") + seqStr;
 }
 
 void NShortcutEditorWidget::keyPressEvent(QKeyEvent *e)
 {
-	QTableWidgetItem *currentItem = item(currentRow(), currentColumn());
-	QString text = currentItem->text();
+    QTableWidgetItem *currentItem = item(currentRow(), currentColumn());
+    QString text = currentItem->text();
 
-	int keyInt = e->key();
-	bool modifiers = e->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier | Qt::AltModifier | Qt::MetaModifier);
+    int keyInt = e->key();
+    bool modifiers = e->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier | Qt::AltModifier | Qt::MetaModifier);
 
-	if (!modifiers && (keyInt == Qt::Key_Delete || keyInt == Qt::Key_Backspace)) {
-		currentItem->setText("");
-		return;
-	}
+    if (!modifiers && (keyInt == Qt::Key_Delete || keyInt == Qt::Key_Backspace)) {
+        currentItem->setText("");
+        return;
+    }
 
-	QString shortcut = keyEventToString(e);
-	if (shortcut == "") {
-		QTableWidget::keyPressEvent(e);
-		return;
-	}
+    QString shortcut = keyEventToString(e);
+    if (shortcut == "") {
+        QTableWidget::keyPressEvent(e);
+        return;
+    }
 
-	if (text.split(", ").size() >= 3)
-		text = "";
+    if (text.split(", ").size() >= 3)
+        text = "";
 
-	if (!text.isEmpty())
-		text += ", ";
+    if (!text.isEmpty())
+        text += ", ";
 
-	currentItem->setText(text + shortcut);
+    currentItem->setText(text + shortcut);
 }
 

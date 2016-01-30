@@ -27,112 +27,112 @@ NSkinFileSystem *NSkinFileSystem::m_instance;
 class NSkinFileEngine : public QAbstractFileEngine
 {
 public:
-	NSkinFileEngine(const QByteArray &ba, const QString &fileName);
-	bool open(QIODevice::OpenMode mode);
-	bool close() { return true; }
-	bool isSequential() const { return false; }
-	qint64 pos() const { return m_pos; }
-	qint64 read(char *data, qint64 maxlen);
-	bool seek(qint64 offset);
-	qint64 size() const { return m_bytes.size(); }
-	QString fileName(FileName file) const;
-	FileFlags fileFlags(FileFlags flags) const;
+    NSkinFileEngine(const QByteArray &ba, const QString &fileName);
+    bool open(QIODevice::OpenMode mode);
+    bool close() { return true; }
+    bool isSequential() const { return false; }
+    qint64 pos() const { return m_pos; }
+    qint64 read(char *data, qint64 maxlen);
+    bool seek(qint64 offset);
+    qint64 size() const { return m_bytes.size(); }
+    QString fileName(FileName file) const;
+    FileFlags fileFlags(FileFlags flags) const;
 
 private:
-	QByteArray m_bytes;
-	qint64 m_pos;
-	QString m_fileName;
+    QByteArray m_bytes;
+    qint64 m_pos;
+    QString m_fileName;
 };
 
 NSkinFileSystem::NSkinFileSystem()
 {
-	m_instance = NULL;
+    m_instance = NULL;
 }
 
 QString NSkinFileSystem::prefix()
 {
-	return _prefix;
+    return _prefix;
 }
 
 bool NSkinFileSystem::init()
 {
-	if (!m_instance) {
-		m_instance = new NSkinFileSystem;
-		return true;
-	} else {
-		return false;
-	}
+    if (!m_instance) {
+        m_instance = new NSkinFileSystem;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 NSkinFileEngine::NSkinFileEngine(const QByteArray &ba, const QString &fileName)
 {
-	m_bytes = ba;
-	m_fileName = fileName;
+    m_bytes = ba;
+    m_fileName = fileName;
 }
 
 QAbstractFileEngine* NSkinFileSystem::create(const QString &fileName) const
 {
-	init();
+    init();
 
-	if (!fileName.startsWith(_prefix))
-		return NULL;
+    if (!fileName.startsWith(_prefix))
+        return NULL;
 
-	QString key = fileName.mid(strlen(_prefix));
-	if (m_fileHash.contains(key))
-		return new NSkinFileEngine(m_fileHash.value(key), fileName);
-	else
-		return NULL;
+    QString key = fileName.mid(strlen(_prefix));
+    if (m_fileHash.contains(key))
+        return new NSkinFileEngine(m_fileHash.value(key), fileName);
+    else
+        return NULL;
 }
 
 void NSkinFileSystem::addFile(const QString &filePath, const QByteArray &ba)
 {
-	init();
+    init();
 
-	m_fileHash[filePath] = ba;
+    m_fileHash[filePath] = ba;
 }
 
 bool NSkinFileEngine::open(QIODevice::OpenMode mode)
 {
-	if (mode & QIODevice::ReadOnly) {
-		m_pos = 0;
-		return true;
-	} else {
-		return false;
-	}
+    if (mode & QIODevice::ReadOnly) {
+        m_pos = 0;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 qint64 NSkinFileEngine::read(char *data, qint64 maxlen)
 {
-	maxlen = qBound(qint64(0), m_bytes.size() - m_pos, maxlen);
-	qCopy(m_bytes.constData() + m_pos, m_bytes.constData() + m_pos + maxlen, data);
-	m_pos += maxlen;
-	return maxlen;
+    maxlen = qBound(qint64(0), m_bytes.size() - m_pos, maxlen);
+    qCopy(m_bytes.constData() + m_pos, m_bytes.constData() + m_pos + maxlen, data);
+    m_pos += maxlen;
+    return maxlen;
 }
 
 bool NSkinFileEngine::seek(qint64 offset)
 {
-	if (offset < 0 || offset >= m_bytes.size())
-		return false;
-	m_pos = offset;
-	return true;
+    if (offset < 0 || offset >= m_bytes.size())
+        return false;
+    m_pos = offset;
+    return true;
 }
 
 QString NSkinFileEngine::fileName(FileName file) const
 {
-	Q_UNUSED(file);
-	return m_fileName;
+    Q_UNUSED(file);
+    return m_fileName;
 }
 
 QAbstractFileEngine::FileFlags NSkinFileEngine::fileFlags(QAbstractFileEngine::FileFlags flags) const
 {
-	flags |= WriteOwnerPerm;
-	flags |= WriteUserPerm;
-	flags |= WriteGroupPerm;
-	flags |= WriteOtherPerm;
-	flags |= LinkType;
-	flags |= BundleType;
-	flags |= DirectoryType;
-	flags |= HiddenFlag;
-	return flags;
+    flags |= WriteOwnerPerm;
+    flags |= WriteUserPerm;
+    flags |= WriteGroupPerm;
+    flags |= WriteOtherPerm;
+    flags |= LinkType;
+    flags |= BundleType;
+    flags |= DirectoryType;
+    flags |= HiddenFlag;
+    return flags;
 }
 

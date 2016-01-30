@@ -14,7 +14,7 @@ SOURCES += *.cpp
 FORMS += *.ui
 
 isEmpty(TMP_DIR):TMP_DIR = $$PWD/../.tmp
-OBJECTS_DIR	= $$TMP_DIR
+OBJECTS_DIR = $$TMP_DIR
 MOC_DIR     = $$TMP_DIR
 RCC_DIR     = $$TMP_DIR
 UI_DIR      = $$TMP_DIR
@@ -32,43 +32,43 @@ mac:include(ux/macDock.pri)
 
 # zlib
 !mac {
-	CONFIG += link_pkgconfig
-	PKGCONFIG += zlib
+    CONFIG += link_pkgconfig
+    PKGCONFIG += zlib
 } else {
-	LIBS += -L/usr/lib -lz
+    LIBS += -L/usr/lib -lz
 }
 
 unix:!mac:PKGCONFIG += x11
 
 # qmake -config no-skins
 !no-skins {
-	include(skins/skins.pri)
-	CONFIG += uitools
-	INCLUDEPATH += widgetCollection
-	LIBS += -LwidgetCollection -lwidget_collection
-	PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
-	RESOURCES += native-skin-embedded.qrc
+    include(skins/skins.pri)
+    CONFIG += uitools
+    INCLUDEPATH += widgetCollection
+    LIBS += -LwidgetCollection -lwidget_collection
+    PRE_TARGETDEPS += widgetCollection/libwidget_collection.a
+    RESOURCES += native-skin-embedded.qrc
 } else {
-	DEFINES += _N_NO_SKINS_
+    DEFINES += _N_NO_SKINS_
 
-	HEADERS -= skinFileSystem.h   skinLoader.h
-	SOURCES -= skinFileSystem.cpp skinLoader.cpp
-	HEADERS += widgetCollection/label.h \
-	           widgetCollection/playlistWidget.h \
-	           widgetCollection/slider.h \
-	           widgetCollection/waveformSlider.h \
-	           widgetCollection/playlistWidgetItem.h
-	SOURCES += widgetCollection/label.cpp \
-	           widgetCollection/playlistWidget.cpp \
-	           widgetCollection/slider.cpp \
-	           widgetCollection/waveformSlider.cpp \
-	           widgetCollection/playlistWidgetItem.cpp
+    HEADERS -= skinFileSystem.h   skinLoader.h
+    SOURCES -= skinFileSystem.cpp skinLoader.cpp
+    HEADERS += widgetCollection/label.h \
+               widgetCollection/playlistWidget.h \
+               widgetCollection/slider.h \
+               widgetCollection/waveformSlider.h \
+               widgetCollection/playlistWidgetItem.h
+    SOURCES += widgetCollection/label.cpp \
+               widgetCollection/playlistWidget.cpp \
+               widgetCollection/slider.cpp \
+               widgetCollection/waveformSlider.cpp \
+               widgetCollection/playlistWidgetItem.cpp
 
-	DEPENDPATH += widgetCollection/
-	INCLUDEPATH += widgetCollection/
+    DEPENDPATH += widgetCollection/
+    INCLUDEPATH += widgetCollection/
 
-	RESOURCES += no-skins.qrc
-	FORMS += skins/native/form.ui
+    RESOURCES += no-skins.qrc
+    FORMS += skins/native/form.ui
 }
 
 RESOURCES += icons/icons.qrc
@@ -80,23 +80,23 @@ no-update-check:DEFINES += _N_NO_UPDATE_CHECK_
 include(version.pri)
 DEFINES += _N_VERSION_=\""\\\"$${N_VERSION}\\\""\"
 build_pass:CONFIG(static, static|shared) {
-	DEFINES += _N_STATIC_BUILD_
+    DEFINES += _N_STATIC_BUILD_
 } else {
-	DEFINES += _N_SHARED_BUILD_
+    DEFINES += _N_SHARED_BUILD_
 }
 
 
 # qmake "PREFIX=/usr"
 unix:!mac {
-	target.path = $$PREFIX/bin
+    target.path = $$PREFIX/bin
 
-	system(icons/install-icons.sh $$TMP_DIR/icons)
-	icons.files = $$TMP_DIR/icons/*
-	icons.path = $$PREFIX
+    system(icons/install-icons.sh $$TMP_DIR/icons)
+    icons.files = $$TMP_DIR/icons/*
+    icons.path = $$PREFIX
 
-	desktop.files = ../$${APP_NAME}.desktop
-	desktop.path = $$PREFIX/share/applications
+    desktop.files = ../$${APP_NAME}.desktop
+    desktop.path = $$PREFIX/share/applications
 
-	INSTALLS += target icons desktop
+    INSTALLS += target icons desktop
 }
 

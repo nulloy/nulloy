@@ -25,15 +25,15 @@ class QString;
 class NSkinFileSystem : public QAbstractFileEngineHandler
 {
 public:
-	QAbstractFileEngine *create(const QString &fileName) const;
-	static bool init();
-	static void addFile(const QString &filePath, const QByteArray &ba);
-	static QString prefix();
+    QAbstractFileEngine *create(const QString &fileName) const;
+    static bool init();
+    static void addFile(const QString &filePath, const QByteArray &ba);
+    static QString prefix();
 
 private:
-	NSkinFileSystem();
-	static QHash<QString, QByteArray> m_fileHash;
-	static NSkinFileSystem *m_instance;
+    NSkinFileSystem();
+    static QHash<QString, QByteArray> m_fileHash;
+    static NSkinFileSystem *m_instance;
 };
 
 #endif

@@ -21,9 +21,9 @@ class QStringList;
 
 namespace NSkinLoader
 {
-	QStringList skinIdentifiers();
-	QString skinUiFormFile();
-	QString skinScriptFile();
+    QStringList skinIdentifiers();
+    QString skinUiFormFile();
+    QString skinScriptFile();
 }
 
 #endif

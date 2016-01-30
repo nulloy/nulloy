@@ -24,17 +24,17 @@ class QFileInfo;
 class NPlaylistWidgetItem : public QListWidgetItem
 {
 private:
-	NPlaylistDataItem m_data;
+    NPlaylistDataItem m_data;
 
 public:
-	NPlaylistWidgetItem(QListWidget *parent = 0);
-	NPlaylistWidgetItem(const QFileInfo &fileinfo, QListWidget *parent = 0);
-	NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QListWidget *parent = 0);
+    NPlaylistWidgetItem(QListWidget *parent = 0);
+    NPlaylistWidgetItem(const QFileInfo &fileinfo, QListWidget *parent = 0);
+    NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QListWidget *parent = 0);
 
-	QVariant data(int role) const;
-	void setData(int role, const QVariant &value);
+    QVariant data(int role) const;
+    void setData(int role, const QVariant &value);
 
-	NPlaylistDataItem dataItem() const;
+    NPlaylistDataItem dataItem() const;
 };
 
 #include <QStyledItemDelegate>
@@ -42,8 +42,8 @@ public:
 class NPlaylistWidgetItemDelegate : public QStyledItemDelegate
 {
 public:
-	NPlaylistWidgetItemDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
-	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    NPlaylistWidgetItemDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
 #endif

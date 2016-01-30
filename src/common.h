@@ -20,12 +20,12 @@
 
 namespace NCore
 {
-	void cArgs(int *argc, const char ***argv);
-	QString applicationBinaryName();
-	QString defaultPlaylistPath();
-	QString settingsPath();
-	QString rcDir();
-	QStringList dirListRecursive(const QString &path, const QStringList &nameFilters = QStringList());
+    void cArgs(int *argc, const char ***argv);
+    QString applicationBinaryName();
+    QString defaultPlaylistPath();
+    QString settingsPath();
+    QString rcDir();
+    QStringList dirListRecursive(const QString &path, const QStringList &nameFilters = QStringList());
 }
 
 #endif

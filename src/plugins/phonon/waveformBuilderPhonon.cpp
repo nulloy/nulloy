@@ -20,102 +20,102 @@
 
 void NWaveformBuilderPhonon::handleData(const QMap< Phonon::AudioDataOutput::Channel, QVector<qint16> > &data)
 {
-	for (int i = 0; i < m_audioDataOutput->dataSize(); ++i) {
-		qint32 pcmValue = 0;
-		for (int j = 0; j < data.size(); ++j)
-			pcmValue += data[(Phonon::AudioDataOutput::Channel)j][i] ;
-		qreal realValue = -((qreal)pcmValue / data.size()) / (1<<15);
-		m_peaks.append(realValue);
-	}
+    for (int i = 0; i < m_audioDataOutput->dataSize(); ++i) {
+        qint32 pcmValue = 0;
+        for (int j = 0; j < data.size(); ++j)
+            pcmValue += data[(Phonon::AudioDataOutput::Channel)j][i] ;
+        qreal realValue = -((qreal)pcmValue / data.size()) / (1<<15);
+        m_peaks.append(realValue);
+    }
 }
 
 void NWaveformBuilderPhonon::init()
 {
-	if (m_init)
-		return;
+    if (m_init)
+        return;
 
-	m_audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
-	m_audioOutput->setVolume(0);
+    m_audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+    m_audioOutput->setVolume(0);
 
-	m_mediaObject = new Phonon::MediaObject(this);
+    m_mediaObject = new Phonon::MediaObject(this);
 
-	m_audioDataOutput = new Phonon::AudioDataOutput(this);
+    m_audioDataOutput = new Phonon::AudioDataOutput(this);
 
-	Phonon::createPath(m_mediaObject, m_audioDataOutput);
-	Phonon::createPath(m_audioDataOutput, m_audioOutput);
+    Phonon::createPath(m_mediaObject, m_audioDataOutput);
+    Phonon::createPath(m_audioDataOutput, m_audioOutput);
 
-	connect(m_audioDataOutput, SIGNAL(dataReady(const QMap< Phonon::AudioDataOutput::Channel, QVector<qint16> > &)),
-	        this, SLOT(handleData(const QMap< Phonon::AudioDataOutput::Channel, QVector<qint16> > &)));
+    connect(m_audioDataOutput, SIGNAL(dataReady(const QMap< Phonon::AudioDataOutput::Channel, QVector<qint16> > &)),
+            this, SLOT(handleData(const QMap< Phonon::AudioDataOutput::Channel, QVector<qint16> > &)));
 
-	m_timer = new QTimer(this);
-	connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
 
-	reset();
+    reset();
 
-	m_init = true;
+    m_init = true;
 }
 
 NWaveformBuilderPhonon::~NWaveformBuilderPhonon()
 {
-	if (!m_init)
-		return;
+    if (!m_init)
+        return;
 
-	m_timer->stop();
+    m_timer->stop();
 
-	m_mediaObject->stop();
-	m_mediaObject->clearQueue();
+    m_mediaObject->stop();
+    m_mediaObject->clearQueue();
 
-	quit();
-	wait();
+    quit();
+    wait();
 }
 
 void NWaveformBuilderPhonon::stop()
 {
-	m_timer->stop();
-	m_mediaObject->stop();
-	m_mediaObject->clearQueue();
+    m_timer->stop();
+    m_mediaObject->stop();
+    m_mediaObject->clearQueue();
 
-	if (isRunning()) {
-		quit();
-		wait();
-	}
+    if (isRunning()) {
+        quit();
+        wait();
+    }
 }
 
 void NWaveformBuilderPhonon::start(const QString &file)
 {
-	stop();
+    stop();
 
-	if (peaksFindFromCache(file))
-		return;
-	if (!QFileInfo(file).exists())
-		return;
-	m_currentFile = file;
+    if (peaksFindFromCache(file))
+        return;
+    if (!QFileInfo(file).exists())
+        return;
+    m_currentFile = file;
 
-	m_mediaObject->setCurrentSource(Phonon::MediaSource(file));
+    m_mediaObject->setCurrentSource(Phonon::MediaSource(file));
 
-	reset();
-	QThread::start();
-	m_mediaObject->play();
-	m_timer->start(300);
+    reset();
+    QThread::start();
+    m_mediaObject->play();
+    m_timer->start(300);
 }
 
 void NWaveformBuilderPhonon::update()
 {
-	if (m_mediaObject->state() != Phonon::PlayingState) {
-		m_peaks.complete();
+    if (m_mediaObject->state() != Phonon::PlayingState) {
+        m_peaks.complete();
 #if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
-		qDebug() <<  "WaveformBuilder ::" << "completed" << m_peaks.size();
+        qDebug() <<  "WaveformBuilder ::" << "completed" << m_peaks.size();
 #endif
-		peaksAppendToCache(m_currentFile);
-		stop();
-	}
+        peaksAppendToCache(m_currentFile);
+        stop();
+    }
 }
 
 qreal NWaveformBuilderPhonon::position()
 {
-	if (!isRunning())
-		return 0;
+    if (!isRunning())
+        return 0;
 
-	return (qreal)m_mediaObject->currentTime() / m_mediaObject->totalTime();
+    return (qreal)m_mediaObject->currentTime() / m_mediaObject->totalTime();
 }
 

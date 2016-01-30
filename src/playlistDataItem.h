@@ -20,20 +20,20 @@
 
 struct NPlaylistDataItem
 {
-	QString title;
-	QString path;
-	int duration;
-	bool failed;
-	int count;      // playback count
-	float position; // playback position
+    QString title;
+    QString path;
+    int duration;
+    bool failed;
+    int count;      // playback count
+    float position; // playback position
 
-	NPlaylistDataItem(const QString &file = "") :
-		path(file),
-		duration(-1),
-		failed(false),
-		count(0),
-		position(0.0)
-	{};
+    NPlaylistDataItem(const QString &file = "") :
+        path(file),
+        duration(-1),
+        failed(false),
+        count(0),
+        position(0.0)
+    {};
 };
 
 #endif

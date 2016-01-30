@@ -20,14 +20,14 @@
 
 class NAboutDialog : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	NAboutDialog(QWidget *parent = 0);
-	~NAboutDialog();
+    NAboutDialog(QWidget *parent = 0);
+    ~NAboutDialog();
 
 public slots:
-	void show();
+    void show();
 };
 
 #endif

@@ -34,199 +34,199 @@ static const char _skinsDirName[] = "skins";
 
 namespace NSkinLoader
 {
-	bool __init = false;
-	QMap<int, QString> _identifiers;
-	QString _formPath;
-	QString _scriptPath;
+    bool __init = false;
+    QMap<int, QString> _identifiers;
+    QString _formPath;
+    QString _scriptPath;
 
-	bool _nextFile(QFile &zipFile, QString &fileName, QByteArray &data);
-	void _init();
+    bool _nextFile(QFile &zipFile, QString &fileName, QByteArray &data);
+    void _init();
 }
 
 bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
 {
-	quint32 signature, crc, compSize, unCompSize;
-	quint16 extractVersion, bitFlag, compMethod, modTime, modDate;
-	quint16 nameLen, extraLen;
+    quint32 signature, crc, compSize, unCompSize;
+    quint16 extractVersion, bitFlag, compMethod, modTime, modDate;
+    quint16 nameLen, extraLen;
 
-	QDataStream in(&zipFile);
-	in.setByteOrder(QDataStream::LittleEndian);
+    QDataStream in(&zipFile);
+    in.setByteOrder(QDataStream::LittleEndian);
 
-	in >> signature;
-	if (signature != 0x04034b50)
-		return false;
+    in >> signature;
+    if (signature != 0x04034b50)
+        return false;
 
-	in >> extractVersion >> bitFlag >> compMethod;
-	in >> modTime >> modDate >> crc >> compSize >> unCompSize;
-	in >> nameLen >> extraLen;
+    in >> extractVersion >> bitFlag >> compMethod;
+    in >> modTime >> modDate >> crc >> compSize >> unCompSize;
+    in >> nameLen >> extraLen;
 
-	fileName = QString(zipFile.read(nameLen));
-	zipFile.read(extraLen);
+    fileName = QString(zipFile.read(nameLen));
+    zipFile.read(extraLen);
 
-	QByteArray compData = zipFile.read(compSize);
-	QByteArray unCompData;
-	if (compMethod == 0) {
-		unCompData = compData;
-	} else {
-		QBuffer compBuf(&compData);
-		QtIOCompressor compressor(&compBuf);
-		compressor.setStreamFormat(QtIOCompressor::RawZipFormat);
-		compressor.open(QIODevice::ReadOnly);
-		unCompData = compressor.readAll();
-	}
+    QByteArray compData = zipFile.read(compSize);
+    QByteArray unCompData;
+    if (compMethod == 0) {
+        unCompData = compData;
+    } else {
+        QBuffer compBuf(&compData);
+        QtIOCompressor compressor(&compBuf);
+        compressor.setStreamFormat(QtIOCompressor::RawZipFormat);
+        compressor.open(QIODevice::ReadOnly);
+        unCompData = compressor.readAll();
+    }
 
-	data = unCompData;
+    data = unCompData;
 
-	return true;
+    return true;
 }
 
 void NSkinLoader::_init()
 {
-	if (__init)
-		return;
-	__init = true;
+    if (__init)
+        return;
+    __init = true;
 
-	QStringList skinsDirList;
-	// ":" is a prefix for .qrc resources
-	skinsDirList << QString() + ":" + _skinsDirName << QCoreApplication::applicationDirPath() + "/" + _skinsDirName;
+    QStringList skinsDirList;
+    // ":" is a prefix for .qrc resources
+    skinsDirList << QString() + ":" + _skinsDirName << QCoreApplication::applicationDirPath() + "/" + _skinsDirName;
 #ifndef Q_WS_WIN
-	if (NCore::rcDir() != QCoreApplication::applicationDirPath())
-		skinsDirList << NCore::rcDir() + "/" + _skinsDirName;
-	if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {
-		QDir dir(QCoreApplication::applicationDirPath());
-		dir.cd(QString() + "../share/nulloy/" + _skinsDirName);
-		skinsDirList << dir.absolutePath();
-	}
+    if (NCore::rcDir() != QCoreApplication::applicationDirPath())
+        skinsDirList << NCore::rcDir() + "/" + _skinsDirName;
+    if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {
+        QDir dir(QCoreApplication::applicationDirPath());
+        dir.cd(QString() + "../share/nulloy/" + _skinsDirName);
+        skinsDirList << dir.absolutePath();
+    }
 #endif
-	QFileInfoList containersInfoList;
-	foreach (QString dirStr, skinsDirList) {
-		QDir dir(dirStr);
-		if (dir.exists())
-			containersInfoList << dir.entryInfoList(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
-	}
+    QFileInfoList containersInfoList;
+    foreach (QString dirStr, skinsDirList) {
+        QDir dir(dirStr);
+        if (dir.exists())
+            containersInfoList << dir.entryInfoList(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
+    }
 
-	for (int i = 0; i < containersInfoList.size(); ++i) {
-		QFileInfo skinContainer = containersInfoList.at(i);
-		QString id;
-		if (!skinContainer.isDir()) {
-			if (skinContainer.suffix() != _skinSuffix) {
-				containersInfoList.removeAt(i);
-				--i;
-				continue;
-			}
+    for (int i = 0; i < containersInfoList.size(); ++i) {
+        QFileInfo skinContainer = containersInfoList.at(i);
+        QString id;
+        if (!skinContainer.isDir()) {
+            if (skinContainer.suffix() != _skinSuffix) {
+                containersInfoList.removeAt(i);
+                --i;
+                continue;
+            }
 
-			QFile zipFile(skinContainer.absoluteFilePath());
-			zipFile.open(QIODevice::ReadOnly);
-			QString fileName;
-			QByteArray data;
-			while (_nextFile(zipFile, fileName, data)) {
-				if (fileName == _idFileName) {
-					id = data.mid(0, data.indexOf('\n')).replace('\r', "");
-					break;
-				}
-			}
-			zipFile.close();
-		} else if (skinContainer.isDir()) {
-			QFileInfoList infoList = QDir(skinContainer.absoluteFilePath()).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
-			bool isSkin = false;
-			foreach (QFileInfo fileInfo, infoList) {
-				if (fileInfo.fileName() != _idFileName)
-					continue;
-				isSkin = true;
-				QFile file(fileInfo.absoluteFilePath());
-				file.open(QIODevice::ReadOnly);
-				QByteArray data = file.readAll();
-				id = data.mid(0, data.indexOf('\n')).replace('\r', "");
-				file.close();
-				break;
-			}
-			if (!isSkin) {
-				containersInfoList.removeAt(i);
-				--i;
-				continue;
-			}
-		}
-		if (skinContainer.absoluteFilePath().startsWith(QString() + ":" + _skinsDirName))
-			id.insert(id.lastIndexOf('/'), " (Built-in)");
-		_identifiers.insert(i, id);
-	}
+            QFile zipFile(skinContainer.absoluteFilePath());
+            zipFile.open(QIODevice::ReadOnly);
+            QString fileName;
+            QByteArray data;
+            while (_nextFile(zipFile, fileName, data)) {
+                if (fileName == _idFileName) {
+                    id = data.mid(0, data.indexOf('\n')).replace('\r', "");
+                    break;
+                }
+            }
+            zipFile.close();
+        } else if (skinContainer.isDir()) {
+            QFileInfoList infoList = QDir(skinContainer.absoluteFilePath()).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+            bool isSkin = false;
+            foreach (QFileInfo fileInfo, infoList) {
+                if (fileInfo.fileName() != _idFileName)
+                    continue;
+                isSkin = true;
+                QFile file(fileInfo.absoluteFilePath());
+                file.open(QIODevice::ReadOnly);
+                QByteArray data = file.readAll();
+                id = data.mid(0, data.indexOf('\n')).replace('\r', "");
+                file.close();
+                break;
+            }
+            if (!isSkin) {
+                containersInfoList.removeAt(i);
+                --i;
+                continue;
+            }
+        }
+        if (skinContainer.absoluteFilePath().startsWith(QString() + ":" + _skinsDirName))
+            id.insert(id.lastIndexOf('/'), " (Built-in)");
+        _identifiers.insert(i, id);
+    }
 
-	QString skinStr = NSettings::instance()->value("Skin").toString();
-	QStringList values = _identifiers.values();
-	int index;
-	index = values.indexOf("Nulloy/Skin/" + skinStr);
-	if (index == -1)
-		index = values.indexOf(QRegExp(QString() + "Nulloy/Skin/" + _skinPrefer + ".*"));
-	if (index == -1)
-		index = 0;
+    QString skinStr = NSettings::instance()->value("Skin").toString();
+    QStringList values = _identifiers.values();
+    int index;
+    index = values.indexOf("Nulloy/Skin/" + skinStr);
+    if (index == -1)
+        index = values.indexOf(QRegExp(QString() + "Nulloy/Skin/" + _skinPrefer + ".*"));
+    if (index == -1)
+        index = 0;
 
-	if (_identifiers.count() == 0) {
-		QMessageBox box(QMessageBox::Critical, QObject::tr("Skin loading error"), QObject::tr("No skins found."), QMessageBox::Close);
-		box.exec();
-		return;
-	}
+    if (_identifiers.count() == 0) {
+        QMessageBox box(QMessageBox::Critical, QObject::tr("Skin loading error"), QObject::tr("No skins found."), QMessageBox::Close);
+        box.exec();
+        return;
+    }
 
-	QFileInfo skinContainer = containersInfoList.at(index);
-	if (!skinContainer.isDir() && skinContainer.suffix() == _skinSuffix) {
-		QFile zipFile(skinContainer.absoluteFilePath());
-		zipFile.open(QIODevice::ReadOnly);
-		QString fileName;
-		QByteArray data;
-		while (_nextFile(zipFile, fileName, data)) {
-			if (fileName != _scriptFileName && fileName != _formFileName) {
-				NSkinFileSystem::addFile(fileName, data);
-				continue;
-			}
-			QString str(data);
-			QRegExp rx("(url\\()([^:])");
-			str.replace(rx, "\\1" + NSkinFileSystem::prefix() + "\\2");
-			NSkinFileSystem::addFile(fileName, str.toUtf8());
+    QFileInfo skinContainer = containersInfoList.at(index);
+    if (!skinContainer.isDir() && skinContainer.suffix() == _skinSuffix) {
+        QFile zipFile(skinContainer.absoluteFilePath());
+        zipFile.open(QIODevice::ReadOnly);
+        QString fileName;
+        QByteArray data;
+        while (_nextFile(zipFile, fileName, data)) {
+            if (fileName != _scriptFileName && fileName != _formFileName) {
+                NSkinFileSystem::addFile(fileName, data);
+                continue;
+            }
+            QString str(data);
+            QRegExp rx("(url\\()([^:])");
+            str.replace(rx, "\\1" + NSkinFileSystem::prefix() + "\\2");
+            NSkinFileSystem::addFile(fileName, str.toUtf8());
 
-			if (fileName == _formFileName)
-				_formPath = NSkinFileSystem::prefix() + fileName;
-			else if (fileName == _scriptFileName)
-				_scriptPath = NSkinFileSystem::prefix() + fileName;
-		}
-		zipFile.close();
-	} else if (skinContainer.isDir()) {
-		QFileInfoList infoList = QDir(skinContainer.absoluteFilePath()).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
-		foreach (QFileInfo fileInfo, infoList) {
-			if (fileInfo.fileName() != _scriptFileName && fileInfo.fileName() != _formFileName)
-				continue;
-			QFile file(fileInfo.absoluteFilePath());
-			file.open(QIODevice::ReadOnly);
-			QByteArray data = file.readAll();
-			QString str(data);
-			QRegExp rx("(url\\()([^:])");
-			str.replace(rx, "\\1" + fileInfo.absolutePath() + "/\\2");
-			str.replace("<iconset resource=\"resources.qrc\">", "<iconset>");
-			NSkinFileSystem::addFile(fileInfo.fileName(), str.toUtf8());
+            if (fileName == _formFileName)
+                _formPath = NSkinFileSystem::prefix() + fileName;
+            else if (fileName == _scriptFileName)
+                _scriptPath = NSkinFileSystem::prefix() + fileName;
+        }
+        zipFile.close();
+    } else if (skinContainer.isDir()) {
+        QFileInfoList infoList = QDir(skinContainer.absoluteFilePath()).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+        foreach (QFileInfo fileInfo, infoList) {
+            if (fileInfo.fileName() != _scriptFileName && fileInfo.fileName() != _formFileName)
+                continue;
+            QFile file(fileInfo.absoluteFilePath());
+            file.open(QIODevice::ReadOnly);
+            QByteArray data = file.readAll();
+            QString str(data);
+            QRegExp rx("(url\\()([^:])");
+            str.replace(rx, "\\1" + fileInfo.absolutePath() + "/\\2");
+            str.replace("<iconset resource=\"resources.qrc\">", "<iconset>");
+            NSkinFileSystem::addFile(fileInfo.fileName(), str.toUtf8());
 
-			if (fileInfo.fileName() == _formFileName)
-				_formPath = NSkinFileSystem::prefix() + fileInfo.fileName();
-			else if (fileInfo.fileName() == _scriptFileName)
-				_scriptPath = NSkinFileSystem::prefix() + fileInfo.fileName();
-		}
-	}
+            if (fileInfo.fileName() == _formFileName)
+                _formPath = NSkinFileSystem::prefix() + fileInfo.fileName();
+            else if (fileInfo.fileName() == _scriptFileName)
+                _scriptPath = NSkinFileSystem::prefix() + fileInfo.fileName();
+        }
+    }
 
-	NSettings::instance()->setValue("Skin", _identifiers.value(index).section('/', 2));
+    NSettings::instance()->setValue("Skin", _identifiers.value(index).section('/', 2));
 }
 
 QStringList NSkinLoader::skinIdentifiers()
 {
-	_init();
-	return _identifiers.values();
+    _init();
+    return _identifiers.values();
 }
 
 QString NSkinLoader::skinUiFormFile()
 {
-	_init();
-	return _formPath;
+    _init();
+    return _formPath;
 }
 
 QString NSkinLoader::skinScriptFile()
 {
-	_init();
-	return _scriptPath;
+    _init();
+    return _scriptPath;
 }
 

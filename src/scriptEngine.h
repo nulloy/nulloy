@@ -23,8 +23,8 @@ class NPlayer;
 class NScriptEngine : public QScriptEngine
 {
 public:
-	NScriptEngine(NPlayer *player);
-	virtual ~NScriptEngine() {};
+    NScriptEngine(NPlayer *player);
+    virtual ~NScriptEngine() {};
 };
 
 #endif

@@ -19,68 +19,68 @@ set SUPPORT_SKINS=yes
 set APP_NAME=Nulloy
 
 :getopt
-	shift
-	if "%0" == "--no-gstreamer" (
-		set BUILD_GSTREAMER=no
-		goto getopt
-	)
-	if "%0" == "--no-gstreamer-tagreader" (
-		set BUILD_GSTREAMER_TAGREADER=no
-		goto getopt
-	)
-	if "%0" == "--vlc" (
-		set BUILD_VLC=yes
-		goto getopt
-	)
-	if "%0" == "--phonon" (
-		set BUILD_PHONON=yes
-		goto getopt
-	)
-	if "%0" == "--taglib" (
-		set BUILD_TAGLIB=yes
-		goto getopt
-	)
-	if "%0" == "--no-skins" (
-		set SUPPORT_SKINS=no
-		goto getopt
-	)
-	if "%0" == "--force-version" (
-		set FORCE_VERSION=%1
-		shift
-		goto getopt
-	)
-	if "%0" == "--debug" (
-		set DEBUG=yes
-		goto getopt
-	)
-	if "%0" == "--console" (
-		set CONSOLE=yes
-		goto getopt
-	)
-	if "%0" == ""       goto getopt_finished
-	if "%0" == "-h"     goto help
-	if "%0" == "--help" goto help
-	if "%0" == "/?"     goto help
-	echo %BASENAME%: invalid option '%0'
-	goto try_help
+    shift
+    if "%0" == "--no-gstreamer" (
+        set BUILD_GSTREAMER=no
+        goto getopt
+    )
+    if "%0" == "--no-gstreamer-tagreader" (
+        set BUILD_GSTREAMER_TAGREADER=no
+        goto getopt
+    )
+    if "%0" == "--vlc" (
+        set BUILD_VLC=yes
+        goto getopt
+    )
+    if "%0" == "--phonon" (
+        set BUILD_PHONON=yes
+        goto getopt
+    )
+    if "%0" == "--taglib" (
+        set BUILD_TAGLIB=yes
+        goto getopt
+    )
+    if "%0" == "--no-skins" (
+        set SUPPORT_SKINS=no
+        goto getopt
+    )
+    if "%0" == "--force-version" (
+        set FORCE_VERSION=%1
+        shift
+        goto getopt
+    )
+    if "%0" == "--debug" (
+        set DEBUG=yes
+        goto getopt
+    )
+    if "%0" == "--console" (
+        set CONSOLE=yes
+        goto getopt
+    )
+    if "%0" == ""       goto getopt_finished
+    if "%0" == "-h"     goto help
+    if "%0" == "--help" goto help
+    if "%0" == "/?"     goto help
+    echo %BASENAME%: invalid option '%0'
+    goto try_help
 
 :try_help
-	echo.
-	echo Try `%BASENAME% --help' for more information
-	goto end
+    echo.
+    echo Try `%BASENAME% --help' for more information
+    goto end
 
 :help
-	echo Usage:  %BASENAME% [options]
-	echo     --no-gstreamer              do not build GStreamer plugins
-	echo     --no-gstreamer-tagreader    do not build GStreamer TagReader plugin
-	echo     --vlc                       build VLC plugins
-	echo     --phonon                    build Phonon plugins
-	echo     --taglib                    build with TagLib
-	echo     --no-skins                  disable skins support
-	echo     --console                   build with console output support
-	echo     --force-version VERSION     overrides version.pri
-	echo     --debug                     build in debug mode
-	goto end
+    echo Usage:  %BASENAME% [options]
+    echo     --no-gstreamer              do not build GStreamer plugins
+    echo     --no-gstreamer-tagreader    do not build GStreamer TagReader plugin
+    echo     --vlc                       build VLC plugins
+    echo     --phonon                    build Phonon plugins
+    echo     --taglib                    build with TagLib
+    echo     --no-skins                  disable skins support
+    echo     --console                   build with console output support
+    echo     --force-version VERSION     overrides version.pri
+    echo     --debug                     build in debug mode
+    goto end
 
 
 :getopt_finished
@@ -107,16 +107,16 @@ if "%BUILD_TAGLIB%" == "yes"              echo CONFIG += taglib>> %QMAKE_CACHE%
 if "%SUPPORT_SKINS%" == "no"              echo CONFIG += no-skins>> %QMAKE_CACHE%
 if "%CONSOLE%" == "yes"                   echo CONFIG += console>> %QMAKE_CACHE%
 if "%DEBUG%" == "yes" (
-	echo CONFIG += debug>> %QMAKE_CACHE%
+    echo CONFIG += debug>> %QMAKE_CACHE%
 ) else (
-	echo CONFIG += release>> %QMAKE_CACHE%
+    echo CONFIG += release>> %QMAKE_CACHE%
 )
 
 echo APP_NAME = %APP_NAME%>> %QMAKE_CACHE%
 
 if not "%FORCE_VERSION%" == "no" (
-	echo Forced version: %FORCE_VERSION%
-	echo N_CONFIG_FORCE_VERSION = %FORCE_VERSION%>> %QMAKE_CACHE%
+    echo Forced version: %FORCE_VERSION%
+    echo N_CONFIG_FORCE_VERSION = %FORCE_VERSION%>> %QMAKE_CACHE%
 )
 
 echo N_CONFIG_SUCCESS = yes>> %QMAKE_CACHE%

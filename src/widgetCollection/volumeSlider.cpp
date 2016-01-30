@@ -23,53 +23,53 @@ static const qreal log10over20 = qreal(0.1151292546497022842); // ln(10) / 20
 
 NVolumeSlider::NVolumeSlider(QWidget *parent) : NSlider(parent)
 {
-	setMinimum(0);
-	setMaximum(100);
+    setMinimum(0);
+    setMaximum(100);
 
-	connect(this, SIGNAL(valueChanged(int)), this, SLOT(on_valueChanged(int)));
+    connect(this, SIGNAL(valueChanged(int)), this, SLOT(on_valueChanged(int)));
 }
 
 void NVolumeSlider::on_valueChanged(int value)
 {
-	setToolTip(toolTipText(value));
+    setToolTip(toolTipText(value));
 }
 
 void NVolumeSlider::mousePressEvent(QMouseEvent *event)
 {
-	NSlider::mousePressEvent(event);
-	showToolTip(event->x(), event->y());
+    NSlider::mousePressEvent(event);
+    showToolTip(event->x(), event->y());
 }
 
 void NVolumeSlider::mouseMoveEvent(QMouseEvent *event)
 {
-	NSlider::mouseMoveEvent(event);
-	showToolTip(event->x(), event->y());
+    NSlider::mouseMoveEvent(event);
+    showToolTip(event->x(), event->y());
 }
 
 void NVolumeSlider::wheelEvent(QWheelEvent *event)
 {
-	NSlider::wheelEvent(event);
-	event->accept();
-	showToolTip(event->x(), event->y());
+    NSlider::wheelEvent(event);
+    event->accept();
+    showToolTip(event->x(), event->y());
 }
 
 QString NVolumeSlider::toolTipText(int value)
 {
-	if (NSettings::instance()->value("ShowDecibelsVolume").toBool()) {
-		qreal decibel = 0.67 * log((qreal)value / maximum()) / log10over20;
-		QString decibelStr;
-		decibelStr.setNum(decibel, 'g', 2);
-		return QString("%1 %2 dB").arg(tr("Volume")).arg(decibelStr);
-	} else {
-		return QString("%1 %2\%").arg(tr("Volume")).arg(QString::number(value));
-	}
+    if (NSettings::instance()->value("ShowDecibelsVolume").toBool()) {
+        qreal decibel = 0.67 * log((qreal)value / maximum()) / log10over20;
+        QString decibelStr;
+        decibelStr.setNum(decibel, 'g', 2);
+        return QString("%1 %2 dB").arg(tr("Volume")).arg(decibelStr);
+    } else {
+        return QString("%1 %2\%").arg(tr("Volume")).arg(QString::number(value));
+    }
 }
 
 void NVolumeSlider::showToolTip(int x, int y)
 {
-	if (x == -1 || y == -1)
-		return;
+    if (x == -1 || y == -1)
+        return;
 
-	QToolTip::showText(mapToGlobal(QPoint(x, y)), toolTipText(value()));
+    QToolTip::showText(mapToGlobal(QPoint(x, y)), toolTipText(value()));
 }
 

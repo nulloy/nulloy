@@ -25,62 +25,62 @@ Q_IMPORT_PLUGIN(widget_collection)
 int main(int argc, char *argv[])
 {
 #ifdef Q_WS_MAC
-	// https://bugreports.qt-project.org/browse/QTBUG-32789
-	if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_8)
-		QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
+    // https://bugreports.qt-project.org/browse/QTBUG-32789
+    if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_8)
+        QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
 
-	// https://bugreports.qt-project.org/browse/QTBUG-40833
-	if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_9)
-		QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Helvetica Neue");
+    // https://bugreports.qt-project.org/browse/QTBUG-40833
+    if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_9)
+        QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Helvetica Neue");
 #endif
 
-	QtSingleApplication instance(argc, argv);
+    QtSingleApplication instance(argc, argv);
 
-	// construct a message
-	QString msg;
-	if (QCoreApplication::arguments().size() > 1) {
-		QStringList argList = QCoreApplication::arguments();
-		argList.takeFirst();
-		msg = argList.join("<|>");
-	}
+    // construct a message
+    QString msg;
+    if (QCoreApplication::arguments().size() > 1) {
+        QStringList argList = QCoreApplication::arguments();
+        argList.takeFirst();
+        msg = argList.join("<|>");
+    }
 
-	if (NSettings::instance()->value("SingleInstance").toBool()) {
-		// try to send it to an already running instrance
-		if (instance.sendMessage(msg))
-			return 0; // return if delivered
-	}
+    if (NSettings::instance()->value("SingleInstance").toBool()) {
+        // try to send it to an already running instrance
+        if (instance.sendMessage(msg))
+            return 0; // return if delivered
+    }
 
-	QApplication::setQuitOnLastWindowClosed(false);
-	QCoreApplication::setApplicationName("Nulloy");
-	QCoreApplication::setApplicationVersion(QString(_N_VERSION_) + " Alpha");
-	QCoreApplication::setOrganizationDomain("nulloy.com");
+    QApplication::setQuitOnLastWindowClosed(false);
+    QCoreApplication::setApplicationName("Nulloy");
+    QCoreApplication::setApplicationVersion(QString(_N_VERSION_) + " Alpha");
+    QCoreApplication::setOrganizationDomain("nulloy.com");
 
-	// for Qt core plugins
+    // for Qt core plugins
 #if defined(Q_WS_WIN)
-	QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/Plugins/");
+    QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/Plugins/");
 #elif defined(Q_WS_MAC)
-	QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/plugins/");
+    QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/plugins/");
 #endif
 
 #ifndef _N_NO_SKINS_
-	NSkinFileSystem::init();
+    NSkinFileSystem::init();
 #endif
 
-	NPlayer p;
-	QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
-	                 &p, SLOT(readMessage(const QString &)));
-	QObject::connect(&instance, SIGNAL(aboutToQuit()),
-	                 &p, SLOT(quit()));
+    NPlayer p;
+    QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
+                     &p, SLOT(readMessage(const QString &)));
+    QObject::connect(&instance, SIGNAL(aboutToQuit()),
+                     &p, SLOT(quit()));
 
-	if (NSettings::instance()->value("RestorePlaylist").toBool())
-		p.loadDefaultPlaylist();
+    if (NSettings::instance()->value("RestorePlaylist").toBool())
+        p.loadDefaultPlaylist();
 
-	// manually read the message
-	if (!msg.isEmpty())
-		p.readMessage(msg);
+    // manually read the message
+    if (!msg.isEmpty())
+        p.readMessage(msg);
 
-	instance.installEventFilter(&p);
+    instance.installEventFilter(&p);
 
-	return instance.exec();
+    return instance.exec();
 }
 

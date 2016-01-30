@@ -21,22 +21,22 @@
 
 QList<NPlaylistDataItem> _processDataItem(const NPlaylistDataItem &dataItem)
 {
-	QList<NPlaylistDataItem> dataItemsList;
-	QString fileName = QFileInfo(dataItem.path).fileName();
-	if (fileName.endsWith(".m3u") || fileName.endsWith(".m3u8")) {
-		QList<NPlaylistDataItem> _dataItemsList = NPlaylistStorage::readM3u(dataItem.path);
-		foreach (NPlaylistDataItem _dataItem, _dataItemsList)
-			dataItemsList << _processDataItem(_dataItem);
-	} else {
-		dataItemsList << dataItem;
-	}
+    QList<NPlaylistDataItem> dataItemsList;
+    QString fileName = QFileInfo(dataItem.path).fileName();
+    if (fileName.endsWith(".m3u") || fileName.endsWith(".m3u8")) {
+        QList<NPlaylistDataItem> _dataItemsList = NPlaylistStorage::readM3u(dataItem.path);
+        foreach (NPlaylistDataItem _dataItem, _dataItemsList)
+            dataItemsList << _processDataItem(_dataItem);
+    } else {
+        dataItemsList << dataItem;
+    }
 
-	return dataItemsList;
+    return dataItemsList;
 }
 
 QList<NPlaylistDataItem> NPlaylistStorage::readPlaylist(const QString &file)
 {
-	return _processDataItem(NPlaylistDataItem(file));
+    return _processDataItem(NPlaylistDataItem(file));
 }
 
 /*
@@ -47,92 +47,92 @@ QList<NPlaylistDataItem> NPlaylistStorage::readPlaylist(const QString &file)
 
 QList<NPlaylistDataItem> NPlaylistStorage::readM3u(const QString &file)
 {
-	QList<NPlaylistDataItem> dataItemsList;
-	QString nulloyPrefix = "#NULLOY:";
-	QString extinfPrefix = "#EXTINF:";
+    QList<NPlaylistDataItem> dataItemsList;
+    QString nulloyPrefix = "#NULLOY:";
+    QString extinfPrefix = "#EXTINF:";
 
-	QString line;
-	QFile playlist(file);
-	if (!playlist.exists() || !playlist.open(QFile::ReadOnly))
-		return dataItemsList;
+    QString line;
+    QFile playlist(file);
+    if (!playlist.exists() || !playlist.open(QFile::ReadOnly))
+        return dataItemsList;
 
-	NPlaylistDataItem dataItem;
-	QTextStream in(&playlist);
-	in.setCodec("UTF-8");
-	while (!in.atEnd()) {
-		line = in.readLine();
-		if (line.trimmed().isEmpty())
-			continue;
-		if (line.startsWith("#")) {
-			if (line.startsWith(nulloyPrefix)) {
-				line.remove(0, nulloyPrefix.size());
+    NPlaylistDataItem dataItem;
+    QTextStream in(&playlist);
+    in.setCodec("UTF-8");
+    while (!in.atEnd()) {
+        line = in.readLine();
+        if (line.trimmed().isEmpty())
+            continue;
+        if (line.startsWith("#")) {
+            if (line.startsWith(nulloyPrefix)) {
+                line.remove(0, nulloyPrefix.size());
 
-				QStringList split = line.split(",");
-				if (split.count() != 3)
-					continue;
+                QStringList split = line.split(",");
+                if (split.count() != 3)
+                    continue;
 
-				dataItem.failed    = split.at(0).toInt();
-				dataItem.count     = split.at(1).toInt();
-				dataItem.position  = split.at(2).toFloat();
-			} else if (line.startsWith(extinfPrefix)) {
-				line.remove(0, extinfPrefix.size());
+                dataItem.failed    = split.at(0).toInt();
+                dataItem.count     = split.at(1).toInt();
+                dataItem.position  = split.at(2).toFloat();
+            } else if (line.startsWith(extinfPrefix)) {
+                line.remove(0, extinfPrefix.size());
 
-				QStringList split = line.split(",");
-				if (split.count() != 2)
-					continue;
+                QStringList split = line.split(",");
+                if (split.count() != 2)
+                    continue;
 
-				dataItem.duration  = split.at(0).toInt();
-				dataItem.title     = split.at(1);
-			}
-		} else {
-			if (QFileInfo(line).isAbsolute())
-				dataItem.path = line;
-			else
-				dataItem.path = QFileInfo(file).absolutePath() + "/" + line;
+                dataItem.duration  = split.at(0).toInt();
+                dataItem.title     = split.at(1);
+            }
+        } else {
+            if (QFileInfo(line).isAbsolute())
+                dataItem.path = line;
+            else
+                dataItem.path = QFileInfo(file).absolutePath() + "/" + line;
 
-			if (dataItem.title.isEmpty())
-				dataItem.title = line;
+            if (dataItem.title.isEmpty())
+                dataItem.title = line;
 
-			dataItemsList << dataItem;
-			dataItem = NPlaylistDataItem();
-		}
-	}
+            dataItemsList << dataItem;
+            dataItem = NPlaylistDataItem();
+        }
+    }
 
-	playlist.close();
-	return dataItemsList;
+    playlist.close();
+    return dataItemsList;
 }
 
 void NPlaylistStorage::writeM3u(const QString &file, QList<NPlaylistDataItem> items, N::M3uExtention ext)
 {
-	QFile playlist(file);
-	if (!playlist.open(QFile::WriteOnly | QFile::Truncate))
-		return;
+    QFile playlist(file);
+    if (!playlist.open(QFile::WriteOnly | QFile::Truncate))
+        return;
 
-	QString playlistPath = QFileInfo(file).absolutePath();
+    QString playlistPath = QFileInfo(file).absolutePath();
 
-	QTextStream out(&playlist);
-	out.setCodec("UTF-8");
-	if (ext >= N::ExtM3u)
-		out << "#EXTM3U\n";
+    QTextStream out(&playlist);
+    out.setCodec("UTF-8");
+    if (ext >= N::ExtM3u)
+        out << "#EXTM3U\n";
 
-	for (int i = 0; i < items.count(); ++i) {
-		bool failed = items.at(i).failed || !QFileInfo(items.at(i).path).exists();
-		if (ext == N::NulloyM3u)
-			out << "#NULLOY:" << failed << "," << items.at(i).count << "," << items.at(i).position << "\n";
+    for (int i = 0; i < items.count(); ++i) {
+        bool failed = items.at(i).failed || !QFileInfo(items.at(i).path).exists();
+        if (ext == N::NulloyM3u)
+            out << "#NULLOY:" << failed << "," << items.at(i).count << "," << items.at(i).position << "\n";
 
-		if (ext >= N::ExtM3u)
-			out << "#EXTINF:" << items.at(i).duration << "," << items.at(i).title << "\n";
+        if (ext >= N::ExtM3u)
+            out << "#EXTINF:" << items.at(i).duration << "," << items.at(i).title << "\n";
 
-		if (QFileInfo(items.at(i).path).exists()) {
-			if (playlistPath == QFileInfo(items.at(i).path).absolutePath()) // same directory
-				out << QFileInfo(items.at(i).path).fileName() << "\n";
-			else
-				out << QFileInfo(items.at(i).path).absoluteFilePath() << "\n";
-		} else { // keep as is
-			out << items.at(i).path << "\n";
-		}
-	}
+        if (QFileInfo(items.at(i).path).exists()) {
+            if (playlistPath == QFileInfo(items.at(i).path).absolutePath()) // same directory
+                out << QFileInfo(items.at(i).path).fileName() << "\n";
+            else
+                out << QFileInfo(items.at(i).path).absoluteFilePath() << "\n";
+        } else { // keep as is
+            out << items.at(i).path << "\n";
+        }
+    }
 
-	playlist.close();
+    playlist.close();
 }
 

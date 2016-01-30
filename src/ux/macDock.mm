@@ -22,27 +22,27 @@ static NMacDock *_instance = NULL;
 
 void _handleClick(id, SEL)
 {
-	_instance->_emitClicked();
+    _instance->_emitClicked();
 }
 
 NMacDock* NMacDock::instance()
 {
-	if (!_instance)
-		_instance = new NMacDock();
-	return _instance;
+    if (!_instance)
+        _instance = new NMacDock();
+    return _instance;
 }
 
 void NMacDock::registerClickHandler()
 {
-	Class cls = [[[NSApplication sharedApplication] delegate] class];
-	SEL sel = @selector(applicationShouldHandleReopen:hasVisibleWindows:);
-	if (class_getInstanceMethod(cls, sel))
-		class_replaceMethod(cls, sel, (IMP)_handleClick, "v@:");
-	else
-		class_addMethod(cls, sel, (IMP)_handleClick,"v@:");
+    Class cls = [[[NSApplication sharedApplication] delegate] class];
+    SEL sel = @selector(applicationShouldHandleReopen:hasVisibleWindows:);
+    if (class_getInstanceMethod(cls, sel))
+        class_replaceMethod(cls, sel, (IMP)_handleClick, "v@:");
+    else
+        class_addMethod(cls, sel, (IMP)_handleClick,"v@:");
 }
 
 void NMacDock::_emitClicked()
 {
-	emit clicked();
+    emit clicked();
 }

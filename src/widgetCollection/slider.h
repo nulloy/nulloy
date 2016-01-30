@@ -20,25 +20,25 @@
 
 class NSlider : public QSlider
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	NSlider(QWidget *parent);
-	qreal valueAtPos(int pos);
+    NSlider(QWidget *parent);
+    qreal valueAtPos(int pos);
 
 protected:
-	virtual void mousePressEvent(QMouseEvent *event);
-	virtual void mouseMoveEvent(QMouseEvent *event);
-	virtual void wheelEvent(QWheelEvent *event);
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void wheelEvent(QWheelEvent *event);
 
 private slots:
-	void setValue(int) {};
+    void setValue(int) {};
 
 public slots:
-	void setValue(qreal value);
+    void setValue(qreal value);
 
 signals:
-	void sliderMoved(qreal value);
+    void sliderMoved(qreal value);
 };
 
 #endif

@@ -24,35 +24,35 @@ class QDataStream;
 class NWaveformPeaks
 {
 private:
-	QVector< QPair<qreal, qreal> > m_vector;
-	bool m_completed;
-	int m_index;
-	int m_factor;
-	int m_factor_k;
-	int m_counter;
+    QVector< QPair<qreal, qreal> > m_vector;
+    bool m_completed;
+    int m_index;
+    int m_factor;
+    int m_factor_k;
+    int m_counter;
 
 public:
-	NWaveformPeaks();
-	void reset();
-	void append(qreal value);
-	void complete();
-	bool isCompleted() { return m_completed; }
-	int size();
-	qreal positive(int index);
-	qreal negative(int index);
+    NWaveformPeaks();
+    void reset();
+    void append(qreal value);
+    void complete();
+    bool isCompleted() { return m_completed; }
+    int size();
+    qreal positive(int index);
+    qreal negative(int index);
 
-	friend inline QDataStream& operator<<(QDataStream &out, const NWaveformPeaks &p)
-	{
-		out << p.m_vector << p.m_index << p.m_completed;
-		return out;
-	}
+    friend inline QDataStream& operator<<(QDataStream &out, const NWaveformPeaks &p)
+    {
+        out << p.m_vector << p.m_index << p.m_completed;
+        return out;
+    }
 
-	friend inline QDataStream& operator>>(QDataStream &in, NWaveformPeaks &p)
-	{
-		p.m_vector.clear();
-		in >> p.m_vector >> p.m_index >> p.m_completed;
-		return in;
-	}
+    friend inline QDataStream& operator>>(QDataStream &in, NWaveformPeaks &p)
+    {
+        p.m_vector.clear();
+        in >> p.m_vector >> p.m_index >> p.m_completed;
+        return in;
+    }
 };
 
 #endif

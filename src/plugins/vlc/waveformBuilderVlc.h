@@ -27,35 +27,35 @@ class NWaveformBuilderVlc : public NWaveformBuilderInterface,
                             public NPlugin,
                             public NAbstractWaveformBuilder
 {
-	Q_OBJECT
-	Q_INTERFACES(NWaveformBuilderInterface NPlugin)
+    Q_OBJECT
+    Q_INTERFACES(NWaveformBuilderInterface NPlugin)
 
 private:
-	libvlc_instance_t *m_vlcInstance;
-	libvlc_media_player_t *m_mediaPlayer;
-	QString m_currentFile;
+    libvlc_instance_t *m_vlcInstance;
+    libvlc_media_player_t *m_mediaPlayer;
+    QString m_currentFile;
 
-	QByteArray m_pcmBuffer;
-	QTimer *m_timer;
-	qreal position();
+    QByteArray m_pcmBuffer;
+    QTimer *m_timer;
+    qreal position();
 
 public:
-	NWaveformBuilderVlc(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
-	~NWaveformBuilderVlc();
-	void init();
-	QString interfaceString() { return NWaveformBuilderInterface::interfaceString(); }
-	N::PluginType type() { return N::WaveformBuilder; }
+    NWaveformBuilderVlc(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
+    ~NWaveformBuilderVlc();
+    void init();
+    QString interfaceString() { return NWaveformBuilderInterface::interfaceString(); }
+    N::PluginType type() { return N::WaveformBuilder; }
 
-	void start(const QString &file);
-	void stop();
-	void positionAndIndex(float &pos, int &index) { NAbstractWaveformBuilder::positionAndIndex(pos, index); }
-	NWaveformPeaks* peaks() { return NAbstractWaveformBuilder::peaks(); }
+    void start(const QString &file);
+    void stop();
+    void positionAndIndex(float &pos, int &index) { NAbstractWaveformBuilder::positionAndIndex(pos, index); }
+    NWaveformPeaks* peaks() { return NAbstractWaveformBuilder::peaks(); }
 
-	void prepareBuffer(uint8_t **pcmBuffer, unsigned int size);
-	void handleBuffer(uint8_t *pcmBuffer, unsigned int nChannels, unsigned int nSamples);
+    void prepareBuffer(uint8_t **pcmBuffer, unsigned int size);
+    void handleBuffer(uint8_t *pcmBuffer, unsigned int nChannels, unsigned int nSamples);
 
 private slots:
-	void update();
+    void update();
 };
 
 #endif

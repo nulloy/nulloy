@@ -25,23 +25,23 @@ class QGraphicsOpacityEffect;
 
 class NCoverWidgetPopup : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 private:
-	QGraphicsOpacityEffect *m_effect;
-	QPropertyAnimation *m_animation;
-	QLabel *m_pixmapLabel;
-	void mousePressEvent(QMouseEvent *);
+    QGraphicsOpacityEffect *m_effect;
+    QPropertyAnimation *m_animation;
+    QLabel *m_pixmapLabel;
+    void mousePressEvent(QMouseEvent *);
 
 public:
-	void setPixmap(QPixmap pixmap);
-	NCoverWidgetPopup(QWidget *parent = 0);
+    void setPixmap(QPixmap pixmap);
+    NCoverWidgetPopup(QWidget *parent = 0);
 
 private slots:
-	void on_animation_finished();
+    void on_animation_finished();
 
 public slots:
-	void show();
+    void show();
 };
 
 #endif

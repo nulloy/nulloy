@@ -23,26 +23,26 @@
 NContainerGstreamer::NContainerGstreamer(QObject *parent) : QObject(parent)
 {
 #ifdef Q_WS_WIN
-	_putenv(QString("GST_REGISTRY=NUL").toUtf8());
-	_putenv(QString("GST_REGISTRY_UPDATE=no").toUtf8());
+    _putenv(QString("GST_REGISTRY=NUL").toUtf8());
+    _putenv(QString("GST_REGISTRY_UPDATE=no").toUtf8());
 #endif
 
-	m_plugins << new NPlaybackEngineGStreamer()
+    m_plugins << new NPlaybackEngineGStreamer()
 #ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
-	          << new NTagReaderGstreamer()
+              << new NTagReaderGstreamer()
 #endif
-	          << new NWaveformBuilderGstreamer();
+              << new NWaveformBuilderGstreamer();
 }
 
 NContainerGstreamer::~NContainerGstreamer()
 {
-	foreach (NPlugin *plugin, m_plugins)
-		delete plugin;
+    foreach (NPlugin *plugin, m_plugins)
+        delete plugin;
 }
 
 QList<NPlugin *> NContainerGstreamer::plugins()
 {
-	return m_plugins;
+    return m_plugins;
 }
 
 Q_EXPORT_PLUGIN2(plugin_gstreamer, NContainerGstreamer)

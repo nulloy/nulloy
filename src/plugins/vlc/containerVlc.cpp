@@ -19,19 +19,19 @@
 
 NContainerVlc::NContainerVlc(QObject *parent) : QObject(parent)
 {
-	m_plugins << new NPlaybackEngineVlc()
-	          << new NWaveformBuilderVlc();
+    m_plugins << new NPlaybackEngineVlc()
+              << new NWaveformBuilderVlc();
 }
 
 NContainerVlc::~NContainerVlc()
 {
-	foreach (NPlugin *plugin, m_plugins)
-		delete plugin;
+    foreach (NPlugin *plugin, m_plugins)
+        delete plugin;
 }
 
 QList<NPlugin *> NContainerVlc::plugins()
 {
-	return m_plugins;
+    return m_plugins;
 }
 
 Q_EXPORT_PLUGIN2(plugin_vlc, NContainerVlc)

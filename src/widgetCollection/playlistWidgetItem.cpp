@@ -24,84 +24,84 @@ NPlaylistWidgetItem::NPlaylistWidgetItem(QListWidget *parent) : QListWidgetItem(
 
 NPlaylistWidgetItem::NPlaylistWidgetItem(const QFileInfo &fileinfo, QListWidget *parent) : QListWidgetItem(parent)
 {
-	m_data.path = fileinfo.filePath();
-	setText(fileinfo.fileName());
+    m_data.path = fileinfo.filePath();
+    setText(fileinfo.fileName());
 }
 
 NPlaylistWidgetItem::NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QListWidget *parent) : QListWidgetItem(parent)
 {
-	m_data = dataItem;
-	setText(dataItem.title);
+    m_data = dataItem;
+    setText(dataItem.title);
 }
 
 QVariant NPlaylistWidgetItem::data(int role) const
 {
-	switch (role) {
-		case (N::FailedRole):
-			return m_data.failed;
-		case (N::PathRole):
-			return m_data.path;
-		case (N::DurationRole):
-			return m_data.duration;
-		case (N::CountRole):
-			return m_data.count;
-		case (N::PositionRole):
-			return m_data.position;
-		default:
-			return QListWidgetItem::data(role);
-	}
+    switch (role) {
+        case (N::FailedRole):
+            return m_data.failed;
+        case (N::PathRole):
+            return m_data.path;
+        case (N::DurationRole):
+            return m_data.duration;
+        case (N::CountRole):
+            return m_data.count;
+        case (N::PositionRole):
+            return m_data.position;
+        default:
+            return QListWidgetItem::data(role);
+    }
 }
 
 void NPlaylistWidgetItem::setData(int role, const QVariant &value)
 {
-	switch (role) {
-		case (N::FailedRole):
-			m_data.failed = value.toBool();
-			break;
-		case (N::PathRole):
-			m_data.path = value.toString();
-			break;
-		case (N::DurationRole):
-			m_data.duration = value.toInt();
-			break;
-		case (N::CountRole):
-			m_data.count = value.toInt();
-			break;
-		case (N::PositionRole):
-			m_data.position = value.toFloat();
-			break;
-		default:
-			QListWidgetItem::setData(role, value);
-			break;
-	}
+    switch (role) {
+        case (N::FailedRole):
+            m_data.failed = value.toBool();
+            break;
+        case (N::PathRole):
+            m_data.path = value.toString();
+            break;
+        case (N::DurationRole):
+            m_data.duration = value.toInt();
+            break;
+        case (N::CountRole):
+            m_data.count = value.toInt();
+            break;
+        case (N::PositionRole):
+            m_data.position = value.toFloat();
+            break;
+        default:
+            QListWidgetItem::setData(role, value);
+            break;
+    }
 }
 
 NPlaylistDataItem NPlaylistWidgetItem::dataItem() const
 {
-	return m_data;
+    return m_data;
 }
 
 void NPlaylistWidgetItemDelegate::paint(QPainter *painter,
                                   const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
-	QStyleOptionViewItemV4 opt = option;
-	const NPlaylistWidget *playlistWidget = qobject_cast<const NPlaylistWidget *>(opt.widget);
+    QStyleOptionViewItemV4 opt = option;
+    const NPlaylistWidget *playlistWidget = qobject_cast<const NPlaylistWidget *>(opt.widget);
 
-	if (index == playlistWidget->currentIndex()) { // if currently playing item
-		QColor color = playlistWidget->currentTextColor();
-		if (color.isValid()) {
-			opt.palette.setColor(QPalette::HighlightedText, color);
-			opt.palette.setColor(QPalette::Text, color);
-		}
-	} else if (index.data(N::FailedRole).toBool()) { // else if a failed one
-		QColor color = playlistWidget->failedTextColor();
-		if (color.isValid()) {
-			opt.palette.setColor(QPalette::HighlightedText, color);
-			opt.palette.setColor(QPalette::Text, color);
-		}
-	}
+    if (index == playlistWidget->currentIndex()) { // if currently playing item
+        QColor color = playlistWidget->currentTextColor();
+        if (color.isValid()) {
+            opt.palette.setColor(QPalette::HighlightedText, color);
+            opt.palette.setColor(QPalette::Text, color);
+        }
+    } else if (index.data(N::FailedRole).toBool()) { // else if a failed one
+        QColor color = playlistWidget->failedTextColor();
+        if (color.isValid()) {
+            opt.palette.setColor(QPalette::HighlightedText, color);
+            opt.palette.setColor(QPalette::Text, color);
+        }
+    }
 
-	QStyledItemDelegate::paint(painter, opt, index);
+    QStyledItemDelegate::paint(painter, opt, index);
 }
 

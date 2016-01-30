@@ -23,10 +23,10 @@
 
 namespace NPlaylistStorage
 {
-	QList<NPlaylistDataItem> readPlaylist(const QString &file);
-	QList<NPlaylistDataItem> readM3u(const QString &file);
+    QList<NPlaylistDataItem> readPlaylist(const QString &file);
+    QList<NPlaylistDataItem> readM3u(const QString &file);
 
-	void writeM3u(const QString &file, QList<NPlaylistDataItem> items, N::M3uExtention ext);
+    void writeM3u(const QString &file, QList<NPlaylistDataItem> items, N::M3uExtention ext);
 };
 
 #endif

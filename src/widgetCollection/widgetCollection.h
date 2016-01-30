@@ -21,40 +21,40 @@
 
 class NWidgetPlugin : public QDesignerCustomWidgetInterface
 {
-	Q_INTERFACES(QDesignerCustomWidgetInterface)
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 private:
-	bool m_initialized;
-	QString m_className;
-	QString m_domXml;
-	QString m_header;
+    bool m_initialized;
+    QString m_className;
+    QString m_domXml;
+    QString m_header;
 
 protected:
-	NWidgetPlugin(const QString &className);
+    NWidgetPlugin(const QString &className);
 
 public:
-	QString name() const { return m_className; }
-	void initialize(QDesignerFormEditorInterface *core);
-	bool isInitialized() const { return m_initialized; }
-	virtual QIcon icon() const { return QIcon(); }
-	virtual QString whatsThis() const { return QString(); }
-	virtual QString toolTip() const { return QString(); }
-	virtual QString group() const { return "Nulloy"; }
-	virtual QString domXml() const { return m_domXml; }
-	virtual QString includeFile() const { return m_header; }
+    QString name() const { return m_className; }
+    void initialize(QDesignerFormEditorInterface *core);
+    bool isInitialized() const { return m_initialized; }
+    virtual QIcon icon() const { return QIcon(); }
+    virtual QString whatsThis() const { return QString(); }
+    virtual QString toolTip() const { return QString(); }
+    virtual QString group() const { return "Nulloy"; }
+    virtual QString domXml() const { return m_domXml; }
+    virtual QString includeFile() const { return m_header; }
 };
 
 class NWidgetCollection : public QObject, public QDesignerCustomWidgetCollectionInterface
 {
-	Q_OBJECT
-	Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+    Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
 
 public:
-	NWidgetCollection(QObject *parent = 0);
-	virtual QList<QDesignerCustomWidgetInterface *> customWidgets() const { return m_plugins; }
+    NWidgetCollection(QObject *parent = 0);
+    virtual QList<QDesignerCustomWidgetInterface *> customWidgets() const { return m_plugins; }
 
 private:
-	QList<QDesignerCustomWidgetInterface *> m_plugins;
+    QList<QDesignerCustomWidgetInterface *> m_plugins;
 };
 
 #endif

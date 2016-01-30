@@ -53,106 +53,106 @@
 template <class Key, class T> class NCache
 {
 private:
-	struct Node {
-		inline Node() {}
-		inline Node(T *data, int cost) : t(new T(*data)), c(cost) {}
-		T *t;
-		int c;
+    struct Node {
+        inline Node() {}
+        inline Node(T *data, int cost) : t(new T(*data)), c(cost) {}
+        T *t;
+        int c;
 
-		friend inline QDataStream& operator<<(QDataStream &out, const Node &n)
-		{
-			out << *n.t << n.c;
-			return out;
-		}
+        friend inline QDataStream& operator<<(QDataStream &out, const Node &n)
+        {
+            out << *n.t << n.c;
+            return out;
+        }
 
-		friend inline QDataStream& operator>>(QDataStream &in, Node &n)
-		{
-			T obj;
-			in >> obj >> n.c;
-			n.t = new T(obj);
-			return in;
-		}
+        friend inline QDataStream& operator>>(QDataStream &in, Node &n)
+        {
+            T obj;
+            in >> obj >> n.c;
+            n.t = new T(obj);
+            return in;
+        }
 
-		inline bool operator==(const Node &n) const { return t == n.t && c == n.c; }
-	};
+        inline bool operator==(const Node &n) const { return t == n.t && c == n.c; }
+    };
 
-	QHash<Key, Node> hash;
-	QList <Key> list;
-	int mx, total;
+    QHash<Key, Node> hash;
+    QList <Key> list;
+    int mx, total;
 
-	inline void unlink(Node &n)
-	{
-		Key k = hash.key(n);
-		list.removeOne(k);
-		total -= n.c;
-		T *obj = n.t;
-		hash.remove(k);
-		delete obj;
-	}
+    inline void unlink(Node &n)
+    {
+        Key k = hash.key(n);
+        list.removeOne(k);
+        total -= n.c;
+        T *obj = n.t;
+        hash.remove(k);
+        delete obj;
+    }
 
-	inline T *relink(const Key &key)
-	{
-		typename QHash<Key, Node>::iterator i = hash.find(key);
-		if (typename QHash<Key, Node>::const_iterator(i) == hash.constEnd())
-			return 0;
+    inline T *relink(const Key &key)
+    {
+        typename QHash<Key, Node>::iterator i = hash.find(key);
+        if (typename QHash<Key, Node>::const_iterator(i) == hash.constEnd())
+            return 0;
 
-		Node &n = *i;
-		Key k = hash.key(n);
-		if (list.first() != k)
-			list.move(list.indexOf(k), 0);
-		return n.t;
-	}
+        Node &n = *i;
+        Key k = hash.key(n);
+        if (list.first() != k)
+            list.move(list.indexOf(k), 0);
+        return n.t;
+    }
 
-	Q_DISABLE_COPY(NCache)
+    Q_DISABLE_COPY(NCache)
 
 public:
-	inline explicit NCache(int maxCost = 100);
+    inline explicit NCache(int maxCost = 100);
 
-	inline ~NCache() { clear(); }
+    inline ~NCache() { clear(); }
 
-	inline int maxCost() const { return mx; }
-	void setMaxCost(int m);
-	inline int totalCost() const { return total; }
+    inline int maxCost() const { return mx; }
+    void setMaxCost(int m);
+    inline int totalCost() const { return total; }
 
-	inline int size() const { return hash.size(); }
-	inline int count() const { return hash.size(); }
-	inline bool isEmpty() const { return hash.isEmpty(); }
-	inline QList<Key> keys() const { return hash.keys(); }
+    inline int size() const { return hash.size(); }
+    inline int count() const { return hash.size(); }
+    inline bool isEmpty() const { return hash.isEmpty(); }
+    inline QList<Key> keys() const { return hash.keys(); }
 
-	void clear();
+    void clear();
 
-	bool insert(const Key &key, T *object, int cost = 1);
-	T *object(const Key &key) const;
-	inline bool contains(const Key &key) const { return hash.contains(key); }
-	T *operator[](const Key &key) const;
+    bool insert(const Key &key, T *object, int cost = 1);
+    T *object(const Key &key) const;
+    inline bool contains(const Key &key) const { return hash.contains(key); }
+    T *operator[](const Key &key) const;
 
-	bool remove(const Key &key);
-	T *take(const Key &key);
+    bool remove(const Key &key);
+    T *take(const Key &key);
 
-	friend inline QDataStream& operator<<(QDataStream &out, const NCache<Key, T> &c)
-	{
-		out << c.hash << c.list << c.mx << c.total;
-		return out;
-	}
+    friend inline QDataStream& operator<<(QDataStream &out, const NCache<Key, T> &c)
+    {
+        out << c.hash << c.list << c.mx << c.total;
+        return out;
+    }
 
-	friend inline QDataStream& operator>>(QDataStream &in, NCache<Key, T> &c)
-	{
-		c.clear();
-		in >> c.hash >> c.list >> c.mx >> c.total;
-		return in;
-	}
+    friend inline QDataStream& operator>>(QDataStream &in, NCache<Key, T> &c)
+    {
+        c.clear();
+        in >> c.hash >> c.list >> c.mx >> c.total;
+        return in;
+    }
 
 private:
-	void trim(int m);
+    void trim(int m);
 };
 
 template <class Key, class T> inline NCache<Key, T>::NCache(int amaxCost) : mx(amaxCost), total(0) {}
 
 template <class Key, class T> inline void NCache<Key, T>::clear()
 {
-	list.clear();
-	hash.clear();
-	total = 0;
+    list.clear();
+    hash.clear();
+    total = 0;
 }
 
 template <class Key, class T> inline void NCache<Key, T>::setMaxCost(int m) { mx = m; trim(mx); }
@@ -161,56 +161,56 @@ template <class Key, class T> inline T *NCache<Key, T>::operator[](const Key &ke
 
 template <class Key, class T> inline bool NCache<Key, T>::remove(const Key &key)
 {
-	typename QHash<Key, Node>::iterator i = hash.find(key);
-	if (typename QHash<Key, Node>::const_iterator(i) == hash.constEnd()) {
-		return false;
-	} else {
-		unlink(*i);
-		return true;
-	}
+    typename QHash<Key, Node>::iterator i = hash.find(key);
+    if (typename QHash<Key, Node>::const_iterator(i) == hash.constEnd()) {
+        return false;
+    } else {
+        unlink(*i);
+        return true;
+    }
 }
 
 template <class Key, class T> inline T *NCache<Key, T>::take(const Key &key)
 {
-	typename QHash<Key, Node>::iterator i = hash.find(key);
-	if (i == hash.end())
-		return 0;
+    typename QHash<Key, Node>::iterator i = hash.find(key);
+    if (i == hash.end())
+        return 0;
 
-	Node &n = *i;
-	T *t = n.t;
-	n.t = 0;
-	unlink(n);
-	return t;
+    Node &n = *i;
+    T *t = n.t;
+    n.t = 0;
+    unlink(n);
+    return t;
 }
 
 template <class Key, class T> bool NCache<Key, T>::insert(const Key &akey, T *aobject, int acost)
 {
-	remove(akey);
-	if (acost > mx) {
-		delete aobject;
-		return false;
-	}
-	trim(mx - acost);
-	Node sn(aobject, acost);
-	hash.insert(akey, sn);
-	total += acost;
-	list.prepend(akey);
-	return true;
+    remove(akey);
+    if (acost > mx) {
+        delete aobject;
+        return false;
+    }
+    trim(mx - acost);
+    Node sn(aobject, acost);
+    hash.insert(akey, sn);
+    total += acost;
+    list.prepend(akey);
+    return true;
 }
 
 template <class Key, class T> void NCache<Key, T>::trim(int m)
 {
-	int i = list.size() - 1;
-	if (i < 0)
-		return;
-	Node *n = &hash[list.at(i)];
-	while (n && total > m) {
-		Node *u = n;
-		--i;
-		n = &hash[list.at(i)];
-		if (qIsDetached(*u->t))
-			unlink(*u);
-	}
+    int i = list.size() - 1;
+    if (i < 0)
+        return;
+    Node *n = &hash[list.at(i)];
+    while (n && total > m) {
+        Node *u = n;
+        --i;
+        n = &hash[list.at(i)];
+        if (qIsDetached(*u->t))
+            unlink(*u);
+    }
 }
 
 #endif

@@ -23,94 +23,94 @@ MAC_UNIVERSAL=no
 
 echo_help()
 {
-	echo "Usage:  $BASENAME [options]"
-	echo '    --no-gstreamer              do not build GStreamer plugins'
-	echo '    --no-gstreamer-tagreader    do not build GStreamer TagReader plugin'
-	echo '    --vlc                       build VLC plugins'
-	echo '    --phonon                    build Phonon plugins'
-	echo '    --taglib                    build with TagLib'
-	echo '    --no-skins                  disable skins support'
-	echo '    --force-version VERSION     overrides version.pri'
-	echo '    --no-update-check           disable online check functionality'
-	echo '    --prefix PREFIX             installation prefix'
-	echo '    --no-app-bundle             do not make .app (Mac only)'
-	echo '    --universal                 build for both i386 and x86_64 (Mac only)'
-	echo '    --debug                     build in debug mode'
+    echo "Usage:  $BASENAME [options]"
+    echo '    --no-gstreamer              do not build GStreamer plugins'
+    echo '    --no-gstreamer-tagreader    do not build GStreamer TagReader plugin'
+    echo '    --vlc                       build VLC plugins'
+    echo '    --phonon                    build Phonon plugins'
+    echo '    --taglib                    build with TagLib'
+    echo '    --no-skins                  disable skins support'
+    echo '    --force-version VERSION     overrides version.pri'
+    echo '    --no-update-check           disable online check functionality'
+    echo '    --prefix PREFIX             installation prefix'
+    echo '    --no-app-bundle             do not make .app (Mac only)'
+    echo '    --universal                 build for both i386 and x86_64 (Mac only)'
+    echo '    --debug                     build in debug mode'
 }
 
 echo_try()
 {
-	echo
-	echo "Try \`$BASENAME --help' for more information"
+    echo
+    echo "Try \`$BASENAME --help' for more information"
 }
 
 getopt -T > /dev/null
 if [ ! $? -eq 4 ]; then
-	echo "$BASENAME: BSD version of 'getopt' is not supported."
-	echo "Install GNU getopt (enhanced) and check PATH environment variable."
-	echo
-	exit 1
+    echo "$BASENAME: BSD version of 'getopt' is not supported."
+    echo "Install GNU getopt (enhanced) and check PATH environment variable."
+    echo
+    exit 1
 fi
 
 args=`getopt -n$BASENAME -o h --longoptions="force-version: no-update-check no-gstreamer no-gstreamer-tagreader vlc phonon taglib no-skins debug prefix: no-app-bundle universal help" -- "$@"`
 
 if test $? != 0; then
-	echo_try; exit 1
+    echo_try; exit 1
 fi
 
 eval set -- $args
 while [ $# -gt 0 ]; do
-	if [ $1 == "--prefix" ]; then
-		shift
-		if (command -v realpath &> /dev/null) && [ -d "`dirname $1`" ]; then
-			PREFIX=`realpath "$1"`
-		else
-			PREFIX=`readlink -m "$1"`
-		fi
-	elif [ $1 == "--debug" ]; then
-		DEBUG=yes
-	elif [ $1 == "--force-version" ]; then
-		shift; FORCE_VERSION=$1
-	elif [ $1 == "--no-gstreamer" ]; then
-		BUILD_GSTREAMER=no
-	elif [ $1 == "--no-gstreamer-tagreader" ]; then
-		BUILD_GSTREAMER_TAGREADER=no
-	elif [ $1 == "--vlc" ]; then
-		BUILD_VLC=yes
-	elif [ $1 == "--phonon" ]; then
-		BUILD_PHONON=yes
-	elif [ $1 == "--taglib" ]; then
-		BUILD_TAGLIB=yes
-	elif [ $1 == "--no-skins" ]; then
-		SUPPORT_SKINS=no
-	elif [ $1 == "--no-update-check" ]; then
-		UPDATE_CHECK=no
-	elif [ $1 == "--no-app-bundle" ]; then
-		MAC_BUNDLE=no
-	elif [ $1 == "--universal" ]; then
-		MAC_UNIVERSAL=yes
-	elif [[ $1 == "--help" || $1 == "-h" ]]; then
-		echo_help; exit 0
-	elif [ $1 == "--" ]; then
-		shift
-		if [ $# -ne 0 ]; then
-			echo "$BASENAME: invalid arguments"
-			echo_try; exit 1
-		fi
-		break
-	fi
-	shift
+    if [ $1 == "--prefix" ]; then
+        shift
+        if (command -v realpath &> /dev/null) && [ -d "`dirname $1`" ]; then
+            PREFIX=`realpath "$1"`
+        else
+            PREFIX=`readlink -m "$1"`
+        fi
+    elif [ $1 == "--debug" ]; then
+        DEBUG=yes
+    elif [ $1 == "--force-version" ]; then
+        shift; FORCE_VERSION=$1
+    elif [ $1 == "--no-gstreamer" ]; then
+        BUILD_GSTREAMER=no
+    elif [ $1 == "--no-gstreamer-tagreader" ]; then
+        BUILD_GSTREAMER_TAGREADER=no
+    elif [ $1 == "--vlc" ]; then
+        BUILD_VLC=yes
+    elif [ $1 == "--phonon" ]; then
+        BUILD_PHONON=yes
+    elif [ $1 == "--taglib" ]; then
+        BUILD_TAGLIB=yes
+    elif [ $1 == "--no-skins" ]; then
+        SUPPORT_SKINS=no
+    elif [ $1 == "--no-update-check" ]; then
+        UPDATE_CHECK=no
+    elif [ $1 == "--no-app-bundle" ]; then
+        MAC_BUNDLE=no
+    elif [ $1 == "--universal" ]; then
+        MAC_UNIVERSAL=yes
+    elif [[ $1 == "--help" || $1 == "-h" ]]; then
+        echo_help; exit 0
+    elif [ $1 == "--" ]; then
+        shift
+        if [ $# -ne 0 ]; then
+            echo "$BASENAME: invalid arguments"
+            echo_try; exit 1
+        fi
+        break
+    fi
+    shift
 done
 
 if [[ ! -n $QMAKE && ! -f $QMAKE ]]; then
-	QMAKE=`which qmake` 2> /dev/null
-	if [[ ! -n $QMAKE || ! -f $QMAKE ]]; then
-		QMAKE=$QTDIR/bin/qmake
-		if [ ! -f $QMAKE ]; then
-			echo "$BASENAME: Unable to find 'qmake'. Try \`QTDIR=/path/to/qt $0' or \`QMAKE=/path/to/qmake $0'."
-			exit 1
-		fi
-	fi
+    QMAKE=`which qmake` 2> /dev/null
+    if [[ ! -n $QMAKE || ! -f $QMAKE ]]; then
+        QMAKE=$QTDIR/bin/qmake
+        if [ ! -f $QMAKE ]; then
+            echo "$BASENAME: Unable to find 'qmake'. Try \`QTDIR=/path/to/qt $0' or \`QMAKE=/path/to/qmake $0'."
+            exit 1
+        fi
+    fi
 fi
 
 QMAKE_CACHE=`pwd`/.qmake.cache
@@ -125,26 +125,26 @@ echo "PKG_CONFIG = $PKG_CONFIG" >> $QMAKE_CACHE
 
 pkg_check_lib()
 {
-	$PKG_CONFIG --print-errors $1
-	if [ $? -eq 0 ]; then
-		echo "found $1"
-	else
-		echo
-		exit 1
-	fi
+    $PKG_CONFIG --print-errors $1
+    if [ $? -eq 0 ]; then
+        echo "found $1"
+    else
+        echo
+        exit 1
+    fi
 }
 
 if [ `which $PKG_CONFIG 2> /dev/null` ]; then
-	echo "checking for pkg-config... yes"
-	[ $BUILD_GSTREAMER == "yes" ]           && pkg_check_lib gstreamer-1.0
-	[ $BUILD_GSTREAMER_TAGREADER == "yes" ] && pkg_check_lib gstreamer-pbutils-1.0
-	[ $BUILD_VLC == "yes" ]                 && pkg_check_lib libvlc
-	[ $BUILD_TAGLIB == "yes" ]              && pkg_check_lib taglib
-	[ $BUILD_PHONON == "yes" ]              && pkg_check_lib phonon
+    echo "checking for pkg-config... yes"
+    [ $BUILD_GSTREAMER == "yes" ]           && pkg_check_lib gstreamer-1.0
+    [ $BUILD_GSTREAMER_TAGREADER == "yes" ] && pkg_check_lib gstreamer-pbutils-1.0
+    [ $BUILD_VLC == "yes" ]                 && pkg_check_lib libvlc
+    [ $BUILD_TAGLIB == "yes" ]              && pkg_check_lib taglib
+    [ $BUILD_PHONON == "yes" ]              && pkg_check_lib phonon
 else
-	echo "$BASENAME: Unable to find 'pkg-config'. Check PATH environment variable."
-	echo
-	exit 1
+    echo "$BASENAME: Unable to find 'pkg-config'. Check PATH environment variable."
+    echo
+    exit 1
 fi
 
 [ $BUILD_GSTREAMER == "yes" ]           && QMAKE_CONFIG="$QMAKE_CONFIG gstreamer"
@@ -157,19 +157,19 @@ fi
 [ $MAC_UNIVERSAL == "yes" ]             && QMAKE_CONFIG="$QMAKE_CONFIG x86 x86_64"
 [ $UPDATE_CHECK == "no" ]               && QMAKE_CONFIG="$QMAKE_CONFIG no-update-check"
 if [ $DEBUG == "yes" ]; then
-	QMAKE_CONFIG="$QMAKE_CONFIG debug"
+    QMAKE_CONFIG="$QMAKE_CONFIG debug"
 else
-	QMAKE_CONFIG="$QMAKE_CONFIG release"
+    QMAKE_CONFIG="$QMAKE_CONFIG release"
 fi
 
 if [ `$QMAKE -query "QMAKE_MKSPECS" | grep -i mingw` ]; then
-	QMAKE_CONFIG="$QMAKE_CONFIG unix_mingw"
-	APP_NAME=Nulloy
+    QMAKE_CONFIG="$QMAKE_CONFIG unix_mingw"
+    APP_NAME=Nulloy
 fi
 
 if [ $FORCE_VERSION != "no" ]; then
-	echo "Forced version: $FORCE_VERSION"
-	echo "N_CONFIG_FORCE_VERSION = $FORCE_VERSION" > $QMAKE_CACHE
+    echo "Forced version: $FORCE_VERSION"
+    echo "N_CONFIG_FORCE_VERSION = $FORCE_VERSION" > $QMAKE_CACHE
 fi
 
 echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
@@ -181,10 +181,10 @@ echo "TMP_DIR = $NULLOY_BUILD_TMP_DIR" >> $QMAKE_CACHE
 [ ! -z "$LRELEASE" ] && echo "LRELEASE = $LRELEASE" >> $QMAKE_CACHE
 
 if [ `uname | grep -i darwin` ]; then
-	QMAKE_EXTRA_OPTIONS="-spec macx-g++"
+    QMAKE_EXTRA_OPTIONS="-spec macx-g++"
 else
-	echo
-	echo "Install prefix: $PREFIX"
+    echo
+    echo "Install prefix: $PREFIX"
 fi
 
 echo
@@ -192,8 +192,8 @@ echo "Running qmake..."
 
 $QMAKE "CONFIG+=$QMAKE_CONFIG" PREFIX="$PREFIX" APP_NAME="$APP_NAME" $QMAKE_EXTRA_OPTIONS
 if [ $? -ne 0 ]; then
-	echo "$BASENAME: qmake failed"
-	exit 1
+    echo "$BASENAME: qmake failed"
+    exit 1
 fi
 
 echo "Nulloy has been configured. Now run \`make'."

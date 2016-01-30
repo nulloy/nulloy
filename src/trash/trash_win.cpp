@@ -19,19 +19,19 @@
 
 int _trash(const QString &file, QString *error)
 {
-	Q_UNUSED(error);
-	QString file_nul = file;
-	file_nul.append("00");
-	file_nul[file.size()] = 0;
-	file_nul[file.size() + 1] = 0;
-	SHFILEOPSTRUCT shfo = SHFILEOPSTRUCT();
-	shfo.wFunc = FO_DELETE;
-	shfo.pFrom = (wchar_t *)(file_nul.utf16());
-	shfo.fFlags = FOF_NOCONFIRMATION | FOF_SIMPLEPROGRESS | FOF_NOERRORUI | FOF_ALLOWUNDO;
-	shfo.fAnyOperationsAborted = false;
-	shfo.hNameMappings = NULL;
-	shfo.pTo = NULL;
-	shfo.lpszProgressTitle = NULL;
-	return SHFileOperation(&shfo);
+    Q_UNUSED(error);
+    QString file_nul = file;
+    file_nul.append("00");
+    file_nul[file.size()] = 0;
+    file_nul[file.size() + 1] = 0;
+    SHFILEOPSTRUCT shfo = SHFILEOPSTRUCT();
+    shfo.wFunc = FO_DELETE;
+    shfo.pFrom = (wchar_t *)(file_nul.utf16());
+    shfo.fFlags = FOF_NOCONFIRMATION | FOF_SIMPLEPROGRESS | FOF_NOERRORUI | FOF_ALLOWUNDO;
+    shfo.fAnyOperationsAborted = false;
+    shfo.hNameMappings = NULL;
+    shfo.pTo = NULL;
+    shfo.lpszProgressTitle = NULL;
+    return SHFileOperation(&shfo);
 }
 

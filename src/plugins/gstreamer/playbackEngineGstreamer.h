@@ -26,66 +26,66 @@ class QTimer;
 
 class NPlaybackEngineGStreamer : public NPlaybackEngineInterface, public NPlugin
 {
-	Q_OBJECT
-	Q_INTERFACES(NPlaybackEngineInterface NPlugin)
+    Q_OBJECT
+    Q_INTERFACES(NPlaybackEngineInterface NPlugin)
 
 private:
-	GstElement *m_playbin;
+    GstElement *m_playbin;
 
-	QTimer *m_timer;
-	qreal m_oldVolume;
-	qreal m_oldPosition;
-	N::PlaybackState m_oldState;
-	qreal m_posponedPosition;
-	QString m_currentMedia;
-	gint64 m_durationNsec;
-	bool m_crossfading;
+    QTimer *m_timer;
+    qreal m_oldVolume;
+    qreal m_oldPosition;
+    N::PlaybackState m_oldState;
+    qreal m_posponedPosition;
+    QString m_currentMedia;
+    gint64 m_durationNsec;
+    bool m_crossfading;
 
-	N::PlaybackState fromGstState(GstState state);
-	void fail();
+    N::PlaybackState fromGstState(GstState state);
+    void fail();
 
 public:
-	NPlaybackEngineGStreamer(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
-	~NPlaybackEngineGStreamer();
-	void init();
-	QString interfaceString() { return NPlaybackEngineInterface::interfaceString(); }
-	N::PluginType type() { return N::PlaybackEngine; }
+    NPlaybackEngineGStreamer(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
+    ~NPlaybackEngineGStreamer();
+    void init();
+    QString interfaceString() { return NPlaybackEngineInterface::interfaceString(); }
+    N::PluginType type() { return N::PlaybackEngine; }
 
-	Q_INVOKABLE bool hasMedia();
-	Q_INVOKABLE QString currentMedia();
-	Q_INVOKABLE N::PlaybackState state() { return m_oldState; }
+    Q_INVOKABLE bool hasMedia();
+    Q_INVOKABLE QString currentMedia();
+    Q_INVOKABLE N::PlaybackState state() { return m_oldState; }
 
-	Q_INVOKABLE qreal volume();
-	Q_INVOKABLE qreal position();
-	Q_INVOKABLE qint64 durationMsec();
+    Q_INVOKABLE qreal volume();
+    Q_INVOKABLE qreal position();
+    Q_INVOKABLE qint64 durationMsec();
 
-	void _emitAboutToFinish();
-	void _crossfadingPrepare();
-	void _crossfadingCancel();
+    void _emitAboutToFinish();
+    void _crossfadingPrepare();
+    void _crossfadingCancel();
 
 public slots:
-	Q_INVOKABLE void setMedia(const QString &file);
-	Q_INVOKABLE void setVolume(qreal volume);
-	Q_INVOKABLE void setPosition(qreal pos);
-	Q_INVOKABLE void jump(qint64 msec);
+    Q_INVOKABLE void setMedia(const QString &file);
+    Q_INVOKABLE void setVolume(qreal volume);
+    Q_INVOKABLE void setPosition(qreal pos);
+    Q_INVOKABLE void jump(qint64 msec);
 
-	Q_INVOKABLE void play();
-	Q_INVOKABLE void stop();
-	Q_INVOKABLE void pause();
+    Q_INVOKABLE void play();
+    Q_INVOKABLE void stop();
+    Q_INVOKABLE void pause();
 
 private slots:
-	void checkStatus();
+    void checkStatus();
 
 signals:
-	void positionChanged(qreal pos);
-	void volumeChanged(qreal volume);
-	void message(QMessageBox::Icon icon, const QString &file, const QString &msg);
-	void mediaChanged(const QString &file);
-	void finished();
-	void aboutToFinish();
-	void failed();
-	void stateChanged(N::PlaybackState state);
-	void tick(qint64 msec);
+    void positionChanged(qreal pos);
+    void volumeChanged(qreal volume);
+    void message(QMessageBox::Icon icon, const QString &file, const QString &msg);
+    void mediaChanged(const QString &file);
+    void finished();
+    void aboutToFinish();
+    void failed();
+    void stateChanged(N::PlaybackState state);
+    void tick(qint64 msec);
 };
 
 #endif

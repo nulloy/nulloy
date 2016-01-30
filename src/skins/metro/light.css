@@ -1,120 +1,120 @@
 #titleLabel {
-	color : #3D3D3D;
+    color : #3D3D3D;
 }
 
 #borderWidget {
-	background-color: #1FAEFF;
+    background-color: #1FAEFF;
 }
 
 #coverWidget {
-	border-color: #CDCDD4;
+    border-color: #CDCDD4;
 }
 #coverWidget:hover {
-	border-color: #1FAEFF;
+    border-color: #1FAEFF;
 }
 
 #splitter {
-	background: #E8E8EB;
+    background: #E8E8EB;
 }
 
 #playlistWidget {
-	color: #4F4F4F;
-	background: #F9F9FC;
-	qproperty-current_text_color: #3D3D3D;
-	qproperty-failed_text_color: #565659;
-	qproperty-file_drop_border_color: #1FAEFF;
-	qproperty-file_drop_background: rgba(31, 174, 255, 50);
+    color: #4F4F4F;
+    background: #F9F9FC;
+    qproperty-current_text_color: #3D3D3D;
+    qproperty-failed_text_color: #565659;
+    qproperty-file_drop_border_color: #1FAEFF;
+    qproperty-file_drop_background: rgba(31, 174, 255, 50);
 }
 #playlistWidget::item {
-	background: #F9F9FC;
+    background: #F9F9FC;
 }
 #playlistWidget::item:alternate {
-	background: #E8E8EB;
+    background: #E8E8EB;
 }
 #playlistWidget::item:selected {
-	color: #4F4F4F;
-	background: #F3F7FF;
-	border-color: #1FAEFF;
+    color: #4F4F4F;
+    background: #F3F7FF;
+    border-color: #1FAEFF;
 }
 #playlistWidget::item:alternate:selected {
-	background: #DFE6F2;
+    background: #DFE6F2;
 }
 #playlistWidget::item:hover {
-	border-color: #1FAEFF;
+    border-color: #1FAEFF;
 }
 #playlistWidget::item:selected:hover {
-	background: #D8E6FF;
+    background: #D8E6FF;
 }
 #playlistWidget::item:alternate:selected:hover {
-	background: #CEDAF2;
+    background: #CEDAF2;
 }
 
 #playlistWidget QScrollBar::handle {
-	background: #D0D1D7;
+    background: #D0D1D7;
 }
 #playlistWidget QScrollBar::handle:hover {
-	background: #78A7FF;
+    background: #78A7FF;
 }
 #playlistWidget QSlider::sub-page:horizontal {
-	background: #757575;
+    background: #757575;
 }
 
 #repeatButton:checked, #shuffleButton:checked {
-	background: #ABCCFF;
+    background: #ABCCFF;
 }
 
 #prevButtonWrapper, #playButtonWrapper,
 #stopButtonWrapper, #nextButtonWrapper {
-	border-color: #3D3D3D;
+    border-color: #3D3D3D;
 }
 #prevButton, #playButton, #stopButton, #nextButton {
-	background: transparent;
+    background: transparent;
 }
 #playButton:hover, #stopButton:hover,
 #nextButton:hover, #prevButton:hover,
 #repeatButton:hover, #shuffleButton:hover,
 #minimizeButton:hover, #themeButton:hover {
-	border-color: #1FAEFF;
+    border-color: #1FAEFF;
 }
 #playButton:pressed, #stopButton:pressed,
 #nextButton:pressed, #prevButton:pressed,
 #repeatButton:pressed, #shuffleButton:pressed,
 #minimizeButton:pressed, #themeButton:pressed {
-	background: rgba(153, 195, 255, 80);
+    background: rgba(153, 195, 255, 80);
 }
 
 #closeButton:pressed {
-	background: #FFCBBF;
+    background: #FFCBBF;
 }
 #closeButton:hover {
-	border-color: #FF7B59;
+    border-color: #FF7B59;
 }
 
 #volumeSlider::sub-page:horizontal {
-	background: #B7B7BF;
+    background: #B7B7BF;
 }
 #volumeSlider::handle:horizontal {
-	background: #3D3D3D;
+    background: #3D3D3D;
 }
 #volumeSlider::handle:horizontal:hover {
-	background: #78A7FF;
+    background: #78A7FF;
 }
 #volumeSlider::groove:horizontal {
-	background: #D2D3D9;
+    background: #D2D3D9;
 }
 
 NTrackInfoWidget QLabel {
-	background: argb(37, 37, 38, 150);
+    background: argb(37, 37, 38, 150);
 }
 
 #waveformSlider {
-	qproperty-background: #CDCDD4;
-	qproperty-wave_background: #1FAEFF;
-	qproperty-wave_border_color: #0080FF;
-	qproperty-progress_playing_background: #4BD161;
-	qproperty-progress_paused_background: #D9941C;
-	qproperty-playing_composition: Darken;
-	qproperty-paused_composition: Overlay;
-	qproperty-file_drop_border_color: #1FAEFF;
-	qproperty-file_drop_background: rgba(31, 174, 255, 50);
+    qproperty-background: #CDCDD4;
+    qproperty-wave_background: #1FAEFF;
+    qproperty-wave_border_color: #0080FF;
+    qproperty-progress_playing_background: #4BD161;
+    qproperty-progress_paused_background: #D9941C;
+    qproperty-playing_composition: Darken;
+    qproperty-paused_composition: Overlay;
+    qproperty-file_drop_border_color: #1FAEFF;
+    qproperty-file_drop_background: rgba(31, 174, 255, 50);
 }

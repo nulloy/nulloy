@@ -23,11 +23,11 @@ class NPlugin;
 class NPluginContainer
 {
 public:
-	NPluginContainer() {}
-	virtual ~NPluginContainer() {}
-	virtual QList<NPlugin *> plugins() = 0;
-	virtual QString name() = 0;
-	virtual QString version() = 0;
+    NPluginContainer() {}
+    virtual ~NPluginContainer() {}
+    virtual QList<NPlugin *> plugins() = 0;
+    virtual QString name() = 0;
+    virtual QString version() = 0;
 };
 
 Q_DECLARE_INTERFACE(NPluginContainer, "Nulloy/NPluginContainer/0.7")

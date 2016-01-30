@@ -17,8 +17,8 @@
 #define N_TAGLIB_FILE_REF_H
 
 namespace NTaglib {
-	extern TagLib::FileRef *_tagRef;
-	extern QString _filePath;
+    extern TagLib::FileRef *_tagRef;
+    extern QString _filePath;
 }
 
 #endif

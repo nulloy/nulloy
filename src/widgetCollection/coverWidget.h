@@ -23,25 +23,25 @@ class NCoverWidgetPopup;
 
 class NCoverWidget : public QLabel
 {
-	Q_OBJECT
+    Q_OBJECT
 
 private:
-	NCoverReaderInterface *m_coverReader;
-	QPixmap m_pixmap;
-	NCoverWidgetPopup *m_popup;
+    NCoverReaderInterface *m_coverReader;
+    QPixmap m_pixmap;
+    NCoverWidgetPopup *m_popup;
 
-	void resizeEvent(QResizeEvent *event);
-	void mousePressEvent(QMouseEvent *event);
-	void changeEvent(QEvent *event);
-	void fitToHeight(int height);
-	void init();
+    void resizeEvent(QResizeEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void changeEvent(QEvent *event);
+    void fitToHeight(int height);
+    void init();
 
 public:
-	NCoverWidget(QWidget *parent = 0);
-	~NCoverWidget();
+    NCoverWidget(QWidget *parent = 0);
+    ~NCoverWidget();
 
 public slots:
-	void setSource(const QString &file);
+    void setSource(const QString &file);
 };
 
 #endif

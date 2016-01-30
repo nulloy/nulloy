@@ -22,33 +22,33 @@
 
 class NW7TaskBar : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
 private:
-	NW7TaskBar() {}
-	~NW7TaskBar() {}
-	NW7TaskBar(NW7TaskBar const &copy);
-	NW7TaskBar operator=(NW7TaskBar const &copy);
+    NW7TaskBar() {}
+    ~NW7TaskBar() {}
+    NW7TaskBar(NW7TaskBar const &copy);
+    NW7TaskBar operator=(NW7TaskBar const &copy);
 
 public:
-	enum State {
-		NoProgress,
-		Indeterminate,
-		Normal,
-		Error,
-		Paused
-	};
+    enum State {
+        NoProgress,
+        Indeterminate,
+        Normal,
+        Error,
+        Paused
+    };
 
-	static NW7TaskBar* instance();
-	void setWindow(QWidget *window);
-	bool winEvent(MSG *message, long *result);
-	bool isEnabled();
+    static NW7TaskBar* instance();
+    void setWindow(QWidget *window);
+    bool winEvent(MSG *message, long *result);
+    bool isEnabled();
 
 public slots:
-	void setEnabled(bool enable);
-	void setProgress(qreal val);
-	void setState(State state);
-	void setOverlayIcon(const QIcon &icon, const QString &text = QString());
+    void setEnabled(bool enable);
+    void setProgress(qreal val);
+    void setState(State state);
+    void setOverlayIcon(const QIcon &icon, const QString &text = QString());
 };
 
 #endif // WIN32

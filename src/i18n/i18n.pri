@@ -18,13 +18,13 @@ system($$qms.commands)
 
 # install
 unix {
-	translations.files = ../i18n/*
-	mac {
-		translations.path = ../$${APP_NAME}.app/Contents/MacOS/i18n
-	} else {
-		translations.path = $$PREFIX/share/$$APP_NAME/i18n
-	}
-	INSTALLS += translations
+    translations.files = ../i18n/*
+    mac {
+        translations.path = ../$${APP_NAME}.app/Contents/MacOS/i18n
+    } else {
+        translations.path = $$PREFIX/share/$$APP_NAME/i18n
+    }
+    INSTALLS += translations
 }
 
 # to sync *.ts with sources:

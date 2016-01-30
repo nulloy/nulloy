@@ -21,88 +21,88 @@
 
 NWaveformPeaks::NWaveformPeaks()
 {
-	reset();
+    reset();
 }
 
 void NWaveformPeaks::reset()
 {
-	m_index = 0;
-	m_factor = 1024;
-	m_factor_k = 2;
-	m_counter = 0;
-	m_completed = false;
+    m_index = 0;
+    m_factor = 1024;
+    m_factor_k = 2;
+    m_counter = 0;
+    m_completed = false;
 
-	m_vector = QVector< QPair<qreal, qreal> >(MAX_RES, qMakePair(0.0, 0.0));
+    m_vector = QVector< QPair<qreal, qreal> >(MAX_RES, qMakePair(0.0, 0.0));
 }
 
 int NWaveformPeaks::size()
 {
-	if (m_completed)
-		return m_vector.size();
-	else
-		return m_index;
+    if (m_completed)
+        return m_vector.size();
+    else
+        return m_index;
 }
 
 void NWaveformPeaks::complete()
 {
-	m_completed = true;
-	m_vector.resize(m_index + 1);
+    m_completed = true;
+    m_vector.resize(m_index + 1);
 }
 
 qreal NWaveformPeaks::positive(int index)
 {
-	return m_vector[index].first;
+    return m_vector[index].first;
 }
 
 qreal NWaveformPeaks::negative(int index)
 {
-	return m_vector[index].second;
+    return m_vector[index].second;
 }
 
 void NWaveformPeaks::append(qreal value)
 {
-	if (m_completed) {
-		qWarning() << "WaveformPeaks::append() : cannot append to completed.";
-		return;
-	}
+    if (m_completed) {
+        qWarning() << "WaveformPeaks::append() : cannot append to completed.";
+        return;
+    }
 
-	if (m_index == m_vector.size() - 1) {
-		m_factor *= m_factor_k;
+    if (m_index == m_vector.size() - 1) {
+        m_factor *= m_factor_k;
 #if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
-		qDebug() << "WaveformPeaks   ::" << "resized  " << m_factor;
+        qDebug() << "WaveformPeaks   ::" << "resized  " << m_factor;
 #endif
 
-		qreal max;
-		qreal min;
-		int i;
-		for (i = 0; i < m_vector.size() / m_factor_k; ++i) {
-			max = 0;
-			min = 0;
-			for (int j = 0; j < m_factor_k; ++j) {
-				max = qMax(m_vector[i * m_factor_k + j].first, max);
-				min = qMin(m_vector[i * m_factor_k + j].second, min);
-			}
-			m_vector[i].first = max;
-			m_vector[i].second = min;
-		}
+        qreal max;
+        qreal min;
+        int i;
+        for (i = 0; i < m_vector.size() / m_factor_k; ++i) {
+            max = 0;
+            min = 0;
+            for (int j = 0; j < m_factor_k; ++j) {
+                max = qMax(m_vector[i * m_factor_k + j].first, max);
+                min = qMin(m_vector[i * m_factor_k + j].second, min);
+            }
+            m_vector[i].first = max;
+            m_vector[i].second = min;
+        }
 
-		m_counter = 0;
-		m_index = i;
+        m_counter = 0;
+        m_index = i;
 
-		for (i = m_index; i < m_vector.size(); ++i) {
-			m_vector[i].first = 0;
-			m_vector[i].second = 0;
-		}
-	}
+        for (i = m_index; i < m_vector.size(); ++i) {
+            m_vector[i].first = 0;
+            m_vector[i].second = 0;
+        }
+    }
 
-	if (m_counter < m_factor) {
-		++m_counter;
-	} else {
-		m_counter = 0;
-		++m_index;
-	}
+    if (m_counter < m_factor) {
+        ++m_counter;
+    } else {
+        m_counter = 0;
+        ++m_index;
+    }
 
-	m_vector[m_index].first = qMax(m_vector[m_index].first, value);
-	m_vector[m_index].second = qMin(m_vector[m_index].second, value);
+    m_vector[m_index].first = qMax(m_vector[m_index].first, value);
+    m_vector[m_index].second = qMin(m_vector[m_index].second, value);
 }
 

@@ -22,18 +22,18 @@
 
 namespace NPluginLoader
 {
-	enum DescriptorRole {
-		TypeRole = 0,
-		ContainerNameRole,
-		PluginObjectRole,
-		LoaderObjectRole
-	};
-	typedef QMap<DescriptorRole, QVariant> Descriptor;
-	QList<Descriptor> descriptors();
+    enum DescriptorRole {
+        TypeRole = 0,
+        ContainerNameRole,
+        PluginObjectRole,
+        LoaderObjectRole
+    };
+    typedef QMap<DescriptorRole, QVariant> Descriptor;
+    QList<Descriptor> descriptors();
 
-	NPlugin* getPlugin(N::PluginType type);
+    NPlugin* getPlugin(N::PluginType type);
 
-	void deinit();
+    void deinit();
 }
 
 #endif

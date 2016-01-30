@@ -10,10 +10,10 @@ HEADERS += $$files(*.h)
 SOURCES += $$files(*.cpp)
 
 gstreamer-tagreader {
-	PKGCONFIG += gstreamer-pbutils-1.0
-	DEFINES += _N_GSTREAMER_TAGREADER_PLUGIN_
+    PKGCONFIG += gstreamer-pbutils-1.0
+    DEFINES += _N_GSTREAMER_TAGREADER_PLUGIN_
 } else {
-	HEADERS -= tagReaderGstreamer.h
-	SOURCES -= tagReaderGstreamer.cpp
+    HEADERS -= tagReaderGstreamer.h
+    SOURCES -= tagReaderGstreamer.cpp
 }
 

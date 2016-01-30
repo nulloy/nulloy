@@ -20,7 +20,7 @@
 
 namespace NTrash
 {
-	QStringList moveToTrash(QStringList files);
+    QStringList moveToTrash(QStringList files);
 }
 
 #endif

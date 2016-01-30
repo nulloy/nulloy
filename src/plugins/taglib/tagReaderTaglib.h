@@ -26,24 +26,24 @@ class QString;
 
 class NTagReaderTaglib : public NTagReaderInterface, public NPlugin
 {
-	Q_OBJECT
-	Q_INTERFACES(NTagReaderInterface NPlugin)
+    Q_OBJECT
+    Q_INTERFACES(NTagReaderInterface NPlugin)
 
 private:
-	QString m_path;
-	QString parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail = false);
+    QString m_path;
+    QString parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail = false);
 
 public:
-	NTagReaderTaglib(QObject *parent = 0) : NTagReaderInterface(parent) {}
-	~NTagReaderTaglib();
+    NTagReaderTaglib(QObject *parent = 0) : NTagReaderInterface(parent) {}
+    ~NTagReaderTaglib();
 
-	void init();
-	QString interfaceString() { return NTagReaderInterface::interfaceString(); }
-	N::PluginType type() { return N::TagReader; }
+    void init();
+    QString interfaceString() { return NTagReaderInterface::interfaceString(); }
+    N::PluginType type() { return N::TagReader; }
 
-	void setSource(const QString &file);
-	QString toString(const QString &format, const QString &encoding);
-	bool isValid();
+    void setSource(const QString &file);
+    QString toString(const QString &format, const QString &encoding);
+    bool isValid();
 };
 
 #endif

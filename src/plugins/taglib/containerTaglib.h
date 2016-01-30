@@ -20,18 +20,18 @@
 
 class NContainerTaglib : public QObject, public NPluginContainer
 {
-	Q_OBJECT
-	Q_INTERFACES(NPluginContainer)
+    Q_OBJECT
+    Q_INTERFACES(NPluginContainer)
 
 private:
-	QList<NPlugin *> m_plugins;
+    QList<NPlugin *> m_plugins;
 
 public:
-	NContainerTaglib(QObject *parent = NULL);
-	~NContainerTaglib();
-	QList<NPlugin *> plugins();
-	QString name() { return "TagLib"; }
-	QString version() { return "0.8.2"; }
+    NContainerTaglib(QObject *parent = NULL);
+    ~NContainerTaglib();
+    QList<NPlugin *> plugins();
+    QString name() { return "TagLib"; }
+    QString version() { return "0.8.2"; }
 };
 
 #endif

@@ -15,87 +15,87 @@
 
 function Main()
 {
-	try {
-		Ui.playButton.setStandardIcon("media-playback-start", ":play.png");
-		Ui.stopButton.setStandardIcon("media-playback-stop", ":stop.png");
-		Ui.prevButton.setStandardIcon("media-skip-backward", ":prev.png");
-		Ui.nextButton.setStandardIcon("media-skip-forward", ":next.png");
-		Ui.repeatButton.setStandardIcon("media-playlist-repeat", ":repeat.png");
-		Ui.shuffleButton.setStandardIcon("media-playlist-shuffle", ":shuffle.png");
+    try {
+        Ui.playButton.setStandardIcon("media-playback-start", ":play.png");
+        Ui.stopButton.setStandardIcon("media-playback-stop", ":stop.png");
+        Ui.prevButton.setStandardIcon("media-skip-backward", ":prev.png");
+        Ui.nextButton.setStandardIcon("media-skip-forward", ":next.png");
+        Ui.repeatButton.setStandardIcon("media-playlist-repeat", ":repeat.png");
+        Ui.shuffleButton.setStandardIcon("media-playlist-shuffle", ":shuffle.png");
 
-		PlaybackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
+        PlaybackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 
-		Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
+        Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
 
-		Ui.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
+        Ui.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
 
-		Ui.mainWindow.windowFlags = (Ui.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
+        Ui.mainWindow.windowFlags = (Ui.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
 
-		if (Q_WS == "mac") {
-			Ui.mainWindow.styleSheet = "";
-			Ui.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
+        if (Q_WS == "mac") {
+            Ui.mainWindow.styleSheet = "";
+            Ui.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
 
-			Ui.playlistWidget.styleSheet = Ui.playlistWidget.styleSheet + "#playlistWidget QScrollBar { margin-bottom: 0; }";
-			Ui.playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
+            Ui.playlistWidget.styleSheet = Ui.playlistWidget.styleSheet + "#playlistWidget QScrollBar { margin-bottom: 0; }";
+            Ui.playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
 
-			Ui.splitTop.layout().setContentsMargins(10, 7, 10, 0);
-			Ui.splitTop.layout().setSpacing(0);
+            Ui.splitTop.layout().setContentsMargins(10, 7, 10, 0);
+            Ui.splitTop.layout().setSpacing(0);
 
-			var margins = Ui.controlsContainer.layout().contentsMargins();
-			margins.right = 7;
-			Ui.controlsContainer.layout().setContentsMargins(margins);
+            var margins = Ui.controlsContainer.layout().contentsMargins();
+            margins.right = 7;
+            Ui.controlsContainer.layout().setContentsMargins(margins);
 
-			var buttons = new Array(Ui.playButton, Ui.stopButton, Ui.prevButton, Ui.nextButton);
-			for (var i = 0; i < buttons.length; ++i) {
-				buttons[i].minimumWidth = 60;
-				buttons[i].minimumHeight = 32;
-			}
+            var buttons = new Array(Ui.playButton, Ui.stopButton, Ui.prevButton, Ui.nextButton);
+            for (var i = 0; i < buttons.length; ++i) {
+                buttons[i].minimumWidth = 60;
+                buttons[i].minimumHeight = 32;
+            }
 
-			var toolButtons = new Array(Ui.repeatButton, Ui.shuffleButton);
-			for (var i = 0; i < toolButtons.length; ++i) {
-				toolButtons[i].maximumHeight = 25;
-				toolButtons[i].styleSheet = "margin-top: 4px";
-			}
+            var toolButtons = new Array(Ui.repeatButton, Ui.shuffleButton);
+            for (var i = 0; i < toolButtons.length; ++i) {
+                toolButtons[i].maximumHeight = 25;
+                toolButtons[i].styleSheet = "margin-top: 4px";
+            }
 
-			Ui.line.styleSheet = "QFrame:active { background: #8e8e8e; }";
-			Ui.line.maximumHeight = 2;
+            Ui.line.styleSheet = "QFrame:active { background: #8e8e8e; }";
+            Ui.line.maximumHeight = 2;
 
-			Ui.mainWindow.setSizeGripEnabled(false);
-		} else {
-			Ui.mainWindow.setSizeGripEnabled(true);
-		}
-	} catch (err) {
-		print("QtScript: " + err);
-	}
+            Ui.mainWindow.setSizeGripEnabled(false);
+        } else {
+            Ui.mainWindow.setSizeGripEnabled(true);
+        }
+    } catch (err) {
+        print("QtScript: " + err);
+    }
 }
 
 Main.prototype.afterShow = function()
 {
-	if (Settings.value("NativeSkin/Splitter"))
-		Ui.splitter.setSizes(Settings.value("NativeSkin/Splitter"));
+    if (Settings.value("NativeSkin/Splitter"))
+        Ui.splitter.setSizes(Settings.value("NativeSkin/Splitter"));
 }
 
 Main.prototype.on_splitterMoved = function(pos, index)
 {
-	Settings.setValue("NativeSkin/Splitter", Ui.splitter.sizes());
+    Settings.setValue("NativeSkin/Splitter", Ui.splitter.sizes());
 }
 
 Main.prototype.on_stateChanged = function(state)
 {
-	if (state == N.PlaybackPlaying)
-		Ui.playButton.setStandardIcon("media-playback-pause", ":pause.png");
-	else
-		Ui.playButton.setStandardIcon("media-playback-start", ":play.png");
+    if (state == N.PlaybackPlaying)
+        Ui.playButton.setStandardIcon("media-playback-pause", ":pause.png");
+    else
+        Ui.playButton.setStandardIcon("media-playback-start", ":play.png");
 }
 
 Main.prototype.on_failed = function()
 {
-	Ui.playlistWidget.currentFailed();
-	Ui.playlistWidget.playNextItem();
+    Ui.playlistWidget.currentFailed();
+    Ui.playlistWidget.playNextItem();
 }
 
 Main.prototype.on_fullScreenEnabled = function(enabled)
 {
-	Ui.controlsContainer.setVisible(!enabled);
-	Ui.playlistContainer.setVisible(!enabled);
+    Ui.controlsContainer.setVisible(!enabled);
+    Ui.playlistContainer.setVisible(!enabled);
 }

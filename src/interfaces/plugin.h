@@ -22,15 +22,15 @@
 class NPlugin
 {
 protected:
-	bool m_init;
+    bool m_init;
 
 public:
-	NPlugin() { m_init = false; }
-	virtual ~NPlugin() {}
-	virtual QString name() { return dynamic_cast<QObject *>(this)->metaObject()->className(); }
-	virtual QString interfaceString() = 0;
-	virtual N::PluginType type() { return N::OtherPlugin; }
-	virtual void init() = 0;
+    NPlugin() { m_init = false; }
+    virtual ~NPlugin() {}
+    virtual QString name() { return dynamic_cast<QObject *>(this)->metaObject()->className(); }
+    virtual QString interfaceString() = 0;
+    virtual N::PluginType type() { return N::OtherPlugin; }
+    virtual void init() = 0;
 };
 
 Q_DECLARE_INTERFACE(NPlugin, "Nulloy/NPlugin/0.7")

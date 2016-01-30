@@ -24,106 +24,106 @@
 
 NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 {
-	m_coverReader = dynamic_cast<NCoverReaderInterface *>(NPluginLoader::getPlugin(N::CoverReader));
-	m_popup = NULL;
+    m_coverReader = dynamic_cast<NCoverReaderInterface *>(NPluginLoader::getPlugin(N::CoverReader));
+    m_popup = NULL;
 
-	hide();
-	setScaledContents(true);
+    hide();
+    setScaledContents(true);
 }
 
 NCoverWidget::~NCoverWidget() {}
 
 void NCoverWidget::changeEvent(QEvent *event)
 {
-	if (event->type() == QEvent::EnabledChange) {
-		if (!m_pixmap.isNull())
-			setVisible(isEnabled());
-	}
+    if (event->type() == QEvent::EnabledChange) {
+        if (!m_pixmap.isNull())
+            setVisible(isEnabled());
+    }
 
-	QLabel::changeEvent(event);
+    QLabel::changeEvent(event);
 }
 
 void NCoverWidget::setSource(const QString &file)
 {
-	hide();
-	init();
+    hide();
+    init();
 
-	if (m_coverReader) {
-		m_coverReader->setSource(file);
-		m_pixmap = QPixmap::fromImage(m_coverReader->getImage());
-	}
+    if (m_coverReader) {
+        m_coverReader->setSource(file);
+        m_pixmap = QPixmap::fromImage(m_coverReader->getImage());
+    }
 
-	if (m_pixmap.isNull()) { // fallback to external file
-		QString pixmapFile;
-		QDir dir = QFileInfo(file).absoluteDir();
-		QStringList images = dir.entryList(QStringList() << "*.jpg" << "*.png", QDir::Files);
+    if (m_pixmap.isNull()) { // fallback to external file
+        QString pixmapFile;
+        QDir dir = QFileInfo(file).absoluteDir();
+        QStringList images = dir.entryList(QStringList() << "*.jpg" << "*.png", QDir::Files);
 
-		// search for image which file name starts same as source file
-		QString baseName = QFileInfo(file).completeBaseName();
-		foreach (QString image, images) {
-			if (baseName.startsWith(QFileInfo(image).completeBaseName())) {
-				pixmapFile = dir.absolutePath() + "/" + image;
-				break;
-			}
-		}
+        // search for image which file name starts same as source file
+        QString baseName = QFileInfo(file).completeBaseName();
+        foreach (QString image, images) {
+            if (baseName.startsWith(QFileInfo(image).completeBaseName())) {
+                pixmapFile = dir.absolutePath() + "/" + image;
+                break;
+            }
+        }
 
-		// search for cover.* or folder.* or front.*
-		if (pixmapFile.isEmpty()) {
-			QStringList matchedImages = images.filter(QRegExp("^(cover|folder|front)\\..*$", Qt::CaseInsensitive));
-			if (!matchedImages.isEmpty())
-				pixmapFile = dir.absolutePath() + "/" + matchedImages.first();
-		}
+        // search for cover.* or folder.* or front.*
+        if (pixmapFile.isEmpty()) {
+            QStringList matchedImages = images.filter(QRegExp("^(cover|folder|front)\\..*$", Qt::CaseInsensitive));
+            if (!matchedImages.isEmpty())
+                pixmapFile = dir.absolutePath() + "/" + matchedImages.first();
+        }
 
-		m_pixmap = QPixmap(pixmapFile);
-	}
+        m_pixmap = QPixmap(pixmapFile);
+    }
 
-	if (!m_pixmap.isNull()) { // first scale, then show
-		setPixmap(m_pixmap);
-		fitToHeight(height());
-		if (isEnabled())
-			show();
-	}
+    if (!m_pixmap.isNull()) { // first scale, then show
+        setPixmap(m_pixmap);
+        fitToHeight(height());
+        if (isEnabled())
+            show();
+    }
 }
 
 void NCoverWidget::init()
 {
-	m_pixmap = QPixmap();
+    m_pixmap = QPixmap();
 
-	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
 
-	setMinimumSize(0, 0);
-	setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+    setMinimumSize(0, 0);
+    setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 }
 
 void NCoverWidget::resizeEvent(QResizeEvent *event)
 {
-	fitToHeight(event->size().height());
+    fitToHeight(event->size().height());
 }
 
 void NCoverWidget::mousePressEvent(QMouseEvent *event)
 {
-	if (event->button() != Qt::LeftButton) {
-		event->ignore();
-		return;
-	}
+    if (event->button() != Qt::LeftButton) {
+        event->ignore();
+        return;
+    }
 
-	if (!m_popup)
-		m_popup = new NCoverWidgetPopup(QWidget::window());
-	m_popup->setPixmap(m_pixmap);
-	m_popup->show();
+    if (!m_popup)
+        m_popup = new NCoverWidgetPopup(QWidget::window());
+    m_popup->setPixmap(m_pixmap);
+    m_popup->show();
 }
 
 void NCoverWidget::fitToHeight(int height)
 {
-	QSize fixedAspect(m_pixmap.size());
-	fixedAspect.scale(parentWidget()->width() / 2, height, Qt::KeepAspectRatio);
+    QSize fixedAspect(m_pixmap.size());
+    fixedAspect.scale(parentWidget()->width() / 2, height, Qt::KeepAspectRatio);
 
-	setMaximumWidth(fixedAspect.width());
-	setMinimumWidth(fixedAspect.width());
+    setMaximumWidth(fixedAspect.width());
+    setMinimumWidth(fixedAspect.width());
 
-	if (fixedAspect.width() >= parentWidget()->width() / 2) // stop scaling, leave space for waveform slider
-		setMaximumHeight(fixedAspect.height());
-	else
-		setMaximumHeight(QWIDGETSIZE_MAX);
+    if (fixedAspect.width() >= parentWidget()->width() / 2) // stop scaling, leave space for waveform slider
+        setMaximumHeight(fixedAspect.height());
+    else
+        setMaximumHeight(QWIDGETSIZE_MAX);
 }
 

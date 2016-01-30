@@ -19,19 +19,19 @@
 
 NContainerTaglib::NContainerTaglib(QObject *parent) : QObject(parent)
 {
-	m_plugins << new NTagReaderTaglib()
-	          << new NCoverReaderTaglib();
+    m_plugins << new NTagReaderTaglib()
+              << new NCoverReaderTaglib();
 }
 
 NContainerTaglib::~NContainerTaglib()
 {
-	foreach (NPlugin *plugin, m_plugins)
-		delete plugin;
+    foreach (NPlugin *plugin, m_plugins)
+        delete plugin;
 }
 
 QList<NPlugin *> NContainerTaglib::plugins()
 {
-	return m_plugins;
+    return m_plugins;
 }
 
 Q_EXPORT_PLUGIN2(plugin_taglib, NContainerTaglib)

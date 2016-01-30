@@ -24,29 +24,29 @@ class NAction;
 
 class NSettings : public QSettings
 {
-	Q_OBJECT
+    Q_OBJECT
 
 private:
-	static NSettings *m_instance;
-	QList<NAction *> m_actionList;
-	void initValue(const QString &key, const QVariant &defaultValue);
+    static NSettings *m_instance;
+    QList<NAction *> m_actionList;
+    void initValue(const QString &key, const QVariant &defaultValue);
 
 public:
-	NSettings(QObject *parent = 0);
-	~NSettings();
-	static NSettings* instance();
+    NSettings(QObject *parent = 0);
+    ~NSettings();
+    static NSettings* instance();
 
-	void initShortcuts(QObject *instance);
-	void saveShortcuts();
-	void loadShortcuts();
-	QList<NAction *> shortcuts();
+    void initShortcuts(QObject *instance);
+    void saveShortcuts();
+    void loadShortcuts();
+    QList<NAction *> shortcuts();
 
-	Q_INVOKABLE QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
-	Q_INVOKABLE void setValue(const QString &key, const QVariant &value);
-	void remove(const QString &key);
+    Q_INVOKABLE QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
+    Q_INVOKABLE void setValue(const QString &key, const QVariant &value);
+    void remove(const QString &key);
 
 signals:
-	void valueChanged(const QString &key, const QVariant &value);
+    void valueChanged(const QString &key, const QVariant &value);
 };
 
 #endif

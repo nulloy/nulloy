@@ -23,30 +23,30 @@
 
 class NTagReaderGstreamer : public NTagReaderInterface, public NPlugin
 {
-	Q_OBJECT
-	Q_INTERFACES(NTagReaderInterface NPlugin)
+    Q_OBJECT
+    Q_INTERFACES(NTagReaderInterface NPlugin)
 
 private:
-	QString m_path;
-	GstTagList *m_taglist;
-	gint64 m_nanosecs;
-	float m_sampleRate;
-	int m_bitDepth;
-	bool m_isValid;
-	QString m_codecName;
-	QString parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail = false);
+    QString m_path;
+    GstTagList *m_taglist;
+    gint64 m_nanosecs;
+    float m_sampleRate;
+    int m_bitDepth;
+    bool m_isValid;
+    QString m_codecName;
+    QString parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail = false);
 
 public:
-	NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}
-	~NTagReaderGstreamer();
+    NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}
+    ~NTagReaderGstreamer();
 
-	void init();
-	QString interfaceString() { return NTagReaderInterface::interfaceString(); }
-	N::PluginType type() { return N::TagReader; }
+    void init();
+    QString interfaceString() { return NTagReaderInterface::interfaceString(); }
+    N::PluginType type() { return N::TagReader; }
 
-	void setSource(const QString &file);
-	QString toString(const QString &format, const QString &encoding);
-	bool isValid();
+    void setSource(const QString &file);
+    QString toString(const QString &format, const QString &encoding);
+    bool isValid();
 };
 
 #endif

@@ -25,14 +25,14 @@ class QString;
 class NTagReaderInterface : public QObject
 {
 public:
-	NTagReaderInterface(QObject *parent = 0) : QObject(parent) {}
-	virtual ~NTagReaderInterface() {}
+    NTagReaderInterface(QObject *parent = 0) : QObject(parent) {}
+    virtual ~NTagReaderInterface() {}
 
-	static QString interfaceString() { return TAGREADER_INTERFACE; }
+    static QString interfaceString() { return TAGREADER_INTERFACE; }
 
-	virtual void setSource(const QString &file) = 0;
-	virtual QString toString(const QString &format, const QString &encoding = QString("UTF-8")) = 0;
-	virtual bool isValid() = 0;
+    virtual void setSource(const QString &file) = 0;
+    virtual QString toString(const QString &format, const QString &encoding = QString("UTF-8")) = 0;
+    virtual bool isValid() = 0;
 };
 
 Q_DECLARE_INTERFACE(NTagReaderInterface, TAGREADER_INTERFACE)

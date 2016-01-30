@@ -20,18 +20,18 @@
 
 class NContainerGstreamer : public QObject, public NPluginContainer
 {
-	Q_OBJECT
-	Q_INTERFACES(NPluginContainer)
+    Q_OBJECT
+    Q_INTERFACES(NPluginContainer)
 
 private:
-	QList<NPlugin *> m_plugins;
+    QList<NPlugin *> m_plugins;
 
 public:
-	NContainerGstreamer(QObject *parent = NULL);
-	~NContainerGstreamer();
-	QList<NPlugin *> plugins();
-	QString name() { return "GStreamer"; }
-	QString version() { return "0.8.2"; }
+    NContainerGstreamer(QObject *parent = NULL);
+    ~NContainerGstreamer();
+    QList<NPlugin *> plugins();
+    QString name() { return "GStreamer"; }
+    QString version() { return "0.8.2"; }
 };
 
 #endif

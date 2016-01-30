@@ -23,57 +23,57 @@ NSlider::NSlider(QWidget *parent) : QSlider(parent) {}
 
 qreal NSlider::valueAtPos(int pos)
 {
-	QStyleOptionSlider opt;
-	initStyleOption(&opt);
-	QRect gr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
-	QRect sr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+    QStyleOptionSlider opt;
+    initStyleOption(&opt);
+    QRect gr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
+    QRect sr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
 
-	int pxMin;
-	int pxMax;
-	if (orientation() == Qt::Horizontal) {
-		pxMin = gr.x() +  sr.width() / 2;
-		pxMax = gr.right() -  sr.width() / 2 + 1;
-	} else {
-		pxMin = gr.y() + sr.height() / 2;
-		pxMax = gr.bottom() - sr.height() / 2 + 1;
-	}
+    int pxMin;
+    int pxMax;
+    if (orientation() == Qt::Horizontal) {
+        pxMin = gr.x() +  sr.width() / 2;
+        pxMax = gr.right() -  sr.width() / 2 + 1;
+    } else {
+        pxMin = gr.y() + sr.height() / 2;
+        pxMax = gr.bottom() - sr.height() / 2 + 1;
+    }
 
-	return QStyle::sliderValueFromPosition(minimum(), maximum(), pos - pxMin, pxMax - pxMin, opt.upsideDown) / (qreal)maximum();
+    return QStyle::sliderValueFromPosition(minimum(), maximum(), pos - pxMin, pxMax - pxMin, opt.upsideDown) / (qreal)maximum();
 }
 
 void NSlider::mousePressEvent(QMouseEvent *event)
 {
-	if (event->button() != Qt::RightButton) {
-		emit sliderPressed();
-		int pos = (orientation() == Qt::Horizontal) ? event->x() : event->y();
-		qreal val = valueAtPos(pos);
-		setValue(val);
-		emit sliderMoved(val);
-	}
+    if (event->button() != Qt::RightButton) {
+        emit sliderPressed();
+        int pos = (orientation() == Qt::Horizontal) ? event->x() : event->y();
+        qreal val = valueAtPos(pos);
+        setValue(val);
+        emit sliderMoved(val);
+    }
 
-	QSlider::mousePressEvent(event);
+    QSlider::mousePressEvent(event);
 }
 
 void NSlider::mouseMoveEvent(QMouseEvent *event)
 {
-	int pos = (orientation() == Qt::Horizontal) ? event->x() : event->y();
-	qreal val = valueAtPos(pos);
-	setValue(val);
-	emit sliderMoved(val);
+    int pos = (orientation() == Qt::Horizontal) ? event->x() : event->y();
+    qreal val = valueAtPos(pos);
+    setValue(val);
+    emit sliderMoved(val);
 
-	QSlider::mouseMoveEvent(event);
+    QSlider::mouseMoveEvent(event);
 }
 
 void NSlider::wheelEvent(QWheelEvent *event)
 {
-	QSlider::wheelEvent(event);
+    QSlider::wheelEvent(event);
 
-	qreal val = value() / (qreal)maximum();
-	emit sliderMoved(val);
+    qreal val = value() / (qreal)maximum();
+    emit sliderMoved(val);
 }
 
 void NSlider::setValue(qreal value)
 {
-	QSlider::setValue(qRound(value * maximum()));
+    QSlider::setValue(qRound(value * maximum()));
 }
 

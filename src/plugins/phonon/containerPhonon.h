@@ -20,18 +20,18 @@
 
 class NContainerPhonon : public QObject, public NPluginContainer
 {
-	Q_OBJECT
-	Q_INTERFACES(NPluginContainer)
+    Q_OBJECT
+    Q_INTERFACES(NPluginContainer)
 
 private:
-	QList<NPlugin *> m_plugins;
+    QList<NPlugin *> m_plugins;
 
 public:
-	NContainerPhonon(QObject *parent = NULL);
-	~NContainerPhonon();
-	QList<NPlugin *> plugins();
-	QString name() { return "Phonon"; }
-	QString version() { return "0.8"; }
+    NContainerPhonon(QObject *parent = NULL);
+    ~NContainerPhonon();
+    QList<NPlugin *> plugins();
+    QString name() { return "Phonon"; }
+    QString version() { return "0.8"; }
 };
 
 #endif

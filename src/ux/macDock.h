@@ -20,22 +20,22 @@
 
 class NMacDock : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
 private:
-	NMacDock() {}
-	~NMacDock() {}
-	NMacDock(NMacDock const &copy);
-	NMacDock operator=(NMacDock const &copy);
+    NMacDock() {}
+    ~NMacDock() {}
+    NMacDock(NMacDock const &copy);
+    NMacDock operator=(NMacDock const &copy);
 
 public:
-	static NMacDock* instance();
-	void registerClickHandler();
+    static NMacDock* instance();
+    void registerClickHandler();
 
-	void _emitClicked();
+    void _emitClicked();
 
 signals:
-	void clicked();
+    void clicked();
 };
 
 #endif

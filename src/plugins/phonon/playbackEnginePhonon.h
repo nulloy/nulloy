@@ -24,53 +24,53 @@
 
 class NPlaybackEnginePhonon : public NPlaybackEngineInterface, public NPlugin
 {
-	Q_OBJECT
-	Q_INTERFACES(NPlaybackEngineInterface NPlugin)
+    Q_OBJECT
+    Q_INTERFACES(NPlaybackEngineInterface NPlugin)
 
 private:
-	Phonon::MediaObject *m_mediaObject;
-	Phonon::AudioOutput *m_audioOutput;
-	qreal m_savedPosition;
+    Phonon::MediaObject *m_mediaObject;
+    Phonon::AudioOutput *m_audioOutput;
+    qreal m_savedPosition;
 
 public:
-	NPlaybackEnginePhonon(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
-	~NPlaybackEnginePhonon();
-	void init();
-	QString interfaceString() { return NPlaybackEngineInterface::interfaceString(); }
-	N::PluginType type() { return N::PlaybackEngine; }
+    NPlaybackEnginePhonon(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
+    ~NPlaybackEnginePhonon();
+    void init();
+    QString interfaceString() { return NPlaybackEngineInterface::interfaceString(); }
+    N::PluginType type() { return N::PlaybackEngine; }
 
-	Q_INVOKABLE bool hasMedia();
-	Q_INVOKABLE QString currentMedia();
-	Q_INVOKABLE N::PlaybackState state();
+    Q_INVOKABLE bool hasMedia();
+    Q_INVOKABLE QString currentMedia();
+    Q_INVOKABLE N::PlaybackState state();
 
-	Q_INVOKABLE qreal volume();
-	Q_INVOKABLE qreal position();
-	Q_INVOKABLE qint64 durationMsec();
+    Q_INVOKABLE qreal volume();
+    Q_INVOKABLE qreal position();
+    Q_INVOKABLE qint64 durationMsec();
 
 public slots:
-	Q_INVOKABLE void setMedia(const QString &file);
-	Q_INVOKABLE void setVolume(qreal volume);
-	Q_INVOKABLE void setPosition(qreal pos);
-	Q_INVOKABLE void jump(qint64 msec);
+    Q_INVOKABLE void setMedia(const QString &file);
+    Q_INVOKABLE void setVolume(qreal volume);
+    Q_INVOKABLE void setPosition(qreal pos);
+    Q_INVOKABLE void jump(qint64 msec);
 
-	Q_INVOKABLE void play();
-	Q_INVOKABLE void stop();
-	Q_INVOKABLE void pause();
+    Q_INVOKABLE void play();
+    Q_INVOKABLE void stop();
+    Q_INVOKABLE void pause();
 
 private slots:
-	void on_tick(qint64 ms);
-	void on_volumeChanged(qreal volume);
-	void on_stateChanged(Phonon::State newState);
+    void on_tick(qint64 ms);
+    void on_volumeChanged(qreal volume);
+    void on_stateChanged(Phonon::State newState);
 
 signals:
-	void positionChanged(qreal pos);
-	void volumeChanged(qreal volume);
-	void message(QMessageBox::Icon icon, const QString &title, const QString &msg);
-	void mediaChanged(const QString &file);
-	void finished();
-	void failed();
-	void stateChanged(N::PlaybackState state);
-	void tick(qint64 msec);
+    void positionChanged(qreal pos);
+    void volumeChanged(qreal volume);
+    void message(QMessageBox::Icon icon, const QString &title, const QString &msg);
+    void mediaChanged(const QString &file);
+    void finished();
+    void failed();
+    void stateChanged(N::PlaybackState state);
+    void tick(qint64 msec);
 };
 
 #endif
