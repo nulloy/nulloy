@@ -511,16 +511,16 @@ padding: 5px;</string>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="tooltipTrackInfoLabel">
+             <widget class="QLabel" name="encodingTrackInfoLabel">
               <property name="text">
-               <string>Tooltip:</string>
+               <string>Encoding:</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="encodingTrackInfoLabel">
+             <widget class="QLabel" name="tooltipTrackInfoLabel">
               <property name="text">
-               <string>Encoding:</string>
+               <string>Tooltip:</string>
               </property>
              </widget>
             </item>
@@ -535,9 +535,6 @@ padding: 5px;</string>
              <widget class="QLineEdit" name="playlistTrackInfoLineEdit"/>
             </item>
             <item>
-             <widget class="QLineEdit" name="tooltipTrackInfoLineEdit"/>
-            </item>
-            <item>
              <widget class="QComboBox" name="encodingTrackInfoComboBox">
               <property name="minimumSize">
                <size>
@@ -546,6 +543,9 @@ padding: 5px;</string>
                </size>
               </property>
              </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="tooltipTrackInfoLineEdit"/>
             </item>
            </layout>
           </item>
@@ -558,6 +558,64 @@ padding: 5px;</string>
           </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_16">
+         <item>
+          <widget class="QLabel" name="tooltipOffsetLabel">
+           <property name="text">
+            <string>Tooltop offset:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="tooltipOffsetXLabel">
+           <property name="text">
+            <string>X:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="tooltipOffsetXSpinBox">
+           <property name="minimum">
+            <number>-32768</number>
+           </property>
+           <property name="maximum">
+            <number>32767</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="tooltipOffsetYLabel">
+           <property name="text">
+            <string>Y:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="tooltipOffsetYSpinBox">
+           <property name="minimum">
+            <number>-32768</number>
+           </property>
+           <property name="maximum">
+            <number>32767</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_9">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
        <item>
         <spacer name="verticalSpacer_5">

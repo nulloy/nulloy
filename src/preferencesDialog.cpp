@@ -363,7 +363,9 @@ void NPreferencesDialog::loadSettings()
             continue;
         QString className = QString(widget->metaObject()->className()).mid(1); // remove leading 'Q'
         QString objectName = widget->objectName();
-        if (objectName == "qt_spinbox_lineedit")
+        if (objectName == "qt_spinbox_lineedit") // QSpinBox inner widget
+            continue;
+        if (objectName.startsWith("tooltipOffset"))
             continue;
         QString settingsName = objectName;
         settingsName.remove(className);
@@ -412,6 +414,12 @@ void NPreferencesDialog::loadSettings()
         }
     }
     // << track info encoding
+
+    // tooltip offset >>
+    QStringList offsetList = NSettings::instance()->value("TooltipOffset").toStringList();
+    ui.tooltipOffsetXSpinBox->setValue(offsetList.at(0).toInt());
+    ui.tooltipOffsetYSpinBox->setValue(offsetList.at(1).toInt());
+    // << tooltip offset
 
     // skins >>
 #ifndef _N_NO_SKINS_
@@ -465,7 +473,9 @@ void NPreferencesDialog::saveSettings()
             continue;
         QString className = QString(widget->metaObject()->className()).mid(1); // remove leading 'Q'
         QString objectName = widget->objectName();
-        if (objectName == "qt_spinbox_lineedit")
+        if (objectName == "qt_spinbox_lineedit") // QSpinBox inner widget
+            continue;
+        if (objectName.startsWith("tooltipOffset"))
             continue;
         QString settingsName = objectName;
         settingsName.remove(className);
@@ -497,6 +507,12 @@ void NPreferencesDialog::saveSettings()
     // track info encoding >>
     NSettings::instance()->setValue("EncodingTrackInfo", ui.encodingTrackInfoComboBox->itemText(ui.encodingTrackInfoComboBox->currentIndex()));
     // << track info encoding
+
+    // tooltip offset >>
+    int tooltipOffsetX = ui.tooltipOffsetXSpinBox->value();
+    int tooltipOffsetY = ui.tooltipOffsetYSpinBox->value();
+    NSettings::instance()->setValue("TooltipOffset", QStringList() << QString::number(tooltipOffsetX) << QString::number(tooltipOffsetY));
+    // << tooltip offset
 
     // plugins >>
     NFlagIterator<N::PluginType> iter(N::MaxPlugin);

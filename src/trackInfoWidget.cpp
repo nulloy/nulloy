@@ -235,6 +235,7 @@ void NTrackInfoWidget::showToolTip(int x, int y)
     }
 
     text = tagReader->toString(text);
-    QToolTip::showText(mapToGlobal(QPoint(x, y)), text);
+    QStringList offsetList = NSettings::instance()->value("TooltipOffset").toStringList();
+    QToolTip::showText(mapToGlobal(QPoint(x, y) + QPoint(offsetList.at(0).toInt(), offsetList.at(1).toInt())), text);
 }
 
