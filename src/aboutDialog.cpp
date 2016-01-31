@@ -49,7 +49,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 #endif
             tr("Version: ") + QCoreApplication::applicationVersion() +
             "<br><br>" +
-            "Copyright (C) 2010-2015  Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
+            "Copyright (C) 2010-2016 Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
         "</span>";
 
     setWindowTitle(QObject::tr("About ") + QCoreApplication::applicationName());
