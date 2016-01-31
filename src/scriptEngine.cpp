@@ -29,6 +29,7 @@ NSplitterPrototype splitterPrototype;
 
 Q_DECLARE_METATYPE(QList<QWidget *>)
 
+Q_DECLARE_METATYPE(NPlayer *)
 Q_DECLARE_METATYPE(NMainWindow *)
 Q_DECLARE_METATYPE(NPlaybackEngineInterface *)
 Q_DECLARE_METATYPE(N::PlaybackState)
@@ -175,6 +176,7 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
     global.setProperty("WS_WM_BUTTON_DIRECTION", direction);
 
     qScriptRegisterMetaType(this, NMarginsPrototype::toScriptValue, NMarginsPrototype::fromScriptValue);
+    qScriptRegisterMetaType(this, NPointPrototype::toScriptValue, NPointPrototype::fromScriptValue);
     setDefaultPrototype(qMetaTypeId<QWidget *>(), newQObject(&widgetPrototype));
     setDefaultPrototype(qMetaTypeId<QLayout *>(), newQObject(&layoutPrototype));
     setDefaultPrototype(qMetaTypeId<QSplitter *>(), newQObject(&splitterPrototype));
@@ -192,6 +194,9 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
     foreach (QWidget *widget, widgets)
         ui.setProperty(widget->objectName(), newQObject(widget));
     ui.setProperty(mainWindow->objectName(), newQObject(mainWindow));
+
+    qScriptRegisterMetaType<NPlayer *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
+    global.setProperty("Player", newQObject(player));
 
     qScriptRegisterMetaType<NPlaybackEngineInterface *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
     global.setProperty("PlaybackEngine", newQObject(player->playbackEngine()));

@@ -22,9 +22,8 @@ NWidgetPrototype::NWidgetPrototype(QObject *parent) : QObject(parent) {}
 void NWidgetPrototype::enableDoubleClick()
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget) {
+    if (widget)
         widget->installEventFilter(this);
-    }
 }
 
 bool NWidgetPrototype::eventFilter(QObject *obj, QEvent *event)
@@ -120,7 +119,10 @@ void NWidgetPrototype::setFontSize(int size)
 QLayout* NWidgetPrototype::layout()
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    return widget->layout();
+    if (widget)
+        return widget->layout();
+    else
+        return NULL;
 }
 
 NLayoutPrototype::NLayoutPrototype(QObject *parent) : QObject(parent) {}
@@ -128,7 +130,10 @@ NLayoutPrototype::NLayoutPrototype(QObject *parent) : QObject(parent) {}
 QMargins NLayoutPrototype::contentsMargins()
 {
     QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
-    return layout->contentsMargins();
+    if (layout)
+        return layout->contentsMargins();
+    else
+        return QMargins();
 }
 
 void NLayoutPrototype::setContentsMargins(int left, int top, int right, int bottom)
@@ -202,5 +207,19 @@ void NMarginsPrototype::fromScriptValue(const QScriptValue &obj, QMargins &m)
     m.setLeft(obj.property("left").toInt32());
     m.setRight(obj.property("right").toInt32());
     m.setTop(obj.property("top").toInt32());
+}
+
+QScriptValue NPointPrototype::toScriptValue(QScriptEngine *engine, const QPoint &p)
+{
+    QScriptValue obj = engine->newObject();
+    obj.setProperty("x", p.x());
+    obj.setProperty("y", p.y());
+    return obj;
+}
+
+void NPointPrototype::fromScriptValue(const QScriptValue &obj, QPoint &p)
+{
+    p.setX(obj.property("x").toInt32());
+    p.setY(obj.property("y").toInt32());
 }
 

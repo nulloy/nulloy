@@ -146,7 +146,7 @@ QToolButton {
 	background-image: url(next-press.png);
 }
 
-#closeButton, #minimizeButton {
+#closeButton, #minimizeButton, #menuButton {
 	background-repeat: no-repeat;
 	background-position: center center;
 }
@@ -167,6 +167,16 @@ QToolButton {
 }
 #minimizeButton:pressed {
 	background-image: url(minimize-press.png);
+}
+
+#menuButton {
+	background-image: url(menu.png);
+}
+#menuButton:hover {
+	background-image: url(menu-hover.png);
+}
+#menuButton:pressed {
+	background-image: url(menu-press.png);
 }
 
 #volumeSlider {
@@ -277,6 +287,40 @@ QToolButton {
            </property>
            <property name="text">
             <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="menuButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>25</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>25</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string notr="true"/>
            </property>
           </widget>
          </item>
@@ -637,6 +681,11 @@ QToolButton {
    <header>playlistWidget.h</header>
   </customwidget>
   <customwidget>
+   <class>NLabel</class>
+   <extends>QLabel</extends>
+   <header>label.h</header>
+  </customwidget>
+  <customwidget>
    <class>NCoverWidget</class>
    <extends>QLabel</extends>
    <header>coverWidget.h</header>
@@ -645,11 +694,6 @@ QToolButton {
    <class>NVolumeSlider</class>
    <extends>QSlider</extends>
    <header>volumeSlider.h</header>
-  </customwidget>
-  <customwidget>
-   <class>NLabel</class>
-   <extends>QLabel</extends>
-   <header>label.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

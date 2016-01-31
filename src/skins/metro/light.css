@@ -73,13 +73,15 @@
 #playButton:hover, #stopButton:hover,
 #nextButton:hover, #prevButton:hover,
 #repeatButton:hover, #shuffleButton:hover,
-#minimizeButton:hover, #themeButton:hover {
+#minimizeButton:hover, #themeButton:hover,
+#menuButton:hover {
     border-color: #1FAEFF;
 }
 #playButton:pressed, #stopButton:pressed,
 #nextButton:pressed, #prevButton:pressed,
 #repeatButton:pressed, #shuffleButton:pressed,
-#minimizeButton:pressed, #themeButton:pressed {
+#minimizeButton:pressed, #themeButton:pressed,
+#menuButton:pressed {
     background: rgba(153, 195, 255, 80);
 }
 

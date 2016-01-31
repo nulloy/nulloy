@@ -29,6 +29,7 @@ Q_DECLARE_METATYPE(QDialog *)
 Q_DECLARE_METATYPE(QAbstractButton *)
 Q_DECLARE_METATYPE(QSplitter *)
 Q_DECLARE_METATYPE(QMargins)
+Q_DECLARE_METATYPE(QPoint)
 
 class NWidgetPrototype : public QObject, public QScriptable
 {
@@ -87,6 +88,12 @@ namespace NMarginsPrototype
 {
     QScriptValue toScriptValue(QScriptEngine *engine, const QMargins &m);
     void fromScriptValue(const QScriptValue &obj, QMargins &m);
+}
+
+namespace NPointPrototype
+{
+    QScriptValue toScriptValue(QScriptEngine *engine, const QPoint &p);
+    void fromScriptValue(const QScriptValue &obj, QPoint &p);
 }
 
 #endif

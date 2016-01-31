@@ -37,6 +37,7 @@ function Main()
         if (WS_WM_BUTTON_DIRECTION == "left") {
             Ui.titleWidget.layout().insertWidget(0, Ui.minimizeButton);
             Ui.titleWidget.layout().insertWidget(0, Ui.closeButton);
+            Ui.titleWidget.layout().insertWidget(10, Ui.menuButton);
             Ui.titleWidget.layout().insertWidget(10, Ui.iconLabel);
         }
     } catch (err) {
@@ -50,6 +51,15 @@ Main.prototype.afterShow = function()
         Ui.splitter.setSizes(Settings.value("SlimSkin/Splitter"));
     else
         Ui.splitter.setSizes([30, 0]);
+
+    Ui.menuButton["clicked()"].connect(this, "showMenu");
+}
+
+Main.prototype.showMenu = function()
+{
+    var menuPos = Ui.menuButton.pos;
+    menuPos.y += Ui.menuButton.height;
+    Player.showContextMenu(menuPos);
 }
 
 Main.prototype.on_splitterMoved = function(pos, index)

@@ -27,13 +27,13 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6568545"
-     inkscape:cx="605.83628"
-     inkscape:cy="478.14028"
+     inkscape:zoom="16.000001"
+     inkscape:cx="562.08307"
+     inkscape:cy="488.07021"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:snap-global="false"
+     inkscape:snap-global="true"
      inkscape:snap-grids="true"
      inkscape:window-width="1977"
      inkscape:window-height="1291"
@@ -64,7 +64,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -928,6 +928,40 @@
          sodipodi:ry="6.5849319"
          d="m 447.55441,114.12925 c -3.63675,0 -6.58493,-2.94817 -6.58493,-6.58493 0,-3.63676 2.94818,-6.58493 6.58493,-6.58493 0,0 0,0 0,0 l 0,6.58493 z"
          transform="matrix(0.93022772,0,0,0.93022772,61.672479,459.32147)" />
+    </g>
+    <g
+       id="g3129"
+       inkscape:export-filename="menu.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="translate(3,0)">
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="button_minimize.png"
+         inkscape:connector-curvature="0"
+         id="path4423-2"
+         d="m 535,564.36218 12,0"
+         style="fill:none;stroke:#000000;stroke-width:1.99683571;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:nodetypes="cc" />
+      <path
+         sodipodi:nodetypes="cc"
+         style="fill:none;stroke:#000000;stroke-width:1.99683571;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 535,560.36218 12,0"
+         id="path3125"
+         inkscape:connector-curvature="0"
+         inkscape:export-filename="button_minimize.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90" />
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="button_minimize.png"
+         inkscape:connector-curvature="0"
+         id="path3127"
+         d="m 535,556.36218 12,0"
+         style="fill:none;stroke:#000000;stroke-width:1.99683571;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:nodetypes="cc" />
     </g>
   </g>
 </svg>

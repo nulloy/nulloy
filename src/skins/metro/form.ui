@@ -129,14 +129,16 @@
 #playButton:hover, #stopButton:hover,
 #nextButton:hover, #prevButton:hover,
 #repeatButton:hover, #shuffleButton:hover,
-#minimizeButton:hover, #themeButton:hover {
+#minimizeButton:hover, #themeButton:hover,
+#menuButton:hover {
 	border: 1 solid #5882CF;
 }
 
 #playButton:pressed, #stopButton:pressed,
 #nextButton:pressed, #prevButton:pressed,
 #repeatButton:pressed, #shuffleButton:pressed,
-#minimizeButton:pressed, #themeButton:pressed {
+#minimizeButton:pressed, #themeButton:pressed,
+#menuButton:pressed {
 	background: rgba(55, 99, 179, 80);
 	padding: 0;
 }
@@ -161,8 +163,11 @@
 #themeButton {
 	qproperty-icon: url(theme.png);
 }
+#menuButton {
+	qproperty-icon: url(menu.png);
+}
 
-#minimizeButton, #closeButton, #themeButton {
+#minimizeButton, #closeButton, #themeButton, #menuButton {
 	border: 0;
 }
 #closeButton:pressed {
@@ -295,6 +300,34 @@ NTrackInfoWidget #MiddleCenter {
                  <width>18</width>
                  <height>18</height>
                 </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="menuButton">
+               <property name="minimumSize">
+                <size>
+                 <width>30</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>30</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="text">
+                <string notr="true"/>
                </property>
               </widget>
              </item>

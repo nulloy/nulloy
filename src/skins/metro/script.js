@@ -44,6 +44,7 @@ function Main()
             Ui.titleWidget.layout().insertWidget(0, Ui.minimizeButton);
             Ui.titleWidget.layout().insertWidget(0, Ui.closeButton);
             Ui.titleWidget.layout().insertWidget(10, Ui.themeButton);
+            Ui.titleWidget.layout().insertWidget(10, Ui.menuButton);
             Ui.titleWidget.layout().insertWidget(10, Ui.iconLabel);
         }
     } catch (err) {
@@ -65,6 +66,15 @@ Main.prototype.afterShow = function()
     Ui.themeButton["clicked(bool)"].connect(this, "loadTheme");
     Ui.themeButton.checked = (Settings.value("MetroSkin/LightTheme") == "true");
     this.loadTheme(Ui.themeButton.checked);
+
+    Ui.menuButton["clicked()"].connect(this, "showMenu");
+}
+
+Main.prototype.showMenu = function()
+{
+    var menuPos = Ui.menuButton.pos;
+    menuPos.y += Ui.menuButton.height;
+    Player.showContextMenu(menuPos);
 }
 
 Main.prototype.loadTheme = function(useLightTheme)
@@ -85,9 +95,10 @@ Main.prototype.loadTheme = function(useLightTheme)
     maskImage("close.png", color);
     maskImage("minimize.png", color);
     maskImage("shuffle.png", color);
-    maskImage("repeat.png",  color);
-    maskImage("icon.png",  color);
-    maskImage("theme.png",  color);
+    maskImage("repeat.png", color);
+    maskImage("icon.png", color);
+    maskImage("theme.png", color);
+    maskImage("menu.png", color);
 
     Ui.mainWindow.styleSheet = styleSheet;
     Ui.playButton.styleSheet = Ui.playButton.styleSheet;
