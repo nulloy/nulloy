@@ -1,1 +1,1 @@
-Nulloy/Skin/Native/0.8
+Nulloy/Skin/Native/0.8.2
