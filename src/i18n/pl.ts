@@ -219,7 +219,7 @@
         <translation>Sterowanie</translation>
     </message>
     <message>
-        <location line="+307"/>
+        <location line="+304"/>
         <source>Latest: </source>
         <translation>Najnowszy: </translation>
     </message>
@@ -254,7 +254,7 @@
         <translation>Rozszerzona lista odtwarzania M3U</translation>
     </message>
     <message>
-        <location line="-600"/>
+        <location line="-597"/>
         <source>Window</source>
         <translation>Okno</translation>
     </message>
@@ -277,7 +277,7 @@
         <translation>Przenieś do kosza</translation>
     </message>
     <message>
-        <location line="+436"/>
+        <location line="+455"/>
         <source>Drop media here</source>
         <translation>Upuść tutaj plik</translation>
     </message>
@@ -305,24 +305,14 @@
         <translation> Opcje</translation>
     </message>
     <message>
-        <location line="+90"/>
-        <location line="+38"/>
-        <location line="+37"/>
+        <location line="+94"/>
+        <location line="+39"/>
+        <location line="+39"/>
         <source>Supported parameters:</source>
         <translation>Obsługiwane parametry:</translation>
     </message>
     <message>
-        <location line="-72"/>
-        <source>Directory path</source>
-        <translation>Ścieżka katalogu</translation>
-    </message>
-    <message>
-        <location line="+37"/>
-        <source>File path</source>
-        <translation>Ścieżka pliku</translation>
-    </message>
-    <message>
-        <location line="+37"/>
+        <location line="+2"/>
         <source>Artist</source>
         <translation>Nazwa artysty</translation>
     </message>
@@ -412,15 +402,25 @@
         <translation>Nazwa pliku bez rozszerzenia</translation>
     </message>
     <message>
-        <location line="-92"/>
-        <location line="+93"/>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
         <source>File name</source>
         <translation>Nazwa pliku</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
         <source>File name including absolute path</source>
         <translation>Nazwa pliku zawierająca pełną ścieżkę</translation>
+    </message>
+    <message>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
+        <source>Directory path without file name</source>
+        <translation>Ścieżka do katalogu bez nazwy pliku</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -458,9 +458,9 @@
         <translation>fałszywe</translation>
     </message>
     <message>
-        <location line="-99"/>
-        <location line="+37"/>
-        <location line="+64"/>
+        <location line="-102"/>
+        <location line="+39"/>
+        <location line="+65"/>
         <source>Examples:</source>
         <translation>Przykłady:</translation>
     </message>
@@ -480,14 +480,14 @@
         <translation>Wyświetl Gatunek. Jeśli nie jest dostępny, nic nie wyświetlaj.</translation>
     </message>
     <message>
-        <location line="-94"/>
-        <location line="+37"/>
-        <location line="+64"/>
+        <location line="-97"/>
+        <location line="+39"/>
+        <location line="+65"/>
         <source>Close</source>
         <translation>Zamknij</translation>
     </message>
     <message>
-        <location line="+143"/>
+        <location line="+151"/>
         <source> (Built-in)</source>
         <translation> (Wbudowany)</translation>
     </message>
@@ -642,24 +642,29 @@
         <translation>Element listy odtwarzania:</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+14"/>
         <source>Tooltip:</source>
         <translation>Podpowiedź:</translation>
     </message>
     <message>
-        <location line="-95"/>
+        <location line="-102"/>
         <location line="+25"/>
         <location line="+109"/>
         <source>Help</source>
         <translation>Pomoc</translation>
     </message>
     <message>
-        <location line="-32"/>
+        <location line="-39"/>
         <source>Encoding:</source>
-        <translation type="unfinished">Kodowanie:</translation>
+        <translation>Kodowanie:</translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+51"/>
+        <source>Tooltop offset:</source>
+        <translation>Podpowiedź offset:</translation>
+    </message>
+    <message>
+        <location line="+72"/>
         <source>Waveform sections:</source>
         <translation>Odcinki Widma dźwiękowego:</translation>
     </message>
@@ -729,7 +734,7 @@
         <translation>Zmiana wtyczek wymaga restartu</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-370"/>
+        <location filename="../preferencesDialog.cpp" line="-386"/>
         <source>English</source>
         <translation>Polski</translation>
     </message>
@@ -742,7 +747,7 @@
         <translation>O programie </translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-355"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-374"/>
         <source>File doesn&apos;t exist: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Plik nie istnieje: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
@@ -752,23 +757,23 @@
         <translation>Kierownik zwyczaj pliku jest włączona, ale nie skonfigurowany.</translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="+34"/>
         <source>Custom File Manager command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
         <translation>Kierownik zwyczaj pliku plecenie nie powiodło się z powodu błędu &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../pluginLoader.cpp" line="+155"/>
-        <location line="+30"/>
+        <location filename="../pluginLoader.cpp" line="+157"/>
+        <location line="+34"/>
         <source>Plugin loading error</source>
         <translation>Błąd podczas wczytywania wtyczki</translation>
     </message>
     <message>
-        <location line="-29"/>
+        <location line="-33"/>
         <source>Failed to load plugin: </source>
         <translation>Nie udało się wczytać wtyczki: </translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+28"/>
         <source>No Waveform plugin found.</source>
         <translation>Nie znaleziono wtyczki Widma dźwiękowego (Waveform).</translation>
     </message>
@@ -783,12 +788,12 @@
         <translation>Nie znaleziono wtyczki odczytującej tagi utworów muzycznych (TagReader).</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+482"/>
+        <location filename="../preferencesDialog.cpp" line="+506"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Tacka systemowa (Obszar powiadomień) jest niedostępny w twoim systemie.</translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-36"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-52"/>
         <source>Reveal in File Manager Error</source>
         <translation>Wykrycie w Menedżerze plików nie powiodło się</translation>
     </message>
@@ -803,7 +808,7 @@
         <translation>Nie znaleziono skórek.</translation>
     </message>
     <message>
-        <location filename="../trash/trash_x11.cpp" line="+23"/>
+        <location filename="../trash/trash_x11.cpp" line="+25"/>
         <source>Custom Trash Command is not configured.</source>
         <translation>Kierownik Przenieś do kosza nie skonfigurowany.</translation>
     </message>
@@ -813,7 +818,7 @@
         <translation>Kierownik Przenieś do kosza jest włączona, ale nie skonfigurowany.</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+21"/>
         <source>Custom Trash Command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
         <translation>Kierownik Przenieś do kosza nie powiodło się z powodu błędu &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
@@ -821,9 +826,9 @@
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="+423"/>
+        <location filename="../skins/metro/form.ui" line="+456"/>
         <location filename="../skins/silver/form.ui" line="+463"/>
-        <location filename="../skins/slim/form.ui" line="+373"/>
+        <location filename="../skins/slim/form.ui" line="+417"/>
         <source>Minimize</source>
         <translation>Zminimalizuj</translation>
     </message>

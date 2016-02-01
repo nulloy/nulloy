@@ -571,7 +571,7 @@ padding: 5px;</string>
          <item>
           <widget class="QLabel" name="tooltipOffsetXLabel">
            <property name="text">
-            <string>X:</string>
+            <string notr="true">X:</string>
            </property>
           </widget>
          </item>
@@ -588,7 +588,7 @@ padding: 5px;</string>
          <item>
           <widget class="QLabel" name="tooltipOffsetYLabel">
            <property name="text">
-            <string>Y:</string>
+            <string notr="true">Y:</string>
            </property>
           </widget>
          </item>

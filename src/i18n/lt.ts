@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="lt">
+<TS version="2.0" language="lt">
 <context>
     <name>NAboutDialog</name>
     <message>
@@ -219,7 +219,7 @@
         <translation>Valdikliai</translation>
     </message>
     <message>
-        <location line="+307"/>
+        <location line="+304"/>
         <source>Latest: </source>
         <translation>Naujausia: </translation>
     </message>
@@ -254,7 +254,7 @@
         <translation>Išplėstinis M3U grojaraštis</translation>
     </message>
     <message>
-        <location line="-600"/>
+        <location line="-597"/>
         <source>Window</source>
         <translation>Langas</translation>
     </message>
@@ -277,7 +277,7 @@
         <translation>Perkelti į šiukšlinę</translation>
     </message>
     <message>
-        <location line="+436"/>
+        <location line="+455"/>
         <source>Drop media here</source>
         <translation>Numeskite failus čia</translation>
     </message>
@@ -305,24 +305,14 @@
         <translation> Nuostatos</translation>
     </message>
     <message>
-        <location line="+90"/>
-        <location line="+38"/>
-        <location line="+37"/>
+        <location line="+94"/>
+        <location line="+39"/>
+        <location line="+39"/>
         <source>Supported parameters:</source>
         <translation>Palaikomi parametrai:</translation>
     </message>
     <message>
-        <location line="-72"/>
-        <source>Directory path</source>
-        <translation>Katalogo kelias</translation>
-    </message>
-    <message>
-        <location line="+37"/>
-        <source>File path</source>
-        <translation>Failo kelias</translation>
-    </message>
-    <message>
-        <location line="+37"/>
+        <location line="+2"/>
         <source>Artist</source>
         <translation>Atlikėjas</translation>
     </message>
@@ -412,15 +402,25 @@
         <translation>Failo pavadinimas be prievardžio</translation>
     </message>
     <message>
-        <location line="-92"/>
-        <location line="+93"/>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
         <source>File name</source>
         <translation>Failo pavadinimas</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
         <source>File name including absolute path</source>
         <translation>Failo pavadinimas su pilnu keliu</translation>
+    </message>
+    <message>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
+        <source>Directory path without file name</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
@@ -458,9 +458,9 @@
         <translation>neteisingai</translation>
     </message>
     <message>
-        <location line="-99"/>
-        <location line="+37"/>
-        <location line="+64"/>
+        <location line="-102"/>
+        <location line="+39"/>
+        <location line="+65"/>
         <source>Examples:</source>
         <translation>Pavyzdžiai:</translation>
     </message>
@@ -480,14 +480,14 @@
         <translation>Parodyti žanrą. Jei neprieinama, nieko neparodyti.</translation>
     </message>
     <message>
-        <location line="-94"/>
-        <location line="+37"/>
-        <location line="+64"/>
+        <location line="-97"/>
+        <location line="+39"/>
+        <location line="+65"/>
         <source>Close</source>
         <translation>Užverti</translation>
     </message>
     <message>
-        <location line="+143"/>
+        <location line="+151"/>
         <source> (Built-in)</source>
         <translation> (Įtaisytas)</translation>
     </message>
@@ -642,24 +642,29 @@
         <translation>Grojaraščio elementas:</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+14"/>
         <source>Tooltip:</source>
         <translation>Mygtuko etiketė:</translation>
     </message>
     <message>
-        <location line="-95"/>
+        <location line="-102"/>
         <location line="+25"/>
         <location line="+109"/>
         <source>Help</source>
         <translation>Pagalba</translation>
     </message>
     <message>
-        <location line="-32"/>
+        <location line="-39"/>
         <source>Encoding:</source>
         <translation>Koduotė:</translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+51"/>
+        <source>Tooltop offset:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+72"/>
         <source>Waveform sections:</source>
         <translation>Bangos formos sekcijos:</translation>
     </message>
@@ -729,7 +734,7 @@
         <translation>Įskiepių perjungimas reikalauja paleidimo iš naujo</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-370"/>
+        <location filename="../preferencesDialog.cpp" line="-386"/>
         <source>English</source>
         <translation>Lietuvių</translation>
     </message>
@@ -742,7 +747,7 @@
         <translation>Apie</translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-355"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-374"/>
         <source>File doesn&apos;t exist: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Failo nėra: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
@@ -752,23 +757,23 @@
         <translation>Pasirinktinė failų tvarkytuvė yra įjungta, bet nekonfigūruota.</translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="+34"/>
         <source>Custom File Manager command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
         <translation>Pasirinktinė failų tvarkytuvės komanda nepavyko su klaidos kodu &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../pluginLoader.cpp" line="+155"/>
-        <location line="+30"/>
+        <location filename="../pluginLoader.cpp" line="+157"/>
+        <location line="+34"/>
         <source>Plugin loading error</source>
         <translation>Klaida, įkeliant įskiepį</translation>
     </message>
     <message>
-        <location line="-29"/>
+        <location line="-33"/>
         <source>Failed to load plugin: </source>
         <translation>Nepavyko įkelti įskiepio: </translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+28"/>
         <source>No Waveform plugin found.</source>
         <translation>Nerastas Waveform įskiepis.</translation>
     </message>
@@ -783,12 +788,12 @@
         <translation>Nerastas TagReader įskiepis.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+482"/>
+        <location filename="../preferencesDialog.cpp" line="+506"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Sistemos dėklas (pranešimų sritis) šioje sistemoje yra neprieinamas.</translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-36"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-52"/>
         <source>Reveal in File Manager Error</source>
         <translation>Klaida, rodant failų tvarkytuvėje</translation>
     </message>
@@ -803,7 +808,7 @@
         <translation>Apipavidalinimų nerasta.</translation>
     </message>
     <message>
-        <location filename="../trash/trash_x11.cpp" line="+23"/>
+        <location filename="../trash/trash_x11.cpp" line="+25"/>
         <source>Custom Trash Command is not configured.</source>
         <translation>Pasirinktinė perkėlimo į šiukšlinę komanda yra nekonfigūruota.</translation>
     </message>
@@ -813,7 +818,7 @@
         <translation>Pasirinktinė perkėlimo į šiukšlinę komanda yra įjungta, bet nekonfigūruota.</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+21"/>
         <source>Custom Trash Command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
         <translation>Pasirinktinė perkėlimo į šiukšlinę komanda nepavyko su klaidos kodu &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
@@ -821,9 +826,9 @@
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="+423"/>
+        <location filename="../skins/metro/form.ui" line="+456"/>
         <location filename="../skins/silver/form.ui" line="+463"/>
-        <location filename="../skins/slim/form.ui" line="+373"/>
+        <location filename="../skins/slim/form.ui" line="+417"/>
         <source>Minimize</source>
         <translation>Sumažinti</translation>
     </message>

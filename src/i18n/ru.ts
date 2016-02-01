@@ -219,7 +219,7 @@
         <translation>Управление</translation>
     </message>
     <message>
-        <location line="+307"/>
+        <location line="+304"/>
         <source>Latest: </source>
         <translation>Последняя: </translation>
     </message>
@@ -254,7 +254,7 @@
         <translation>Расширенный M3U Плейлист</translation>
     </message>
     <message>
-        <location line="-600"/>
+        <location line="-597"/>
         <source>Window</source>
         <translation>Окно</translation>
     </message>
@@ -277,7 +277,7 @@
         <translation>Переместить в корзину</translation>
     </message>
     <message>
-        <location line="+436"/>
+        <location line="+455"/>
         <source>Drop media here</source>
         <translation>Перетащите файл сюда</translation>
     </message>
@@ -305,24 +305,14 @@
         <translation> Настройки</translation>
     </message>
     <message>
-        <location line="+90"/>
-        <location line="+38"/>
-        <location line="+37"/>
+        <location line="+94"/>
+        <location line="+39"/>
+        <location line="+39"/>
         <source>Supported parameters:</source>
         <translation>Поддерживаемые параметры:</translation>
     </message>
     <message>
-        <location line="-72"/>
-        <source>Directory path</source>
-        <translation>Путь к директории</translation>
-    </message>
-    <message>
-        <location line="+37"/>
-        <source>File path</source>
-        <translation>Путь к файлу</translation>
-    </message>
-    <message>
-        <location line="+37"/>
+        <location line="+2"/>
         <source>Artist</source>
         <translation>Имя артиста</translation>
     </message>
@@ -412,15 +402,25 @@
         <translation>Имя файла без расширения</translation>
     </message>
     <message>
-        <location line="-92"/>
-        <location line="+93"/>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
         <source>File name</source>
         <translation>Имя файла</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
         <source>File name including absolute path</source>
         <translation>Имя файла, включая полный путь</translation>
+    </message>
+    <message>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
+        <source>Directory path without file name</source>
+        <translation>Путь к директории без имени файла</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -458,9 +458,9 @@
         <translation>ложь</translation>
     </message>
     <message>
-        <location line="-99"/>
-        <location line="+37"/>
-        <location line="+64"/>
+        <location line="-102"/>
+        <location line="+39"/>
+        <location line="+65"/>
         <source>Examples:</source>
         <translation>Примеры:</translation>
     </message>
@@ -480,14 +480,14 @@
         <translation>Вывести название жанра. Если не доступно, ничего не выводить.</translation>
     </message>
     <message>
-        <location line="-94"/>
-        <location line="+37"/>
-        <location line="+64"/>
+        <location line="-97"/>
+        <location line="+39"/>
+        <location line="+65"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location line="+143"/>
+        <location line="+151"/>
         <source> (Built-in)</source>
         <translation> (Встроенный)</translation>
     </message>
@@ -642,24 +642,29 @@
         <translation>В плейлисте:</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+14"/>
         <source>Tooltip:</source>
         <translation>Вслывающая подсказка:</translation>
     </message>
     <message>
-        <location line="-95"/>
+        <location line="-102"/>
         <location line="+25"/>
         <location line="+109"/>
         <source>Help</source>
         <translation>Помощь</translation>
     </message>
     <message>
-        <location line="-32"/>
+        <location line="-39"/>
         <source>Encoding:</source>
-        <translation type="unfinished">Кодировка:</translation>
+        <translation>Кодировка:</translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+51"/>
+        <source>Tooltop offset:</source>
+        <translation>Смещение подсказки:</translation>
+    </message>
+    <message>
+        <location line="+72"/>
         <source>Waveform sections:</source>
         <translation>Участки звуковой волны:</translation>
     </message>
@@ -729,7 +734,7 @@
         <translation>Переключение плагинов требует перезапуска</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-370"/>
+        <location filename="../preferencesDialog.cpp" line="-386"/>
         <source>English</source>
         <translation>Русский</translation>
     </message>
@@ -742,7 +747,7 @@
         <translation>О программе </translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-355"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-374"/>
         <source>File doesn&apos;t exist: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Такого файла не существует: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
@@ -752,23 +757,23 @@
         <translation>Команда файлового менеджера включена, но не настроена.</translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="+34"/>
         <source>Custom File Manager command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
         <translation>Команда файлового менеджера завершилась с ошибкой &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../pluginLoader.cpp" line="+155"/>
-        <location line="+30"/>
+        <location filename="../pluginLoader.cpp" line="+157"/>
+        <location line="+34"/>
         <source>Plugin loading error</source>
         <translation>Ощибка при загрузки плагина</translation>
     </message>
     <message>
-        <location line="-29"/>
+        <location line="-33"/>
         <source>Failed to load plugin: </source>
         <translation>Этот плагин не может быть загружен: </translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+28"/>
         <source>No Waveform plugin found.</source>
         <translation>Waveform плагин отсутствует.</translation>
     </message>
@@ -783,12 +788,12 @@
         <translation>TagReader плагин отсутствует.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+482"/>
+        <location filename="../preferencesDialog.cpp" line="+506"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Системный лоток (область уведомлений) на этой системе не доступна.</translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-36"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-52"/>
         <source>Reveal in File Manager Error</source>
         <translation>Ошибка файлового менеджера</translation>
     </message>
@@ -803,7 +808,7 @@
         <translation>Скинов не обнаружено.</translation>
     </message>
     <message>
-        <location filename="../trash/trash_x11.cpp" line="+23"/>
+        <location filename="../trash/trash_x11.cpp" line="+25"/>
         <source>Custom Trash Command is not configured.</source>
         <translation>Команда удаления в корзину не настроена.</translation>
     </message>
@@ -813,7 +818,7 @@
         <translation>Команда удаления в корзину включена, но не настроена.</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+21"/>
         <source>Custom Trash Command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
         <translation>Команда удаления в корзину завершилась с ошибкой &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
@@ -821,9 +826,9 @@
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="+423"/>
+        <location filename="../skins/metro/form.ui" line="+456"/>
         <location filename="../skins/silver/form.ui" line="+463"/>
-        <location filename="../skins/slim/form.ui" line="+373"/>
+        <location filename="../skins/slim/form.ui" line="+417"/>
         <source>Minimize</source>
         <translation>Минимизировать</translation>
     </message>

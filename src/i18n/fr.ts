@@ -219,7 +219,7 @@
         <translation>Contrôles</translation>
     </message>
     <message>
-        <location line="+307"/>
+        <location line="+304"/>
         <source>Latest: </source>
         <translation>Dernière version: </translation>
     </message>
@@ -254,7 +254,7 @@
         <translation>Playlist M3U étendue</translation>
     </message>
     <message>
-        <location line="-600"/>
+        <location line="-597"/>
         <source>Window</source>
         <translation>Fenêtre</translation>
     </message>
@@ -277,7 +277,7 @@
         <translation>Déplacer dans la corbeille</translation>
     </message>
     <message>
-        <location line="+436"/>
+        <location line="+455"/>
         <source>Drop media here</source>
         <translation>Déposer des médias ici</translation>
     </message>
@@ -305,24 +305,14 @@
         <translation> Préférences</translation>
     </message>
     <message>
-        <location line="+90"/>
-        <location line="+38"/>
-        <location line="+37"/>
+        <location line="+94"/>
+        <location line="+39"/>
+        <location line="+39"/>
         <source>Supported parameters:</source>
         <translation>Paramètres pris en charge:</translation>
     </message>
     <message>
-        <location line="-72"/>
-        <source>Directory path</source>
-        <translation>Dossier</translation>
-    </message>
-    <message>
-        <location line="+37"/>
-        <source>File path</source>
-        <translation>Fichier</translation>
-    </message>
-    <message>
-        <location line="+37"/>
+        <location line="+2"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
@@ -412,15 +402,25 @@
         <translation>Nom du fichier sans son extension</translation>
     </message>
     <message>
-        <location line="-92"/>
-        <location line="+93"/>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
         <source>File name</source>
         <translation>Nom du fichier</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
         <source>File name including absolute path</source>
         <translation>Nom du fichier avec son chemin absolu</translation>
+    </message>
+    <message>
+        <location line="-95"/>
+        <location line="+39"/>
+        <location line="+57"/>
+        <source>Directory path without file name</source>
+        <translation>Chemin du répertoire sans nom de fichier</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -458,9 +458,9 @@
         <translation>false</translation>
     </message>
     <message>
-        <location line="-99"/>
-        <location line="+37"/>
-        <location line="+64"/>
+        <location line="-102"/>
+        <location line="+39"/>
+        <location line="+65"/>
         <source>Examples:</source>
         <translation>Exemples:</translation>
     </message>
@@ -480,14 +480,14 @@
         <translation>Afficher le Genre. Si non disponible, n&apos;affichera rien.</translation>
     </message>
     <message>
-        <location line="-94"/>
-        <location line="+37"/>
-        <location line="+64"/>
+        <location line="-97"/>
+        <location line="+39"/>
+        <location line="+65"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
     <message>
-        <location line="+143"/>
+        <location line="+151"/>
         <source> (Built-in)</source>
         <translation> (Encastré)</translation>
     </message>
@@ -642,24 +642,29 @@
         <translation>Élément de la playlist:</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+14"/>
         <source>Tooltip:</source>
         <translation>Tooltip:</translation>
     </message>
     <message>
-        <location line="-95"/>
+        <location line="-102"/>
         <location line="+25"/>
         <location line="+109"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location line="-32"/>
+        <location line="-39"/>
         <source>Encoding:</source>
-        <translation type="unfinished">Encodage:</translation>
+        <translation>Encodage:</translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+51"/>
+        <source>Tooltop offset:</source>
+        <translation>Tooltip offset:</translation>
+    </message>
+    <message>
+        <location line="+72"/>
         <source>Waveform sections:</source>
         <translation>Personnalisation des sections de la forme d&apos;onde:</translation>
     </message>
@@ -729,7 +734,7 @@
         <translation>Changer de plugin necessite un redémarrage de Nulloy</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-370"/>
+        <location filename="../preferencesDialog.cpp" line="-386"/>
         <source>English</source>
         <translation>Français</translation>
     </message>
@@ -742,7 +747,7 @@
         <translation>À propos </translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-355"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-374"/>
         <source>File doesn&apos;t exist: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Fichier inexistant: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
@@ -752,23 +757,23 @@
         <translation>Gestionnaire de fichiers personnalisée est activé mais non configuré.</translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="+34"/>
         <source>Custom File Manager command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
         <translation>Gestionnaire de fichiers personnalisée &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../pluginLoader.cpp" line="+155"/>
-        <location line="+30"/>
+        <location filename="../pluginLoader.cpp" line="+157"/>
+        <location line="+34"/>
         <source>Plugin loading error</source>
         <translation>Une erreur s&apos;est produite lors du chargement du plugin</translation>
     </message>
     <message>
-        <location line="-29"/>
+        <location line="-33"/>
         <source>Failed to load plugin: </source>
         <translation>Erreur de chargement du plugin: </translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+28"/>
         <source>No Waveform plugin found.</source>
         <translation>Plugin introuvable (waveform).</translation>
     </message>
@@ -783,12 +788,12 @@
         <translation>Plugin introuvage (TagReader).</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+482"/>
+        <location filename="../preferencesDialog.cpp" line="+506"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>L&apos;affichage dans une zone de notification n&apos;est pas disponible pour ce système.</translation>
     </message>
     <message>
-        <location filename="../widgetCollection/playlistWidget.cpp" line="-36"/>
+        <location filename="../widgetCollection/playlistWidget.cpp" line="-52"/>
         <source>Reveal in File Manager Error</source>
         <translation>Reveal in File Manager Error</translation>
     </message>
@@ -803,7 +808,7 @@
         <translation>Aucun thème trouvé.</translation>
     </message>
     <message>
-        <location filename="../trash/trash_x11.cpp" line="+23"/>
+        <location filename="../trash/trash_x11.cpp" line="+25"/>
         <source>Custom Trash Command is not configured.</source>
         <translation>Corbeille commande est non configuré.</translation>
     </message>
@@ -813,7 +818,7 @@
         <translation>Corbeille commande est activé mais non configuré.</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+21"/>
         <source>Custom Trash Command failed with exit code &lt;b&gt;%1&lt;/b&gt;.</source>
         <translation>Corbeille commande échoué avec l&apos;erreur &lt;b&gt;%1&lt;/b&gt;.</translation>
     </message>
@@ -821,9 +826,9 @@
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../skins/metro/form.ui" line="+423"/>
+        <location filename="../skins/metro/form.ui" line="+456"/>
         <location filename="../skins/silver/form.ui" line="+463"/>
-        <location filename="../skins/slim/form.ui" line="+373"/>
+        <location filename="../skins/slim/form.ui" line="+417"/>
         <source>Minimize</source>
         <translation>Réduire</translation>
     </message>
