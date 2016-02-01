@@ -19,6 +19,6 @@ Description: GStreamer backend for Nulloy
 
 Package: nulloy-taglib
 Architecture: any
-Depends: nulloy, libtag1c2a
+Depends: nulloy, libtagc0
 Description: TagLib backend for Nulloy
 
