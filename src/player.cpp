@@ -644,7 +644,7 @@ void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
                          m_mainWindow,
                          QCoreApplication::applicationName() + tr(" Update"),
                          tr("A newer version is available: ") + versionOnline + "<br><br>" +
-                         "<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
+                         "<a href='http://" + QCoreApplication::organizationDomain() + "/download'>http://" +
                          QCoreApplication::organizationDomain() + "/download</a>");
         }
     }
