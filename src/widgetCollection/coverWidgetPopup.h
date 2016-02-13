@@ -30,12 +30,15 @@ class NCoverWidgetPopup : public QWidget
 private:
     QGraphicsOpacityEffect *m_effect;
     QPropertyAnimation *m_animation;
+    QPixmap m_pixmap;
     QLabel *m_pixmapLabel;
     void mousePressEvent(QMouseEvent *);
+    bool eventFilter(QObject *obj, QEvent *event);
 
 public:
-    void setPixmap(QPixmap pixmap);
+    void setPixmap(const QPixmap &pixmap);
     NCoverWidgetPopup(QWidget *parent = 0);
+    void resize(const QSize &size);
 
 private slots:
     void on_animation_finished();

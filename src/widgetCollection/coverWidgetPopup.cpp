@@ -57,6 +57,8 @@ NCoverWidgetPopup::NCoverWidgetPopup(QWidget *parent) : QWidget(parent)
     m_animation->setEasingCurve(QEasingCurve::OutQuad);
     m_animation->setStartValue(0.0);
     m_animation->setEndValue(1.0);
+
+    QWidget::window()->installEventFilter(this);
 }
 
 void NCoverWidgetPopup::mousePressEvent(QMouseEvent *event)
@@ -75,17 +77,23 @@ void NCoverWidgetPopup::mousePressEvent(QMouseEvent *event)
 #endif
 }
 
-void NCoverWidgetPopup::setPixmap(QPixmap pixmap)
+void NCoverWidgetPopup::setPixmap(const QPixmap &pixmap)
+{
+    m_pixmap = pixmap;
+    setToolTip(QString("%1 x %2").arg(m_pixmap.width()).arg(m_pixmap.height()));
+    resize(QWidget::window()->size());
+}
+
+void NCoverWidgetPopup::resize(const QSize &size)
 {
     QSize margin = QSize(MARGIN * 2, MARGIN * 2);
-    QSize pixmapMaxSize = QWidget::window()->size() - margin;
-    if (pixmap.height() > pixmapMaxSize.height() || pixmap.width() > pixmapMaxSize.width())
-        pixmap = pixmap.scaled(pixmapMaxSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
+    QSize pixmapMaxSize = size - margin;
+    QPixmap pixmap = m_pixmap;
+    if (m_pixmap.height() > pixmapMaxSize.height() || m_pixmap.width() > pixmapMaxSize.width())
+        pixmap = m_pixmap.scaled(pixmapMaxSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     m_pixmapLabel->setPixmap(pixmap);
-    setMinimumSize(parentWidget()->size());
-    setMaximumSize(parentWidget()->size());
-    setToolTip(QString("%1 x %2").arg(pixmap.width()).arg(pixmap.height()));
+    setMinimumSize(size);
+    setMaximumSize(size);
 }
 
 void NCoverWidgetPopup::on_animation_finished()
@@ -102,3 +110,10 @@ void NCoverWidgetPopup::show()
         m_animation->start();
 }
 
+bool NCoverWidgetPopup::eventFilter(QObject *, QEvent *event)
+{
+    if (event->type() == QEvent::Resize)
+        resize(dynamic_cast<QResizeEvent *>(event)->size());
+
+    return false;
+}
