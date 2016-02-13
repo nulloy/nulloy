@@ -516,9 +516,10 @@ void NPlayer::readMessage(const QString &str)
         if (NSettings::instance()->value("EnqueueFiles").toBool()) {
             int lastRow = m_playlistWidget->count();
             m_playlistWidget->addFiles(files);
-            if (m_playbackEngine->state() == N::PlaybackStopped || NSettings::instance()->value("PlayEnqueued").toBool())
+            if (m_playbackEngine->state() == N::PlaybackStopped || NSettings::instance()->value("PlayEnqueued").toBool()) {
                 m_playlistWidget->playRow(lastRow);
                 m_playbackEngine->setPosition(0); // overrides setPosition() in loadDefaultPlaylist()
+            }
         } else {
             m_playlistWidget->playFiles(files);
         }
