@@ -446,6 +446,8 @@ void NPlaylistWidget::rowsAboutToBeRemoved(const QModelIndex &parent, int start,
     NPlaylistWidgetItem *nextItem = NULL;
     if (end < count() - 1)
         nextItem = item(end + 1);
+    else if (start !=0 && NSettings::instance()->value("LoopPlaylist").toBool())
+        nextItem = item(0);
 
     // set cursor focus
     if (nextItem)
