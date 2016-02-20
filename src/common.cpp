@@ -55,6 +55,11 @@ QString NCore::applicationBinaryName()
     return QFileInfo(QCoreApplication::arguments().first()).completeBaseName();
 }
 
+QString NCore::applicationBasenameName()
+{
+    return QFileInfo(QCoreApplication::arguments().first()).fileName();
+}
+
 QString NCore::defaultPlaylistPath()
 {
     return NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".m3u";

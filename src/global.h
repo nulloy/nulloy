@@ -34,6 +34,7 @@ private:
     unsigned mFlag;
 };
 
+#define MSG_SPLITTER "<|>"
 #define ENUM_TO_STR(c,e,v) (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).valueToKey(v))
 #define STR_TO_ENUM(c,e,k) (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).keyToValue(k))
 

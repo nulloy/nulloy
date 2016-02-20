@@ -491,25 +491,30 @@ void NPlayer::readMessage(const QString &str)
         m_mainWindow->raise();
         return;
     }
-    QStringList argList = str.split("<|>");
+    QStringList argList = str.split(MSG_SPLITTER);
     QStringList files;
-    QStringList notPathArgList;
+    QStringList options;
     foreach (QString arg, argList) {
-        if (QFile(arg).exists())
+        if (arg.startsWith("--"))
+            options << arg;
+        else if (QFile(arg).exists())
             files << arg;
-        else
-            notPathArgList << arg;
     }
 
-    foreach (QString arg, notPathArgList) {
-        if (arg == "--next")
+    foreach (QString arg, options) {
+        if (arg == "--next") {
             m_playlistWidget->playNextItem();
-        else if (arg == "--prev")
+            return;
+        } else if (arg == "--prev") {
             m_playlistWidget->playPrevItem();
-        else if (arg == "--stop")
+            return;
+        } else if (arg == "--stop") {
             m_playbackEngine->stop();
-        else if (arg == "--pause")
+            return;
+        } else if (arg == "--pause") {
             m_playbackEngine->play();
+            return;
+        }
     }
 
     if (!files.isEmpty()) {
@@ -523,9 +528,10 @@ void NPlayer::readMessage(const QString &str)
         } else {
             m_playlistWidget->playFiles(files);
         }
-    }
 
-    m_playlistWidget->setShuffleMode(NSettings::instance()->value("Shuffle").toBool());
+        // re-shuffle
+        m_playlistWidget->setShuffleMode(NSettings::instance()->value("Shuffle").toBool());
+    }
 }
 
 void NPlayer::loadDefaultPlaylist()

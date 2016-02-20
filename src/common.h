@@ -22,6 +22,7 @@ namespace NCore
 {
     void cArgs(int *argc, const char ***argv);
     QString applicationBinaryName();
+    QString applicationBasenameName();
     QString defaultPlaylistPath();
     QString settingsPath();
     QString rcDir();
