@@ -1,10 +1,8 @@
-# Nulloy Music Player http://nulloy.com
+# ![Icon](https://github.com/nulloy/nulloy.github.io/blob/master/files/github-icon.png) Nulloy Music Player http://nulloy.com
 
 [![Build Status](https://travis-ci.org/nulloy/nulloy.svg)](https://travis-ci.org/nulloy/nulloy)
 
 **Testing PPA:** [ppa:nulloy/testing](https://launchpad.net/~nulloy/+archive/ubuntu/testing)
-
-
 
 ## Windows Build Instructions
 
@@ -123,3 +121,14 @@ apt-get install gstreamer1.0-plugins-{good,bad,ugly}
 ```sh
 yum install gstreamer1-plugins-{good,bad,ugly}}
 ```
+
+## Screenshots
+
+![Screenshot](https://github.com/nulloy/nulloy.github.io/blob/master/files/screen.png)
+
+![Screenshot 1](https://github.com/nulloy/nulloy.github.io/blob/master/files/screen_1.png)
+
+![Screenshot 2](https://github.com/nulloy/nulloy.github.io/blob/master/files/screen_2.png)
+
+## License
+[GPL3](/LICENSE.GPL3)
