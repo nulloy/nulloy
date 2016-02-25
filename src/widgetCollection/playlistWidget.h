@@ -54,6 +54,7 @@ private:
     void contextMenuEvent(QContextMenuEvent *event);
     void setCurrentItem(NPlaylistWidgetItem *item);
     void activateItem(NPlaylistWidgetItem *item);
+    void resetCurrentItem();
     bool revealInFileManager(const QString &file, QString *error);
 
 protected:
@@ -61,7 +62,6 @@ protected:
 
 protected slots:
     void rowsInserted(const QModelIndex &parent, int start, int end);
-    void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
 
 private slots:
     void on_itemActivated(QListWidgetItem *item);
@@ -73,7 +73,7 @@ public:
     NPlaylistWidget(QWidget *parent = 0);
     ~NPlaylistWidget();
 
-    NPlaylistWidgetItem* item(int row);
+    NPlaylistWidgetItem* item(int row, bool loop = false);
 
     int currentRow();
     void setCurrentRow(int row);
