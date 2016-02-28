@@ -15,6 +15,7 @@ BUILD_GSTREAMER_TAGREADER=yes
 BUILD_TAGLIB=no
 BUILD_VLC=no
 BUILD_PHONON=no
+BUILD_TESTS=no
 UPDATE_CHECK=yes
 SUPPORT_SKINS=yes
 
@@ -36,6 +37,7 @@ echo_help()
     echo '    --no-app-bundle             do not make .app (Mac only)'
     echo '    --universal                 build for both i386 and x86_64 (Mac only)'
     echo '    --debug                     build in debug mode'
+    echo '    --tests                     build unit tests'
 }
 
 echo_try()
@@ -52,7 +54,7 @@ if [ ! $? -eq 4 ]; then
     exit 1
 fi
 
-args=`getopt -n$BASENAME -o h --longoptions="force-version: no-update-check no-gstreamer no-gstreamer-tagreader vlc phonon taglib no-skins debug prefix: no-app-bundle universal help" -- "$@"`
+args=`getopt -n$BASENAME -o h --longoptions="force-version: no-update-check no-gstreamer no-gstreamer-tagreader vlc phonon taglib tests no-skins debug prefix: no-app-bundle universal help" -- "$@"`
 
 if test $? != 0; then
     echo_try; exit 1
@@ -81,6 +83,8 @@ while [ $# -gt 0 ]; do
         BUILD_PHONON=yes
     elif [ $1 == "--taglib" ]; then
         BUILD_TAGLIB=yes
+    elif [ $1 == "--tests" ]; then
+        BUILD_TESTS=yes
     elif [ $1 == "--no-skins" ]; then
         SUPPORT_SKINS=no
     elif [ $1 == "--no-update-check" ]; then
@@ -152,6 +156,7 @@ fi
 [ $BUILD_VLC == "yes" ]                 && QMAKE_CONFIG="$QMAKE_CONFIG vlc"
 [ $BUILD_PHONON == "yes" ]              && QMAKE_CONFIG="$QMAKE_CONFIG phonon"
 [ $BUILD_TAGLIB == "yes" ]              && QMAKE_CONFIG="$QMAKE_CONFIG taglib"
+[ $BUILD_TESTS == "yes" ]               && QMAKE_CONFIG="$QMAKE_CONFIG tests"
 [ $SUPPORT_SKINS == "no" ]              && QMAKE_CONFIG="$QMAKE_CONFIG no-skins"
 [ $MAC_BUNDLE == "no" ]                 && QMAKE_CONFIG="$QMAKE_CONFIG no-app-bundle"
 [ $MAC_UNIVERSAL == "yes" ]             && QMAKE_CONFIG="$QMAKE_CONFIG x86 x86_64"

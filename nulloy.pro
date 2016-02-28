@@ -43,3 +43,7 @@ plugins-all {
 
 SUBDIRS += src
 
+tests {
+    SUBDIRS += tests
+}
+

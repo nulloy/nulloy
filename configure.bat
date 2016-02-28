@@ -15,6 +15,7 @@ set BUILD_GSTREAMER_TAGREADER=yes
 set BUILD_TAGLIB=no
 set BUILD_VLC=no
 set BUILD_PHONON=no
+set BUILD_TESTS=no
 set SUPPORT_SKINS=yes
 set APP_NAME=Nulloy
 
@@ -38,6 +39,10 @@ set APP_NAME=Nulloy
     )
     if "%0" == "--taglib" (
         set BUILD_TAGLIB=yes
+        goto getopt
+    )
+    if "%0" == "--tests" (
+        set BUILD_TESTS=yes
         goto getopt
     )
     if "%0" == "--no-skins" (
@@ -80,6 +85,7 @@ set APP_NAME=Nulloy
     echo     --console                   build with console output support
     echo     --force-version VERSION     overrides version.pri
     echo     --debug                     build in debug mode
+    echo     --tests                     build unit tests
     goto end
 
 
@@ -104,6 +110,7 @@ if "%BUILD_GSTREAMER_TAGREADER%" == "yes" echo CONFIG += gstreamer-tagreader>> %
 if "%BUILD_VLC%" == "yes"                 echo CONFIG += vlc>> %QMAKE_CACHE%
 if "%BUILD_PHONON%" == "yes"              echo CONFIG += phonon>> %QMAKE_CACHE%
 if "%BUILD_TAGLIB%" == "yes"              echo CONFIG += taglib>> %QMAKE_CACHE%
+if "%BUILD_TESTS%" == "yes"               echo CONFIG += tests>> %QMAKE_CACHE%
 if "%SUPPORT_SKINS%" == "no"              echo CONFIG += no-skins>> %QMAKE_CACHE%
 if "%CONSOLE%" == "yes"                   echo CONFIG += console>> %QMAKE_CACHE%
 if "%DEBUG%" == "yes" (

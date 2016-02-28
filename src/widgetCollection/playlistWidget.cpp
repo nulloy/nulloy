@@ -90,6 +90,10 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     m_shuffleMode = false;
     m_currentShuffledIndex = 0;
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setDefaultDropAction(Qt::MoveAction);
+    setDragDropMode(QAbstractItemView::DragDrop);
+    setDragEnabled(true);
 }
 
 void NPlaylistWidget::wheelEvent(QWheelEvent *event)
