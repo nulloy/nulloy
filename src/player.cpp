@@ -542,6 +542,10 @@ void NPlayer::loadDefaultPlaylist()
     if (!playlistRowValues.isEmpty()) {
         int row = playlistRowValues.at(0).toInt();
         qreal pos = playlistRowValues.at(1).toFloat();
+
+        if (row > m_playlistWidget->count() - 1)
+            return;
+
         if (pos > 0 && pos < 1) {
             m_playlistWidget->playRow(row);
             m_playbackEngine->setPosition(pos); // postponed till file duration is available
@@ -723,11 +727,11 @@ void NPlayer::quit()
     QCoreApplication::quit();
 }
 
-void NPlayer::on_playbackEngine_mediaChanged(const QString &path)
+void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
 {
     QString title;
     QString titleDefault = QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion();
-    if (QFile(path).exists()) {
+    if (QFile(file).exists()) {
         NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
         QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
         QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();

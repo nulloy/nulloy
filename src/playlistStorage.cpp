@@ -85,10 +85,16 @@ QList<NPlaylistDataItem> NPlaylistStorage::readM3u(const QString &file)
                 dataItem.title     = split.at(1);
             }
         } else {
-            if (QFileInfo(line).isAbsolute())
+            QFileInfo fileInfo(line);
+            if (!fileInfo.exists()) {
+                dataItem.failed = 1;
                 dataItem.path = line;
-            else
-                dataItem.path = QFileInfo(file).absolutePath() + "/" + line;
+            } else {
+                if (fileInfo.isAbsolute())
+                    dataItem.path = line;
+                else
+                    dataItem.path = fileInfo.absolutePath() + "/" + line;
+            }
 
             if (dataItem.title.isEmpty())
                 dataItem.title = line;

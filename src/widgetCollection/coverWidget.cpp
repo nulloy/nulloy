@@ -48,6 +48,10 @@ void NCoverWidget::setSource(const QString &file)
     hide();
     init();
 
+    QFileInfo fileInfo(file);
+    if (!fileInfo.exists())
+        return;
+
     if (m_coverReader) {
         m_coverReader->setSource(file);
         m_pixmap = QPixmap::fromImage(m_coverReader->getImage());
@@ -55,11 +59,11 @@ void NCoverWidget::setSource(const QString &file)
 
     if (m_pixmap.isNull()) { // fallback to external file
         QString pixmapFile;
-        QDir dir = QFileInfo(file).absoluteDir();
+        QDir dir = fileInfo.absoluteDir();
         QStringList images = dir.entryList(QStringList() << "*.jpg" << "*.jpeg" << "*.png", QDir::Files);
 
         // search for image which file name starts same as source file
-        QString baseName = QFileInfo(file).completeBaseName();
+        QString baseName = fileInfo.completeBaseName();
         foreach (QString image, images) {
             if (baseName.startsWith(QFileInfo(image).completeBaseName())) {
                 pixmapFile = dir.absolutePath() + "/" + image;

@@ -53,11 +53,12 @@ void NTagReaderGstreamer::setSource(const QString &file)
 
     m_isValid = false;
 
-    if (file.isEmpty())
+    QFileInfo fileInfo(file);
+    if (!fileInfo.exists())
         return;
 
     m_path = file;
-    gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL, NULL);
+    gchar *uri = g_filename_to_uri(fileInfo.absoluteFilePath().toUtf8().constData(), NULL, NULL);
 
     GError *err = NULL;
     GstDiscoverer *discoverer = gst_discoverer_new(GST_SECOND * 60, &err);
