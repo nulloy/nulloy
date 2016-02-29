@@ -370,10 +370,8 @@ void NPlaylistWidget::activateItem(NPlaylistWidgetItem *item)
 {
     if (count() > 0)
         emit itemActivated(item);
-    else {
-        emit activateEmptyFail();
+    else
         resetCurrentItem();
-    }
 }
 
 void NPlaylistWidget::on_itemActivated(QListWidgetItem *item)

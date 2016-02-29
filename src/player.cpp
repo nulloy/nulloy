@@ -437,7 +437,6 @@ void NPlayer::connectSignals()
     connect(m_preferencesAction, SIGNAL(triggered()), m_preferencesDialog, SLOT(exec()));
     connect(m_exitAction, SIGNAL(triggered()), this, SLOT(quit()));
     connect(m_addFilesAction, SIGNAL(triggered()), this, SLOT(showOpenFileDialog()));
-    connect(m_playlistWidget, SIGNAL(activateEmptyFail()), m_addFilesAction, SLOT(trigger()));
     connect(m_addDirAction, SIGNAL(triggered()), this, SLOT(showOpenDirDialog()));
     connect(m_savePlaylistAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
     connect(m_showCoverAction, SIGNAL(toggled(bool)), this, SLOT(on_showCoverAction_toggled(bool)));
@@ -820,16 +819,19 @@ void NPlayer::on_showCoverAction_toggled(bool checked)
 
 void NPlayer::on_playButton_clicked()
 {
-    if (!m_playlistWidget->hasCurrent())
-        m_playlistWidget->playRow(0);
-    else
+    if (!m_playlistWidget->hasCurrent()) {
+        if (m_playlistWidget->count() > 0)
+            m_playlistWidget->playRow(0);
+        else
+            showOpenFileDialog();
+    } else {
         m_playbackEngine->play(); // toggle play/pause
+    }
 }
 
 void NPlayer::on_playbackEngine_failed()
 {
     m_playlistWidget->currentFailed();
-    m_playlistWidget->playNextItem();
 }
 
 void NPlayer::showAboutMessageBox()

@@ -103,7 +103,6 @@ public slots:
 signals:
     void currentActivated();
     void setMedia(const QString &file);
-    void activateEmptyFail();
 
     void shuffleModeChanged(bool enable);
     void repeatModeChanged(bool enable);

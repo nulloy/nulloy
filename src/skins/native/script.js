@@ -88,12 +88,6 @@ Main.prototype.on_stateChanged = function(state)
         Ui.playButton.setStandardIcon("media-playback-start", ":play.png");
 }
 
-Main.prototype.on_failed = function()
-{
-    Ui.playlistWidget.currentFailed();
-    Ui.playlistWidget.playNextItem();
-}
-
 Main.prototype.on_fullScreenEnabled = function(enabled)
 {
     Ui.controlsContainer.setVisible(!enabled);

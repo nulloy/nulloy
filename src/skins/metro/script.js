@@ -114,12 +114,6 @@ Main.prototype.on_stateChanged = function(state)
         Ui.playButton.styleSheet = "qproperty-icon: url(play.png)";
 }
 
-Main.prototype.on_failed = function()
-{
-    Ui.playlistWidget.currentFailed();
-    Ui.playlistWidget.playNextItem();
-}
-
 Main.prototype.on_resized = function()
 {
     if (Q_WS == "mac") {
