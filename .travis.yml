@@ -8,7 +8,15 @@ install:
   - sudo add-apt-repository ppa:gstreamer-developers/ppa -y
   - sudo apt-get update
   - sudo apt-get install libqt4-dev qt4-qmake libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev zip libx11-dev libtag1-dev
+  - sudo apt-get install fluxbox
+
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 3 # give xvfb some time to start
+  - fluxbox &
 
 script:
-  - ./configure --taglib
+  - ./configure --taglib --tests
   - make -j`grep processor /proc/cpuinfo | wc -l`
+  - ./test
