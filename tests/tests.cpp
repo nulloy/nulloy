@@ -19,10 +19,12 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    int res;
 
     {
         TestPlaylistWidget testPlaylistWidget;
-        QTest::qExec(&testPlaylistWidget);
+        if ((res = QTest::qExec(&testPlaylistWidget)))
+            return res;
     }
 
     return 0;
