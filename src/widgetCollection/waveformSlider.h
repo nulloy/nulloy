@@ -112,46 +112,46 @@ private:
     QBrush m_fileDropBackground;
 
 public:
-    int radius();
+    int radius() const;
     void setRadius(int radius);
 
-    QBrush background();
+    QBrush background() const;
     void setBackground(QBrush brush);
 
-    QBrush waveBackground();
+    QBrush waveBackground() const;
     void setWaveBackground(QBrush brush);
 
-    QColor waveBorderColor();
+    QColor waveBorderColor() const;
     void setWaveBorderColor(QColor color);
 
-    QBrush progressPlayingBackground();
+    QBrush progressPlayingBackground() const;
     void setProgressPlayingBackground(QBrush brush);
 
-    QBrush progressPausedBackground();
+    QBrush progressPausedBackground() const;
     void setProgressPausedBackground(QBrush brush);
 
-    QBrush remainingPlayingBackground();
+    QBrush remainingPlayingBackground() const;
     void setRemainingPlayingBackground(QBrush brush);
 
-    QBrush remainingPausedBackground();
+    QBrush remainingPausedBackground() const;
     void setRemainingPausedBackground(QBrush brush);
 
-    QString playingComposition();
+    QString playingComposition() const;
     void setPlayingComposition(const QString &mode);
 
-    QString pausedComposition();
+    QString pausedComposition() const;
     void setPausedComposition(const QString &mode);
 
-    QColor groovePlayingColor();
+    QColor groovePlayingColor() const;
     void setGroovePlayingColor(QColor color);
 
-    QColor groovePausedColor();
+    QColor groovePausedColor() const;
     void setGroovePausedColor(QColor color);
 
-    QColor fileDropBorderColor();
+    QColor fileDropBorderColor() const;
     void setFileDropBorderColor(QColor color);
 
-    QBrush fileDropBackground();
+    QBrush fileDropBackground() const;
     void setFileDropBackground(QBrush brush);
 // << STYLESHEET PROPERTIES
 };

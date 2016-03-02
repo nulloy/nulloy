@@ -53,7 +53,7 @@ void NVolumeSlider::wheelEvent(QWheelEvent *event)
     showToolTip(event->x(), event->y());
 }
 
-QString NVolumeSlider::toolTipText(int value)
+QString NVolumeSlider::toolTipText(int value) const
 {
     if (NSettings::instance()->value("ShowDecibelsVolume").toBool()) {
         qreal decibel = 0.67 * log((qreal)value / maximum()) / log10over20;

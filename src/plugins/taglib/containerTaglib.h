@@ -29,9 +29,9 @@ private:
 public:
     NContainerTaglib(QObject *parent = NULL);
     ~NContainerTaglib();
-    QList<NPlugin *> plugins();
-    QString name() { return "TagLib"; }
-    QString version() { return "0.8.2"; }
+    QList<NPlugin *> plugins() const;
+    QString name() const { return "TagLib"; }
+    QString version() const { return "0.8.2"; }
 };
 
 #endif

@@ -130,7 +130,7 @@ void NPlaybackEngineGStreamer::setVolume(qreal volume)
     g_object_set(m_playbin, "volume", qBound(0.0, volume, 1.0), NULL);
 }
 
-qreal NPlaybackEngineGStreamer::volume()
+qreal NPlaybackEngineGStreamer::volume() const
 {
     gdouble volume;
     g_object_get(m_playbin, "volume", &volume, NULL);
@@ -162,12 +162,12 @@ void NPlaybackEngineGStreamer::jump(qint64 msec)
                             posNsec);
 }
 
-qreal NPlaybackEngineGStreamer::position()
+qreal NPlaybackEngineGStreamer::position() const
 {
     return m_crossfading ? 0 : m_oldPosition;
 }
 
-qint64 NPlaybackEngineGStreamer::durationMsec()
+qint64 NPlaybackEngineGStreamer::durationMsec() const
 {
     return m_durationNsec / NSEC_IN_MSEC;
 }
@@ -207,12 +207,12 @@ void NPlaybackEngineGStreamer::stop()
     gst_element_set_state(m_playbin, GST_STATE_NULL);
 }
 
-bool NPlaybackEngineGStreamer::hasMedia()
+bool NPlaybackEngineGStreamer::hasMedia() const
 {
     return !m_currentMedia.isEmpty();
 }
 
-QString NPlaybackEngineGStreamer::currentMedia()
+QString NPlaybackEngineGStreamer::currentMedia() const
 {
     return m_currentMedia;
 }

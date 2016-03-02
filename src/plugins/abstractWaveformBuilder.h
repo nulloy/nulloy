@@ -39,7 +39,7 @@ protected:
     QHash<QByteArray, QString> m_dateHash;
 
     virtual void reset();
-    virtual qreal position() = 0;
+    virtual qreal position() const = 0;
     bool peaksFindFromCache(const QString &file);
     void peaksAppendToCache(const QString &file);
 

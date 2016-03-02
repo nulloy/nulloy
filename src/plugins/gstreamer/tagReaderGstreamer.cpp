@@ -101,13 +101,13 @@ NTagReaderGstreamer::~NTagReaderGstreamer()
         gst_tag_list_free(m_taglist);
 }
 
-QString NTagReaderGstreamer::toString(const QString &format, const QString &encoding)
+QString NTagReaderGstreamer::toString(const QString &format, const QString &encoding) const
 {
     bool res;
     return parse(format, &res, encoding);
 }
 
-QString NTagReaderGstreamer::parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail)
+QString NTagReaderGstreamer::parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail) const
 {
     if (format.isEmpty())
         return "";
@@ -277,7 +277,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
     return res;
 }
 
-bool NTagReaderGstreamer::isValid()
+bool NTagReaderGstreamer::isValid() const
 {
     return m_isValid;
 }

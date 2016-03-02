@@ -35,7 +35,7 @@ void NWaveformPeaks::reset()
     m_vector = QVector< QPair<qreal, qreal> >(MAX_RES, qMakePair(0.0, 0.0));
 }
 
-int NWaveformPeaks::size()
+int NWaveformPeaks::size() const
 {
     if (m_completed)
         return m_vector.size();
@@ -49,12 +49,12 @@ void NWaveformPeaks::complete()
     m_vector.resize(m_index + 1);
 }
 
-qreal NWaveformPeaks::positive(int index)
+qreal NWaveformPeaks::positive(int index) const
 {
     return m_vector[index].first;
 }
 
-qreal NWaveformPeaks::negative(int index)
+qreal NWaveformPeaks::negative(int index) const
 {
     return m_vector[index].second;
 }

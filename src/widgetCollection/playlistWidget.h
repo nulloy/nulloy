@@ -55,7 +55,7 @@ private:
     void setCurrentItem(NPlaylistWidgetItem *item);
     void activateItem(NPlaylistWidgetItem *item);
     void resetCurrentItem();
-    bool revealInFileManager(const QString &file, QString *error);
+    bool revealInFileManager(const QString &file, QString *error) const;
 
 protected:
     void wheelEvent(QWheelEvent *event);
@@ -73,16 +73,16 @@ public:
     NPlaylistWidget(QWidget *parent = 0);
     ~NPlaylistWidget();
 
-    NPlaylistWidgetItem* item(int row, bool loop = false);
+    NPlaylistWidgetItem* item(int row, bool loop = false) const;
 
-    int currentRow();
+    int currentRow() const;
     void setCurrentRow(int row);
-    Q_INVOKABLE bool hasCurrent();
+    Q_INVOKABLE bool hasCurrent() const;
     QModelIndex currentIndex() const;
-    QString currentTitle();
+    QString currentTitle() const;
 
-    Q_INVOKABLE bool shuffleMode();
-    Q_INVOKABLE bool repeatMode();
+    Q_INVOKABLE bool shuffleMode() const;
+    Q_INVOKABLE bool repeatMode() const;
 
 public slots:
     void playNextItem();
@@ -141,13 +141,13 @@ public:
     QColor currentTextColor() const;
     void setCurrentTextColor(QColor color);
 
-    QColor fileDropBorderColor();
+    QColor fileDropBorderColor() const;
     void setFileDropBorderColor(QColor color);
 
-    QBrush fileDropBackground();
+    QBrush fileDropBackground() const;
     void setFileDropBackground(QBrush brush);
 
-    int fileDropRadius();
+    int fileDropRadius() const;
     void setFileDropRadius(int radius);
 // << STYLESHEET PROPERTIES
 };

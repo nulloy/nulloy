@@ -56,19 +56,19 @@ NCoverReaderTaglib::~NCoverReaderTaglib()
     }
 }
 
-bool NCoverReaderTaglib::isValid()
+bool NCoverReaderTaglib::isValid() const
 {
     return (NTaglib::_tagRef && NTaglib::_tagRef->file() && NTaglib::_tagRef->file()->isValid());
 }
 
-QImage NCoverReaderTaglib::fromTagBytes(const TagLib::ByteVector &data)
+QImage NCoverReaderTaglib::fromTagBytes(const TagLib::ByteVector &data) const
 {
     QImage image;
     image.loadFromData((const uchar *)data.data(), data.size());
     return image;
 }
 
-QImage NCoverReaderTaglib::fromApe(TagLib::APE::Tag *tag)
+QImage NCoverReaderTaglib::fromApe(TagLib::APE::Tag *tag) const
 {
     const TagLib::APE::ItemListMap &map = tag->itemListMap();
 
@@ -81,7 +81,7 @@ QImage NCoverReaderTaglib::fromApe(TagLib::APE::Tag *tag)
     return fromTagBytes(item.mid(fileName.size() + 1));
 }
 
-QImage NCoverReaderTaglib::fromAsf(TagLib::ASF::Tag *tag)
+QImage NCoverReaderTaglib::fromAsf(TagLib::ASF::Tag *tag) const
 {
     const TagLib::ASF::AttributeListMap &map = tag->attributeListMap();
 
@@ -100,7 +100,7 @@ QImage NCoverReaderTaglib::fromAsf(TagLib::ASF::Tag *tag)
     return QImage();
 }
 
-QImage NCoverReaderTaglib::fromFlac(TagLib::FLAC::File *file)
+QImage NCoverReaderTaglib::fromFlac(TagLib::FLAC::File *file) const
 {
     const TagLib::List<TagLib::FLAC::Picture *> &list = file->pictureList();
     if (list.isEmpty())
@@ -110,7 +110,7 @@ QImage NCoverReaderTaglib::fromFlac(TagLib::FLAC::File *file)
     return fromTagBytes(pic->data());
 }
 
-QImage NCoverReaderTaglib::fromId3(TagLib::ID3v2::Tag *tag)
+QImage NCoverReaderTaglib::fromId3(TagLib::ID3v2::Tag *tag) const
 {
     const TagLib::ID3v2::FrameList &list = tag->frameList("APIC");
     if (list.isEmpty())
@@ -120,7 +120,7 @@ QImage NCoverReaderTaglib::fromId3(TagLib::ID3v2::Tag *tag)
     return fromTagBytes(frame->picture());
 }
 
-QImage NCoverReaderTaglib::fromMp4(TagLib::MP4::Tag *tag)
+QImage NCoverReaderTaglib::fromMp4(TagLib::MP4::Tag *tag) const
 {
     TagLib::String str = "covr";
     if (!tag->itemListMap().contains(str))
@@ -133,7 +133,7 @@ QImage NCoverReaderTaglib::fromMp4(TagLib::MP4::Tag *tag)
     return QImage();
 }
 
-QImage NCoverReaderTaglib::fromVorbis(TagLib::Tag *tag)
+QImage NCoverReaderTaglib::fromVorbis(TagLib::Tag *tag) const
 {
     if (auto *comment = dynamic_cast<TagLib::Ogg::XiphComment *>(tag)) {
         TagLib::String str = "COVERART";
@@ -155,7 +155,7 @@ QImage NCoverReaderTaglib::fromVorbis(TagLib::Tag *tag)
     return QImage();
 }
 
-QImage NCoverReaderTaglib::getImage()
+QImage NCoverReaderTaglib::getImage() const
 {
     QImage image;
 

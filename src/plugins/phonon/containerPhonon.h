@@ -29,9 +29,9 @@ private:
 public:
     NContainerPhonon(QObject *parent = NULL);
     ~NContainerPhonon();
-    QList<NPlugin *> plugins();
-    QString name() { return "Phonon"; }
-    QString version() { return "0.8"; }
+    QList<NPlugin *> plugins() const;
+    QString name() const { return "Phonon"; }
+    QString version() const { return "0.8"; }
 };
 
 #endif

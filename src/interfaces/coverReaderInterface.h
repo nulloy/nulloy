@@ -31,8 +31,8 @@ public:
     static QString interfaceString() { return COVERREADER_INTERFACE; }
 
     virtual void setSource(const QString &file) = 0;
-    virtual QImage getImage() = 0;
-    virtual bool isValid() = 0;
+    virtual QImage getImage() const = 0;
+    virtual bool isValid() const = 0;
 };
 
 Q_DECLARE_INTERFACE(NCoverReaderInterface, COVERREADER_INTERFACE)

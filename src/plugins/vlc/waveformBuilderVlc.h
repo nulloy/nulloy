@@ -37,14 +37,14 @@ private:
 
     QByteArray m_pcmBuffer;
     QTimer *m_timer;
-    qreal position();
+    qreal position() const;
 
 public:
     NWaveformBuilderVlc(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
     ~NWaveformBuilderVlc();
     void init();
-    QString interfaceString() { return NWaveformBuilderInterface::interfaceString(); }
-    N::PluginType type() { return N::WaveformBuilder; }
+    QString interfaceString() const { return NWaveformBuilderInterface::interfaceString(); }
+    N::PluginType type() const { return N::WaveformBuilder; }
 
     void start(const QString &file);
     void stop();

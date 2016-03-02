@@ -59,7 +59,7 @@ void NW7TaskBar::setEnabled(bool enable)
     _enabled = enable;
 }
 
-bool NW7TaskBar::isEnabled()
+bool NW7TaskBar::isEnabled() const
 {
     return _enabled;
 }

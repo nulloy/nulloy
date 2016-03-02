@@ -34,19 +34,19 @@ private:
     int m_bitDepth;
     bool m_isValid;
     QString m_codecName;
-    QString parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail = false);
+    QString parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail = false) const;
 
 public:
     NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}
     ~NTagReaderGstreamer();
 
     void init();
-    QString interfaceString() { return NTagReaderInterface::interfaceString(); }
-    N::PluginType type() { return N::TagReader; }
+    QString interfaceString() const { return NTagReaderInterface::interfaceString(); }
+    N::PluginType type() const { return N::TagReader; }
 
     void setSource(const QString &file);
-    QString toString(const QString &format, const QString &encoding);
-    bool isValid();
+    QString toString(const QString &format, const QString &encoding) const;
+    bool isValid() const;
 };
 
 #endif

@@ -110,7 +110,7 @@ void NPlaybackEngineVlc::setVolume(qreal volume)
     libvlc_audio_set_volume(m_mediaPlayer, qRound(qBound(0.0, volume, 1.0) * 100 / 2));
 }
 
-qreal NPlaybackEngineVlc::volume()
+qreal NPlaybackEngineVlc::volume() const
 {
     return libvlc_audio_get_volume(m_mediaPlayer) / (qreal)100 * 2;
 }
@@ -123,7 +123,7 @@ void NPlaybackEngineVlc::setPosition(qreal pos)
     libvlc_media_player_set_position(m_mediaPlayer, qBound(0.0, pos, 1.0));
 }
 
-qreal NPlaybackEngineVlc::position()
+qreal NPlaybackEngineVlc::position() const
 {
     if (!hasMedia())
         return -1;
@@ -140,7 +140,7 @@ void NPlaybackEngineVlc::jump(qint64 msec)
     libvlc_media_player_set_time(m_mediaPlayer, posMsec);
 }
 
-qint64 NPlaybackEngineVlc::durationMsec()
+qint64 NPlaybackEngineVlc::durationMsec() const
 {
     if (!hasMedia())
         return -1;
@@ -175,13 +175,13 @@ void NPlaybackEngineVlc::stop()
     libvlc_media_player_stop(m_mediaPlayer);
 }
 
-bool NPlaybackEngineVlc::hasMedia()
+bool NPlaybackEngineVlc::hasMedia() const
 {
     libvlc_media_t *media = libvlc_media_player_get_media(m_mediaPlayer);
     return (media != NULL);
 }
 
-QString NPlaybackEngineVlc::currentMedia()
+QString NPlaybackEngineVlc::currentMedia() const
 {
     libvlc_media_t *media = libvlc_media_player_get_media(m_mediaPlayer);
     if (media != NULL)

@@ -42,16 +42,16 @@ public:
     NPlaybackEngineVlc(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
     ~NPlaybackEngineVlc();
     void init();
-    QString interfaceString() { return NPlaybackEngineInterface::interfaceString(); }
-    N::PluginType type() { return N::PlaybackEngine; }
+    QString interfaceString() const { return NPlaybackEngineInterface::interfaceString(); }
+    N::PluginType type() const { return N::PlaybackEngine; }
 
-    Q_INVOKABLE bool hasMedia();
-    Q_INVOKABLE QString currentMedia();
-    Q_INVOKABLE N::PlaybackState state() { return m_oldState; }
+    Q_INVOKABLE bool hasMedia() const;
+    Q_INVOKABLE QString currentMedia() const;
+    Q_INVOKABLE N::PlaybackState state() const { return m_oldState; }
 
-    Q_INVOKABLE qreal volume();
-    Q_INVOKABLE qreal position();
-    Q_INVOKABLE qint64 durationMsec();
+    Q_INVOKABLE qreal volume() const;
+    Q_INVOKABLE qreal position() const;
+    Q_INVOKABLE qint64 durationMsec() const;
 
 public slots:
     Q_INVOKABLE void setMedia(const QString &file);

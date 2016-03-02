@@ -39,14 +39,14 @@ private:
 
     QString m_currentFile;
     QTimer *m_timer;
-    qreal position();
+    qreal position() const;
 
 public:
     NWaveformBuilderPhonon(QObject *parent = NULL) : NWaveformBuilderInterface(parent) {}
     ~NWaveformBuilderPhonon();
     void init();
-    QString interfaceString() { return NWaveformBuilderInterface::interfaceString(); }
-    N::PluginType type() { return N::WaveformBuilder; }
+    QString interfaceString() const { return NWaveformBuilderInterface::interfaceString(); }
+    N::PluginType type() const { return N::WaveformBuilder; }
 
     void start(const QString &file);
     void stop();

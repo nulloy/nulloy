@@ -40,7 +40,7 @@ NContainerGstreamer::~NContainerGstreamer()
         delete plugin;
 }
 
-QList<NPlugin *> NContainerGstreamer::plugins()
+QList<NPlugin *> NContainerGstreamer::plugins() const
 {
     return m_plugins;
 }

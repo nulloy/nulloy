@@ -28,13 +28,13 @@ public:
     NPlaybackEngineInterface(QObject *parent = 0) : QObject(parent) {}
     virtual ~NPlaybackEngineInterface() {}
 
-    Q_INVOKABLE virtual bool hasMedia() = 0;
-    Q_INVOKABLE virtual QString currentMedia() = 0;
-    Q_INVOKABLE virtual N::PlaybackState state() = 0;
+    Q_INVOKABLE virtual bool hasMedia() const = 0;
+    Q_INVOKABLE virtual QString currentMedia() const = 0;
+    Q_INVOKABLE virtual N::PlaybackState state() const = 0;
 
-    Q_INVOKABLE virtual qreal volume() = 0;
-    Q_INVOKABLE virtual qreal position() = 0;
-    Q_INVOKABLE virtual qint64 durationMsec() = 0;
+    Q_INVOKABLE virtual qreal volume() const = 0;
+    Q_INVOKABLE virtual qreal position() const = 0;
+    Q_INVOKABLE virtual qint64 durationMsec() const = 0;
 
     static QString interfaceString() { return PLAYBACK_INTERFACE; }
 

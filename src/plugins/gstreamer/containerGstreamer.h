@@ -29,9 +29,9 @@ private:
 public:
     NContainerGstreamer(QObject *parent = NULL);
     ~NContainerGstreamer();
-    QList<NPlugin *> plugins();
-    QString name() { return "GStreamer"; }
-    QString version() { return "0.8.2"; }
+    QList<NPlugin *> plugins() const;
+    QString name() const { return "GStreamer"; }
+    QString version() const { return "0.8.2"; }
 };
 
 #endif

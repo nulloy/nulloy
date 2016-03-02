@@ -31,7 +31,7 @@ public:
 
     void setEnabled(bool enable);
     void setCustomizable(bool enable) { m_customizable = enable; }
-    bool isCustomizable() { return m_customizable; }
+    bool isCustomizable() const { return m_customizable; }
 
     QList<QKeySequence> globalShortcuts();
     void setGlobalShortcut(const QKeySequence &shortcut);

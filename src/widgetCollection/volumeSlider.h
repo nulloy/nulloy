@@ -29,7 +29,7 @@ private:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent *e);
-    QString toolTipText(int value);
+    QString toolTipText(int value) const;
 
 private slots:
     void on_valueChanged(int value);

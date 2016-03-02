@@ -36,10 +36,10 @@ public:
     void reset();
     void append(qreal value);
     void complete();
-    bool isCompleted() { return m_completed; }
-    int size();
-    qreal positive(int index);
-    qreal negative(int index);
+    bool isCompleted() const { return m_completed; }
+    int size() const;
+    qreal positive(int index) const;
+    qreal negative(int index) const;
 
     friend inline QDataStream& operator<<(QDataStream &out, const NWaveformPeaks &p)
     {

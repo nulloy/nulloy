@@ -74,13 +74,13 @@ NTagReaderTaglib::~NTagReaderTaglib()
     }
 }
 
-QString NTagReaderTaglib::toString(const QString &format, const QString &encoding)
+QString NTagReaderTaglib::toString(const QString &format, const QString &encoding) const
 {
     bool res;
     return parse(format, &res, encoding);
 }
 
-QString NTagReaderTaglib::parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail)
+QString NTagReaderTaglib::parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail) const
 {
     if (format.isEmpty())
         return "";
@@ -277,7 +277,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
     return res;
 }
 
-bool NTagReaderTaglib::isValid()
+bool NTagReaderTaglib::isValid() const
 {
     return (NTaglib::_tagRef && NTaglib::_tagRef->file() && NTaglib::_tagRef->file()->isValid());
 }

@@ -38,15 +38,15 @@ class NWidgetPrototype : public QObject, public QScriptable
 
 public:
     NWidgetPrototype(QObject *parent = 0);
-    int windowFlags();
+    int windowFlags() const;
     void setWindowFlags(int flags);
     Q_INVOKABLE void setAttribute(int attribute, bool enable = true);
-    Q_INVOKABLE QWidget* parentWidget();
+    Q_INVOKABLE QWidget* parentWidget() const;
     Q_INVOKABLE void move(int x, int y);
     Q_INVOKABLE void resize(int w, int h);
     Q_INVOKABLE void setSizeGripEnabled(bool enabled);
     Q_INVOKABLE void setStandardIcon(QString name, QString fallback = "");
-    Q_INVOKABLE QLayout* layout();
+    Q_INVOKABLE QLayout* layout() const;
     Q_INVOKABLE void setFontSize(int size);
     Q_INVOKABLE void enableDoubleClick();
 
@@ -66,7 +66,7 @@ class NLayoutPrototype : public QObject, public QScriptable
 
 public:
     NLayoutPrototype(QObject *parent = 0);
-    Q_INVOKABLE QMargins contentsMargins();
+    Q_INVOKABLE QMargins contentsMargins() const;
     Q_INVOKABLE void setContentsMargins(int left, int top, int right, int bottom);
     Q_INVOKABLE void setContentsMargins(QMargins margins);
     Q_INVOKABLE void setSpacing(int spacing);
@@ -80,7 +80,7 @@ class NSplitterPrototype : public QObject, public QScriptable
 
 public:
     NSplitterPrototype(QObject *parent = 0);
-    Q_INVOKABLE QList<int> sizes();
+    Q_INVOKABLE QList<int> sizes() const;
     Q_INVOKABLE void setSizes(const QList<int> &list);
 };
 

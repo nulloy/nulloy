@@ -42,7 +42,7 @@ public:
     static NW7TaskBar* instance();
     void setWindow(QWidget *window);
     bool winEvent(MSG *message, long *result);
-    bool isEnabled();
+    bool isEnabled() const;
 
 public slots:
     void setEnabled(bool enable);

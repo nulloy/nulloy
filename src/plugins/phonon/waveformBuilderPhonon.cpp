@@ -111,7 +111,7 @@ void NWaveformBuilderPhonon::update()
     }
 }
 
-qreal NWaveformBuilderPhonon::position()
+qreal NWaveformBuilderPhonon::position() const
 {
     if (!isRunning())
         return 0;

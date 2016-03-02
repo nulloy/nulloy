@@ -27,9 +27,9 @@ protected:
 public:
     NPlugin() { m_init = false; }
     virtual ~NPlugin() {}
-    virtual QString name() { return dynamic_cast<QObject *>(this)->metaObject()->className(); }
-    virtual QString interfaceString() = 0;
-    virtual N::PluginType type() { return N::OtherPlugin; }
+    virtual QString name() const { return dynamic_cast<const QObject *>(this)->metaObject()->className(); }
+    virtual QString interfaceString() const = 0;
+    virtual N::PluginType type() const { return N::OtherPlugin; }
     virtual void init() = 0;
 };
 

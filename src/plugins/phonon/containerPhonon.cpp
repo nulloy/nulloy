@@ -29,7 +29,7 @@ NContainerPhonon::~NContainerPhonon()
         delete plugin;
 }
 
-QList<NPlugin *> NContainerPhonon::plugins()
+QList<NPlugin *> NContainerPhonon::plugins() const
 {
     return m_plugins;
 }

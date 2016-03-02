@@ -74,7 +74,7 @@ void NPlaybackEnginePhonon::setVolume(qreal volume)
     m_audioOutput->setVolume(qBound(0.0, volume, 1.0));
 }
 
-qreal NPlaybackEnginePhonon::volume()
+qreal NPlaybackEnginePhonon::volume() const
 {
     return m_audioOutput->volume();
 }
@@ -90,7 +90,7 @@ void NPlaybackEnginePhonon::setPosition(qreal pos)
         m_savedPosition = pos;
 }
 
-qreal NPlaybackEnginePhonon::position()
+qreal NPlaybackEnginePhonon::position() const
 {
     if (!hasMedia())
         return -1;
@@ -125,7 +125,7 @@ void NPlaybackEnginePhonon::stop()
     m_mediaObject->stop();
 }
 
-bool NPlaybackEnginePhonon::hasMedia()
+bool NPlaybackEnginePhonon::hasMedia() const
 {
     Phonon::MediaSource source = m_mediaObject->currentSource();
 
@@ -138,7 +138,7 @@ bool NPlaybackEnginePhonon::hasMedia()
     }
 }
 
-QString NPlaybackEnginePhonon::currentMedia()
+QString NPlaybackEnginePhonon::currentMedia() const
 {
     return m_mediaObject->currentSource().fileName();
 }
@@ -166,12 +166,12 @@ void NPlaybackEnginePhonon::on_stateChanged(Phonon::State newState)
     emit stateChanged(fromPhononState(newState));
 }
 
-N::PlaybackState NPlaybackEnginePhonon::state()
+N::PlaybackState NPlaybackEnginePhonon::state() const
 {
     return fromPhononState(m_mediaObject->state());
 }
 
-qint64 NPlaybackEnginePhonon::durationMsec()
+qint64 NPlaybackEnginePhonon::durationMsec() const
 {
     return m_mediaObject->totalTime();
 }

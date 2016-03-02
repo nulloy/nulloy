@@ -171,7 +171,7 @@ void NWaveformBuilderVlc::update()
     }
 }
 
-qreal NWaveformBuilderVlc::position()
+qreal NWaveformBuilderVlc::position() const
 {
     if (!isRunning())
         return 0;

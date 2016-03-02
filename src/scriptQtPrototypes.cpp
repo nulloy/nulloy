@@ -46,7 +46,7 @@ void NWidgetPrototype::setParent(QWidget *parent)
         widget->setParent(parent);
 }
 
-int NWidgetPrototype::windowFlags()
+int NWidgetPrototype::windowFlags() const
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
     if (widget)
@@ -69,7 +69,7 @@ void NWidgetPrototype::setAttribute(int attribute, bool enable)
         widget->setAttribute((Qt::WidgetAttribute)attribute, enable);
 }
 
-QWidget* NWidgetPrototype::parentWidget()
+QWidget* NWidgetPrototype::parentWidget() const
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
     if (widget)
@@ -116,7 +116,7 @@ void NWidgetPrototype::setFontSize(int size)
     }
 }
 
-QLayout* NWidgetPrototype::layout()
+QLayout* NWidgetPrototype::layout() const
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
     if (widget)
@@ -127,7 +127,7 @@ QLayout* NWidgetPrototype::layout()
 
 NLayoutPrototype::NLayoutPrototype(QObject *parent) : QObject(parent) {}
 
-QMargins NLayoutPrototype::contentsMargins()
+QMargins NLayoutPrototype::contentsMargins() const
 {
     QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
     if (layout)
@@ -175,7 +175,7 @@ void NLayoutPrototype::insertWidget(int index, QWidget *widget)
 
 NSplitterPrototype::NSplitterPrototype(QObject *parent) : QObject(parent) {}
 
-QList<int> NSplitterPrototype::sizes()
+QList<int> NSplitterPrototype::sizes() const
 {
     QSplitter *splitter = qscriptvalue_cast<QSplitter *>(thisObject());
     if (splitter)

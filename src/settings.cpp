@@ -182,12 +182,12 @@ void NSettings::saveShortcuts()
     }
 }
 
-QList<NAction *> NSettings::shortcuts()
+QList<NAction *> NSettings::shortcuts() const
 {
     return m_actionList;
 }
 
-QVariant NSettings::value(const QString &key, const QVariant &defaultValue)
+QVariant NSettings::value(const QString &key, const QVariant &defaultValue) const
 {
     QVariant value = QSettings::value(key, defaultValue);
     return value;

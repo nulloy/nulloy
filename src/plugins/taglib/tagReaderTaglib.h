@@ -31,19 +31,19 @@ class NTagReaderTaglib : public NTagReaderInterface, public NPlugin
 
 private:
     QString m_path;
-    QString parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail = false);
+    QString parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail = false) const;
 
 public:
     NTagReaderTaglib(QObject *parent = 0) : NTagReaderInterface(parent) {}
     ~NTagReaderTaglib();
 
     void init();
-    QString interfaceString() { return NTagReaderInterface::interfaceString(); }
-    N::PluginType type() { return N::TagReader; }
+    QString interfaceString() const { return NTagReaderInterface::interfaceString(); }
+    N::PluginType type() const { return N::TagReader; }
 
     void setSource(const QString &file);
-    QString toString(const QString &format, const QString &encoding);
-    bool isValid();
+    QString toString(const QString &format, const QString &encoding) const;
+    bool isValid() const;
 };
 
 #endif

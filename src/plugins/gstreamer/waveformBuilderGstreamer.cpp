@@ -145,7 +145,7 @@ void NWaveformBuilderGstreamer::start(const QString &file)
     gst_element_set_state(m_playbin, GST_STATE_PLAYING);
 }
 
-qreal NWaveformBuilderGstreamer::position()
+qreal NWaveformBuilderGstreamer::position() const
 {
     if (!m_playbin)
         return 0;

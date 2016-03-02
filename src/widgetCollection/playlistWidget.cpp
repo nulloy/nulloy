@@ -193,7 +193,7 @@ void NPlaylistWidget::on_revealAction_triggered()
         QMessageBox::warning(this, QObject::tr("Reveal in File Manager Error"), error, QMessageBox::Close);
 }
 
-bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error)
+bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) const
 {
     QFileInfo fileInfo(file);
 
@@ -322,7 +322,7 @@ void NPlaylistWidget::currentFailed()
     m_currentItem->setData(N::FailedRole, true);
 }
 
-int NPlaylistWidget::currentRow()
+int NPlaylistWidget::currentRow() const
 {
     if (m_currentItem)
         return row(m_currentItem);
@@ -330,7 +330,7 @@ int NPlaylistWidget::currentRow()
         return -1;
 }
 
-bool NPlaylistWidget::hasCurrent()
+bool NPlaylistWidget::hasCurrent() const
 {
     return currentRow() != -1;
 }
@@ -343,7 +343,7 @@ QModelIndex NPlaylistWidget::currentIndex() const
         return QModelIndex();
 }
 
-QString NPlaylistWidget::currentTitle()
+QString NPlaylistWidget::currentTitle() const
 {
     if (m_currentItem)
         return m_currentItem->text();
@@ -487,7 +487,7 @@ void NPlaylistWidget::rowsInserted(const QModelIndex &parent, int start, int end
     QListWidget::rowsInserted(parent, start, end);
 }
 
-bool NPlaylistWidget::shuffleMode()
+bool NPlaylistWidget::shuffleMode() const
 {
     return m_shuffleMode;
 }
@@ -512,7 +512,7 @@ void NPlaylistWidget::setShuffleMode(bool enable)
     m_currentShuffledIndex = 0;
 }
 
-bool NPlaylistWidget::repeatMode()
+bool NPlaylistWidget::repeatMode() const
 {
     return m_repeatMode;
 }
@@ -525,7 +525,7 @@ void NPlaylistWidget::setRepeatMode(bool enable)
     NSettings::instance()->setValue("Repeat", enable);
 }
 
-NPlaylistWidgetItem* NPlaylistWidget::item(int row, bool loop)
+NPlaylistWidgetItem* NPlaylistWidget::item(int row, bool loop) const
 {
     if (count() == 0)
         return NULL;
@@ -741,7 +741,7 @@ QColor NPlaylistWidget::failedTextColor() const
     return m_failedTextColor;
 }
 
-QColor NPlaylistWidget::fileDropBorderColor()
+QColor NPlaylistWidget::fileDropBorderColor() const
 {
     return m_fileDropBorderColor;
 }
@@ -751,7 +751,7 @@ void NPlaylistWidget::setFileDropBorderColor(QColor color)
     m_fileDropBorderColor = color;
 }
 
-QBrush NPlaylistWidget::fileDropBackground()
+QBrush NPlaylistWidget::fileDropBackground() const
 {
     return m_fileDropBackground;
 }
@@ -761,7 +761,7 @@ void NPlaylistWidget::setFileDropBackground(QBrush brush)
     m_fileDropBackground = brush;
 }
 
-int NPlaylistWidget::fileDropRadius()
+int NPlaylistWidget::fileDropRadius() const
 {
     return m_fileDropRadius;
 }

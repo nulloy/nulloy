@@ -29,7 +29,7 @@ NContainerTaglib::~NContainerTaglib()
         delete plugin;
 }
 
-QList<NPlugin *> NContainerTaglib::plugins()
+QList<NPlugin *> NContainerTaglib::plugins() const
 {
     return m_plugins;
 }

@@ -29,7 +29,7 @@ NContainerVlc::~NContainerVlc()
         delete plugin;
 }
 
-QList<NPlugin *> NContainerVlc::plugins()
+QList<NPlugin *> NContainerVlc::plugins() const
 {
     return m_plugins;
 }

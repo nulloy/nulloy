@@ -29,9 +29,9 @@ private:
 public:
     NContainerVlc(QObject *parent = NULL);
     ~NContainerVlc();
-    QList<NPlugin *> plugins();
-    QString name() { return "VLC"; }
-    QString version() { return "0.8"; }
+    QList<NPlugin *> plugins() const;
+    QString name() const { return "VLC"; }
+    QString version() const { return "0.8"; }
 };
 
 #endif

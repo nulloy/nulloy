@@ -25,9 +25,9 @@ class NPluginContainer
 public:
     NPluginContainer() {}
     virtual ~NPluginContainer() {}
-    virtual QList<NPlugin *> plugins() = 0;
-    virtual QString name() = 0;
-    virtual QString version() = 0;
+    virtual QList<NPlugin *> plugins() const = 0;
+    virtual QString name() const = 0;
+    virtual QString version() const = 0;
 };
 
 Q_DECLARE_INTERFACE(NPluginContainer, "Nulloy/NPluginContainer/0.7")

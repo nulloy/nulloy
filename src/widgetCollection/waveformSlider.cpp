@@ -261,7 +261,7 @@ void NWaveformSlider::setMedia(const QString &file)
 }
 
 // STYLESHEET PROPERTIES >>
-int NWaveformSlider::radius()
+int NWaveformSlider::radius() const
 {
     return m_radius;
 }
@@ -271,7 +271,7 @@ void NWaveformSlider::setRadius(int radius)
     m_radius = radius;
 }
 
-QBrush NWaveformSlider::background()
+QBrush NWaveformSlider::background() const
 {
     return m_background;
 }
@@ -281,7 +281,7 @@ void NWaveformSlider::setBackground(QBrush brush)
     m_background = brush;
 }
 
-QBrush NWaveformSlider::waveBackground()
+QBrush NWaveformSlider::waveBackground() const
 {
     return m_waveBackground;
 }
@@ -291,7 +291,7 @@ void NWaveformSlider::setWaveBackground(QBrush brush)
     m_waveBackground = brush;
 }
 
-QColor NWaveformSlider::waveBorderColor()
+QColor NWaveformSlider::waveBorderColor() const
 {
     return m_waveBorderColor;
 }
@@ -301,7 +301,7 @@ void NWaveformSlider::setWaveBorderColor(QColor color)
     m_waveBorderColor = color;
 }
 
-QBrush NWaveformSlider::progressPlayingBackground()
+QBrush NWaveformSlider::progressPlayingBackground() const
 {
     return m_progressPlayingBackground;
 }
@@ -311,7 +311,7 @@ void NWaveformSlider::setProgressPlayingBackground(QBrush brush)
     m_progressPlayingBackground = brush;
 }
 
-QBrush NWaveformSlider::progressPausedBackground()
+QBrush NWaveformSlider::progressPausedBackground() const
 {
     return m_progressPausedBackground;
 }
@@ -321,7 +321,7 @@ void NWaveformSlider::setProgressPausedBackground(QBrush brush)
     m_progressPausedBackground = brush;
 }
 
-QBrush NWaveformSlider::remainingPlayingBackground()
+QBrush NWaveformSlider::remainingPlayingBackground() const
 {
     return m_remainingPlayingBackground;
 }
@@ -331,7 +331,7 @@ void NWaveformSlider::setRemainingPlayingBackground(QBrush brush)
     m_remainingPlayingBackground = brush;
 }
 
-QBrush NWaveformSlider::remainingPausedBackground()
+QBrush NWaveformSlider::remainingPausedBackground() const
 {
     return m_remainingPausedBackground;
 }
@@ -341,7 +341,7 @@ void NWaveformSlider::setRemainingPausedBackground(QBrush brush)
     m_remainingPausedBackground = brush;
 }
 
-QColor NWaveformSlider::groovePlayingColor()
+QColor NWaveformSlider::groovePlayingColor() const
 {
     return m_groovePlayingColor;
 }
@@ -351,7 +351,7 @@ void NWaveformSlider::setGroovePlayingColor(QColor color)
     m_groovePlayingColor = color;
 }
 
-QColor NWaveformSlider::groovePausedColor()
+QColor NWaveformSlider::groovePausedColor() const
 {
     return m_groovePausedColor;
 }
@@ -361,7 +361,7 @@ void NWaveformSlider::setGroovePausedColor(QColor color)
     m_groovePausedColor = color;
 }
 
-QString NWaveformSlider::playingComposition()
+QString NWaveformSlider::playingComposition() const
 {
     return ENUM_TO_STR(N, CompositionMode, m_playingComposition);
 }
@@ -371,7 +371,7 @@ void NWaveformSlider::setPlayingComposition(const QString &mode)
     m_playingComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
 }
 
-QString NWaveformSlider::pausedComposition()
+QString NWaveformSlider::pausedComposition() const
 {
     return ENUM_TO_STR(N, CompositionMode, m_pausedComposition);
 }
@@ -381,7 +381,7 @@ void NWaveformSlider::setPausedComposition(const QString &mode)
     m_pausedComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
 }
 
-QColor NWaveformSlider::fileDropBorderColor()
+QColor NWaveformSlider::fileDropBorderColor() const
 {
     return m_fileDropBorderColor;
 }
@@ -391,7 +391,7 @@ void NWaveformSlider::setFileDropBorderColor(QColor color)
     m_fileDropBorderColor = color;
 }
 
-QBrush NWaveformSlider::fileDropBackground()
+QBrush NWaveformSlider::fileDropBackground() const
 {
     return m_fileDropBackground;
 }
