@@ -1,8 +1,8 @@
-# ![Icon](https://github.com/nulloy/nulloy.github.io/blob/master/files/github-icon.png) Nulloy Music Player http://nulloy.com
+# ![Icon](http://nulloy.com/files/github-icon.png) Nulloy Music Player http://nulloy.com
 
-<img src="https://github.com/nulloy/nulloy.github.io/blob/master/files/screen.png" height="250">
-<img src="https://github.com/nulloy/nulloy.github.io/blob/master/files/screen_1.png" height="250">
-<img src="https://github.com/nulloy/nulloy.github.io/blob/master/files/screen_2.png" height="250">
+<img src="http://nulloy.com/files/screen.png" height="250">
+<img src="http://nulloy.com/files/screen_1.png" height="250">
+<img src="http://nulloy.com/files/screen_2.png" height="250">
 
 [![Build Status](https://travis-ci.org/nulloy/nulloy.svg)](https://travis-ci.org/nulloy/nulloy)
 
