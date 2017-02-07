@@ -107,7 +107,7 @@ while [ $# -gt 0 ]; do
 done
 
 if [[ ! -n $QMAKE && ! -f $QMAKE ]]; then
-    QMAKE=`which qmake` 2> /dev/null
+    QMAKE=`which qmake 2> /dev/null`
     if [[ ! -n $QMAKE || ! -f $QMAKE ]]; then
         QMAKE=$QTDIR/bin/qmake
         if [ ! -f $QMAKE ]; then
