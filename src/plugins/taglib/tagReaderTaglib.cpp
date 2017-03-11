@@ -97,27 +97,28 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
 
     QString res;
     QTextCodec *codec = QTextCodec::codecForName(encoding.toUtf8());
+    bool isUtf8 = (encoding == QLatin1String("UTF-8"));
     for (int i = 0; i < format.size(); ++i) {
         if (format.at(i) == '%') {
             ++i;
             QChar ch = format.at(i);
             if (ch == 'a') {
-                QString str = codec->toUnicode(tag->artist().toCString(encoding == "UTF-8"));
+                QString str = codec->toUnicode(tag->artist().toCString(isUtf8));
                 if (!(*success = !str.isEmpty()))
                     str = "<Unknown artist>";
                 res += str;
             } else if (ch == 't') {
-                QString str = codec->toUnicode(tag->title().toCString(encoding == "UTF-8"));
+                QString str = codec->toUnicode(tag->title().toCString(isUtf8));
                 if (!(*success = !str.isEmpty()))
                     str = "<Unknown title>";
                 res += str;
             } else if (ch == 'A') {
-                QString str = codec->toUnicode(tag->album().toCString(encoding == "UTF-8"));
+                QString str = codec->toUnicode(tag->album().toCString(isUtf8));
                 if (!(*success = !str.isEmpty()))
                     str = "<Unknown album>";
                 res += str;
             } else if (ch == 'c') {
-                QString str = codec->toUnicode(tag->comment().toCString(encoding == "UTF-8"));
+                QString str = codec->toUnicode(tag->comment().toCString(isUtf8));
                 if (!(*success = !str.isEmpty()))
                     str = "<Empty comment>";
                 res += str;
