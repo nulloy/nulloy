@@ -44,6 +44,7 @@ public:
     QString interfaceString() const { return NTagReaderInterface::interfaceString(); }
     N::PluginType type() const { return N::TagReader; }
 
+    QString getSource();
     void setSource(const QString &file);
     QString toString(const QString &format, const QString &encoding) const;
     bool isValid() const;

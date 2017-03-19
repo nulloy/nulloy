@@ -41,6 +41,11 @@ void NTagReaderTaglib::init()
     NTaglib::_tagRef = NULL;
 }
 
+QString NTagReaderTaglib::getSource()
+{
+    return NTaglib::_filePath;
+}
+
 void NTagReaderTaglib::setSource(const QString &file)
 {
     if (NTaglib::_filePath == file)

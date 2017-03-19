@@ -77,7 +77,6 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     trashAction->setShortcut(trashShortcut->key());
     connect(trashAction, SIGNAL(triggered()), this, SLOT(on_trashAction_triggered()));
 
-
     m_contextMenu = new QMenu(this);
     m_contextMenu->addAction(revealAction);
     m_contextMenu->addAction(removeAction);
@@ -94,6 +93,37 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     setDefaultDropAction(Qt::MoveAction);
     setDragDropMode(QAbstractItemView::DragDrop);
     setDragEnabled(true);
+
+    m_processVisibleItemsTimer = new QTimer(this);
+    m_processVisibleItemsTimer->setSingleShot(true);
+    connect(m_processVisibleItemsTimer, SIGNAL(timeout()), this, SLOT(processVisibleItems()));
+    connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(startProcessVisibleItemsTimer()));
+}
+
+void NPlaylistWidget::resizeEvent(QResizeEvent *event)
+{
+    startProcessVisibleItemsTimer();
+    QListWidget::resizeEvent(event);
+}
+
+void NPlaylistWidget::startProcessVisibleItemsTimer()
+{
+    if (m_processVisibleItemsTimer->isActive())
+        m_processVisibleItemsTimer->stop();
+
+    m_processVisibleItemsTimer->start(100);
+}
+
+void NPlaylistWidget::processVisibleItems()
+{
+    QListWidgetItem *minItem = this->itemAt(0, 0);
+    QListWidgetItem *maxItem = this->itemAt(0, this->height());
+    while (minItem) {
+        formatItemTitle(reinterpret_cast<NPlaylistWidgetItem *>(minItem));
+        if (minItem == maxItem)
+            break;
+        minItem = item(row(minItem) + 1);
+    }
 }
 
 void NPlaylistWidget::wheelEvent(QWheelEvent *event)
@@ -268,6 +298,28 @@ void NPlaylistWidget::resetCurrentItem()
     emit setMedia("");
 }
 
+void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, bool force)
+{
+    QString titleFormat = NSettings::instance()->value("PlaylistTrackInfo").toString();
+    if (!force && titleFormat == item->data(N::TitleFormatRole))
+        return;
+
+    QString oldSource = m_tagReader->getSource();
+
+    QString file = item->data(N::PathRole).toString();
+    m_tagReader->setSource(file);
+
+    if (m_tagReader->isValid()) {
+        QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
+        item->setData(N::TitleFormatRole, titleFormat);
+        item->setText(m_tagReader->toString(titleFormat, encoding));
+    } else {
+        item->setText(QFileInfo(file).fileName());
+    }
+
+    m_tagReader->setSource(oldSource);
+}
+
 void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 {
     resetCurrentItem();
@@ -293,16 +345,11 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
         return;
     }
 
-    // trying to read tags
     m_tagReader->setSource(file);
+    formatItemTitle(item, true);
     if (m_tagReader->isValid()) {
-        QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
-        item->setText(m_tagReader->toString(NSettings::instance()->value("PlaylistTrackInfo").toString(), encoding));
         item->setData(N::DurationRole, m_tagReader->toString("%D").toInt());
-    } else {
-        item->setText(QFileInfo(file).fileName());
     }
-
     item->setData(N::FailedRole, false); // reset failed role
 
     // setting currently playing font to bold, colors set in delegate
@@ -387,6 +434,7 @@ void NPlaylistWidget::addFiles(const QStringList &files)
 {
     foreach (QString path, files)
         addItem(new NPlaylistWidgetItem(QFileInfo(path)));
+    processVisibleItems();
 }
 
 void NPlaylistWidget::setFiles(const QStringList &files)
@@ -396,6 +444,7 @@ void NPlaylistWidget::setFiles(const QStringList &files)
     m_currentItem = NULL;
     foreach (QString path, files)
         addItem(new NPlaylistWidgetItem(QFileInfo(path)));
+    processVisibleItems();
 }
 
 bool NPlaylistWidget::setPlaylist(const QString &file)
@@ -411,6 +460,8 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
 
     for (int i = 0; i < dataItemsList.count(); ++i)
         addItem(new NPlaylistWidgetItem(dataItemsList.at(i)));
+
+    processVisibleItems();
 
     return true;
 }
@@ -606,6 +657,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
             ++index;
         }
     }
+    processVisibleItems();
 
     if (wasEmpty)
         playRow(0);

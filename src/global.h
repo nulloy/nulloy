@@ -57,7 +57,8 @@ public:
         PathRole,
         DurationRole,
         CountRole,
-        PositionRole
+        PositionRole,
+        TitleFormatRole
     };
 
     enum PlaybackState {

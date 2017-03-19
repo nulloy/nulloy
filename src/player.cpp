@@ -622,6 +622,7 @@ void NPlayer::on_preferencesDialog_settingsChanged()
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
     m_trackInfoWidget->loadSettings();
     m_trackInfoWidget->updateStaticTags();
+    m_playlistWidget->processVisibleItems();
 }
 
 

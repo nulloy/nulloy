@@ -30,6 +30,7 @@ public:
 
     static QString interfaceString() { return TAGREADER_INTERFACE; }
 
+    virtual QString getSource() = 0;
     virtual void setSource(const QString &file) = 0;
     virtual QString toString(const QString &format, const QString &encoding = QString("UTF-8")) const = 0;
     virtual bool isValid() const = 0;

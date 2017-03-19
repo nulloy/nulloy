@@ -44,6 +44,12 @@ void NTagReaderGstreamer::init()
     m_init = true;
 }
 
+
+QString NTagReaderGstreamer::getSource()
+{
+    return m_path;
+}
+
 void NTagReaderGstreamer::setSource(const QString &file)
 {
     if (m_taglist) {

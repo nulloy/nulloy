@@ -44,6 +44,7 @@ private:
     QMenu *m_contextMenu;
     NTagReaderInterface *m_tagReader;
     NPlaybackEngineInterface *m_playbackEngine;
+    QTimer *m_processVisibleItemsTimer;
 
     QList<NPlaylistWidgetItem *> m_shuffledItems;
     int m_currentShuffledIndex;
@@ -52,8 +53,10 @@ private:
 
     void paintEvent(QPaintEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
+    void resizeEvent(QResizeEvent *event);
     void setCurrentItem(NPlaylistWidgetItem *item);
     void activateItem(NPlaylistWidgetItem *item);
+    void formatItemTitle(NPlaylistWidgetItem *item, bool force = false);
     void resetCurrentItem();
     bool revealInFileManager(const QString &file, QString *error) const;
 
@@ -68,6 +71,7 @@ private slots:
     void on_trashAction_triggered();
     void on_removeAction_triggered();
     void on_revealAction_triggered();
+    void startProcessVisibleItemsTimer();
 
 public:
     NPlaylistWidget(QWidget *parent = 0);
@@ -93,6 +97,7 @@ public slots:
     void setFiles(const QStringList &files);
     void playFiles(const QStringList &files);
     bool setPlaylist(const QString &file);
+    void processVisibleItems();
 
     void currentFinished();
     void currentFailed();

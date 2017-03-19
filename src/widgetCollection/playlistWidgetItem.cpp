@@ -44,9 +44,11 @@ QVariant NPlaylistWidgetItem::data(int role) const
         case (N::DurationRole):
             return m_data.duration;
         case (N::CountRole):
-            return m_data.count;
+            return m_data.playbackCount;
         case (N::PositionRole):
-            return m_data.position;
+            return m_data.playbackPosition;
+        case (N::TitleFormatRole):
+            return m_data.titleFormat;
         default:
             return QListWidgetItem::data(role);
     }
@@ -65,10 +67,13 @@ void NPlaylistWidgetItem::setData(int role, const QVariant &value)
             m_data.duration = value.toInt();
             break;
         case (N::CountRole):
-            m_data.count = value.toInt();
+            m_data.playbackCount = value.toInt();
             break;
         case (N::PositionRole):
-            m_data.position = value.toFloat();
+            m_data.playbackPosition = value.toFloat();
+            break;
+        case (N::TitleFormatRole):
+            m_data.titleFormat = value.toString();
             break;
         default:
             QListWidgetItem::setData(role, value);
