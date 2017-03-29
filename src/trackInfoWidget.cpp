@@ -116,6 +116,7 @@ void NTrackInfoWidget::resizeEvent(QResizeEvent *event)
     QFrame::resizeEvent(event);
     bool toShrink = (m_heightThreshold > height());
     QVBoxLayout *vLayout = dynamic_cast<QVBoxLayout *>(m_container->layout());
+    Q_ASSERT(vLayout);
 
     vLayout->itemAt(0)->widget()->setHidden(toShrink); // top
     vLayout->itemAt(4)->widget()->setHidden(toShrink); // bottom
@@ -139,6 +140,8 @@ void NTrackInfoWidget::mouseMoveEvent(QMouseEvent *event)
 void NTrackInfoWidget::updateStaticTags()
 {
     NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+    if (!tagReader)
+        return;
     QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
     if (!tagReader->isValid()) {
         hide();
@@ -176,6 +179,8 @@ void NTrackInfoWidget::tick(qint64 msec)
     m_msec = msec;
 
     NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+    if (!tagReader)
+        return;
     QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
     int total = tagReader->toString("%D").toInt();
     int hours = total / 60 / 60;
@@ -205,6 +210,9 @@ void NTrackInfoWidget::showToolTip(int x, int y)
     }
 
     NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+    if (!tagReader)
+        return;
+
     QString text = m_tooltipFormat;
 
     if (m_tooltipFormat.contains("%C") || m_tooltipFormat.contains("%o")) {

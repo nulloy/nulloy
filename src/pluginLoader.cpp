@@ -36,21 +36,27 @@ static const char _pluginsDirName[] = "plugins";
 
 namespace NPluginLoader
 {
-    bool __init = false;
+    bool _init = false;
     QList<Descriptor> _descriptors;
     QMap<N::PluginType, NPlugin *> _usedPlugins;
     QMap<QPluginLoader *, bool> _usedLoaders;
 
-    void _init();
     NPlugin* _findPlugin(N::PluginType type);
 }
 
 void NPluginLoader::deinit()
 {
+    if (!_init)
+        return;
+    _init = false;
+
     foreach(QPluginLoader *loader, _usedLoaders.keys()) {
         if (loader->isLoaded())
             loader->unload();
     }
+    _descriptors.clear();
+    _usedPlugins.clear();
+    _usedLoaders.clear();
 }
 
 NPlugin* NPluginLoader::_findPlugin(N::PluginType type)
@@ -94,11 +100,11 @@ NPlugin* NPluginLoader::_findPlugin(N::PluginType type)
     return plugin;
 }
 
-void NPluginLoader::_init()
+void NPluginLoader::init()
 {
-    if (__init)
+    if (_init)
         return;
-    __init = true;
+    _init = true;
 
     QStringList pluginsDirList;
     pluginsDirList << QCoreApplication::applicationDirPath() + "/" + _pluginsDirName;
@@ -195,13 +201,13 @@ void NPluginLoader::_init()
 
 NPlugin* NPluginLoader::getPlugin(N::PluginType type)
 {
-    _init();
+    if (!_init)
+        return NULL;
     return _usedPlugins[type];
 }
 
 QList<NPluginLoader::Descriptor> NPluginLoader::descriptors()
 {
-    _init();
     return _descriptors;
 }
 

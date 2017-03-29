@@ -33,6 +33,7 @@ namespace NPluginLoader
 
     NPlugin* getPlugin(N::PluginType type);
 
+    void init();
     void deinit();
 }
 

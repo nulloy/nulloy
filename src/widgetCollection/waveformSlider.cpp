@@ -49,6 +49,7 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
     setMaximum(10000);
 
     m_waveBuilder = dynamic_cast<NWaveformBuilderInterface *>(NPluginLoader::getPlugin(N::WaveformBuilder));
+    Q_ASSERT(m_waveBuilder);
 
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));

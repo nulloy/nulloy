@@ -66,8 +66,10 @@ NPlayer::NPlayer()
     m_settings = NSettings::instance();
 
     NI18NLoader::init();
+    NPluginLoader::init();
 
     m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
+    Q_ASSERT(m_playbackEngine);
     m_playbackEngine->setParent(this);
 
 #ifndef _N_NO_SKINS_
@@ -734,6 +736,8 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
     QString titleDefault = QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion();
     if (QFile(file).exists()) {
         NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+        if (!tagReader)
+            return;
         QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
         QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
         if (!format.isEmpty() && tagReader->isValid())
