@@ -205,6 +205,7 @@ void NPlaybackEngineGStreamer::stop()
 
     m_crossfading = false;
     gst_element_set_state(m_playbin, GST_STATE_NULL);
+    m_durationNsec = 0;
 }
 
 bool NPlaybackEngineGStreamer::hasMedia() const
