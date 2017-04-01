@@ -129,12 +129,12 @@
     <message>
         <location line="+4"/>
         <source>Always On Top</source>
-        <translation>Siempre En Cima</translation>
+        <translation>Siempre Encima</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Fullscreen Mode</source>
-        <translation>Patalla Completa</translation>
+        <translation>Pantalla Completa</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -639,7 +639,7 @@
     <message>
         <location line="+7"/>
         <source>Playlist item:</source>
-        <translation>Elemto en Lista de Reproduccion  :</translation>
+        <translation>Elemento en Lista de Reproducción:</translation>
     </message>
     <message>
         <location line="+14"/>
