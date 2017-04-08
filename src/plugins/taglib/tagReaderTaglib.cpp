@@ -217,7 +217,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
                     *success = false;
                 }
                 res += str;
-            } else if (ch == 'C') {
+            } else if (ch == 'H') {
                 QString str = QString::number(ap->channels());
                 if (str == "0") {
                     str = "<Unknown channels number>";

@@ -220,7 +220,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                 res += str;
             } else if (ch == 's') {
                 res += QString::number(m_sampleRate);
-            } else if (ch == 'C') {
+            } else if (ch == 'H') {
                 res += "<Usupported tag: channels number>";
                 *success = false;
             } else if (ch == 'f') {
