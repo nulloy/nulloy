@@ -99,11 +99,10 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 {
     qreal vol = m_oldVolume;
 
-    if (!m_crossfading)
+    if (!m_crossfading || file.isEmpty())
         stop();
 
     if (file.isEmpty()) {
-        stop();
         emit mediaChanged(m_currentMedia = "");
         return;
     }

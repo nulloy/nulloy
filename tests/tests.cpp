@@ -19,14 +19,11 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    int res;
+    NPluginLoader::init();
+    TestPlaylistWidget test;
+    int res = QTest::qExec(&test);
+    NPluginLoader::deinit();
 
-    {
-        TestPlaylistWidget testPlaylistWidget;
-        if ((res = QTest::qExec(&testPlaylistWidget)))
-            return res;
-    }
-
-    return 0;
+    return res;
 }
 

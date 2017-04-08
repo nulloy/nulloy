@@ -324,10 +324,10 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, bool force)
 
 void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 {
-    resetCurrentItem();
-
-    if (!item)
+    if (!item) {
+        resetCurrentItem();
         return;
+    }
 
     QString file = item->data(N::PathRole).toString();
     // check if it's a playlist file:

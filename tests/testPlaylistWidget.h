@@ -17,9 +17,12 @@
 #define TEST_PLAYLIST_WIDGET_H
 
 #include <QtTest/QtTest>
-#include "playlistWidget.h"
-#include "settings.h"
 #include <QSignalSpy>
+
+#include "playlistWidget.h"
+#include "pluginLoader.h"
+#include "playbackEngineInterface.h"
+#include "settings.h"
 
 #define DELAY 50
 
@@ -27,13 +30,23 @@ class TestPlaylistWidget: public QObject
 {
     Q_OBJECT
 
-private slots:
-    void testRemoval()
+private:
+    void init()
     {
-        NPlaylistWidget widget;
-        widget.show();
+        NSettings::instance()->clear();
+        delete NSettings::instance();
+    }
 
-        widget.setPlaylist("tests/playlist.m3u");
+private slots:
+    void testPlaylistRemoval()
+    {
+        init();
+
+        NPlaylistWidget widget;
+
+        widget.show();
+        QDir::setCurrent("tests");
+        widget.setPlaylist("playlist.m3u");
         QCOMPARE(widget.count(), 10);
 
         // when deleting last, jumps to the "new" last
@@ -106,6 +119,87 @@ private slots:
             QList<QVariant> arguments = spy.takeFirst();
             QVERIFY(arguments.at(0).toString() == "");
         }
+    }
+
+    void testAutoPlay()
+    {
+        init();
+
+        NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
+        Q_ASSERT(m_playbackEngine);
+        NPlaylistWidget widget;
+        QSignalSpy spy(&widget, SIGNAL(setMedia(const QString &)));
+        int count = 0;
+        int row = 0;
+
+        connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
+        connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
+        connect(playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)), this, SLOT(message(QMessageBox::Icon, const QString &, const QString &)));
+        connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
+        connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
+
+        widget.show();
+        QDir::setCurrent("tests");
+        widget.setPlaylist("playlist.m3u");
+
+        widget.playRow(row);
+        ++count;
+        QCOMPARE(spy.count(), count);
+        playbackEngine->setPosition(0.8);
+        QTest::qWait(500);
+        ++row;
+        ++count;
+        QCOMPARE(widget.currentRow(), row);
+        QCOMPARE(spy.count(), count);
+    }
+
+    void testRepeat() {
+        init();
+
+        NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
+        Q_ASSERT(m_playbackEngine);
+        NPlaylistWidget widget;
+        QSignalSpy spy(&widget, SIGNAL(setMedia(const QString &)));
+        int count = 0;
+        int row = 0;
+
+        connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
+        connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
+        connect(playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)), this, SLOT(message(QMessageBox::Icon, const QString &, const QString &)));
+        connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
+        connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
+
+        widget.setRepeatMode(true);
+        widget.show();
+        QDir::setCurrent("tests");
+        widget.setPlaylist("playlist.m3u");
+
+        widget.playRow(row);
+        ++count;
+        QCOMPARE(spy.count(), count);
+        playbackEngine->setPosition(0.8);
+        QTest::qWait(500);
+        ++count;
+        QCOMPARE(spy.count(), count);
+        QCOMPARE(widget.currentRow(), row);
+
+        QTest::keyClick(&widget, Qt::Key_A, Qt::ControlModifier, DELAY);
+        QTest::keyClick(&widget, Qt::Key_Space, Qt::ControlModifier, DELAY);
+        QTest::keyClick(&widget, Qt::Key_Delete, 0, DELAY);
+        QCOMPARE(widget.count(), 1);
+        QCOMPARE(widget.currentRow(), row);
+        QCOMPARE(spy.count(), count);
+
+        playbackEngine->setPosition(0.8);
+        QTest::qWait(500);
+        ++count;
+        QCOMPARE(spy.count(), count);
+        QCOMPARE(widget.currentRow(), row);
+    }
+
+    void message(QMessageBox::Icon, const QString &, const QString &msg)
+    {
+        QFAIL(msg.toAscii());
     }
 };
 
