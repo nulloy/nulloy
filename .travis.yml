@@ -17,6 +17,6 @@ before_script:
   - fluxbox 2>/dev/null &
 
 script:
-  - ./configure --taglib --tests
+  - ./configure --taglib --no-gstreamer-tagreader --tests
   - make -j`grep processor /proc/cpuinfo | wc -l`
   - ./test
