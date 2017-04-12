@@ -156,11 +156,12 @@ fi
 [ $BUILD_VLC == "yes" ]                 && QMAKE_CONFIG="$QMAKE_CONFIG vlc"
 [ $BUILD_PHONON == "yes" ]              && QMAKE_CONFIG="$QMAKE_CONFIG phonon"
 [ $BUILD_TAGLIB == "yes" ]              && QMAKE_CONFIG="$QMAKE_CONFIG taglib"
-[ $BUILD_TESTS == "yes" ]               && QMAKE_CONFIG="$QMAKE_CONFIG tests"
 [ $SUPPORT_SKINS == "no" ]              && QMAKE_CONFIG="$QMAKE_CONFIG no-skins"
 [ $MAC_BUNDLE == "no" ]                 && QMAKE_CONFIG="$QMAKE_CONFIG no-app-bundle"
 [ $MAC_UNIVERSAL == "yes" ]             && QMAKE_CONFIG="$QMAKE_CONFIG x86 x86_64"
 [ $UPDATE_CHECK == "no" ]               && QMAKE_CONFIG="$QMAKE_CONFIG no-update-check"
+[ $BUILD_TESTS == "yes" ]               && QMAKE_CONFIG="$QMAKE_CONFIG tests" \
+                                        && echo "DEFINES += _TESTS_" >> $QMAKE_CACHE
 if [ $DEBUG == "yes" ]; then
     QMAKE_CONFIG="$QMAKE_CONFIG debug"
 else

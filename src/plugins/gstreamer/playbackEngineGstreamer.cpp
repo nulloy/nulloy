@@ -72,6 +72,16 @@ void NPlaybackEngineGStreamer::init()
     m_playbin = gst_element_factory_make("playbin", NULL);
     g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
 
+#ifdef _TESTS_
+    GstElement *sink = gst_element_factory_make("fakesink", NULL);
+    g_object_set(sink, "sync", TRUE, NULL);
+    g_object_set(m_playbin, "audio-sink", sink, NULL);
+
+    sink = gst_element_factory_make("fakesink", NULL);
+    g_object_set(sink, "sync", TRUE, NULL);
+    g_object_set(m_playbin, "video-sink", sink, NULL);
+#endif
+
     m_oldVolume = -1;
     m_oldPosition = -1;
     m_posponedPosition = -1;
