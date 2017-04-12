@@ -9,6 +9,7 @@ compiler:
 install:
   - sudo apt-get install libqt4-dev qt4-qmake libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev zip libx11-dev libtag1-dev
   - sudo apt-get install fluxbox
+  - sudo apt-get install gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
 
 before_script:
   - export DISPLAY=:99.0
