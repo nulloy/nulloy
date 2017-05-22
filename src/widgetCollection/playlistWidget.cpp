@@ -682,10 +682,10 @@ Qt::DropActions NPlaylistWidget::supportedDropActions() const
 }
 #endif
 
-QMimeData* NPlaylistWidget::mimeData(const QList<NPlaylistWidgetItem *> items) const
+QMimeData* NPlaylistWidget::mimeData(const QList<QListWidgetItem *> items) const
 {
     QList<QUrl> urls;
-    foreach (NPlaylistWidgetItem *item, items)
+    foreach (QListWidgetItem *item, items)
         urls << QUrl::fromLocalFile(item->data(N::PathRole).toString());
 
     QPointer<QMimeData> data = new QMimeData();

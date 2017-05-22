@@ -118,7 +118,7 @@ private:
     bool m_fileDrop;
     QList<QUrl> m_mimeDataUrls;
     QStringList mimeTypes() const;
-    QMimeData* mimeData(const QList<NPlaylistWidgetItem *> items) const;
+    QMimeData* mimeData(const QList<QListWidgetItem *> items) const;
     bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
 #ifdef Q_WS_MAC
     Qt::DropActions supportedDropActions() const;
