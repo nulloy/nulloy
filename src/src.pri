@@ -21,9 +21,10 @@ include(../3rdParty/qxt-696423b-patched/qxtglobalshortcut.pri)
 include(../3rdParty/qtsingleapplication-8fd81b2/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 include($$SRC_DIR/i18n/i18n.pri)
-include($$SRC_DIR/trash/trash.pri)
-win32:include($$SRC_DIR/ux/w7TaskBar.pri)
-mac:include($$SRC_DIR/ux/macDock.pri)
+include($$SRC_DIR/platform/trash.pri)
+win32:include($$SRC_DIR/platform/w7TaskBar.pri)
+mac:include($$SRC_DIR/platform/macDock.pri)
+mac:include($$SRC_DIR/platform/foundation.pri)
 
 # zlib
 !mac {
