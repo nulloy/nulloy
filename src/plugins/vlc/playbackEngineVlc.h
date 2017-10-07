@@ -19,6 +19,7 @@
 #include "plugin.h"
 #include "playbackEngineInterface.h"
 #include <QTimer>
+#include <QTime>
 #include <vlc/vlc.h>
 #include <vlc_aout.h>
 
@@ -35,6 +36,8 @@ private:
     QTimer *m_timer;
     qreal m_oldVolume;
     qreal m_oldPosition;
+    qint64 m_oldTime;
+    QTime m_positionTimer;
     N::PlaybackState m_oldState;
     QString m_currentMedia;
 
@@ -50,7 +53,7 @@ public:
     Q_INVOKABLE N::PlaybackState state() const { return m_oldState; }
 
     Q_INVOKABLE qreal volume() const;
-    Q_INVOKABLE qreal position() const;
+    Q_INVOKABLE qreal position();
     Q_INVOKABLE qint64 durationMsec() const;
 
 public slots:

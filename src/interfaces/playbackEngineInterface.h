@@ -33,7 +33,7 @@ public:
     Q_INVOKABLE virtual N::PlaybackState state() const = 0;
 
     Q_INVOKABLE virtual qreal volume() const = 0;
-    Q_INVOKABLE virtual qreal position() const = 0;
+    Q_INVOKABLE virtual qreal position() = 0;
     Q_INVOKABLE virtual qint64 durationMsec() const = 0;
 
     static QString interfaceString() { return PLAYBACK_INTERFACE; }
