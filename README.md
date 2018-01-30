@@ -4,7 +4,7 @@
 <img src="http://nulloy.com/files/screen_1.png" height="250">
 <img src="http://nulloy.com/files/screen_2.png" height="250">
 
-[![Build Status](https://travis-ci.org/nulloy/nulloy.svg)](https://travis-ci.org/nulloy/nulloy)
+[![Build Status](https://travis-ci.org/nulloy/nulloy.svg?branch=master)](https://travis-ci.org/nulloy/nulloy)
 
 **Testing PPA:** [ppa:nulloy/testing](https://launchpad.net/~nulloy/+archive/ubuntu/testing)
 
