@@ -641,7 +641,7 @@ void NPlayer::downloadVersion()
 #endif
 
     if (!suffix.isEmpty())
-        m_versionDownloader->get(QNetworkRequest(QUrl("http://" + QCoreApplication::organizationDomain() + "/version_" + suffix)));
+        m_versionDownloader->get(QNetworkRequest(QUrl("http://static." + QCoreApplication::organizationDomain() + "/release/" + suffix)));
 }
 
 void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
