@@ -631,17 +631,8 @@ void NPlayer::on_preferencesDialog_settingsChanged()
 #ifndef _N_NO_UPDATE_CHECK_
 void NPlayer::downloadVersion()
 {
-    QString suffix;
-#if defined Q_WS_WIN
-    suffix = "win";
-#elif defined Q_WS_X11
-    suffix = "x11";
-#elif defined Q_WS_MAC
-    suffix = "mac";
-#endif
-
     if (!suffix.isEmpty())
-        m_versionDownloader->get(QNetworkRequest(QUrl("http://static." + QCoreApplication::organizationDomain() + "/release/" + suffix)));
+        m_versionDownloader->get(QNetworkRequest(QUrl("http://static." + QCoreApplication::organizationDomain() + "/release/version")));
 }
 
 void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
