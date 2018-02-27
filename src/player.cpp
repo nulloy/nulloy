@@ -631,8 +631,7 @@ void NPlayer::on_preferencesDialog_settingsChanged()
 #ifndef _N_NO_UPDATE_CHECK_
 void NPlayer::downloadVersion()
 {
-    if (!suffix.isEmpty())
-        m_versionDownloader->get(QNetworkRequest(QUrl("http://static." + QCoreApplication::organizationDomain() + "/release/version")));
+    m_versionDownloader->get(QNetworkRequest(QUrl("http://static." + QCoreApplication::organizationDomain() + "/release/version")));
 }
 
 void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
