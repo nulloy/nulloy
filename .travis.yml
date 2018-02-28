@@ -1,23 +1,45 @@
 language: cpp
-sudo: required
-dist: trusty
+
+os:
+  - linux
+  - osx
 
 compiler:
   - clang
   - gcc
 
 install:
-  - sudo apt-get install libqt4-dev qt4-qmake libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev zip libx11-dev libtag1-dev
-  - sudo apt-get install fluxbox
-  - sudo apt-get install gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      sudo apt update ;
+      sudo apt install g++ libqt4-dev qt4-qmake libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev ;
+      sudo apt install fluxbox ;
+      sudo apt install gstreamer1.0-plugins-{good,bad,ugly} ;
+    fi
+
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew update ;
+      brew install pkgconfig gnu-getopt cartr/qt4/qt gstreamer gst-plugins-base taglib ;
+      export PATH="/usr/local/opt/gnu-getopt/bin:$PATH" ;
+    fi
 
 before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 3 # give xvfb some time to start
-  - fluxbox 2>/dev/null &
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      export DISPLAY=:99.0 ;
+      sh -e /etc/init.d/xvfb start ;
+      sleep 3 ;
+      fluxbox 2>/dev/null &
+    fi
 
 script:
-  - ./configure --taglib --no-gstreamer-tagreader --tests
-  - make -j`grep processor /proc/cpuinfo | wc -l`
-  - ./test
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      ./configure --taglib --no-gstreamer-tagreader --tests ;
+      make -j$(grep processor /proc/cpuinfo | wc -l) ;
+      ./test ;
+    fi
+
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      ./configure --taglib --no-app-bundle --force-version 1-testing ;
+      make -j$(sysctl -n hw.ncpu) ;
+    fi
+
+
