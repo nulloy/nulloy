@@ -54,16 +54,37 @@ Nulloy.exe
 ## OSX Build Instructions
 
 ### Prerequisites
-* Xcode
-* MacPorts Installer http://www.macports.org/
+* Xcode Command Line Tools
+* MacPorts http://www.macports.org/ or HomeBrew https://brew.sh/
 
 ### Environment Setup
 
-Install Xcode and then install Xcode Command Line Tools. Install MacPorts and open a terminal.
+Install Xcode Command Line Tools:
+
+```sh
+xcode-select --install
+```
+
+### Installing Dependences
+
+First install either MacPorts or HomeBrew.
+
+#### MacPorts
+
+After installing MacPorts:
 
 ```sh
 . ~/.profile
 sudo port install pkgconfig getopt qt4-mac gstreamer1{,-gst-plugins-base} taglib
+```
+
+#### HomeBrew
+
+After installing HomeBrew:
+
+```sh
+brew install pkgconfig gnu-getopt cartr/qt4/qt gstreamer gst-plugins-base taglib
+export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
 ```
 
 ### Build & Run Nulloy
@@ -77,10 +98,18 @@ make
 
 ### Optional
 
-Install extra GStreamer plugins for more audio formats
+Install extra GStreamer plugins for more audio formats.
+
+#### MacPorts
 
 ```sh
 sudo port install gstreamer1-gst-plugins-{good,bad,ugly}
+```
+
+#### HomeBrew
+
+```sh
+brew install gst-plugins-{good,bad,ugly}
 ```
 
 
