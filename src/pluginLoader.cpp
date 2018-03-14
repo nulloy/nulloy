@@ -127,8 +127,8 @@ void NPluginLoader::init()
                 subDirsList << dirStr + "/" + subDir;
         }
     }
-    _putenv(QString("PATH=" + pluginsDirList.join(";") + ";" +
-        subDirsList.join(";") + ";" + getenv("PATH")).replace('/', '\\').toUtf8());
+    _wputenv(reinterpret_cast<const wchar_t *>(QString("PATH=" + pluginsDirList.join(";") + ";" +
+        subDirsList.join(";") + ";" + getenv("PATH")).replace('/', '\\').utf16()));
 #endif
     foreach (QString dirStr, pluginsDirList) {
         QDir dir(dirStr);
