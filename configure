@@ -116,7 +116,7 @@ check_executable()
 
     echo -n "checking for $FNAME..."
 
-    if [[ -z "${!VNAME}" ]]; then
+    if [[ -z "${!VNAME}" || ! -f "$FNAME" ]]; then
         eval ${VNAME}=$(which "$FNAME" 2>/dev/null)
         if [[ -z "${!VNAME}" ]]; then
             echo "no"
