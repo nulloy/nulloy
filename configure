@@ -110,11 +110,22 @@ if [[ ! -n $QMAKE && ! -f $QMAKE ]]; then
     QMAKE=`which qmake 2> /dev/null`
     if [[ ! -n $QMAKE || ! -f $QMAKE ]]; then
         QMAKE=$QTDIR/bin/qmake
-        if [ ! -f $QMAKE ]; then
-            echo "$BASENAME: Unable to find 'qmake'. Try \`QTDIR=/path/to/qt $0' or \`QMAKE=/path/to/qmake $0'."
-            exit 1
-        fi
     fi
+fi
+if [ ! -f $QMAKE ]; then
+    echo "$BASENAME: Unable to find 'qmake'. Try \`QTDIR=/path/to/qt $0' or \`QMAKE=/path/to/qmake $0'."
+    exit 1
+fi
+
+if [[ ! -n $LRELEASE && ! -f $LRELEASE ]]; then
+    LRELEASE=`which lrelease 2> /dev/null`
+    if [[ ! -n $LRELEASE || ! -f $LRELEASE ]]; then
+        LRELEASE=$QTDIR/bin/lrelease
+    fi
+fi
+if [ ! -f "$LRELEASE" ]; then
+    echo "$BASENAME: Unable to find 'lrelease'. Try \`QTDIR=/path/to/qt $0' or \`LRELEASE=/path/to/lrelease $0'."
+    exit 1
 fi
 
 QMAKE_CACHE=`pwd`/.qmake.cache
@@ -184,7 +195,7 @@ echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
 [ ! -d "$NULLOY_BUILD_TMP_DIR" ] && mkdir $NULLOY_BUILD_TMP_DIR
 echo "TMP_DIR = $NULLOY_BUILD_TMP_DIR" >> $QMAKE_CACHE
 
-[ ! -z "$LRELEASE" ] && echo "LRELEASE = $LRELEASE" >> $QMAKE_CACHE
+echo "LRELEASE = $LRELEASE" >> $QMAKE_CACHE
 
 if [ `uname | grep -i darwin` ]; then
     QMAKE_EXTRA_OPTIONS="-spec macx-g++"
