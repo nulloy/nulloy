@@ -138,8 +138,8 @@
     </message>
     <message>
         <location line="-151"/>
-        <source>Save Playlist...</source>
-        <translation>保存播放列表...</translation>
+        <source>Save Playlist</source>
+        <translation>保存播放列表</translation>
     </message>
     <message>
         <location line="+461"/>
@@ -210,8 +210,8 @@
     </message>
     <message>
         <location line="+6"/>
-        <source>Add Files...</source>
-        <translation>添加文件...</translation>
+        <source>Add Files</source>
+        <translation>添加文件</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -255,8 +255,8 @@
     </message>
     <message>
         <location line="+27"/>
-        <source>Add Directory...</source>
-        <translation>添加目录...</translation>
+        <source>Add Directory</source>
+        <translation>添加目录</translation>
     </message>
 </context>
 <context>

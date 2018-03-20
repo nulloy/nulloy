@@ -98,18 +98,18 @@
     </message>
     <message>
         <location line="+3"/>
-        <source>Add Files...</source>
-        <translation>Pridėti failus...</translation>
+        <source>Add Files</source>
+        <translation>Pridėti failus</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>Add Directory...</source>
-        <translation>Pridėti katalogą...</translation>
+        <source>Add Directory</source>
+        <translation>Pridėti katalogą</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>Save Playlist...</source>
-        <translation>Įrašyti grojaraštį...</translation>
+        <source>Save Playlist</source>
+        <translation>Įrašyti grojaraštį</translation>
     </message>
     <message>
         <location line="+3"/>

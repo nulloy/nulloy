@@ -178,13 +178,13 @@ void NPlayer::createActions()
     m_exitAction = new NAction(QIcon::fromTheme("exit", style()->standardIcon(QStyle::SP_DialogCloseButton)), tr("Exit"), this);
     m_exitAction->setShortcut(QKeySequence("Ctrl+Q"));
 
-    m_addFilesAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Add Files..."), this);
+    m_addFilesAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Add Files") + "...", this);
     m_addFilesAction->setShortcut(QKeySequence("Ctrl+O"));
 
-    m_addDirAction = new NAction(style()->standardIcon(QStyle::SP_FileDialogNewFolder), tr("Add Directory..."), this);
+    m_addDirAction = new NAction(style()->standardIcon(QStyle::SP_FileDialogNewFolder), tr("Add Directory") + "...", this);
     m_addDirAction->setShortcut(QKeySequence("Ctrl+Shift+O"));
 
-    m_savePlaylistAction = new NAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save Playlist..."), this);
+    m_savePlaylistAction = new NAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save Playlist") + "...", this);
     m_savePlaylistAction->setShortcut(QKeySequence("Ctrl+S"));
 
     m_showCoverAction = new NAction(tr("Show Cover Art"), this);
@@ -844,8 +844,7 @@ void NPlayer::showOpenFileDialog()
 {
     QString filters = NSettings::instance()->value("FileFilters").toString();
     QStringList files = QFileDialog::getOpenFileNames(
-                        m_mainWindow,
-                        qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
+                        m_mainWindow, tr("Add Files"),
                         m_settings->value("LastDirectory").toString(),
                         tr("All supported") + " (" + filters + ");;" +
                         tr("All files") + " (*)");
@@ -871,8 +870,7 @@ void NPlayer::on_mainWindow_scrolled(int delta)
 void NPlayer::showOpenDirDialog()
 {
     QString dir = QFileDialog::getExistingDirectory(
-                  m_mainWindow,
-                  qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
+                  m_mainWindow, tr("Add Directory"),
                   m_settings->value("LastDirectory").toString(),
                   QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -892,7 +890,7 @@ void NPlayer::showSavePlaylistDialog()
 {
     QString selectedFilter;
     QString file = QFileDialog::getSaveFileName(
-                   m_mainWindow, qobject_cast<QAction *>(QObject::sender())->text().remove("..."),
+                   m_mainWindow, tr("Save Playlist"),
                    m_settings->value("LastDirectory").toString(),
                    tr("M3U Playlist") + " (*.m3u);;" +
                    tr("Extended M3U Playlist") + " (*.m3u)",

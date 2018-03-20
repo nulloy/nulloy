@@ -98,18 +98,18 @@
     </message>
     <message>
         <location line="+3"/>
-        <source>Add Files...</source>
-        <translation>Dodaj pliki...</translation>
+        <source>Add Files</source>
+        <translation>Dodaj pliki</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>Add Directory...</source>
-        <translation>Dodaj folder...</translation>
+        <source>Add Directory</source>
+        <translation>Dodaj folder</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>Save Playlist...</source>
-        <translation>Zapisz listę odtwarzania...</translation>
+        <source>Save Playlist</source>
+        <translation>Zapisz listę odtwarzania</translation>
     </message>
     <message>
         <location line="+3"/>
