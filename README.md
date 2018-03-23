@@ -91,9 +91,10 @@ export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
 
 ```sh
 cd nulloy.git
-./configure --taglib --no-app-bundle --force-version 1-testing
+./configure --taglib --force-version 1-testing
 make
-./nulloy
+make install
+./nulloy.app/Contents/MacOS/nulloy
 ```
 
 ### Optional

@@ -1,7 +1,5 @@
 QT += script
 
-mac:no-app-bundle:CONFIG -= app_bundle
-
 INCLUDEPATH += $$SRC_DIR $$SRC_DIR/interfaces
 
 HEADERS += $$SRC_DIR/*.h
