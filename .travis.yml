@@ -38,7 +38,7 @@ script:
     fi
 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      ./configure --taglib --no-app-bundle --force-version 1-testing ;
+      ./configure --taglib --force-version 1-testing ;
       make -j$(sysctl -n hw.ncpu) ;
     fi
 
