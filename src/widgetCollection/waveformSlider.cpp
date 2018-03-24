@@ -19,6 +19,10 @@
 #include "settings.h"
 #include "common.h"
 
+#ifdef Q_WS_MAC
+#include "foundation.h"
+#endif
+
 #include <QMouseEvent>
 #include <QFile>
 #include <QStylePainter>
@@ -433,8 +437,12 @@ void NWaveformSlider::dropEvent(QDropEvent *event)
     const QMimeData *data = event->mimeData();
     if (data->hasUrls()) {
         QStringList files;
-        foreach (QUrl url, data->urls())
+        foreach (QUrl url, data->urls()) {
+#ifdef Q_WS_MAC // QTBUG-40449
+            url = filePathURL(url);
+#endif
             files << NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '));
+        }
         emit filesDropped(files);
     }
 
