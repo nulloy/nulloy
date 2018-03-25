@@ -13,7 +13,7 @@ install:
       sudo apt update ;
       sudo apt install g++ libqt4-dev qt4-qmake libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev ;
       sudo apt install fluxbox ;
-      sudo apt install gstreamer1.0-plugins-good ;
+      sudo apt install gstreamer1.0-plugins-good gstreamer1.0-tools ;
     fi
 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
