@@ -13,12 +13,13 @@ install:
       sudo apt update ;
       sudo apt install g++ libqt4-dev qt4-qmake libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev ;
       sudo apt install fluxbox ;
-      sudo apt install gstreamer1.0-plugins-{good,bad,ugly} ;
+      sudo apt install gstreamer1.0-plugins-good ;
     fi
 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update ;
       brew install pkgconfig gnu-getopt cartr/qt4/qt gstreamer gst-plugins-base taglib ;
+      brew install gst-plugins-good ;
       export PATH="/usr/local/opt/gnu-getopt/bin:$PATH" ;
     fi
 
@@ -32,13 +33,13 @@ before_script:
 
 script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      ./configure --taglib --no-gstreamer-tagreader --tests ;
+      ./configure --tests ;
       make -j$(grep processor /proc/cpuinfo | wc -l) ;
       ./test ;
     fi
 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      ./configure --taglib --force-version 1-testing ;
+      ./configure --tests;
       make -j$(sysctl -n hw.ncpu) ;
     fi
 
