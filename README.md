@@ -44,7 +44,7 @@ mingw32-make install
 
 ```bat
 cd C:\nulloy.git
-configure --taglib --force-version 1-testing
+configure
 mingw32-make
 Nulloy.exe
 ```
@@ -91,7 +91,7 @@ export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
 
 ```sh
 cd nulloy.git
-./configure --taglib --force-version 1-testing
+./configure
 make
 make install
 ./nulloy.app/Contents/MacOS/nulloy
@@ -135,7 +135,7 @@ yum install gcc-c++ qt-devel gstreamer1{-plugins-base,}-devel zip libX11-devel t
 
 ```sh
 cd nulloy.git
-./configure --taglib --force-version 1-testing
+./configure
 make
 ./nulloy
 ```

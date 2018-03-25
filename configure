@@ -6,30 +6,25 @@ PREFIX=/usr
 DEBUG=no
 APP_NAME=nulloy
 
-HAVE_GSTREAMER=no
-HAVE_VLC=no
-
 FORCE_VERSION=no
 BUILD_GSTREAMER=yes
-BUILD_GSTREAMER_TAGREADER=yes
-BUILD_TAGLIB=no
+BUILD_GSTREAMER_TAGREADER=no
+BUILD_TAGLIB=yes
 BUILD_VLC=no
 BUILD_PHONON=no
 BUILD_TESTS=no
 UPDATE_CHECK=yes
 SUPPORT_SKINS=yes
-
-MAC_BUNDLE=yes
 MAC_UNIVERSAL=no
 
 echo_help()
 {
     echo "Usage:  $BASENAME [options]"
-    echo '    --no-gstreamer              do not build GStreamer plugins'
-    echo '    --no-gstreamer-tagreader    do not build GStreamer TagReader plugin'
-    echo '    --vlc                       build VLC plugins'
-    echo '    --phonon                    build Phonon plugins'
-    echo '    --taglib                    build with TagLib'
+    echo '    --no-gstreamer              do not build GStreamer plugin'
+    echo '    --gstreamer-tagreader       include TagReader in GStreamer plugin'
+    echo '    --vlc                       build VLC plugin'
+    echo '    --phonon                    build Phonon plugin'
+    echo '    --no-taglib                 do not build TagLib plugin'
     echo '    --no-skins                  disable skins support'
     echo '    --force-version VERSION     overrides version.pri'
     echo '    --no-update-check           disable online check functionality'
@@ -53,7 +48,7 @@ if [ ! $? -eq 4 ]; then
     exit 1
 fi
 
-args=`getopt -n$BASENAME -o h --longoptions="force-version: no-update-check no-gstreamer no-gstreamer-tagreader vlc phonon taglib tests no-skins debug prefix: universal help" -- "$@"`
+args=`getopt -n$BASENAME -o h --longoptions="force-version: no-update-check no-gstreamer gstreamer-tagreader vlc phonon no-taglib tests no-skins debug prefix: universal help" -- "$@"`
 
 if test $? != 0; then
     echo_try; exit 1
@@ -74,14 +69,14 @@ while [ $# -gt 0 ]; do
         shift; FORCE_VERSION=$1
     elif [ $1 == "--no-gstreamer" ]; then
         BUILD_GSTREAMER=no
-    elif [ $1 == "--no-gstreamer-tagreader" ]; then
-        BUILD_GSTREAMER_TAGREADER=no
+    elif [ $1 == "--gstreamer-tagreader" ]; then
+        BUILD_GSTREAMER_TAGREADER=yes
     elif [ $1 == "--vlc" ]; then
         BUILD_VLC=yes
     elif [ $1 == "--phonon" ]; then
         BUILD_PHONON=yes
-    elif [ $1 == "--taglib" ]; then
-        BUILD_TAGLIB=yes
+    elif [ $1 == "--no-taglib" ]; then
+        BUILD_TAGLIB=no
     elif [ $1 == "--tests" ]; then
         BUILD_TESTS=yes
     elif [ $1 == "--no-skins" ]; then
