@@ -40,61 +40,45 @@ echo_try()
     echo "Try \`$BASENAME --help' for more information"
 }
 
-getopt -T > /dev/null
-if [ ! $? -eq 4 ]; then
-    echo "$BASENAME: BSD version of 'getopt' is not supported."
-    echo "Install GNU getopt (enhanced) and check PATH environment variable."
-    echo
-    exit 1
-fi
-
-args=`getopt -n$BASENAME -o h --longoptions="force-version: no-update-check no-gstreamer gstreamer-tagreader vlc phonon no-taglib tests no-skins debug prefix: universal help" -- "$@"`
-
-if test $? != 0; then
-    echo_try; exit 1
-fi
-
-eval set -- $args
-while [ $# -gt 0 ]; do
-    if [ $1 == "--prefix" ]; then
-        shift
-        if (command -v realpath &> /dev/null) && [ -d "`dirname $1`" ]; then
-            PREFIX=`realpath "$1"`
-        else
-            PREFIX=`readlink -m "$1"`
-        fi
-    elif [ $1 == "--debug" ]; then
-        DEBUG=yes
-    elif [ $1 == "--force-version" ]; then
-        shift; FORCE_VERSION=$1
-    elif [ $1 == "--no-gstreamer" ]; then
-        BUILD_GSTREAMER=no
-    elif [ $1 == "--gstreamer-tagreader" ]; then
-        BUILD_GSTREAMER_TAGREADER=yes
-    elif [ $1 == "--vlc" ]; then
-        BUILD_VLC=yes
-    elif [ $1 == "--phonon" ]; then
-        BUILD_PHONON=yes
-    elif [ $1 == "--no-taglib" ]; then
-        BUILD_TAGLIB=no
-    elif [ $1 == "--tests" ]; then
-        BUILD_TESTS=yes
-    elif [ $1 == "--no-skins" ]; then
-        SUPPORT_SKINS=no
-    elif [ $1 == "--no-update-check" ]; then
-        UPDATE_CHECK=no
-    elif [ $1 == "--universal" ]; then
-        MAC_UNIVERSAL=yes
-    elif [[ $1 == "--help" || $1 == "-h" ]]; then
-        echo_help; exit 0
-    elif [ $1 == "--" ]; then
-        shift
-        if [ $# -ne 0 ]; then
-            echo "$BASENAME: invalid arguments"
+while test $# -gt 0; do
+    case "$1" in
+        --prefix)
+            shift
+            if (command -v realpath &> /dev/null) && [ -d "`dirname $1`" ]; then
+                PREFIX=`realpath "$1"`
+            else
+                PREFIX=`readlink -m "$1"`
+            fi
+            ;;
+        --debug)
+            DEBUG=yes ;;
+        --force-version)
+            shift; FORCE_VERSION=$1 ;;
+        --no-gstreamer)
+            BUILD_GSTREAMER=no ;;
+        --gstreamer-tagreader)
+            BUILD_GSTREAMER_TAGREADER=yes ;;
+        --vlc)
+            BUILD_VLC=yes ;;
+        --phonon)
+            BUILD_PHONON=yes ;;
+        --no-taglib)
+            BUILD_TAGLIB=no ;;
+        --tests)
+            BUILD_TESTS=yes ;;
+        --no-skins)
+            SUPPORT_SKINS=no ;;
+        --no-update-check)
+            UPDATE_CHECK=no ;;
+        --universal)
+            MAC_UNIVERSAL=yes ;;
+        --help|-h)
+            echo_help; exit 0 ;;
+        *)
+            echo "$BASENAME: invalid argument: $1"
             echo_try; exit 1
-        fi
-        break
-    fi
+            ;;
+    esac
     shift
 done
 

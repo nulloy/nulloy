@@ -18,9 +18,8 @@ install:
 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update ;
-      brew install pkgconfig gnu-getopt cartr/qt4/qt gstreamer gst-plugins-base taglib ;
+      brew install pkgconfig cartr/qt4/qt gstreamer gst-plugins-base taglib ;
       brew install gst-plugins-good ;
-      export PATH="/usr/local/opt/gnu-getopt/bin:$PATH" ;
     fi
 
 before_script:

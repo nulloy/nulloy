@@ -63,7 +63,7 @@ set SUPPORT_SKINS=yes
     if "%0" == "-h"     goto help
     if "%0" == "--help" goto help
     if "%0" == "/?"     goto help
-    echo %BASENAME%: invalid option '%0'
+    echo %BASENAME%: invalid argument '%0'
     goto try_help
 
 :try_help

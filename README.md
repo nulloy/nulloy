@@ -75,7 +75,7 @@ After installing MacPorts:
 
 ```sh
 . ~/.profile
-sudo port install pkgconfig getopt qt4-mac gstreamer1{,-gst-plugins-base} taglib
+sudo port install pkgconfig qt4-mac gstreamer1{,-gst-plugins-base} taglib
 ```
 
 #### HomeBrew
@@ -83,8 +83,7 @@ sudo port install pkgconfig getopt qt4-mac gstreamer1{,-gst-plugins-base} taglib
 After installing HomeBrew:
 
 ```sh
-brew install pkgconfig gnu-getopt cartr/qt4/qt gstreamer gst-plugins-base taglib
-export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
+brew install pkgconfig cartr/qt4/qt gstreamer gst-plugins-base taglib
 ```
 
 ### Build & Run Nulloy
