@@ -1,7 +1,7 @@
-#! /bin/bash
+#!/bin/bash
 
-BASENAME=`basename $0`
-
+BASENAME=$(basename $0)
+CWD=$(dirname $0)
 PREFIX=/usr
 DEBUG=no
 APP_NAME=nulloy
@@ -17,8 +17,11 @@ UPDATE_CHECK=yes
 SUPPORT_SKINS=yes
 MAC_UNIVERSAL=no
 
-echo_help()
-{
+echo_err() {
+    echo "$BASENAME: $@" >&2
+}
+
+echo_help() {
     echo "Usage:  $BASENAME [options]"
     echo '    --no-gstreamer              do not build GStreamer plugin'
     echo '    --gstreamer-tagreader       include TagReader in GStreamer plugin'
@@ -28,14 +31,13 @@ echo_help()
     echo '    --no-skins                  disable skins support'
     echo '    --force-version VERSION     overrides version.pri'
     echo '    --no-update-check           disable online check functionality'
-    echo '    --prefix PREFIX             installation prefix'
+    echo '    --prefix PREFIX             installation prefix (ignored on Mac)'
     echo '    --universal                 build for both i386 and x86_64 (Mac only)'
     echo '    --debug                     build in debug mode'
     echo '    --tests                     build unit tests'
 }
 
-echo_try()
-{
+echo_try() {
     echo
     echo "Try \`$BASENAME --help' for more information"
 }
@@ -44,10 +46,10 @@ while test $# -gt 0; do
     case "$1" in
         --prefix)
             shift
-            if (command -v realpath &> /dev/null) && [ -d "`dirname $1`" ]; then
-                PREFIX=`realpath "$1"`
+            if command -v realpath &> /dev/null && -d $(dirname "$1"); then
+                PREFIX=$(realpath "$1")
             else
-                PREFIX=`readlink -m "$1"`
+                PREFIX=$(readlink -m "$1")
             fi
             ;;
         --debug)
@@ -75,118 +77,105 @@ while test $# -gt 0; do
         --help|-h)
             echo_help; exit 0 ;;
         *)
-            echo "$BASENAME: invalid argument: $1"
+            echo_err "invalid argument: $1"
             echo_try; exit 1
             ;;
     esac
     shift
 done
 
-QMAKE_CACHE=`pwd`/.qmake.cache
-[ -f $QMAKE_CACHE ] && rm -f $QMAKE_CACHE
+QMAKE_CACHE=$CWD/.qmake.cache
+echo -n > $QMAKE_CACHE
 
-check_executable()
-{
+check_executable() {
     VNAME="$1"
     FNAME="$2"
 
-    echo -n "checking for $FNAME: "
+    echo -n "Checking for $FNAME: "
 
     if [[ ! -z "${!VNAME}" ]]; then
         FNAME="${!VNAME}"
     else
-        eval ${VNAME}="$FNAME"
+        eval $VNAME="$FNAME"
     fi
 
     if [[ ! -f "$FNAME" ]]; then
         FNAME=$(which "$FNAME" 2>/dev/null)
         if [[ -z "$FNAME" ]]; then
             echo "no"
-            echo "$BASENAME: Unable to find '$FNAME'. Check the PATH environment variable or try \`$VNAME=/path/to/$FNAME $0'"
+            echo_err "Unable to find $2. Check the PATH environment variable or try \`$VNAME=/path/to/$2 $0'."
             exit 1
         fi
     fi
 
     echo "$FNAME"
 }
-
 check_executable QMAKE qmake
 check_executable LRELEASE lrelease
 echo "LRELEASE = $LRELEASE" >> $QMAKE_CACHE
 check_executable PKG_CONFIG pkg-config
 echo "PKG_CONFIG = $PKG_CONFIG" >> $QMAKE_CACHE
 
-[ -n "$CFLAGS" ]   && echo "QMAKE_CFLAGS += ${CFLAGS}"     >> $QMAKE_CACHE
-[ -n "$CXXFLAGS" ] && echo "QMAKE_CXXFLAGS += ${CXXFLAGS}" >> $QMAKE_CACHE
-[ -n "$LDFLAGS" ]  && echo "QMAKE_LFLAGS += ${LDFLAGS}"    >> $QMAKE_CACHE
+[[ -n "$CFLAGS" ]]   && echo "QMAKE_CFLAGS += ${CFLAGS}"     >> $QMAKE_CACHE
+[[ -n "$CXXFLAGS" ]] && echo "QMAKE_CXXFLAGS += ${CXXFLAGS}" >> $QMAKE_CACHE
+[[ -n "$LDFLAGS" ]]  && echo "QMAKE_LFLAGS += ${LDFLAGS}"    >> $QMAKE_CACHE
 
-
-pkg_check_lib()
-{
-    $PKG_CONFIG --print-errors $1
-    if [ $? -eq 0 ]; then
-        echo "found $1"
+pkg_check_lib() {
+    if $PKG_CONFIG --print-errors $1; then
+        echo "Found $1"
     else
         echo
         exit 1
     fi
 }
-[ $BUILD_GSTREAMER == "yes" ]           && pkg_check_lib gstreamer-1.0
-[ $BUILD_GSTREAMER_TAGREADER == "yes" ] && pkg_check_lib gstreamer-pbutils-1.0
-[ $BUILD_VLC == "yes" ]                 && pkg_check_lib libvlc
-[ $BUILD_TAGLIB == "yes" ]              && pkg_check_lib taglib
-[ $BUILD_PHONON == "yes" ]              && pkg_check_lib phonon
+[[ $BUILD_GSTREAMER == "yes" ]]           && pkg_check_lib gstreamer-1.0
+[[ $BUILD_GSTREAMER_TAGREADER == "yes" ]] && pkg_check_lib gstreamer-pbutils-1.0
+[[ $BUILD_VLC == "yes" ]]                 && pkg_check_lib libvlc
+[[ $BUILD_TAGLIB == "yes" ]]              && pkg_check_lib taglib
+[[ $BUILD_PHONON == "yes" ]]              && pkg_check_lib phonon
 
-[ $BUILD_GSTREAMER == "yes" ]           && QMAKE_CONFIG="$QMAKE_CONFIG gstreamer"
-[ $BUILD_GSTREAMER_TAGREADER == "yes" ] && QMAKE_CONFIG="$QMAKE_CONFIG gstreamer-tagreader"
-[ $BUILD_VLC == "yes" ]                 && QMAKE_CONFIG="$QMAKE_CONFIG vlc"
-[ $BUILD_PHONON == "yes" ]              && QMAKE_CONFIG="$QMAKE_CONFIG phonon"
-[ $BUILD_TAGLIB == "yes" ]              && QMAKE_CONFIG="$QMAKE_CONFIG taglib"
-[ $SUPPORT_SKINS == "no" ]              && QMAKE_CONFIG="$QMAKE_CONFIG no-skins"
-[ $MAC_UNIVERSAL == "yes" ]             && QMAKE_CONFIG="$QMAKE_CONFIG x86 x86_64"
-[ $UPDATE_CHECK == "no" ]               && QMAKE_CONFIG="$QMAKE_CONFIG no-update-check"
-[ $BUILD_TESTS == "yes" ]               && QMAKE_CONFIG="$QMAKE_CONFIG tests" \
-                                        && echo "DEFINES += _TESTS_" >> $QMAKE_CACHE
-if [ $DEBUG == "yes" ]; then
-    QMAKE_CONFIG="$QMAKE_CONFIG debug"
+[[ $BUILD_GSTREAMER == "yes" ]]           && echo "CONFIG += gstreamer" >> $QMAKE_CACHE
+[[ $BUILD_GSTREAMER_TAGREADER == "yes" ]] && echo "CONFIG += gstreamer-tagreader" >> $QMAKE_CACHE
+[[ $BUILD_VLC == "yes" ]]                 && echo "CONFIG += vlc" >> $QMAKE_CACHE
+[[ $BUILD_PHONON == "yes" ]]              && echo "CONFIG += phonon" >> $QMAKE_CACHE
+[[ $BUILD_TAGLIB == "yes" ]]              && echo "CONFIG += taglib" >> $QMAKE_CACHE
+[[ $SUPPORT_SKINS == "no" ]]              && echo "CONFIG += no-skins" >> $QMAKE_CACHE
+[[ $MAC_UNIVERSAL == "yes" ]]             && echo "CONFIG += x86 x86_64" >> $QMAKE_CACHE
+[[ $UPDATE_CHECK == "no" ]]               && echo "CONFIG += no-update-check" >> $QMAKE_CACHE
+[[ $BUILD_TESTS == "yes" ]]               && echo "CONFIG += tests" >> $QMAKE_CACHE \
+                                          && echo "DEFINES += _TESTS_" >> $QMAKE_CACHE
+if [[ $DEBUG == "yes" ]]; then
+    echo "CONFIG += debug" >> $QMAKE_CACHE
 else
-    QMAKE_CONFIG="$QMAKE_CONFIG release"
+    echo "CONFIG += release" >> $QMAKE_CACHE
 fi
 
-if [ `$QMAKE -query "QMAKE_MKSPECS" | grep -i mingw` ]; then
-    QMAKE_CONFIG="$QMAKE_CONFIG unix_mingw"
+if $QMAKE -query "QMAKE_MKSPECS" | grep -i mingw; then
+    echo "CONFIG += unix_mingw" >> $QMAKE_CACHE
     APP_NAME=Nulloy
 fi
+echo "APP_NAME = $APP_NAME" >> $QMAKE_CACHE
 
-if [ $FORCE_VERSION != "no" ]; then
+echo
+if [[ $FORCE_VERSION != "no" ]]; then
     echo "Forced version: $FORCE_VERSION"
-    echo "N_CONFIG_FORCE_VERSION = $FORCE_VERSION" > $QMAKE_CACHE
+    echo "N_CONFIG_FORCE_VERSION = $FORCE_VERSION" >> $QMAKE_CACHE
 fi
+
+if uname | grep -i darwin; then
+    QMAKE_EXTRA_OPTIONS="-spec macx-g++"
+else
+    echo "Install prefix: $PREFIX"
+fi
+echo "PREFIX = $PREFIX" >> $QMAKE_CACHE
 
 echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
 
-[ -z "$NULLOY_BUILD_TMP_DIR" ] && NULLOY_BUILD_TMP_DIR=`pwd`/.tmp
-[ ! -d "$NULLOY_BUILD_TMP_DIR" ] && mkdir $NULLOY_BUILD_TMP_DIR
-echo "TMP_DIR = $NULLOY_BUILD_TMP_DIR" >> $QMAKE_CACHE
-
-if [ `uname | grep -i darwin` ]; then
-    QMAKE_EXTRA_OPTIONS="-spec macx-g++"
-else
-    echo
-    echo "Install prefix: $PREFIX"
-fi
-
 echo
 echo "Running qmake..."
-
-$QMAKE "CONFIG+=$QMAKE_CONFIG" PREFIX="$PREFIX" APP_NAME="$APP_NAME" $QMAKE_EXTRA_OPTIONS
-if [ $? -ne 0 ]; then
-    echo "$BASENAME: qmake failed"
+if ! $QMAKE $QMAKE_EXTRA_OPTIONS; then
+    echo_err "qmake failed"
     exit 1
 fi
 
 echo "Nulloy has been configured. Now run \`make'."
-echo
-
-exit 0
-

@@ -63,7 +63,7 @@ set SUPPORT_SKINS=yes
     if "%0" == "-h"     goto help
     if "%0" == "--help" goto help
     if "%0" == "/?"     goto help
-    echo %BASENAME%: invalid argument '%0'
+    echo %BASENAME%: invalid argument: %0
     goto try_help
 
 :try_help
@@ -85,16 +85,14 @@ set SUPPORT_SKINS=yes
     echo     --tests                     build unit tests
     goto end
 
-
 :getopt_finished
-
 
 %QMAKE% -v > NUL 2>&1
 if errorlevel 1 goto qmake_not_found
 goto qmake_ok
 
 :qmake_not_found
-echo %BASENAME%: Unable to find 'qmake'. Check the PATH environment variable.
+echo %BASENAME%: Unable to find qmake. Check the PATH environment variable.
 goto end
 
 :qmake_ok
@@ -127,11 +125,9 @@ echo N_CONFIG_SUCCESS = yes>> %QMAKE_CACHE%
 
 echo.
 echo Running qmake...
-
 %QMAKE%
 
 echo Nulloy has been configured. Now run `make'.
-echo.
 
 :end
 
