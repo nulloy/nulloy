@@ -6,8 +6,6 @@
 
 [![Build Status](https://travis-ci.org/nulloy/nulloy.svg?branch=master)](https://travis-ci.org/nulloy/nulloy)
 
-**Testing PPA:** [ppa:nulloy/testing](https://launchpad.net/~nulloy/+archive/ubuntu/testing)
-
 ## Windows Build Instructions
 
 ### Prerequisites
