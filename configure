@@ -90,23 +90,24 @@ check_executable()
     VNAME="$1"
     FNAME="$2"
 
-    echo -n "checking for $FNAME..."
+    echo -n "checking for $FNAME: "
 
-    if [[ -z "${!VNAME}" || ! -f "$FNAME" ]]; then
-        eval ${VNAME}=$(which "$FNAME" 2>/dev/null)
-        if [[ -z "${!VNAME}" ]]; then
+    if [[ ! -z "${!VNAME}" ]]; then
+        FNAME="${!VNAME}"
+    else
+        eval ${VNAME}="$FNAME"
+    fi
+
+    if [[ ! -f "$FNAME" ]]; then
+        FNAME=$(which "$FNAME" 2>/dev/null)
+        if [[ -z "$FNAME" ]]; then
             echo "no"
             echo "$BASENAME: Unable to find '$FNAME'. Check the PATH environment variable or try \`$VNAME=/path/to/$FNAME $0'"
             exit 1
         fi
     fi
-    if [[ ! -f "${!VNAME}" ]]; then
-        echo "no"
-        echo "$BASENAME: '${!VNAME}': No such file or directory."
-        exit 1
-    fi
 
-    echo "${!VNAME}"
+    echo "$FNAME"
 }
 
 check_executable QMAKE qmake
