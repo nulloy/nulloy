@@ -1,4 +1,4 @@
-QT += script
+QT += script gui
 
 INCLUDEPATH += $$SRC_DIR $$SRC_DIR/interfaces
 

@@ -32,6 +32,7 @@
 
 #include <QContextMenuEvent>
 #include <QDir>
+#include <QDrag>
 #include <QFileInfo>
 #include <QMenu>
 #include <QScrollBar>

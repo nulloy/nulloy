@@ -2,7 +2,8 @@ TEMPLATE = lib
 TARGET = widget_collection
 DESTDIR = $$PWD
 
-CONFIG += designer plugin static
+QT += designer gui
+CONFIG += plugin static
 
 include(widgetCollection.pri)
 INCLUDEPATH += ../platform/
