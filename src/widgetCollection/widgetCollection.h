@@ -16,12 +16,13 @@
 #ifndef N_WIDGET_COLLECTION_H
 #define N_WIDGET_COLLECTION_H
 
-#include <QDesignerCustomWidgetCollectionInterface>
-#include <QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class NWidgetPlugin : public QDesignerCustomWidgetInterface
 {
     Q_INTERFACES(QDesignerCustomWidgetInterface)
+    Q_PLUGIN_METADATA(IID "com.nulloy.NWidgetCollection")
 
 private:
     bool m_initialized;

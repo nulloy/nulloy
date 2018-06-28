@@ -1,4 +1,4 @@
-QT += script gui
+QT += script gui core-private
 
 INCLUDEPATH += $$SRC_DIR $$SRC_DIR/interfaces
 
@@ -37,7 +37,7 @@ unix:!mac:PKGCONFIG += x11
 # qmake -config no-skins
 !no-skins {
     include($$SRC_DIR/skins/skins.pri)
-    CONFIG += uitools
+    QT += uitools
     INCLUDEPATH += $$SRC_DIR/widgetCollection
     LIBS += -L$$SRC_DIR/widgetCollection -lwidget_collection
     PRE_TARGETDEPS += $$SRC_DIR/widgetCollection/libwidget_collection.a

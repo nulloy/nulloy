@@ -22,6 +22,7 @@ class NContainerTaglib : public QObject, public NPluginContainer
 {
     Q_OBJECT
     Q_INTERFACES(NPluginContainer)
+    Q_PLUGIN_METADATA(IID "com.nulloy.NContainerTaglib")
 
 private:
     QList<NPlugin *> m_plugins;

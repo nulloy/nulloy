@@ -208,7 +208,7 @@ template <class Key, class T> void NCache<Key, T>::trim(int m)
         Node *u = n;
         --i;
         n = &hash[list.at(i)];
-        if (qIsDetached(*u->t))
+        //if (qIsDetached(*u->t))
             unlink(*u);
     }
 }

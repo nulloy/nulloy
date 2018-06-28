@@ -191,7 +191,7 @@ void NAboutDialog::show()
 
     // resize according to content
     foreach (QString objectName, QStringList() << "aboutTextBrowser" << "licenseTextBrowser") {
-        QTextBrowser *textBrowser = qFindChild<QTextBrowser *>(parent(), objectName);
+        QTextBrowser *textBrowser = parent()->findChild<QTextBrowser *>(objectName);
         QSize textSize = textBrowser->document()->size().toSize();
         textBrowser->setMinimumHeight(textSize.height());
     }

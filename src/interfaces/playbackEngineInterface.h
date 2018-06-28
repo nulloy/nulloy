@@ -18,8 +18,6 @@
 
 #include "global.h"
 
-#include <QMessageBox>
-
 #define PLAYBACK_INTERFACE "Nulloy/NPlaybackEngineInterface/0.7"
 
 class NPlaybackEngineInterface : public QObject
@@ -51,7 +49,7 @@ public slots:
 signals:
     virtual void positionChanged(qreal pos) = 0;
     virtual void volumeChanged(qreal vol) = 0;
-    virtual void message(QMessageBox::Icon icon, const QString &title, const QString &msg) = 0;
+    virtual void message(N::MessageIcon icon, const QString &title, const QString &msg) = 0;
     virtual void mediaChanged(const QString &file) = 0;
     virtual void finished() = 0;
     virtual void failed() = 0;

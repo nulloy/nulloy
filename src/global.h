@@ -82,6 +82,14 @@ public:
         MaxPlugin       = (1<<4) - 1
     };
 
+    enum MessageIcon {
+        NoIcon = 0,
+        Question = 4,
+        Information = 1,
+        Warning = 2,
+        Critical = 3
+    };
+
     Q_DECLARE_FLAGS(PluginTypeFlags, PluginType)
     Q_DECLARE_OPERATORS_FOR_FLAGS(PluginTypeFlags)
 
