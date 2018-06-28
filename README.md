@@ -119,7 +119,7 @@ brew install gst-plugins-{good,bad,ugly}
 #### DEB-based distro
 
 ```sh
-apt-get install g++ qt5-default qttools5-dev qtscript5-dev libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev
+apt-get install g++ qt5-default qttools5-dev qtscript5-dev qtbase5-private-dev libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev
 ```
 
 #### RPM-based distro
