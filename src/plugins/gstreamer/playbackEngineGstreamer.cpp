@@ -63,7 +63,7 @@ void NPlaybackEngineGStreamer::init()
     NCore::cArgs(&argc, &argv);
     gst_init(&argc, (char ***)&argv);
     if (!gst_init_check(&argc, (char ***)&argv, &err)) {
-        emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err ? QString::fromUtf8(err->message) : "unknown error");
+        emit message(N::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err ? QString::fromUtf8(err->message) : "unknown error");
         emit failed();
         if (err)
             g_error_free(err);
@@ -119,7 +119,7 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 
     if (!QFile(file).exists()) {
         fail();
-        emit message(QMessageBox::Warning, file, "No such file or directory");
+        emit message(N::Warning, file, "No such file or directory");
         return;
     }
 
@@ -245,7 +245,7 @@ void NPlaybackEngineGStreamer::checkStatus()
                 gst_message_parse_error(msg, &err, &debug);
                 g_free(debug);
 
-                emit message(QMessageBox::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err ? QString::fromUtf8(err->message) : "unknown error");
+                emit message(N::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), err ? QString::fromUtf8(err->message) : "unknown error");
                 fail();
 
                 if (err)

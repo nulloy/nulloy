@@ -380,7 +380,7 @@ void NPlayer::connectSignals()
     connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
     connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(currentFinished()));
     connect(m_playbackEngine, SIGNAL(failed()), this, SLOT(on_playbackEngine_failed()));
-    connect(m_playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)), m_logDialog, SLOT(showMessage(QMessageBox::Icon, const QString &, const QString &)));
+    connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
 
     connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
 

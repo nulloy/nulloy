@@ -17,7 +17,7 @@
 #define N_LOG_DIALOG_H
 
 #include <QDialog>
-#include <QMessageBox>
+#include "global.h"
 
 class QCheckBox;
 class QString;
@@ -41,7 +41,7 @@ public:
     ~NLogDialog();
 
 public slots:
-    void showMessage(QMessageBox::Icon icon, const QString &title, const QString &msg);
+    void showMessage(N::MessageIcon icon, const QString &title, const QString &msg);
 };
 
 #endif

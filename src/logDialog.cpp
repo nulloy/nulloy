@@ -55,7 +55,7 @@ NLogDialog::NLogDialog(QWidget *parent) : QDialog(parent)
 
 NLogDialog::~NLogDialog() {}
 
-void NLogDialog::showMessage(QMessageBox::Icon icon, const QString &title, const QString &msg)
+void NLogDialog::showMessage(N::MessageIcon icon, const QString &title, const QString &msg)
 {
     if (!m_text.isEmpty())
         m_text.append("<br>");
@@ -68,10 +68,10 @@ void NLogDialog::showMessage(QMessageBox::Icon icon, const QString &title, const
     }
 
     switch (icon) {
-    case QMessageBox::Critical:
+    case N::Critical:
         m_text.append("<span style=\"background-color: #ff0000\">Error</span>: ");
         break;
-    case QMessageBox::Warning:
+    case N::Warning:
         m_text.append("<span style=\"background-color: #ffaa00\">Warning</span>: ");
         break;
     default:

@@ -134,7 +134,7 @@ private slots:
 
         connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
-        connect(playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)), this, SLOT(message(QMessageBox::Icon, const QString &, const QString &)));
+        connect(playbackEngine, SIGNAL(message(N::MessageBox::Icon, const QString &, const QString &)), this, SLOT(message(N::MessageBox::Icon, const QString &, const QString &)));
         connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 
@@ -165,7 +165,7 @@ private slots:
 
         connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
-        connect(playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)), this, SLOT(message(QMessageBox::Icon, const QString &, const QString &)));
+        connect(playbackEngine, SIGNAL(message(N::MessageBox::Icon, const QString &, const QString &)), this, SLOT(message(N::MessageBox::Icon, const QString &, const QString &)));
         connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 
@@ -197,7 +197,7 @@ private slots:
         QCOMPARE(widget.currentRow(), row);
     }
 
-    void message(QMessageBox::Icon, const QString &, const QString &msg)
+    void message(N::MessageBox::Icon, const QString &, const QString &msg)
     {
         QFAIL(msg.toAscii());
     }

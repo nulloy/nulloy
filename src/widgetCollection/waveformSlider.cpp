@@ -373,7 +373,7 @@ QString NWaveformSlider::playingComposition() const
 
 void NWaveformSlider::setPlayingComposition(const QString &mode)
 {
-    m_playingComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
+    m_playingComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toLatin1());
 }
 
 QString NWaveformSlider::pausedComposition() const
@@ -383,7 +383,7 @@ QString NWaveformSlider::pausedComposition() const
 
 void NWaveformSlider::setPausedComposition(const QString &mode)
 {
-    m_pausedComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
+    m_pausedComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toLatin1());
 }
 
 QColor NWaveformSlider::fileDropBorderColor() const

@@ -45,5 +45,3 @@ QList<NPlugin *> NContainerGstreamer::plugins() const
     return m_plugins;
 }
 
-Q_EXPORT_PLUGIN2(plugin_gstreamer, NContainerGstreamer)
-

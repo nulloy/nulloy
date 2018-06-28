@@ -16,11 +16,13 @@
 #ifndef N_SKIN_FILE_SYSTEM_H
 #define N_SKIN_FILE_SYSTEM_H
 
-#include <QAbstractFileEngineHandler>
+//#include <QAbstractFileEngineHandler>
+#include <QtCore/private/qabstractfileengine_p.h>
 #include <QHash>
 
 class QByteArray;
 class QString;
+//class QAbstractFileEngineHandler;
 
 class NSkinFileSystem : public QAbstractFileEngineHandler
 {

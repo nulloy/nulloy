@@ -84,6 +84,3 @@ NWidgetCollection::NWidgetCollection(QObject *parent) : QObject(parent)
     m_plugins.push_back(new NLabelPlugin(this));
     m_plugins.push_back(new NCoverWidgetPlugin(this));
 }
-
-Q_EXPORT_PLUGIN2(widget_collection, NWidgetCollection)
-
