@@ -20,8 +20,13 @@
 #include <QScriptable>
 #include <QScriptValue>
 #include <QScriptEngine>
-
 #include <QtGui>
+
+class QLayout;
+class QAbstractButton;
+class QWidget;
+class QSplitter;
+class QDialog;
 
 Q_DECLARE_METATYPE(QWidget *)
 Q_DECLARE_METATYPE(QLayout *)

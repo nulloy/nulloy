@@ -49,6 +49,7 @@
 
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QMessageBox>
 #include <QMenu>
 #include <QMetaObject>
 #include <QResizeEvent>

@@ -16,6 +16,11 @@
 #include "scriptQtPrototypes.h"
 #include "global.h"
 #include <QMouseEvent>
+#include <QLayout>
+#include <QWidget>
+#include <QSplitter>
+#include <QDialog>
+#include <QAbstractButton>
 
 NWidgetPrototype::NWidgetPrototype(QObject *parent) : QObject(parent) {}
 
