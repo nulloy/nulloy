@@ -116,7 +116,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     ui.skinRestartLabel->setVisible(false);
     connect(ui.skinComboBox, SIGNAL(activated(int)), ui.skinRestartLabel, SLOT(show()));
 
-    ui.waveformTrackInfoTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    ui.waveformTrackInfoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     int i = 0;
     foreach (int mib, QTextCodec::availableMibs()) {

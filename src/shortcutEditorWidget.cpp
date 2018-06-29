@@ -76,10 +76,10 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
 
     resizeColumnToContents(Name);
     resizeColumnToContents(Description);
-    horizontalHeader()->setResizeMode(Name, QHeaderView::Fixed);
-    horizontalHeader()->setResizeMode(Description, QHeaderView::Fixed);
-    horizontalHeader()->setResizeMode(Shortcut, QHeaderView::Stretch);
-    horizontalHeader()->setResizeMode(GlobalShortcut, QHeaderView::Stretch);
+    horizontalHeader()->setSectionResizeMode(Name, QHeaderView::Fixed);
+    horizontalHeader()->setSectionResizeMode(Description, QHeaderView::Fixed);
+    horizontalHeader()->setSectionResizeMode(Shortcut, QHeaderView::Stretch);
+    horizontalHeader()->setSectionResizeMode(GlobalShortcut, QHeaderView::Stretch);
     horizontalHeader()->setStretchLastSection(true);
 }
 
