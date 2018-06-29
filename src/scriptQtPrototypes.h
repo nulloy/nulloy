@@ -22,11 +22,11 @@
 #include <QScriptEngine>
 #include <QtGui>
 
-class QLayout;
-class QAbstractButton;
-class QWidget;
-class QSplitter;
-class QDialog;
+#include <QLayout>
+#include <QWidget>
+#include <QSplitter>
+#include <QDialog>
+#include <QAbstractButton>
 
 Q_DECLARE_METATYPE(QWidget *)
 Q_DECLARE_METATYPE(QLayout *)
