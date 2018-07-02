@@ -22,7 +22,6 @@
 class NWidgetPlugin : public QDesignerCustomWidgetInterface
 {
     Q_INTERFACES(QDesignerCustomWidgetInterface)
-    Q_PLUGIN_METADATA(IID "com.nulloy.NWidgetCollection")
 
 private:
     bool m_initialized;
@@ -49,6 +48,7 @@ class NWidgetCollection : public QObject, public QDesignerCustomWidgetCollection
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+    Q_PLUGIN_METADATA(IID "com.nulloy.NWidgetCollection")
 
 public:
     NWidgetCollection(QObject *parent = 0);
