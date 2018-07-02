@@ -20,7 +20,7 @@
 
 #ifndef _N_NO_SKINS_
 #include "skinFileSystem.h"
-Q_IMPORT_PLUGIN(widget_collection)
+Q_IMPORT_PLUGIN(NWidgetCollection)
 #endif
 
 static void print_out(const QString &out)
