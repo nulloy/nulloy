@@ -17,8 +17,7 @@ RCC_DIR     = $$TMP_DIR
 UI_DIR      = $$TMP_DIR
 
 include($$SRC_DIR/func.pri)
-#include(../3rdParty/qxt-696423b-patched/qxtglobalshortcut.pri)
-include(../3rdParty/qxtglobalshortcut5-1ead85a/qxt.pri)
+include(../3rdParty/qxt-696423b-patched/qxtglobalshortcut.pri)
 include(../3rdParty/qtsingleapplication-8fd81b2/src/qtsingleapplication.pri)
 include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 include($$SRC_DIR/i18n/i18n.pri)
