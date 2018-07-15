@@ -88,27 +88,30 @@ QMAKE_CACHE=$CWD/.qmake.cache
 echo -n > $QMAKE_CACHE
 
 check_executable() {
-    VNAME="$1"
-    FNAME="$2"
+    VARNAME="$1"
+    DEFVALUE="$2"
+    CURVALUE=""
+    OUTVALUE=""
 
-    echo -n "Checking for $FNAME: "
+    echo -n "checking for $DEFVALUE: "
 
-    if [[ ! -z "${!VNAME}" ]]; then
-        FNAME="${!VNAME}"
-    else
-        eval $VNAME="$FNAME"
+    if [[ -z "${!VARNAME}" ]]; then
+        eval ${VARNAME}="$DEFVALUE"
     fi
+    CURVALUE="${!VARNAME}"
 
-    if [[ ! -f "$FNAME" ]]; then
-        FNAME=$(which "$FNAME" 2>/dev/null)
-        if [[ -z "$FNAME" ]]; then
+    if [[ ! -f "$CURVALUE" ]]; then
+        OUTVALUE=$(which "$CURVALUE" 2>/dev/null)
+        if [[ -z "$OUTVALUE" ]]; then
             echo "no"
-            echo_err "Unable to find $2. Check the PATH environment variable or try \`$VNAME=/path/to/$2 $0'."
+            echo "$BASENAME: Unable to find \`$CURVALUE'. Check the PATH environment variable or try \`$VARNAME=/path/to/$CURVALUE $0'"
             exit 1
         fi
+    else
+        OUTVALUE="$CURVALUE"
     fi
 
-    echo "$FNAME"
+    echo "$OUTVALUE"
 }
 check_executable QMAKE qmake
 check_executable LRELEASE lrelease
