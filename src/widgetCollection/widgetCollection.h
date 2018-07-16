@@ -16,8 +16,14 @@
 #ifndef N_WIDGET_COLLECTION_H
 #define N_WIDGET_COLLECTION_H
 
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 2, 2)
+#include <QtDesigner/QDesignerCustomWidgetCollectionInterface>
+#include <QtDesigner/QDesignerCustomWidgetInterface>
+#else
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 #include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#endif
 
 class NWidgetPlugin : public QDesignerCustomWidgetInterface
 {
