@@ -8,6 +8,8 @@ SOURCES -= $$SRC_DIR/main.cpp
 
 FORMS += $$SRC_DIR/*.ui
 
+CONFIG += app_bundle
+
 isEmpty(TMP_DIR):TMP_DIR = ../.tmp
 OBJECTS_DIR = $$TMP_DIR
 MOC_DIR     = $$TMP_DIR
