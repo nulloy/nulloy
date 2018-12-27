@@ -15,7 +15,6 @@ BUILD_PHONON=no
 BUILD_TESTS=no
 UPDATE_CHECK=yes
 SUPPORT_SKINS=yes
-MAC_UNIVERSAL=no
 
 echo_err() {
     echo "$BASENAME: $@" >&2
@@ -32,7 +31,6 @@ echo_help() {
     echo '    --force-version VERSION     overrides version.pri'
     echo '    --no-update-check           disable online check functionality'
     echo '    --prefix PREFIX             installation prefix (ignored on Mac)'
-    echo '    --universal                 build for both i386 and x86_64 (Mac only)'
     echo '    --debug                     build in debug mode'
     echo '    --tests                     build unit tests'
 }
@@ -72,8 +70,6 @@ while test $# -gt 0; do
             SUPPORT_SKINS=no ;;
         --no-update-check)
             UPDATE_CHECK=no ;;
-        --universal)
-            MAC_UNIVERSAL=yes ;;
         --help|-h)
             echo_help; exit 0 ;;
         *)
@@ -140,7 +136,6 @@ pkg_check_lib() {
 [[ $BUILD_PHONON == "yes" ]]              && echo "CONFIG += phonon" >> $QMAKE_CACHE
 [[ $BUILD_TAGLIB == "yes" ]]              && echo "CONFIG += taglib" >> $QMAKE_CACHE
 [[ $SUPPORT_SKINS == "no" ]]              && echo "CONFIG += no-skins" >> $QMAKE_CACHE
-[[ $MAC_UNIVERSAL == "yes" ]]             && echo "CONFIG += x86 x86_64" >> $QMAKE_CACHE
 [[ $UPDATE_CHECK == "no" ]]               && echo "CONFIG += no-update-check" >> $QMAKE_CACHE
 [[ $BUILD_TESTS == "yes" ]]               && echo "CONFIG += tests" >> $QMAKE_CACHE \
                                           && echo "DEFINES += _TESTS_" >> $QMAKE_CACHE
