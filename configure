@@ -145,7 +145,7 @@ else
     echo "CONFIG += release" >> $QMAKE_CACHE
 fi
 
-if $QMAKE -query "QMAKE_MKSPECS" | grep -i mingw; then
+if $QMAKE -query "QMAKE_XSPEC" | grep -i win; then
     echo "CONFIG += unix_mingw" >> $QMAKE_CACHE
     APP_NAME=Nulloy
 fi
