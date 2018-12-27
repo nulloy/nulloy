@@ -17,6 +17,7 @@
 
 #include "w7TaskBar.h"
 
+#include <QtWin> 
 #include <windows.h>
 #include <shlobj.h>
 #include <QIcon>
@@ -131,7 +132,7 @@ void NW7TaskBar::setOverlayIcon(const QIcon &icon, const QString &text)
 
     HICON hIcon = NULL;
     if (!icon.isNull())
-        hIcon = icon.pixmap(icon.availableSizes().first().width()).toWinHICON();
+        hIcon = QtWin::toHICON(icon.pixmap(icon.availableSizes().first().width()));
 
     wchar_t *wText = 0;
     wText = new wchar_t[text.length() + 1];
