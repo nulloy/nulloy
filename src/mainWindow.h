@@ -52,7 +52,7 @@ private:
     Qt::WindowFrameSection getSection(const QPoint &pos);
     void updateCursor(Qt::WindowFrameSection section);
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     bool m_framelessShadow;
     void updateFramelessShadow();
     bool winEvent(MSG *message, long *result);
@@ -62,7 +62,7 @@ public:
     NMainWindow(const QString &uiFile = "", QWidget *parent = 0);
     ~NMainWindow();
     bool isOnTop();
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     Q_INVOKABLE void setFramelessShadow(bool enabled);
 #endif
 

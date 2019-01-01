@@ -20,7 +20,7 @@
 #include <QDir>
 #include <QFileInfo>
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <QSettings>
 #endif
 
@@ -73,7 +73,7 @@ QString NCore::settingsPath()
 QString NCore::rcDir()
 {
     if (!_rcDir_init) {
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
         QDir parentDir(QCoreApplication::applicationDirPath());
         if (parentDir.dirName() == "bin")
             _rcDir = QDir::homePath() + "/.nulloy";
