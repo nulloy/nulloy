@@ -23,6 +23,8 @@
 Q_IMPORT_PLUGIN(NWidgetCollection)
 #endif
 
+bool logToFile = false;
+
 static void print_out(const QString &out)
 {
     QTextStream stream(stdout);
@@ -32,7 +34,7 @@ static void print_out(const QString &out)
 static void print_err(const QString &err)
 {
     QTextStream stream(stderr);
-    stream <<  NCore::applicationBasenameName() + ": " + err << "\n";
+    stream << err << "\n";
 }
 
 static void print_help()
@@ -45,6 +47,7 @@ static void print_help()
         "    --prev         play previous file\n"
         "    --stop         stop playback\n"
         "    --pause        pause playback\n"
+        "    --log          log to file\n"
         "    --version      print version\n"
         "    -h, --help     print this message\n"
     );
@@ -53,6 +56,34 @@ static void print_help()
 static void print_try()
 {
     print_out("Try `" +  NCore::applicationBasenameName() + " --help' for more information");
+}
+
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    print_err(msg);
+
+    if (logToFile) {
+        QString prefix;
+        switch (type) {
+            case QtDebugMsg:
+                prefix = "Debug";
+                break;
+            case QtWarningMsg:
+                prefix = "Warning";
+                break;
+            case QtCriticalMsg:
+                prefix = "Critical";
+                break;
+            case QtFatalMsg:
+                prefix = "Fatal";
+                break;
+        }
+        QFile logFile(NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".log");
+        logFile.open(QIODevice::Text | QIODevice::WriteOnly | QIODevice::Append);
+        QTextStream stream(&logFile);
+        stream << QString("%1 %2: %3").arg(QTime::currentTime().toString("hh:mm:ss.zzz"), prefix, msg.toLocal8Bit().constData()) << endl;
+        logFile.close();
+    }
 }
 
 int main(int argc, char *argv[])
@@ -73,6 +104,8 @@ int main(int argc, char *argv[])
     instance.setOrganizationDomain("nulloy.com");
     instance.setQuitOnLastWindowClosed(false);
 
+    qInstallMessageHandler(messageHandler);
+
     QStringList argList = instance.arguments();
     argList.takeFirst();
     QStringList files;
@@ -90,6 +123,8 @@ int main(int argc, char *argv[])
                     arg == "--pause")
                 {
                     options << arg;
+                } else if (arg == "--log") {
+                    logToFile = true;
                 } else if (arg == "--version") {
                     print_out(instance.applicationVersion());
                     return 0;
