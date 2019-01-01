@@ -43,7 +43,7 @@ void NI18NLoader::init()
     // find directories
     QStringList langDirList;
     langDirList << QCoreApplication::applicationDirPath() + "/" + _i18nDirName;
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
     if (NCore::rcDir() != QCoreApplication::applicationDirPath())
         langDirList << NCore::rcDir() + "/" + _i18nDirName;
     if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {

@@ -108,7 +108,7 @@ void NPluginLoader::init()
 
     QStringList pluginsDirList;
     pluginsDirList << QCoreApplication::applicationDirPath() + "/" + _pluginsDirName;
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
     if (NCore::rcDir() != QCoreApplication::applicationDirPath())
         pluginsDirList << NCore::rcDir() + "/" + _pluginsDirName;
     if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {
@@ -118,7 +118,7 @@ void NPluginLoader::init()
     }
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     QStringList subDirsList;
     foreach (QString dirStr, pluginsDirList) {
         QDir dir(dirStr);
@@ -136,7 +136,7 @@ void NPluginLoader::init()
             continue;
         foreach (QString fileName, dir.entryList(QDir::Files)) {
             QString fileFullPath = dir.absoluteFilePath(fileName);
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
             // skip non plugin files
             if (!fileName.startsWith("plugin", Qt::CaseInsensitive) || !fileName.endsWith("dll", Qt::CaseInsensitive))
                 continue;

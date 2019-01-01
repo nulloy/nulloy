@@ -89,7 +89,7 @@ void NSkinLoader::_init()
     QStringList skinsDirList;
     // ":" is a prefix for .qrc resources
     skinsDirList << QString() + ":" + _skinsDirName << QCoreApplication::applicationDirPath() + "/" + _skinsDirName;
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
     if (NCore::rcDir() != QCoreApplication::applicationDirPath())
         skinsDirList << NCore::rcDir() + "/" + _skinsDirName;
     if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {

@@ -68,7 +68,7 @@ void NCoverWidgetPopup::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-#ifndef Q_WS_MAC // QTBUG-15367
+#ifndef Q_OS_MACOS // QTBUG-15367
     m_animation->setDirection(QAbstractAnimation::Backward);
     if (m_animation->state() == QAbstractAnimation::Stopped)
         m_animation->start();

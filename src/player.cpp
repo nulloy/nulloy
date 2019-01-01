@@ -39,11 +39,11 @@
 #include "skinFileSystem.h"
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include "w7TaskBar.h"
 #endif
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MACOS
 #include "macDock.h"
 #endif
 
@@ -119,13 +119,13 @@ NPlayer::NPlayer()
     loadSettings();
     connectSignals();
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     NW7TaskBar::instance()->setWindow(m_mainWindow);
     NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
     connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
 #endif
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MACOS
     NMacDock::instance()->registerClickHandler();
     connect(NMacDock::instance(), SIGNAL(clicked()), m_mainWindow, SLOT(show()));
 #endif
@@ -320,7 +320,7 @@ void NPlayer::createContextMenu()
 
 void NPlayer::createGlobalMenu()
 {
-    #ifdef Q_WS_MAC
+    #ifdef Q_OS_MACOS
     // removing icons from context menu
     QList<NAction *> actions = findChildren<NAction *>();
     for (int i = 0; i < actions.size(); ++i)
@@ -362,7 +362,7 @@ void NPlayer::createTrayIcon()
     trayIconMenu->addAction(m_exitAction);
     m_systemTray = new QSystemTrayIcon(this);
     m_systemTray->setContextMenu(trayIconMenu);
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MACOS
     m_systemTray->setIcon(QIcon(":mac-systray.png"));
 #else
     m_systemTray->setIcon(m_mainWindow->windowIcon());
@@ -662,7 +662,7 @@ void NPlayer::on_mainWindow_closed()
     if (m_settings->value("MinimizeToTray").toBool()) {
         m_systemTray->setVisible(true);
     } else {
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MACOS
         quit();
 #endif
     }
@@ -751,7 +751,7 @@ void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
     bool newOnTop = (whilePlaying && state == N::PlaybackPlaying);
     if (!alwaysOnTop && (oldOnTop != newOnTop))
         m_mainWindow->setOnTop(newOnTop);
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     if (NW7TaskBar::instance()->isEnabled()) {
         if (state == N::PlaybackPlaying) {
             NW7TaskBar::instance()->setState(NW7TaskBar::Normal);

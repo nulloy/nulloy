@@ -23,7 +23,7 @@
 #include <QUiLoader>
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include "w7TaskBar.h"
 #include <windows.h>
 #include <dwmapi.h>
@@ -45,7 +45,7 @@
 
 NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(parent)
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     m_framelessShadow = false;
 #endif
 
@@ -82,10 +82,10 @@ NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(paren
         widget->installEventFilter(this);
 
     QIcon icon;
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     icon = QIcon::fromTheme("nulloy");
 #endif
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MACOS
     if (icon.isNull()) {
         QStringList files = QDir(":").entryList(QStringList() << "icon-*", QDir::Files);
         foreach (QString fileName, files)
@@ -163,7 +163,7 @@ void NMainWindow::toggleMaximize()
         m_unmaximizedPos = pos();
         m_unmaximizedSize = size();
         showMaximized();
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
         setGeometry(QApplication::desktop()->availableGeometry());
         showMaximized();
 #endif
@@ -474,7 +474,7 @@ void NMainWindow::closeEvent(QCloseEvent *event)
     emit closed();
 }
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 bool _DwmIsCompositionEnabled()
 {
     HMODULE library = LoadLibrary(L"dwmapi.dll");
@@ -523,7 +523,7 @@ bool NMainWindow::winEvent(MSG *message, long *result)
 
 bool NMainWindow::isOnTop()
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     DWORD dwExStyle = GetWindowLong(this->winId(), GWL_EXSTYLE);
     return (dwExStyle & WS_EX_TOPMOST);
 #else
@@ -534,7 +534,7 @@ bool NMainWindow::isOnTop()
 
 void NMainWindow::setOnTop(bool onTop)
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     if (onTop)
         SetWindowPos(this->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     else
@@ -549,7 +549,7 @@ void NMainWindow::setOnTop(bool onTop)
     show();
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     NW7TaskBar::instance()->setWindow(this);
 #endif
 }

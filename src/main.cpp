@@ -88,7 +88,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 
 int main(int argc, char *argv[])
 {
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MACOS
     // https://bugreports.qt-project.org/browse/QTBUG-32789
     if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_8)
         QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
@@ -155,9 +155,9 @@ int main(int argc, char *argv[])
     }
 
     // for Qt core plugins
-#if defined(Q_WS_WIN)
+#if defined(Q_OS_WIN)
     instance.addLibraryPath(instance.applicationDirPath() + "/Plugins/");
-#elif defined(Q_WS_MAC)
+#elif defined(Q_OS_MACOS)
     instance.addLibraryPath(instance.applicationDirPath() + "/plugins/");
 #endif
 
