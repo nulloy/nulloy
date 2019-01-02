@@ -55,7 +55,7 @@ private:
 #ifdef Q_OS_WIN
     bool m_framelessShadow;
     void updateFramelessShadow();
-    bool winEvent(MSG *message, long *result);
+    bool nativeEvent(const QByteArray &eventType, void *message, long *result);
 #endif
 
 public:
