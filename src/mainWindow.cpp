@@ -502,21 +502,22 @@ void NMainWindow::updateFramelessShadow()
     DWORD major = (DWORD) (LOBYTE(LOWORD(version))); // major = 6 for vista/7/2008
 
     if (_DwmIsCompositionEnabled() && m_framelessShadow && major == 6)
-        SetClassLongPtr(winId(), GCL_STYLE, GetClassLongPtr(winId(), GCL_STYLE) | CS_DROPSHADOW);
+        SetClassLongPtr((HWND)winId(), GCL_STYLE, GetClassLongPtr((HWND)winId(), GCL_STYLE) | CS_DROPSHADOW);
     else
-        SetClassLongPtr(winId(), GCL_STYLE, GetClassLongPtr(winId(), GCL_STYLE) & ~CS_DROPSHADOW);
+        SetClassLongPtr((HWND)winId(), GCL_STYLE, GetClassLongPtr((HWND)winId(), GCL_STYLE) & ~CS_DROPSHADOW);
 
     hide();
     show();
 }
 
-bool NMainWindow::winEvent(MSG *message, long *result)
+bool NMainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
-    if (message->message == WM_DWMCOMPOSITIONCHANGED) {
+    MSG* msg = reinterpret_cast<MSG*>(message);
+    if (msg->message == WM_DWMCOMPOSITIONCHANGED) {
         updateFramelessShadow();
         return true;
     } else {
-        return NW7TaskBar::instance()->winEvent(message, result);
+        return NW7TaskBar::instance()->nativeEvent(eventType, message, result);
     }
 }
 #endif
@@ -524,7 +525,7 @@ bool NMainWindow::winEvent(MSG *message, long *result)
 bool NMainWindow::isOnTop()
 {
 #ifdef Q_OS_WIN
-    DWORD dwExStyle = GetWindowLong(this->winId(), GWL_EXSTYLE);
+    DWORD dwExStyle = GetWindowLong((HWND)this->winId(), GWL_EXSTYLE);
     return (dwExStyle & WS_EX_TOPMOST);
 #else
     Qt::WindowFlags flags = windowFlags();
@@ -536,9 +537,9 @@ void NMainWindow::setOnTop(bool onTop)
 {
 #ifdef Q_OS_WIN
     if (onTop)
-        SetWindowPos(this->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        SetWindowPos((HWND)this->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     else
-        SetWindowPos(this->winId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        SetWindowPos((HWND)this->winId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 #else
     Qt::WindowFlags flags = windowFlags();
     if (onTop)
