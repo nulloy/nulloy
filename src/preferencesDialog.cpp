@@ -78,7 +78,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     ui.autoCheckUpdatesContainer->hide();
 #endif
 
-#if defined Q_OS_WIN || defined Q_OS_MACOS
+#if defined Q_OS_WIN || defined Q_OS_MAC
     ui.customTrashContainer->hide();
 #endif
 
@@ -187,7 +187,7 @@ void NPreferencesDialog::on_fileManagerHelpButton_clicked()
 
 void NPreferencesDialog::on_customTrashHelpButton_clicked()
 {
-#if !defined Q_OS_WIN && !defined Q_OS_MACOS
+#if !defined Q_OS_WIN && !defined Q_OS_MAC
     QDialog *dialog = new QDialog(this);
     dialog->setWindowTitle("Trash Command Configuration");
 

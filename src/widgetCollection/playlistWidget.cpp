@@ -26,7 +26,7 @@
 #include "tagReaderInterface.h"
 #include "playbackEngineInterface.h"
 
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
 #include "foundation.h"
 #endif
 
@@ -271,7 +271,7 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
         cmd = "explorer.exe /n,/select,\"" + path.replace('/', '\\') + "\"";
 #elif defined Q_OS_LINUX
         cmd = "xdg-open \"" + fileInfo.canonicalPath().replace("'", "'\\''") + "\"";
-#elif defined Q_OS_MACOS
+#elif defined Q_OS_MAC
         cmd = "open -R \"" + path.replace("'", "'\\''") + "\"";
 #endif
     }
@@ -661,7 +661,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
         wasEmpty = true;
 
     foreach (QUrl url, data->urls()) {
-#ifdef Q_OS_MACOS // QTBUG-40449
+#ifdef Q_OS_MAC // QTBUG-40449
         url = filePathURL(url);
 #endif
         foreach (QString file, NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '))) {
@@ -686,7 +686,7 @@ QStringList NPlaylistWidget::mimeTypes() const
     return qstrList;
 }
 
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
 Qt::DropActions NPlaylistWidget::supportedDropActions() const
 {
     return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;

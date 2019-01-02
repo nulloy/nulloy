@@ -43,7 +43,7 @@
 #include "w7TaskBar.h"
 #endif
 
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
 #include "macDock.h"
 #endif
 
@@ -125,7 +125,7 @@ NPlayer::NPlayer()
     connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
 #endif
 
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
     NMacDock::instance()->registerClickHandler();
     connect(NMacDock::instance(), SIGNAL(clicked()), m_mainWindow, SLOT(show()));
 #endif
@@ -320,7 +320,7 @@ void NPlayer::createContextMenu()
 
 void NPlayer::createGlobalMenu()
 {
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
     // removing icons from context menu
     QList<NAction *> actions = findChildren<NAction *>();
     for (int i = 0; i < actions.size(); ++i)
@@ -362,7 +362,7 @@ void NPlayer::createTrayIcon()
     trayIconMenu->addAction(m_exitAction);
     m_systemTray = new QSystemTrayIcon(this);
     m_systemTray->setContextMenu(trayIconMenu);
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
     m_systemTray->setIcon(QIcon(":mac-systray.png"));
 #else
     m_systemTray->setIcon(m_mainWindow->windowIcon());
@@ -662,7 +662,7 @@ void NPlayer::on_mainWindow_closed()
     if (m_settings->value("MinimizeToTray").toBool()) {
         m_systemTray->setVisible(true);
     } else {
-#ifndef Q_OS_MACOS
+#ifndef Q_OS_MAC
         quit();
 #endif
     }

@@ -25,14 +25,14 @@
 #include <QPushButton>
 #include <QFile>
 
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
 #include <QBitmap>
 #endif
 
 NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 {
     QString aboutHtml = QString() +
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
         "<span style=\"font-size:14pt;\">" +
 #else
         "<span style=\"font-size:9pt;\">" +
@@ -42,7 +42,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
             "<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
                                  QCoreApplication::organizationDomain() + "</a>" +
         "</span><br><br>" +
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
         "<span style=\"font-size:10pt;\">" +
 #else
         "<span style=\"font-size:8pt;\">" +
@@ -70,7 +70,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
     QLabel *iconLabel = new QLabel;
     QPixmap pixmap(":icon-96.png");
     iconLabel->setPixmap(pixmap);
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
     iconLabel->setMask(pixmap.mask());
 #endif
 
@@ -141,7 +141,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
     licenseTab->setLayout(licenseTabLayout);
 
     QString licenseHtml =
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
         "<span style=\"font-size:10pt;\">"
 #else
         "<span style=\"font-size:8pt;\">"

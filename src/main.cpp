@@ -91,11 +91,11 @@ int main(int argc, char *argv[])
     // for Qt core plugins
 #if defined(Q_OS_WIN)
     QCoreApplication::addLibraryPath(QFileInfo(argv[0]).dir().path() + "/Plugins/");
-#elif defined(Q_OS_MACOS)
+#elif defined(Q_OS_MAC)
     QCoreApplication::addLibraryPath(QFileInfo(argv[0]).dir().path() + "/plugins/");
 #endif
 
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
     // https://bugreports.qt-project.org/browse/QTBUG-32789
     if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_8)
         QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
