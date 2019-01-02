@@ -342,9 +342,23 @@ void NPlayer::createGlobalMenu()
     controlsMenu->addAction(m_prevAction);
     controlsMenu->addAction(m_nextAction);
     controlsMenu->addSeparator();
-    controlsMenu->addMenu(m_playlistSubMenu);
 
-    menuBar->addMenu(m_windowSubMenu);
+    QMenu *playlistSubMenu = controlsMenu->addMenu(tr("Playlist"));
+    playlistSubMenu->addAction(m_shufflePlaylistAction);
+    playlistSubMenu->addAction(m_repeatPlaylistAction);
+    playlistSubMenu->addAction(m_loopPlaylistAction);
+    playlistSubMenu->addAction(m_nextFileEnableAction);
+    playlistSubMenu->addAction(m_nextFileByNameAscdAction);
+    playlistSubMenu->addAction(m_nextFileByNameDescAction);
+    playlistSubMenu->addAction(m_nextFileByDateAscd);
+    playlistSubMenu->addAction(m_nextFileByDateDesc);
+    controlsMenu->addMenu(playlistSubMenu);
+
+    QMenu *windowMenu = menuBar->addMenu(tr("Window"));
+    windowMenu->addAction(m_showCoverAction);
+    windowMenu->addAction(m_playingOnTopAction);
+    windowMenu->addAction(m_alwaysOnTopAction);
+    windowMenu->addAction(m_fullScreenAction);
 #endif
 }
 
