@@ -88,6 +88,13 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 
 int main(int argc, char *argv[])
 {
+    // for Qt core plugins
+#if defined(Q_OS_WIN)
+    QCoreApplication::addLibraryPath(QFileInfo(argv[0]).dir().path() + "/Plugins/");
+#elif defined(Q_OS_MACOS)
+    QCoreApplication::addLibraryPath(QFileInfo(argv[0]).dir().path() + "/plugins/");
+#endif
+
 #ifdef Q_OS_MACOS
     // https://bugreports.qt-project.org/browse/QTBUG-32789
     if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_8)
@@ -153,13 +160,6 @@ int main(int argc, char *argv[])
         if (instance.sendMessage(msg))
             return 0; // return if delivered
     }
-
-    // for Qt core plugins
-#if defined(Q_OS_WIN)
-    instance.addLibraryPath(instance.applicationDirPath() + "/Plugins/");
-#elif defined(Q_OS_MACOS)
-    instance.addLibraryPath(instance.applicationDirPath() + "/plugins/");
-#endif
 
 #ifndef _N_NO_SKINS_
     NSkinFileSystem::init();
