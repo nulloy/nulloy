@@ -144,7 +144,7 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
     global.setProperty("QT_VERSION", QT_VERSION);
 
     QString ws;
-#if defined Q_OS_MACOS
+#if defined Q_OS_MAC
     ws = "mac";
 #elif defined Q_OS_WIN
     ws = "win";

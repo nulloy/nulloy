@@ -85,7 +85,7 @@ NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(paren
 #ifdef Q_OS_LINUX
     icon = QIcon::fromTheme("nulloy");
 #endif
-#ifndef Q_OS_MACOS
+#ifndef Q_OS_MAC
     if (icon.isNull()) {
         QStringList files = QDir(":").entryList(QStringList() << "icon-*", QDir::Files);
         foreach (QString fileName, files)

@@ -19,7 +19,7 @@
 #include "settings.h"
 #include "common.h"
 
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MAC
 #include "foundation.h"
 #endif
 
@@ -438,7 +438,7 @@ void NWaveformSlider::dropEvent(QDropEvent *event)
     if (data->hasUrls()) {
         QStringList files;
         foreach (QUrl url, data->urls()) {
-#ifdef Q_OS_MACOS // QTBUG-40449
+#ifdef Q_OS_MAC // QTBUG-40449
             url = filePathURL(url);
 #endif
             files << NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '));
