@@ -292,14 +292,6 @@ NPlaylistWidget::~NPlaylistWidget() {}
 
 void NPlaylistWidget::resetCurrentItem()
 {
-    if (m_currentItem) {
-        QFont f = m_currentItem->font();
-        f.setBold(false);
-        m_currentItem->setFont(f);
-        m_currentItem->setData(N::PositionRole, m_playbackEngine->position());
-        m_currentItem->setData(N::CountRole, m_currentItem->data(N::CountRole).toInt() + 1);
-    }
-
     m_currentItem = NULL;
     m_tagReader->setSource("");
     emit setMedia("");
@@ -329,6 +321,14 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, bool force)
 
 void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
 {
+    if (m_currentItem) {
+        QFont f = m_currentItem->font();
+        f.setBold(false);
+        m_currentItem->setFont(f);
+        m_currentItem->setData(N::PositionRole, m_playbackEngine->position());
+        m_currentItem->setData(N::CountRole, m_currentItem->data(N::CountRole).toInt() + 1);
+    }
+
     if (!item) {
         resetCurrentItem();
         return;
