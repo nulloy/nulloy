@@ -117,19 +117,20 @@ void NPlaylistWidget::startProcessVisibleItemsTimer()
     if (m_processVisibleItemsTimer->isActive())
         m_processVisibleItemsTimer->stop();
 
-    m_processVisibleItemsTimer->start(100);
+    m_processVisibleItemsTimer->start(30);
 }
 
 void NPlaylistWidget::processVisibleItems()
 {
-    QListWidgetItem *minItem = this->itemAt(0, 0);
-    QListWidgetItem *maxItem = this->itemAt(0, this->height());
-    while (minItem) {
-        formatItemTitle(reinterpret_cast<NPlaylistWidgetItem *>(minItem));
-        if (minItem == maxItem)
-            break;
-        minItem = item(row(minItem) + 1);
-    }
+    int minRow = row(itemAt(0, 0));
+    QListWidgetItem *maxItem = itemAt(0, this->height());
+    int maxRow = maxItem ? row(maxItem) : count() - 1;
+
+    int totalRows = maxRow - minRow;
+    minRow = qMax(0, minRow - totalRows);
+    maxRow = qMin(maxRow + totalRows, count() - 1);
+    for (int i = minRow; i < maxRow; ++i)
+        formatItemTitle(reinterpret_cast<NPlaylistWidgetItem *>(item(i)));
 }
 
 void NPlaylistWidget::wheelEvent(QWheelEvent *event)
@@ -307,7 +308,7 @@ void NPlaylistWidget::resetCurrentItem()
 void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, bool force)
 {
     QString titleFormat = NSettings::instance()->value("PlaylistTrackInfo").toString();
-    if (!force && titleFormat == item->data(N::TitleFormatRole))
+    if (!force && titleFormat == item->data(N::TitleFormatRole) && !item->text().isEmpty())
         return;
 
     QString oldSource = m_tagReader->getSource();
@@ -475,6 +476,7 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
 void NPlaylistWidget::playFiles(const QStringList &files)
 {
     setFiles(files);
+    processVisibleItems();
     playRow(0);
 }
 
@@ -662,11 +664,12 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
         url = filePathURL(url);
 #endif
         foreach (QString file, NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '))) {
-            insertItem(index, new NPlaylistWidgetItem(QFileInfo(file)));
+            NPlaylistWidgetItem *item = new NPlaylistWidgetItem(QFileInfo(file));
+            insertItem(index, item);
+            formatItemTitle(item);
             ++index;
         }
     }
-    processVisibleItems();
 
     if (wasEmpty)
         playRow(0);

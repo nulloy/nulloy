@@ -25,13 +25,11 @@ NPlaylistWidgetItem::NPlaylistWidgetItem(QListWidget *parent) : QListWidgetItem(
 NPlaylistWidgetItem::NPlaylistWidgetItem(const QFileInfo &fileinfo, QListWidget *parent) : QListWidgetItem(parent)
 {
     m_data.path = fileinfo.filePath();
-    setText(fileinfo.fileName());
 }
 
 NPlaylistWidgetItem::NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QListWidget *parent) : QListWidgetItem(parent)
 {
     m_data = dataItem;
-    setText(dataItem.title);
 }
 
 QVariant NPlaylistWidgetItem::data(int role) const
