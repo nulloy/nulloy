@@ -120,9 +120,9 @@ echo "PKG_CONFIG = $PKG_CONFIG" >> $QMAKE_CACHE
 [[ -n "$LDFLAGS" ]]  && echo "QMAKE_LFLAGS += ${LDFLAGS}"    >> $QMAKE_CACHE
 
 pkg_check_lib() {
-    for P in $@; do
-        if $PKG_CONFIG --print-errors $1; then
-            echo "Found $1"
+    for LIB in $@; do
+        if $PKG_CONFIG --print-errors $LIB; then
+            echo "Found '$LIB'"
         else
             echo
             exit 1
