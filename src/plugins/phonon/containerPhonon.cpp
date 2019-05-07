@@ -33,6 +33,3 @@ QList<NPlugin *> NContainerPhonon::plugins() const
 {
     return m_plugins;
 }
-
-Q_EXPORT_PLUGIN2(plugin_phonon, NContainerPhonon)
-

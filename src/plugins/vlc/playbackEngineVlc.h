@@ -71,7 +71,7 @@ private slots:
 signals:
     void positionChanged(qreal pos);
     void volumeChanged(qreal volume);
-    void message(N::MessageBox::Icon icon, const QString &title, const QString &msg);
+    void message(N::MessageIcon icon, const QString &title, const QString &msg);
     void mediaChanged(const QString &file);
     void finished();
     void failed();

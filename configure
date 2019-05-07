@@ -117,18 +117,21 @@ echo "PKG_CONFIG = $PKG_CONFIG" >> $QMAKE_CACHE
 [[ -n "$LDFLAGS" ]]  && echo "QMAKE_LFLAGS += ${LDFLAGS}"    >> $QMAKE_CACHE
 
 pkg_check_lib() {
-    if $PKG_CONFIG --print-errors $1; then
-        echo "Found $1"
-    else
-        echo
-        exit 1
-    fi
+    for P in $@; do
+        if $PKG_CONFIG --print-errors $1; then
+            echo "Found $1"
+        else
+            echo
+            exit 1
+        fi
+        shift
+    done
 }
 [[ $BUILD_GSTREAMER == "yes" ]]           && pkg_check_lib gstreamer-1.0
 [[ $BUILD_GSTREAMER_TAGREADER == "yes" ]] && pkg_check_lib gstreamer-pbutils-1.0
-[[ $BUILD_VLC == "yes" ]]                 && pkg_check_lib libvlc
+[[ $BUILD_VLC == "yes" ]]                 && pkg_check_lib libvlc vlc-plugin
 [[ $BUILD_TAGLIB == "yes" ]]              && pkg_check_lib taglib
-[[ $BUILD_PHONON == "yes" ]]              && pkg_check_lib phonon
+[[ $BUILD_PHONON == "yes" ]]              && pkg_check_lib phonon4qt5
 
 [[ $BUILD_GSTREAMER == "yes" ]]           && echo "CONFIG += gstreamer" >> $QMAKE_CACHE
 [[ $BUILD_GSTREAMER_TAGREADER == "yes" ]] && echo "CONFIG += gstreamer-tagreader" >> $QMAKE_CACHE

@@ -60,11 +60,15 @@ static void print_try()
 
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
+    Q_UNUSED(context);
     print_err(msg);
 
     if (logToFile) {
         QString prefix;
         switch (type) {
+            case QtInfoMsg:
+                prefix = "Info";
+                break;
             case QtDebugMsg:
                 prefix = "Debug";
                 break;
