@@ -22,6 +22,7 @@ class NContainerVlc : public QObject, public NPluginContainer
 {
     Q_OBJECT
     Q_INTERFACES(NPluginContainer)
+    Q_PLUGIN_METADATA(IID "com.nulloy.NContainerVlc")
 
 private:
     QList<NPlugin *> m_plugins;

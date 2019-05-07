@@ -58,13 +58,13 @@ void NPlaybackEnginePhonon::setMedia(const QString &file)
         return;
 
     if (!QFile(file).exists()) {
-        emit message(N::MessageBox::Warning, file, "No such file or directory");
+        emit message(N::Warning, file, "No such file or directory");
         emit mediaChanged("");
         emit failed();
         return;
     }
 
-    m_mediaObject->setCurrentSource(Phonon::MediaSource(file));
+    m_mediaObject->setCurrentSource(Phonon::MediaSource(QUrl::fromLocalFile(file)));
 
     emit mediaChanged(file);
 }

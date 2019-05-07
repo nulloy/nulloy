@@ -33,6 +33,3 @@ QList<NPlugin *> NContainerVlc::plugins() const
 {
     return m_plugins;
 }
-
-Q_EXPORT_PLUGIN2(plugin_vlc, NContainerVlc)
-
