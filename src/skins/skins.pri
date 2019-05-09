@@ -4,7 +4,7 @@ win32:SKIN_DEST_DIR = $$SRC_DIR/../Skins
 system($$QMAKE_MKDIR $$fixSlashes($$SKIN_DEST_DIR))
 
 unix {
-    ZIP_ADD_CMD = zip -j
+    ZIP_ADD_CMD = zip -j -X
     ZIP_DEL_CMD = zip -d
 }
 win32 {
