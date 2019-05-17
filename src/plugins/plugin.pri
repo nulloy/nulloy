@@ -17,7 +17,7 @@ unix {
     mac {
         target.path = ../../../$${APP_NAME}.app/Contents/MacOS/plugins
     } else {
-        target.path = $$PREFIX/lib/$$APP_NAME/plugins
+        target.path = $$PREFIX/$$LIBDIR/$$APP_NAME/plugins
     }
     INSTALLS += target
 }
