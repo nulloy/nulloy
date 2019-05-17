@@ -113,7 +113,7 @@ void NPluginLoader::init()
         pluginsDirList << NCore::rcDir() + "/" + _pluginsDirName;
     if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {
         QDir dir(QCoreApplication::applicationDirPath());
-        dir.cd(QString() + "../lib/nulloy/" + _pluginsDirName);
+        dir.cd(QString() + "../" + N_LIBDIR + "/nulloy/" + _pluginsDirName);
         pluginsDirList << dir.absolutePath();
     }
 #endif

@@ -3,6 +3,7 @@
 BASENAME=$(basename $0)
 CWD=$(dirname $0)
 PREFIX=/usr
+LIBDIR=lib
 DEBUG=no
 APP_NAME=nulloy
 
@@ -30,7 +31,8 @@ echo_help() {
     echo '    --no-skins                  disable skins support'
     echo '    --force-version VERSION     overrides version.pri'
     echo '    --no-update-check           disable online check functionality'
-    echo '    --prefix PREFIX             installation prefix (ignored on Mac)'
+    echo '    --prefix PREFIX             installation prefix (default: /usr, ignored on Mac)'
+    echo '    --libdir LIBDIR             library directory under prefix (default: lib)'
     echo '    --debug                     build in debug mode'
     echo '    --tests                     build unit tests'
 }
@@ -68,6 +70,8 @@ while test $# -gt 0; do
             BUILD_TESTS=yes ;;
         --no-skins)
             SUPPORT_SKINS=no ;;
+        --libdir)
+            shift; LIBDIR=$1 ;;
         --no-update-check)
             UPDATE_CHECK=no ;;
         --help|-h)
@@ -169,6 +173,9 @@ else
     echo "Install prefix: $PREFIX"
 fi
 echo "PREFIX = $PREFIX" >> $QMAKE_CACHE
+
+echo "N_LIBDIR = $LIBDIR" >> $QMAKE_CACHE
+echo "Library directory: $LIBDIR"
 
 echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
 
