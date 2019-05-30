@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BASENAME=$(basename $0)
-CWD=$(dirname $0)
+CWD="$(dirname $0)"
 PREFIX=/usr
 LIBDIR=lib
 DEBUG=no
@@ -84,7 +84,7 @@ while test $# -gt 0; do
     shift
 done
 
-QMAKE_CACHE=$CWD/.qmake.cache
+QMAKE_CACHE="$CWD"/.qmake.cache
 echo -n > $QMAKE_CACHE
 
 check_executable() {
@@ -171,7 +171,7 @@ else
 fi
 echo "PREFIX = $PREFIX" >> $QMAKE_CACHE
 
-echo "N_LIBDIR = $LIBDIR" >> $QMAKE_CACHE
+echo "LIBDIR = $LIBDIR" >> $QMAKE_CACHE
 echo "Library directory: $LIBDIR"
 
 echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
