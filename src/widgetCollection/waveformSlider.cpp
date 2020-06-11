@@ -26,6 +26,7 @@
 #include <QMouseEvent>
 #include <QFile>
 #include <QStylePainter>
+#include <QPainterPath>
 #include <QStyleOptionFocusRect>
 
 #define IDLE_INTERVAL 60
