@@ -84,13 +84,17 @@ build_pass:CONFIG(static, static|shared) {
 unix:!mac {
     target.path = $$PREFIX/bin
 
-    system(icons/install-icons.sh $$TMP_DIR/icons)
-    icons.files = $$TMP_DIR/icons/*
-    icons.path = $$PREFIX
+    SIZES = 16 22 24 32 48 64 96 128
+    for(size, SIZES) {
+        eval(icon$${size}.extra = mkdir $$TMP_DIR/icon-$${size}; cp $$SRC_DIR/icons/icon-$${size}.png $$TMP_DIR/icon-$${size}/$${APP_NAME}.png)
+        eval(icon$${size}.files = $$TMP_DIR/icon-$${size}/*)
+        eval(icon$${size}.path = $$PREFIX/share/icons/hicolor/$${size}x$${size}/apps)
+        eval(INSTALLS += icon$${size})
+    }
 
     desktop.files = ../$${APP_NAME}.desktop
     desktop.path = $$PREFIX/share/applications
 
-    INSTALLS += target icons desktop
+    INSTALLS += target desktop
 }
 
