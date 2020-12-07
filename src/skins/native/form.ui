@@ -452,6 +452,7 @@ NTrackInfoWidget #MiddleCenter {
          </property>
          <property name="styleSheet">
           <string notr="true">#playlistWidget {
+	qproperty-current_text_color: palette(HighlightedText);
 	qproperty-failed_text_color: palette(dark);
 	qproperty-file_drop_border_color: rgba(97, 148, 215, 100);
 	qproperty-file_drop_background: rgba(97, 148, 215, 100);
