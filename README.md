@@ -125,7 +125,7 @@ apt-get install g++ qt5-default qttools5-dev qtscript5-dev qtbase5-private-dev l
 #### RPM-based distro
 
 ```sh
-yum install gcc-c++ qt-devel gstreamer1{-plugins-base,}-devel zip libX11-devel taglib-devel
+yum install gcc-c++ qt5-qtbase-devel qt5-qttools-devel qt5-qttools-static qt5-qtscript-devel qt5-qtbase-private-devel qt5-linguist gstreamer1{-plugins-base,}-devel zip libX11-devel taglib-devel
 ```
 
 ### Build & Run Nulloy
