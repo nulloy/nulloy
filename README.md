@@ -9,41 +9,66 @@
 ## Windows Build Instructions
 
 ### Prerequisites
-* Qt 4.x MinGW build http://www.qt.io/download-open-source/
-* MinGW-w64 http://mingw-w64.org/
-* GStreamer 1.0 http://gstreamer.freedesktop.org/download/
-* pkg-config http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/
+
+* Qt 5 offline installer https://www.qt.io/offline-installers/
+* GStreamer 1.0 MinGW 32-bit (runtime and development installers) http://gstreamer.freedesktop.org/download/
+* pkg-config and its dependencies (glib and gettext-runtime) https://download.gnome.org/binaries/win32/dependencies/, https://download.gnome.org/binaries/win32/glib/
 * CMake http://www.cmake.org/
-* TagLib https://github.com/taglib/taglib/
+* TagLib source code https://github.com/taglib/taglib/
 * 7zip http://www.7-zip.org/
 
-### Environment Setup
-
-Extract and/or install the downloads. Move ```pkg-config.exe``` to ```C:\mingw\bin```. Create ```vars.bat``` file with:
-
-```bat
-set QTDIR=C:\qt4
-set TAGLIB_DIR=C:\taglib.git
-set PKG_CONFIG_PATH=%GSTREAMER_1_0_ROOT_X86%\lib\pkgconfig;%TAGLIB_DIR%\lib\pkgconfig
-set PATH=%QTDIR%\bin;%TAGLIB_DIR%\bin;C:\mingw\bin;C:\Program Files\7-Zip;%PATH%
+Disconnect from the Internet to skip creating Qt account. Run Qt 5 offline installer and select only the following components:
 ```
-Create a shortcut from ```vars.bat``` and set target as ```%COMSPEC% /k "C:\vars.bat"```. Open the shortcut.
++ Qt
+  + Qt 5
+    - Qt Prebuilt Components for MinGW 32-bit
+    - Qt Script
+  + Developer and Designer Tools
+    - MinGW 32-bit toolchain
+```
+
+Extract pkg-config and its dependencies into `C:\Downloads\pkg-config`.
+
+Install GStreamer runtime and development packages. Open command prompt (Start menu -> type "cmd") and execute:
+```bat
+DEL C:\gstreamer\1.0\mingw_x86\bin\pkg-config.exe
+DEL C:\gstreamer\1.0\mingw_x86\bin\libstdc++-6.dll
+DEL C:\gstreamer\1.0\mingw_x86\bin\libtag.dll
+DEL C:\gstreamer\1.0\mingw_x86\lib\libstdc++.a
+DEL C:\gstreamer\1.0\mingw_x86\lib\libtag.a
+DEL C:\gstreamer\1.0\mingw_x86\lib\pkgconfig\taglib.pc
+```
+
+Extract and / or install the rest of the prerequisites.
 
 ### Build TagLib
 
+Run Qt MinGW terminal (Start menu -> `Qt` -> `Qt (MinGW 32-bit)`) and execute:
+
 ```bat
-cd %TAGLIB_DIR%
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DZLIB_INCLUDE_DIR=%GSTREAMER_1_0_ROOT_X86%\include -DCMAKE_INSTALL_PREFIX="."
+C:\Downloads\taglib
+cmake.exe -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DZLIB_INCLUDE_DIR=C:\gstreamer\1.0\mingw_x86\include -DCMAKE_INSTALL_PREFIX="."
 mingw32-make
 mingw32-make install
 ```
 
 ### Build & Run Nulloy
 
+In the same terminal execute:
+
 ```bat
-cd C:\nulloy.git
-configure
+set PATH=C:\Program Files\7-Zip;%PATH%
+set PATH=C:\Downloads\pkg-config\bin;%PATH%
+set PATH=C:\gstreamer\1.0\mingw_x86\bin;%PATH%
+set PKG_CONFIG_PATH=C:\gstreamer\1.0\mingw_x86\lib\pkgconfig;%PKG_CONFIG_PATH%
+set PKG_CONFIG_PATH=C:\Downloads\taglib\lib\pkgconfig;%PKG_CONFIG_PATH%
+
+cd C:\Downloads\nulloy
+configure.bat
 mingw32-make
+windeployqt Nulloy.exe
+copy /B C:\gstreamer\1.0\mingw_x86\bin\*.dll . \Y
+copy /B C:\Downloads\taglib\bin\libtag.dll . \Y
 Nulloy.exe
 ```
 
