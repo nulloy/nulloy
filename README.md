@@ -97,8 +97,8 @@ First install either MacPorts or HomeBrew.
 After installing MacPorts:
 
 ```sh
-. ~/.profile
-sudo port install pkgconfig qt4-mac gstreamer1{,-gst-plugins-base} taglib
+sudo port install pkgconfig qt5 qt5-qtscript qt5-qttools gstreamer1{,-gst-plugins-base} taglib
+export PATH=/opt/local/libexec/qt5/bin:$PATH
 ```
 
 #### HomeBrew
@@ -106,7 +106,8 @@ sudo port install pkgconfig qt4-mac gstreamer1{,-gst-plugins-base} taglib
 After installing HomeBrew:
 
 ```sh
-brew install pkgconfig cartr/qt4/qt gstreamer gst-plugins-base taglib
+brew install pkgconfig qt5 gstreamer gst-plugins-base taglib
+export PATH=/usr/local/opt/qt/bin:$PATH
 ```
 
 ### Build & Run Nulloy

@@ -167,9 +167,7 @@ if [[ $FORCE_VERSION != "no" ]]; then
     echo "N_CONFIG_FORCE_VERSION = $FORCE_VERSION" >> $QMAKE_CACHE
 fi
 
-if uname | grep -i darwin; then
-    QMAKE_EXTRA_OPTIONS="-spec macx-g++"
-else
+if uname | grep -i -v darwin; then
     echo "Install prefix: $PREFIX"
 fi
 echo "PREFIX = $PREFIX" >> $QMAKE_CACHE
