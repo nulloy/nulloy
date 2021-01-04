@@ -29,21 +29,16 @@ Disconnect from the Internet to skip creating Qt account. Run Qt 5 offline insta
 
 Extract pkg-config and its dependencies into `C:\Downloads\pkg-config`.
 
-Install GStreamer runtime and development packages. Open command prompt (Start menu -> type "cmd") and execute:
+Install GStreamer runtime and development packages. Open command prompt and execute:
 ```bat
-DEL C:\gstreamer\1.0\mingw_x86\bin\pkg-config.exe
-DEL C:\gstreamer\1.0\mingw_x86\bin\libstdc++-6.dll
-DEL C:\gstreamer\1.0\mingw_x86\bin\libtag.dll
-DEL C:\gstreamer\1.0\mingw_x86\lib\libstdc++.a
-DEL C:\gstreamer\1.0\mingw_x86\lib\libtag.a
-DEL C:\gstreamer\1.0\mingw_x86\lib\pkgconfig\taglib.pc
+del C:\gstreamer\1.0\mingw_x86\lib\libstdc++.a
 ```
 
 Extract and / or install the rest of the prerequisites.
 
 ### Build TagLib
 
-Run Qt MinGW terminal (Start menu -> `Qt` -> `Qt (MinGW 32-bit)`) and execute:
+Run Qt MinGW terminal and execute:
 
 ```bat
 C:\Downloads\taglib
@@ -58,17 +53,19 @@ In the same terminal execute:
 
 ```bat
 set PATH=C:\Program Files\7-Zip;%PATH%
-set PATH=C:\Downloads\pkg-config\bin;%PATH%
 set PATH=C:\gstreamer\1.0\mingw_x86\bin;%PATH%
+set PATH=C:\Downloads\pkg-config\bin;%PATH%
 set PKG_CONFIG_PATH=C:\gstreamer\1.0\mingw_x86\lib\pkgconfig;%PKG_CONFIG_PATH%
 set PKG_CONFIG_PATH=C:\Downloads\taglib\lib\pkgconfig;%PKG_CONFIG_PATH%
+set GST_PLUGIN_PATH=C:\gstreamer\1.0\mingw_x86\lib
 
 cd C:\Downloads\nulloy
 configure.bat
 mingw32-make
+copy /B /Y C:\gstreamer\1.0\mingw_x86\bin\*.dll .
+del libstdc++-6.dll
+copy /B /Y C:\Downloads\taglib\bin\libtag.dll .
 windeployqt Nulloy.exe
-copy /B C:\gstreamer\1.0\mingw_x86\bin\*.dll . \Y
-copy /B C:\Downloads\taglib\bin\libtag.dll . \Y
 Nulloy.exe
 ```
 
