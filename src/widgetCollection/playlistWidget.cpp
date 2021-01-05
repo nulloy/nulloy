@@ -26,10 +26,6 @@
 #include "tagReaderInterface.h"
 #include "playbackEngineInterface.h"
 
-#ifdef Q_OS_MAC
-#include "foundation.h"
-#endif
-
 #include <QContextMenuEvent>
 #include <QDir>
 #include <QDrag>
@@ -661,9 +657,6 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
         wasEmpty = true;
 
     foreach (QUrl url, data->urls()) {
-#ifdef Q_OS_MAC // QTBUG-40449
-        url = filePathURL(url);
-#endif
         foreach (QString file, NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '))) {
             NPlaylistWidgetItem *item = new NPlaylistWidgetItem(QFileInfo(file));
             insertItem(index, item);
