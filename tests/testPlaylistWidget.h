@@ -126,7 +126,9 @@ private slots:
         init();
 
         NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
-        Q_ASSERT(m_playbackEngine);
+        Q_ASSERT(playbackEngine);
+        playbackEngine->stop();
+
         NPlaylistWidget widget;
         QSignalSpy spy(&widget, SIGNAL(setMedia(const QString &)));
         int count = 0;
@@ -134,7 +136,7 @@ private slots:
 
         connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
-        connect(playbackEngine, SIGNAL(message(N::MessageBox::Icon, const QString &, const QString &)), this, SLOT(message(N::MessageBox::Icon, const QString &, const QString &)));
+        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
         connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 
@@ -157,7 +159,9 @@ private slots:
         init();
 
         NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
-        Q_ASSERT(m_playbackEngine);
+        Q_ASSERT(playbackEngine);
+        playbackEngine->stop();
+
         NPlaylistWidget widget;
         QSignalSpy spy(&widget, SIGNAL(setMedia(const QString &)));
         int count = 0;
@@ -165,7 +169,7 @@ private slots:
 
         connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
-        connect(playbackEngine, SIGNAL(message(N::MessageBox::Icon, const QString &, const QString &)), this, SLOT(message(N::MessageBox::Icon, const QString &, const QString &)));
+        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
         connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 
@@ -197,9 +201,9 @@ private slots:
         QCOMPARE(widget.currentRow(), row);
     }
 
-    void message(N::MessageBox::Icon, const QString &, const QString &msg)
+    void message(N::MessageIcon, const QString &, const QString &msg)
     {
-        QFAIL(msg.toAscii());
+        QFAIL(msg.toUtf8().constData());
     }
 };
 

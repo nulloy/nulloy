@@ -4,6 +4,8 @@ os:
   - linux
   - osx
 
+osx_image: xcode12
+
 compiler:
   - clang
   - gcc
