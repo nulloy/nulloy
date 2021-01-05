@@ -94,7 +94,7 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 
 void NTrackInfoWidget::enterEvent(QEvent *)
 {
-#ifndef Q_WS_MAC // QTBUG-15367
+#ifndef Q_OS_MAC // QTBUG-15367
     m_animation->setDirection(QAbstractAnimation::Forward);
     if (m_animation->state() == QAbstractAnimation::Stopped)
         m_animation->start();

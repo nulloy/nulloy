@@ -19,13 +19,10 @@
 #include "settings.h"
 #include "common.h"
 
-#ifdef Q_WS_MAC
-#include "foundation.h"
-#endif
-
 #include <QMouseEvent>
 #include <QFile>
 #include <QStylePainter>
+#include <QPainterPath>
 #include <QStyleOptionFocusRect>
 
 #define IDLE_INTERVAL 60
@@ -373,7 +370,7 @@ QString NWaveformSlider::playingComposition() const
 
 void NWaveformSlider::setPlayingComposition(const QString &mode)
 {
-    m_playingComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
+    m_playingComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toLatin1());
 }
 
 QString NWaveformSlider::pausedComposition() const
@@ -383,7 +380,7 @@ QString NWaveformSlider::pausedComposition() const
 
 void NWaveformSlider::setPausedComposition(const QString &mode)
 {
-    m_pausedComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toAscii());
+    m_pausedComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toLatin1());
 }
 
 QColor NWaveformSlider::fileDropBorderColor() const
@@ -438,9 +435,6 @@ void NWaveformSlider::dropEvent(QDropEvent *event)
     if (data->hasUrls()) {
         QStringList files;
         foreach (QUrl url, data->urls()) {
-#ifdef Q_WS_MAC // QTBUG-40449
-            url = filePathURL(url);
-#endif
             files << NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '));
         }
         emit filesDropped(files);

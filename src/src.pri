@@ -1,4 +1,4 @@
-QT += script
+QT += script gui core-private
 
 INCLUDEPATH += $$SRC_DIR $$SRC_DIR/interfaces
 
@@ -7,6 +7,8 @@ SOURCES += $$files($$SRC_DIR/*.cpp)
 SOURCES -= $$SRC_DIR/main.cpp
 
 FORMS += $$SRC_DIR/*.ui
+
+CONFIG += app_bundle
 
 isEmpty(TMP_DIR):TMP_DIR = ../.tmp
 OBJECTS_DIR = $$TMP_DIR
@@ -22,7 +24,6 @@ include($$SRC_DIR/i18n/i18n.pri)
 include($$SRC_DIR/platform/trash.pri)
 win32:include($$SRC_DIR/platform/w7TaskBar.pri)
 mac:include($$SRC_DIR/platform/macDock.pri)
-mac:include($$SRC_DIR/platform/foundation.pri)
 
 # zlib
 !mac {
@@ -37,7 +38,7 @@ unix:!mac:PKGCONFIG += x11
 # qmake -config no-skins
 !no-skins {
     include($$SRC_DIR/skins/skins.pri)
-    CONFIG += uitools
+    QT += uitools
     INCLUDEPATH += $$SRC_DIR/widgetCollection
     LIBS += -L$$SRC_DIR/widgetCollection -lwidget_collection
     PRE_TARGETDEPS += $$SRC_DIR/widgetCollection/libwidget_collection.a

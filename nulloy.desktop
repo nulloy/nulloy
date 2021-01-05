@@ -10,7 +10,7 @@ MimeType=x-content/audio-player;audio/basic;audio/mpeg3;audio/x-mpeg-3;audio/fla
 Icon=nulloy
 Exec=nulloy %F
 
-Actions=PlayPause;Stop;Next;Previous
+Actions=PlayPause;Stop;Next;Previous;
 
 [Desktop Action PlayPause]
 Name=Play / Pause

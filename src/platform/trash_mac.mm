@@ -17,7 +17,10 @@
 #import "Cocoa/Cocoa.h"
 #import "Foundation/Foundation.h"
 
-NSString *QStringToNSString(const QString &string);
+NSString *QStringToNSString(const QString &string)
+{
+   return [NSString stringWithCharacters: reinterpret_cast<const UniChar*>(string.unicode()) length: string.length()];
+}
 
 int _trash(const QString &file, QString *error)
 {

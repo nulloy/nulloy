@@ -22,7 +22,7 @@
 
 NContainerGstreamer::NContainerGstreamer(QObject *parent) : QObject(parent)
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     _putenv(QString("GST_REGISTRY=NUL").toUtf8());
     _putenv(QString("GST_REGISTRY_UPDATE=no").toUtf8());
 #endif
@@ -44,6 +44,4 @@ QList<NPlugin *> NContainerGstreamer::plugins() const
 {
     return m_plugins;
 }
-
-Q_EXPORT_PLUGIN2(plugin_gstreamer, NContainerGstreamer)
 

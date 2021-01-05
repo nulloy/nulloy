@@ -18,8 +18,7 @@
 
 #include <QVector>
 #include <QPair>
-
-class QDataStream;
+#include <QDataStream>
 
 class NWaveformPeaks
 {

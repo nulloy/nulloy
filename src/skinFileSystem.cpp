@@ -15,7 +15,7 @@
 
 #include "skinFileSystem.h"
 
-#include <QAbstractFileEngine>
+#include <QtCore/private/qabstractfileengine_p.h>
 #include <QByteArray>
 #include <QString>
 

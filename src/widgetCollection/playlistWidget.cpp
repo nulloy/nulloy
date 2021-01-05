@@ -26,12 +26,9 @@
 #include "tagReaderInterface.h"
 #include "playbackEngineInterface.h"
 
-#ifdef Q_WS_MAC
-#include "foundation.h"
-#endif
-
 #include <QContextMenuEvent>
 #include <QDir>
+#include <QDrag>
 #include <QFileInfo>
 #include <QMenu>
 #include <QScrollBar>
@@ -251,7 +248,7 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
         QString filePath = file;
         QString fileName = fileInfo.fileName();
         QString canonicalPath = fileInfo.canonicalPath();
-#if defined Q_WS_WIN
+#if defined Q_OS_WIN
         filePath.replace('/', '\\');
         fileName.replace('/', '\\');
         canonicalPath.replace('/', '\\');
@@ -266,17 +263,17 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
         cmd.replace("%P", canonicalPath);
     } else {
         QString path = fileInfo.canonicalFilePath();
-#if defined Q_WS_WIN
+#if defined Q_OS_WIN
         cmd = "explorer.exe /n,/select,\"" + path.replace('/', '\\') + "\"";
-#elif defined Q_WS_X11
+#elif defined Q_OS_LINUX
         cmd = "xdg-open \"" + fileInfo.canonicalPath().replace("'", "'\\''") + "\"";
-#elif defined Q_WS_MAC
+#elif defined Q_OS_MAC
         cmd = "open -R \"" + path.replace("'", "'\\''") + "\"";
 #endif
     }
 
     qDebug() << qPrintable(cmd);
-#if !defined Q_WS_WIN
+#if !defined Q_OS_WIN
     int res = QProcess::execute("sh", QStringList() << "-c" << cmd);
     if (res != 0 && customFileManager) {
         *error = QString(QObject::tr("Custom File Manager command failed with exit code <b>%1</b>.")).arg(res);
@@ -660,9 +657,6 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
         wasEmpty = true;
 
     foreach (QUrl url, data->urls()) {
-#ifdef Q_WS_MAC // QTBUG-40449
-        url = filePathURL(url);
-#endif
         foreach (QString file, NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '))) {
             NPlaylistWidgetItem *item = new NPlaylistWidgetItem(QFileInfo(file));
             insertItem(index, item);
@@ -685,7 +679,7 @@ QStringList NPlaylistWidget::mimeTypes() const
     return qstrList;
 }
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 Qt::DropActions NPlaylistWidget::supportedDropActions() const
 {
     return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;

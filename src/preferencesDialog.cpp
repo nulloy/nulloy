@@ -21,7 +21,7 @@
 #include "plugin.h"
 #include "i18nLoader.h"
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include "w7TaskBar.h"
 #endif
 
@@ -70,7 +70,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     ui.skinComboBox->hide();
 #endif
 
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
     ui.taskbarProgressContainer->hide();
 #endif
 
@@ -78,7 +78,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     ui.autoCheckUpdatesContainer->hide();
 #endif
 
-#if defined Q_WS_WIN || defined Q_WS_MAC
+#if defined Q_OS_WIN || defined Q_OS_MAC
     ui.customTrashContainer->hide();
 #endif
 
@@ -116,7 +116,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     ui.skinRestartLabel->setVisible(false);
     connect(ui.skinComboBox, SIGNAL(activated(int)), ui.skinRestartLabel, SLOT(show()));
 
-    ui.waveformTrackInfoTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    ui.waveformTrackInfoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     int i = 0;
     foreach (int mib, QTextCodec::availableMibs()) {
@@ -187,7 +187,7 @@ void NPreferencesDialog::on_fileManagerHelpButton_clicked()
 
 void NPreferencesDialog::on_customTrashHelpButton_clicked()
 {
-#if !defined Q_WS_WIN && !defined Q_WS_MAC
+#if !defined Q_OS_WIN && !defined Q_OS_MAC
     QDialog *dialog = new QDialog(this);
     dialog->setWindowTitle("Trash Command Configuration");
 
@@ -489,7 +489,7 @@ void NPreferencesDialog::saveSettings()
         }
     }
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
 #endif
     // << general

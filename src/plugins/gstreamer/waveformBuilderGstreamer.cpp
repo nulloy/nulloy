@@ -17,7 +17,7 @@
 
 #include "common.h"
 
-#if defined Q_WS_WIN || defined Q_WS_MAC
+#if defined Q_OS_WIN || defined Q_OS_MAC
 #include <QTimer>
 #endif
 

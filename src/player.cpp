@@ -39,16 +39,17 @@
 #include "skinFileSystem.h"
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include "w7TaskBar.h"
 #endif
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 #include "macDock.h"
 #endif
 
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QMessageBox>
 #include <QMenu>
 #include <QMetaObject>
 #include <QResizeEvent>
@@ -94,18 +95,18 @@ NPlayer::NPlayer()
     m_aboutDialog = NULL;
     m_logDialog = new NLogDialog(m_mainWindow);
     m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
-    m_volumeSlider = qFindChild<NVolumeSlider *>(m_mainWindow, "volumeSlider");
-    m_coverWidget = qFindChild<QWidget *>(m_mainWindow, "coverWidget");
+    m_volumeSlider = m_mainWindow->findChild<NVolumeSlider *>("volumeSlider");
+    m_coverWidget = m_mainWindow->findChild<QWidget *>("coverWidget");
 
-    m_playlistWidget = qFindChild<NPlaylistWidget *>(m_mainWindow, "playlistWidget");
-    if (QAbstractButton *repeatButton = qFindChild<QAbstractButton *>(m_mainWindow, "repeatButton"))
+    m_playlistWidget = m_mainWindow->findChild<NPlaylistWidget *>("playlistWidget");
+    if (QAbstractButton *repeatButton = m_mainWindow->findChild<QAbstractButton *>("repeatButton"))
         repeatButton->setChecked(m_playlistWidget->repeatMode());
 
     m_trackInfoWidget = new NTrackInfoWidget();
     QVBoxLayout *trackInfoLayout = new QVBoxLayout;
     trackInfoLayout->setContentsMargins(0, 0, 0, 0);
     trackInfoLayout->addWidget(m_trackInfoWidget);
-    m_waveformSlider = qFindChild<NWaveformSlider *>(m_mainWindow, "waveformSlider");
+    m_waveformSlider = m_mainWindow->findChild<NWaveformSlider *>("waveformSlider");
     m_waveformSlider->setLayout(trackInfoLayout);
 
 #ifndef _N_NO_UPDATE_CHECK_
@@ -118,13 +119,13 @@ NPlayer::NPlayer()
     loadSettings();
     connectSignals();
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     NW7TaskBar::instance()->setWindow(m_mainWindow);
     NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
     connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
 #endif
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     NMacDock::instance()->registerClickHandler();
     connect(NMacDock::instance(), SIGNAL(clicked()), m_mainWindow, SLOT(show()));
 #endif
@@ -319,7 +320,7 @@ void NPlayer::createContextMenu()
 
 void NPlayer::createGlobalMenu()
 {
-    #ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     // removing icons from context menu
     QList<NAction *> actions = findChildren<NAction *>();
     for (int i = 0; i < actions.size(); ++i)
@@ -341,9 +342,23 @@ void NPlayer::createGlobalMenu()
     controlsMenu->addAction(m_prevAction);
     controlsMenu->addAction(m_nextAction);
     controlsMenu->addSeparator();
-    controlsMenu->addMenu(m_playlistSubMenu);
 
-    menuBar->addMenu(m_windowSubMenu);
+    QMenu *playlistSubMenu = controlsMenu->addMenu(tr("Playlist"));
+    playlistSubMenu->addAction(m_shufflePlaylistAction);
+    playlistSubMenu->addAction(m_repeatPlaylistAction);
+    playlistSubMenu->addAction(m_loopPlaylistAction);
+    playlistSubMenu->addAction(m_nextFileEnableAction);
+    playlistSubMenu->addAction(m_nextFileByNameAscdAction);
+    playlistSubMenu->addAction(m_nextFileByNameDescAction);
+    playlistSubMenu->addAction(m_nextFileByDateAscd);
+    playlistSubMenu->addAction(m_nextFileByDateDesc);
+    controlsMenu->addMenu(playlistSubMenu);
+
+    QMenu *windowMenu = menuBar->addMenu(tr("Window"));
+    windowMenu->addAction(m_showCoverAction);
+    windowMenu->addAction(m_playingOnTopAction);
+    windowMenu->addAction(m_alwaysOnTopAction);
+    windowMenu->addAction(m_fullScreenAction);
 #endif
 }
 
@@ -361,7 +376,7 @@ void NPlayer::createTrayIcon()
     trayIconMenu->addAction(m_exitAction);
     m_systemTray = new QSystemTrayIcon(this);
     m_systemTray->setContextMenu(trayIconMenu);
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     m_systemTray->setIcon(QIcon(":mac-systray.png"));
 #else
     m_systemTray->setIcon(m_mainWindow->windowIcon());
@@ -380,7 +395,7 @@ void NPlayer::connectSignals()
     connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
     connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(currentFinished()));
     connect(m_playbackEngine, SIGNAL(failed()), this, SLOT(on_playbackEngine_failed()));
-    connect(m_playbackEngine, SIGNAL(message(QMessageBox::Icon, const QString &, const QString &)), m_logDialog, SLOT(showMessage(QMessageBox::Icon, const QString &, const QString &)));
+    connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
 
     connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
 
@@ -389,22 +404,22 @@ void NPlayer::connectSignals()
     if (m_coverWidget)
         connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_coverWidget, SLOT(setSource(const QString &)));
 
-    if (QAbstractButton *playButton = qFindChild<QAbstractButton *>(m_mainWindow, "playButton"))
+    if (QAbstractButton *playButton = m_mainWindow->findChild<QAbstractButton *>("playButton"))
         connect(playButton, SIGNAL(clicked()), this, SLOT(on_playButton_clicked()));
 
-    if (QAbstractButton *stopButton = qFindChild<QAbstractButton *>(m_mainWindow, "stopButton"))
+    if (QAbstractButton *stopButton = m_mainWindow->findChild<QAbstractButton *>("stopButton"))
         connect(stopButton, SIGNAL(clicked()), m_playbackEngine, SLOT(stop()));
 
-    if (QAbstractButton *prevButton = qFindChild<QAbstractButton *>(m_mainWindow, "prevButton"))
+    if (QAbstractButton *prevButton = m_mainWindow->findChild<QAbstractButton *>("prevButton"))
         connect(prevButton, SIGNAL(clicked()), m_playlistWidget, SLOT(playPrevItem()));
 
-    if (QAbstractButton *nextButton = qFindChild<QAbstractButton *>(m_mainWindow, "nextButton"))
+    if (QAbstractButton *nextButton = m_mainWindow->findChild<QAbstractButton *>("nextButton"))
         connect(nextButton, SIGNAL(clicked()), m_playlistWidget, SLOT(playNextItem()));
 
-    if (QAbstractButton *closeButton = qFindChild<QAbstractButton *>(m_mainWindow, "closeButton"))
+    if (QAbstractButton *closeButton = m_mainWindow->findChild<QAbstractButton *>("closeButton"))
         connect(closeButton, SIGNAL(clicked()), m_mainWindow, SLOT(close()));
 
-    if (QAbstractButton *minimizeButton = qFindChild<QAbstractButton *>(m_mainWindow, "minimizeButton"))
+    if (QAbstractButton *minimizeButton = m_mainWindow->findChild<QAbstractButton *>("minimizeButton"))
         connect(minimizeButton, SIGNAL(clicked()), m_mainWindow, SLOT(showMinimized()));
 
     if (m_volumeSlider) {
@@ -413,12 +428,12 @@ void NPlayer::connectSignals()
         connect(m_mainWindow, SIGNAL(scrolled(int)), this, SLOT(on_mainWindow_scrolled(int)));
     }
 
-    if (QAbstractButton *repeatButton = qFindChild<QAbstractButton *>(m_mainWindow, "repeatButton")) {
+    if (QAbstractButton *repeatButton = m_mainWindow->findChild<QAbstractButton *>("repeatButton")) {
         connect(repeatButton, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setRepeatMode(bool)));
         connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), repeatButton, SLOT(setChecked(bool)));
     }
 
-    if (QAbstractButton *shuffleButton = qFindChild<QAbstractButton *>(m_mainWindow, "shuffleButton")) {
+    if (QAbstractButton *shuffleButton = m_mainWindow->findChild<QAbstractButton *>("shuffleButton")) {
         connect(shuffleButton, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setShuffleMode(bool)));
         connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), shuffleButton, SLOT(setChecked(bool)));
     }
@@ -661,7 +676,7 @@ void NPlayer::on_mainWindow_closed()
     if (m_settings->value("MinimizeToTray").toBool()) {
         m_systemTray->setVisible(true);
     } else {
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
         quit();
 #endif
     }
@@ -750,7 +765,7 @@ void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
     bool newOnTop = (whilePlaying && state == N::PlaybackPlaying);
     if (!alwaysOnTop && (oldOnTop != newOnTop))
         m_mainWindow->setOnTop(newOnTop);
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     if (NW7TaskBar::instance()->isEnabled()) {
         if (state == N::PlaybackPlaying) {
             NW7TaskBar::instance()->setState(NW7TaskBar::Normal);

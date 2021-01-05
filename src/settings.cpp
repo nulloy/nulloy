@@ -20,7 +20,7 @@
 #include "action.h"
 
 #include <QCoreApplication>
-#include <QDesktopServices>
+#include <QStandardPaths>
 #include <QDir>
 #include <QSettings>
 #include <QVariant>
@@ -81,7 +81,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
     initValue("PlayEnqueued", true);
     initValue("AutoCheckUpdates", true);
     initValue("DisplayLogDialog", true);
-    initValue("LastDirectory", QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
+    initValue("LastDirectory", QStandardPaths::standardLocations(QStandardPaths::MusicLocation));
     initValue("LoopPlaylist", false);
     initValue("LoadNext", false);
     initValue("ShowCoverArt", true);
@@ -89,7 +89,7 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
     initValue("Volume", 0.8);
     initValue("ShowDecibelsVolume", false);
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     initValue("TaskbarProgress", true);
 #endif
 

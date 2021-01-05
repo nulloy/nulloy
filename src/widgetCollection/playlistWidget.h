@@ -120,7 +120,7 @@ private:
     QStringList mimeTypes() const;
     QMimeData* mimeData(const QList<QListWidgetItem *> items) const;
     bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     Qt::DropActions supportedDropActions() const;
 #endif
 protected:

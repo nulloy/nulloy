@@ -22,6 +22,7 @@ class NContainerPhonon : public QObject, public NPluginContainer
 {
     Q_OBJECT
     Q_INTERFACES(NPluginContainer)
+    Q_PLUGIN_METADATA(IID "com.nulloy.NContainerPhonon")
 
 private:
     QList<NPlugin *> m_plugins;

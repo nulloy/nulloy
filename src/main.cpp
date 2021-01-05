@@ -20,8 +20,10 @@
 
 #ifndef _N_NO_SKINS_
 #include "skinFileSystem.h"
-Q_IMPORT_PLUGIN(widget_collection)
+Q_IMPORT_PLUGIN(NWidgetCollection)
 #endif
+
+bool logToFile = false;
 
 static void print_out(const QString &out)
 {
@@ -32,7 +34,7 @@ static void print_out(const QString &out)
 static void print_err(const QString &err)
 {
     QTextStream stream(stderr);
-    stream <<  NCore::applicationBasenameName() + ": " + err << "\n";
+    stream << err << "\n";
 }
 
 static void print_help()
@@ -45,6 +47,7 @@ static void print_help()
         "    --prev         play previous file\n"
         "    --stop         stop playback\n"
         "    --pause        pause playback\n"
+        "    --log          log to file\n"
         "    --version      print version\n"
         "    -h, --help     print this message\n"
     );
@@ -55,9 +58,48 @@ static void print_try()
     print_out("Try `" +  NCore::applicationBasenameName() + " --help' for more information");
 }
 
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    Q_UNUSED(context);
+    print_err(msg);
+
+    if (logToFile) {
+        QString prefix;
+        switch (type) {
+            case QtInfoMsg:
+                prefix = "Info";
+                break;
+            case QtDebugMsg:
+                prefix = "Debug";
+                break;
+            case QtWarningMsg:
+                prefix = "Warning";
+                break;
+            case QtCriticalMsg:
+                prefix = "Critical";
+                break;
+            case QtFatalMsg:
+                prefix = "Fatal";
+                break;
+        }
+        QFile logFile(NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".log");
+        logFile.open(QIODevice::Text | QIODevice::WriteOnly | QIODevice::Append);
+        QTextStream stream(&logFile);
+        stream << QString("%1 %2: %3").arg(QTime::currentTime().toString("hh:mm:ss.zzz"), prefix, msg.toLocal8Bit().constData()) << endl;
+        logFile.close();
+    }
+}
+
 int main(int argc, char *argv[])
 {
-#ifdef Q_WS_MAC
+    // for Qt core plugins
+#if defined(Q_OS_WIN)
+    QCoreApplication::addLibraryPath(QFileInfo(argv[0]).dir().path() + "/Plugins/");
+#elif defined(Q_OS_MAC)
+    QCoreApplication::addLibraryPath(QFileInfo(argv[0]).dir().path() + "/plugins/");
+#endif
+
+#ifdef Q_OS_MAC
     // https://bugreports.qt-project.org/browse/QTBUG-32789
     if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_8)
         QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
@@ -72,6 +114,8 @@ int main(int argc, char *argv[])
     instance.setApplicationVersion(QString(_N_VERSION_));
     instance.setOrganizationDomain("nulloy.com");
     instance.setQuitOnLastWindowClosed(false);
+
+    qInstallMessageHandler(messageHandler);
 
     QStringList argList = instance.arguments();
     argList.takeFirst();
@@ -90,6 +134,8 @@ int main(int argc, char *argv[])
                     arg == "--pause")
                 {
                     options << arg;
+                } else if (arg == "--log") {
+                    logToFile = true;
                 } else if (arg == "--version") {
                     print_out(instance.applicationVersion());
                     return 0;
@@ -118,13 +164,6 @@ int main(int argc, char *argv[])
         if (instance.sendMessage(msg))
             return 0; // return if delivered
     }
-
-    // for Qt core plugins
-#if defined(Q_WS_WIN)
-    instance.addLibraryPath(instance.applicationDirPath() + "/Plugins/");
-#elif defined(Q_WS_MAC)
-    instance.addLibraryPath(instance.applicationDirPath() + "/plugins/");
-#endif
 
 #ifndef _N_NO_SKINS_
     NSkinFileSystem::init();

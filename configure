@@ -1,8 +1,9 @@
 #!/bin/bash
 
 BASENAME=$(basename $0)
-CWD=$(dirname $0)
+CWD="$(dirname $0)"
 PREFIX=/usr
+LIBDIR=lib
 DEBUG=no
 APP_NAME=nulloy
 
@@ -15,7 +16,6 @@ BUILD_PHONON=no
 BUILD_TESTS=no
 UPDATE_CHECK=yes
 SUPPORT_SKINS=yes
-MAC_UNIVERSAL=no
 
 echo_err() {
     echo "$BASENAME: $@" >&2
@@ -31,8 +31,8 @@ echo_help() {
     echo '    --no-skins                  disable skins support'
     echo '    --force-version VERSION     overrides version.pri'
     echo '    --no-update-check           disable online check functionality'
-    echo '    --prefix PREFIX             installation prefix (ignored on Mac)'
-    echo '    --universal                 build for both i386 and x86_64 (Mac only)'
+    echo '    --prefix PREFIX             installation prefix (default: /usr, ignored on Mac)'
+    echo '    --libdir LIBDIR             library directory under prefix (default: lib)'
     echo '    --debug                     build in debug mode'
     echo '    --tests                     build unit tests'
 }
@@ -70,10 +70,10 @@ while test $# -gt 0; do
             BUILD_TESTS=yes ;;
         --no-skins)
             SUPPORT_SKINS=no ;;
+        --libdir)
+            shift; LIBDIR=$1 ;;
         --no-update-check)
             UPDATE_CHECK=no ;;
-        --universal)
-            MAC_UNIVERSAL=yes ;;
         --help|-h)
             echo_help; exit 0 ;;
         *)
@@ -84,7 +84,7 @@ while test $# -gt 0; do
     shift
 done
 
-QMAKE_CACHE=$CWD/.qmake.cache
+QMAKE_CACHE="$CWD"/.qmake.cache
 echo -n > $QMAKE_CACHE
 
 check_executable() {
@@ -124,18 +124,21 @@ echo "PKG_CONFIG = $PKG_CONFIG" >> $QMAKE_CACHE
 [[ -n "$LDFLAGS" ]]  && echo "QMAKE_LFLAGS += ${LDFLAGS}"    >> $QMAKE_CACHE
 
 pkg_check_lib() {
-    if $PKG_CONFIG --print-errors $1; then
-        echo "Found $1"
-    else
-        echo
-        exit 1
-    fi
+    for LIB in $@; do
+        if $PKG_CONFIG --print-errors $LIB; then
+            echo "Found '$LIB'"
+        else
+            echo
+            exit 1
+        fi
+        shift
+    done
 }
 [[ $BUILD_GSTREAMER == "yes" ]]           && pkg_check_lib gstreamer-1.0
 [[ $BUILD_GSTREAMER_TAGREADER == "yes" ]] && pkg_check_lib gstreamer-pbutils-1.0
-[[ $BUILD_VLC == "yes" ]]                 && pkg_check_lib libvlc
+[[ $BUILD_VLC == "yes" ]]                 && pkg_check_lib libvlc vlc-plugin
 [[ $BUILD_TAGLIB == "yes" ]]              && pkg_check_lib taglib
-[[ $BUILD_PHONON == "yes" ]]              && pkg_check_lib phonon
+[[ $BUILD_PHONON == "yes" ]]              && pkg_check_lib phonon4qt5
 
 [[ $BUILD_GSTREAMER == "yes" ]]           && echo "CONFIG += gstreamer" >> $QMAKE_CACHE
 [[ $BUILD_GSTREAMER_TAGREADER == "yes" ]] && echo "CONFIG += gstreamer-tagreader" >> $QMAKE_CACHE
@@ -143,7 +146,6 @@ pkg_check_lib() {
 [[ $BUILD_PHONON == "yes" ]]              && echo "CONFIG += phonon" >> $QMAKE_CACHE
 [[ $BUILD_TAGLIB == "yes" ]]              && echo "CONFIG += taglib" >> $QMAKE_CACHE
 [[ $SUPPORT_SKINS == "no" ]]              && echo "CONFIG += no-skins" >> $QMAKE_CACHE
-[[ $MAC_UNIVERSAL == "yes" ]]             && echo "CONFIG += x86 x86_64" >> $QMAKE_CACHE
 [[ $UPDATE_CHECK == "no" ]]               && echo "CONFIG += no-update-check" >> $QMAKE_CACHE
 [[ $BUILD_TESTS == "yes" ]]               && echo "CONFIG += tests" >> $QMAKE_CACHE \
                                           && echo "DEFINES += _TESTS_" >> $QMAKE_CACHE
@@ -153,7 +155,7 @@ else
     echo "CONFIG += release" >> $QMAKE_CACHE
 fi
 
-if $QMAKE -query "QMAKE_MKSPECS" | grep -i mingw; then
+if $QMAKE -query "QMAKE_XSPEC" | grep -i win; then
     echo "CONFIG += unix_mingw" >> $QMAKE_CACHE
     APP_NAME=Nulloy
 fi
@@ -165,12 +167,13 @@ if [[ $FORCE_VERSION != "no" ]]; then
     echo "N_CONFIG_FORCE_VERSION = $FORCE_VERSION" >> $QMAKE_CACHE
 fi
 
-if uname | grep -i darwin; then
-    QMAKE_EXTRA_OPTIONS="-spec macx-g++"
-else
+if uname | grep -i -v darwin; then
     echo "Install prefix: $PREFIX"
 fi
 echo "PREFIX = $PREFIX" >> $QMAKE_CACHE
+
+echo "LIBDIR = $LIBDIR" >> $QMAKE_CACHE
+echo "Library directory: $LIBDIR"
 
 echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
 

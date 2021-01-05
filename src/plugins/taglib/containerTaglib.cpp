@@ -34,5 +34,3 @@ QList<NPlugin *> NContainerTaglib::plugins() const
     return m_plugins;
 }
 
-Q_EXPORT_PLUGIN2(plugin_taglib, NContainerTaglib)
-

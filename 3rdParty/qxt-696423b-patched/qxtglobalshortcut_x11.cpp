@@ -30,7 +30,6 @@
 *****************************************************************************/
 
 #include <QVector>
-#include <X11/Xlib.h>
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 #   include <QX11Info>
 #else
@@ -38,6 +37,7 @@
 #   include <qpa/qplatformnativeinterface.h>
 #   include <xcb/xcb.h>
 #endif
+#include <X11/Xlib.h>
 
 #include "keymapper_x11.h"
 
@@ -237,8 +237,11 @@ quint32 QxtGlobalShortcutPrivate::nativeKeycode(Qt::Key key)
       keysym = XStringToKeysym(QKeySequence(key).toString().toLatin1().data());
     }
 
-    Display* display = QX11Info::display();
-    return XKeysymToKeycode(display, keysym);
+    QxtX11Data x11;
+    if (!x11.isValid())
+        return 0;
+
+    return XKeysymToKeycode(x11.display(), keysym);
 }
 
 bool QxtGlobalShortcutPrivate::registerShortcut(quint32 nativeKey, quint32 nativeMods)

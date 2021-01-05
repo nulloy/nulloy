@@ -23,7 +23,7 @@
 #include <QUiLoader>
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include "w7TaskBar.h"
 #include <windows.h>
 #include <dwmapi.h>
@@ -45,7 +45,7 @@
 
 NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(parent)
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     m_framelessShadow = false;
 #endif
 
@@ -82,10 +82,10 @@ NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(paren
         widget->installEventFilter(this);
 
     QIcon icon;
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     icon = QIcon::fromTheme("nulloy");
 #endif
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
     if (icon.isNull()) {
         QStringList files = QDir(":").entryList(QStringList() << "icon-*", QDir::Files);
         foreach (QString fileName, files)
@@ -163,7 +163,7 @@ void NMainWindow::toggleMaximize()
         m_unmaximizedPos = pos();
         m_unmaximizedSize = size();
         showMaximized();
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
         setGeometry(QApplication::desktop()->availableGeometry());
         showMaximized();
 #endif
@@ -474,7 +474,7 @@ void NMainWindow::closeEvent(QCloseEvent *event)
     emit closed();
 }
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 bool _DwmIsCompositionEnabled()
 {
     HMODULE library = LoadLibrary(L"dwmapi.dll");
@@ -502,29 +502,30 @@ void NMainWindow::updateFramelessShadow()
     DWORD major = (DWORD) (LOBYTE(LOWORD(version))); // major = 6 for vista/7/2008
 
     if (_DwmIsCompositionEnabled() && m_framelessShadow && major == 6)
-        SetClassLongPtr(winId(), GCL_STYLE, GetClassLongPtr(winId(), GCL_STYLE) | CS_DROPSHADOW);
+        SetClassLongPtr((HWND)winId(), GCL_STYLE, GetClassLongPtr((HWND)winId(), GCL_STYLE) | CS_DROPSHADOW);
     else
-        SetClassLongPtr(winId(), GCL_STYLE, GetClassLongPtr(winId(), GCL_STYLE) & ~CS_DROPSHADOW);
+        SetClassLongPtr((HWND)winId(), GCL_STYLE, GetClassLongPtr((HWND)winId(), GCL_STYLE) & ~CS_DROPSHADOW);
 
     hide();
     show();
 }
 
-bool NMainWindow::winEvent(MSG *message, long *result)
+bool NMainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
-    if (message->message == WM_DWMCOMPOSITIONCHANGED) {
+    MSG* msg = reinterpret_cast<MSG*>(message);
+    if (msg->message == WM_DWMCOMPOSITIONCHANGED) {
         updateFramelessShadow();
         return true;
     } else {
-        return NW7TaskBar::instance()->winEvent(message, result);
+        return NW7TaskBar::instance()->nativeEvent(eventType, message, result);
     }
 }
 #endif
 
 bool NMainWindow::isOnTop()
 {
-#ifdef Q_WS_WIN
-    DWORD dwExStyle = GetWindowLong(this->winId(), GWL_EXSTYLE);
+#ifdef Q_OS_WIN
+    DWORD dwExStyle = GetWindowLong((HWND)this->winId(), GWL_EXSTYLE);
     return (dwExStyle & WS_EX_TOPMOST);
 #else
     Qt::WindowFlags flags = windowFlags();
@@ -534,11 +535,11 @@ bool NMainWindow::isOnTop()
 
 void NMainWindow::setOnTop(bool onTop)
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     if (onTop)
-        SetWindowPos(this->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        SetWindowPos((HWND)this->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     else
-        SetWindowPos(this->winId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        SetWindowPos((HWND)this->winId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 #else
     Qt::WindowFlags flags = windowFlags();
     if (onTop)
@@ -549,7 +550,7 @@ void NMainWindow::setOnTop(bool onTop)
     show();
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     NW7TaskBar::instance()->setWindow(this);
 #endif
 }

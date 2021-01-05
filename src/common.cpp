@@ -20,7 +20,7 @@
 #include <QDir>
 #include <QFileInfo>
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <QSettings>
 #endif
 
@@ -73,7 +73,7 @@ QString NCore::settingsPath()
 QString NCore::rcDir()
 {
     if (!_rcDir_init) {
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
         QDir parentDir(QCoreApplication::applicationDirPath());
         if (parentDir.dirName() == "bin")
             _rcDir = QDir::homePath() + "/.nulloy";
@@ -109,7 +109,8 @@ QString NCore::rcDir()
 QStringList NCore::_processPath(const QString &path, const QStringList &nameFilters)
 {
     QStringList list;
-    if (QFileInfo(path).isDir()) {
+    QFileInfo fileinfo = QFileInfo(path);
+    if (fileinfo.isDir()) {
         QStringList entryList;
         if (!nameFilters.isEmpty())
             entryList = QDir(path).entryList(nameFilters, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
@@ -119,7 +120,7 @@ QStringList NCore::_processPath(const QString &path, const QStringList &nameFilt
         foreach (QString f, entryList)
             list << _processPath(path + "/" + f, nameFilters);
     } else {
-        if (QDir::match(nameFilters, path))
+        if (QDir::match(nameFilters, fileinfo.fileName()))
             list << path;
     }
 

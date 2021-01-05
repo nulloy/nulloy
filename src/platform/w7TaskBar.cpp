@@ -17,6 +17,7 @@
 
 #include "w7TaskBar.h"
 
+#include <QtWin> 
 #include <windows.h>
 #include <shlobj.h>
 #include <QIcon>
@@ -64,9 +65,11 @@ bool NW7TaskBar::isEnabled() const
     return _enabled;
 }
 
-bool NW7TaskBar::winEvent(MSG *message, long *result)
+bool NW7TaskBar::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
-    if (message->message == _messageId) {
+    Q_UNUSED(eventType);
+    MSG* msg = reinterpret_cast<MSG*>(message);
+    if (msg->message == _messageId) {
         HRESULT hr = CoCreateInstance(CLSID_TaskbarList, NULL,
                                       CLSCTX_INPROC_SERVER,
                                       IID_ITaskbarList3,
@@ -90,7 +93,7 @@ void NW7TaskBar::setProgress(qreal val)
     if (!_taskBar || !_enabled)
         return;
 
-    _taskBar->SetProgressValue(_winId, qRound(val * 100), 100);
+    _taskBar->SetProgressValue((HWND)_winId, qRound(val * 100), 100);
 
     if (val == 0)
         setState(NoProgress);
@@ -119,7 +122,7 @@ void NW7TaskBar::setState(State state)
         case Paused:
             flag = TBPF_PAUSED;
     }
-    _taskBar->SetProgressState(_winId, flag);
+    _taskBar->SetProgressState((HWND)_winId, flag);
 }
 
 void NW7TaskBar::setOverlayIcon(const QIcon &icon, const QString &text)
@@ -129,13 +132,13 @@ void NW7TaskBar::setOverlayIcon(const QIcon &icon, const QString &text)
 
     HICON hIcon = NULL;
     if (!icon.isNull())
-        hIcon = icon.pixmap(icon.availableSizes().first().width()).toWinHICON();
+        hIcon = QtWin::toHICON(icon.pixmap(icon.availableSizes().first().width()));
 
     wchar_t *wText = 0;
     wText = new wchar_t[text.length() + 1];
     wText[text.toWCharArray(wText)] = 0;
 
-    _taskBar->SetOverlayIcon(_winId, hIcon, wText);
+    _taskBar->SetOverlayIcon((HWND)_winId, hIcon, wText);
 
     if (hIcon)
         DestroyIcon(hIcon);
