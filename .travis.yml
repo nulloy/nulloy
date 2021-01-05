@@ -11,14 +11,14 @@ compiler:
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       sudo apt update ;
-      sudo apt install g++ libqt4-dev qt4-qmake libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev ;
+      sudo apt install g++ qt5-default qttools5-dev qtscript5-dev qtbase5-private-dev libqt5x11extras5-dev libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev ;
       sudo apt install fluxbox ;
       sudo apt install gstreamer1.0-plugins-good gstreamer1.0-tools ;
     fi
 
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update ;
-      brew install pkgconfig cartr/qt4/qt gstreamer gst-plugins-base taglib ;
+      brew install pkgconfig qt5 gstreamer gst-plugins-base taglib ;
       brew install gst-plugins-good ;
     fi
 
