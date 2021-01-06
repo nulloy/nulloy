@@ -1,12 +1,13 @@
-# ![Icon](http://nulloy.com/files/github-icon.png) Nulloy Music Player http://nulloy.com
+# ![Icon](http://nulloy.com/files/github-icon.png) Nulloy Music Player [![Build Status](https://travis-ci.org/nulloy/nulloy.svg?branch=master)](https://travis-ci.org/nulloy/nulloy)
 
-<img src="http://nulloy.com/files/screen.png" height="250">
-<img src="http://nulloy.com/files/screen_1.png" height="250">
-<img src="http://nulloy.com/files/screen_2.png" height="250">
+![Screenshot](http://nulloy.com/files/screen.png)
 
-[![Build Status](https://travis-ci.org/nulloy/nulloy.svg?branch=master)](https://travis-ci.org/nulloy/nulloy)
+More screenshots: https://nulloy.com/screenshots/
 
-## Windows Build Instructions
+# Build Instructions
+
+<details>
+<summary>Windows</summary>
 
 ### Prerequisites
 
@@ -68,16 +69,16 @@ copy /B /Y C:\Downloads\taglib\bin\libtag.dll .
 windeployqt Nulloy.exe
 Nulloy.exe
 ```
+</details>
 
-
-
-## OSX Build Instructions
+<details>
+<summary>macOS</summary>
 
 ### Prerequisites
 * Xcode Command Line Tools
 * MacPorts http://www.macports.org/ or HomeBrew https://brew.sh/
 
-### Environment Setup
+### Environment
 
 Install Xcode Command Line Tools:
 
@@ -85,7 +86,7 @@ Install Xcode Command Line Tools:
 xcode-select --install
 ```
 
-### Installing Dependences
+### Dependences
 
 First install either MacPorts or HomeBrew.
 
@@ -94,8 +95,10 @@ First install either MacPorts or HomeBrew.
 After installing MacPorts:
 
 ```sh
-sudo port install pkgconfig qt5 qt5-qtscript qt5-qttools gstreamer1{,-gst-plugins-base} taglib
+sudo port install pkgconfig qt5 qt5-qtscript qt5-qttools gstreamer1 gstreamer1-gst-plugins-base taglib
 export PATH=/opt/local/libexec/qt5/bin:$PATH
+# install extra GStreamer plugins for more audio formats
+sudo port install gstreamer1-gst-plugins-good gstreamer1-gst-plugins-bad gstreamer1-gst-plugins-ugly
 ```
 
 #### HomeBrew
@@ -105,6 +108,8 @@ After installing HomeBrew:
 ```sh
 brew install pkgconfig qt5 gstreamer gst-plugins-base taglib
 export PATH=/usr/local/opt/qt/bin:$PATH
+# install extra GStreamer plugins for more audio formats
+brew install gst-plugins-good gst-plugins-bad gst-plugins-ugly
 ```
 
 ### Build & Run Nulloy
@@ -116,39 +121,27 @@ make
 make install
 ./nulloy.app/Contents/MacOS/nulloy
 ```
+</details>
 
-### Optional
+<details>
+<summary>Linux</summary>
 
-Install extra GStreamer plugins for more audio formats.
-
-#### MacPorts
-
-```sh
-sudo port install gstreamer1-gst-plugins-{good,bad,ugly}
-```
-
-#### HomeBrew
-
-```sh
-brew install gst-plugins-{good,bad,ugly}
-```
-
-
-
-## Linux Build Instructions
-
-### Installing Dependences
+### Dependences
 
 #### DEB-based distro
 
 ```sh
-apt-get install g++ qt5-default qttools5-dev qtscript5-dev qtbase5-private-dev libqt5x11extras5-dev libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev
+apt install g++ qt5-default qttools5-dev qtscript5-dev qtbase5-private-dev libqt5x11extras5-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev zip libx11-dev libtag1-dev
+# install extra GStreamer plugins for more audio formats
+apt install gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
 ```
 
 #### RPM-based distro
 
 ```sh
-yum install gcc-c++ qt5-qtbase-devel qt5-qttools-devel qt5-qttools-static qt5-qtscript-devel qt5-qtbase-private-devel qt5-linguist gstreamer1{-plugins-base,}-devel zip libX11-devel taglib-devel
+yum install gcc-c++ qt5-qtbase-devel qt5-qttools-devel qt5-qttools-static qt5-qtscript-devel qt5-qtbase-private-devel qt5-linguist gstreamer1-plugins-base-devel gstreamer1-devel zip libX11-devel taglib-devel
+# install extra GStreamer plugins for more audio formats
+yum install gstreamer1-plugins-good gstreamer1-plugins-bad gstreamer1-plugins-ugly
 ```
 
 ### Build & Run Nulloy
@@ -159,22 +152,7 @@ cd nulloy.git
 make
 ./nulloy
 ```
-
-### Optional
-
-Install extra GStreamer plugins for more audio formats
-
-#### DEB-based distro
-
-```sh
-apt-get install gstreamer1.0-plugins-{good,bad,ugly}
-```
-
-#### RPM-based distro
-
-```sh
-yum install gstreamer1-plugins-{good,bad,ugly}}
-```
+</details>
 
 ## License
 [GPL3](/LICENSE.GPL3)
