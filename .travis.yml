@@ -14,7 +14,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       sudo apt update ;
       sudo apt install g++ qt5-default qttools5-dev qttools5-dev-tools qtscript5-dev qtbase5-private-dev libqt5x11extras5-dev libgstreamer{-plugins-base,}1.0-dev zip libx11-dev libtag1-dev ;
-      sudo apt install fluxbox ;
+      sudo apt install fluxbox xvfb ;
       sudo apt install gstreamer1.0-plugins-good gstreamer1.0-tools ;
     fi
 
@@ -26,8 +26,8 @@ install:
 
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      export DISPLAY=:99.0 ;
-      sh -e /etc/init.d/xvfb start ;
+      Xvfb :99 &
+      export DISPLAY=:99 ;
       sleep 3 ;
       fluxbox 2>/dev/null &
     fi
