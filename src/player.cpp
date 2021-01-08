@@ -646,7 +646,7 @@ void NPlayer::on_preferencesDialog_settingsChanged()
 #ifndef _N_NO_UPDATE_CHECK_
 void NPlayer::downloadVersion()
 {
-    m_versionDownloader->get(QNetworkRequest(QUrl("http://static." + QCoreApplication::organizationDomain() + "/release/version")));
+    m_versionDownloader->get(QNetworkRequest(QUrl("https://static." + QCoreApplication::organizationDomain() + "/release/version")));
 }
 
 void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
@@ -662,7 +662,7 @@ void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
                          m_mainWindow,
                          QCoreApplication::applicationName() + tr(" Update"),
                          tr("A newer version is available: ") + versionOnline + "<br><br>" +
-                         "<a href='http://" + QCoreApplication::organizationDomain() + "/download'>http://" +
+                         "<a href='https://" + QCoreApplication::organizationDomain() + "/download'>https://" +
                          QCoreApplication::organizationDomain() + "/download</a>");
         }
     }
