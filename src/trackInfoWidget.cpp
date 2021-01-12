@@ -184,8 +184,8 @@ void NTrackInfoWidget::tick(qint64 msec)
     QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
     int total = tagReader->toString("%D").toInt();
     int hours = total / 60 / 60;
-    QTime current = QTime().addMSecs(msec);
-    QTime remaining = QTime().addMSecs(total * 1000 - msec);
+    QTime current = QTime(0, 0).addMSecs(msec);
+    QTime remaining = QTime(0, 0).addMSecs(total * 1000 - msec);
     foreach (NLabel *label, m_dynamicFormatsMap.keys()) {
         QString text = m_dynamicFormatsMap[label];
         if (hours > 0) {
@@ -219,7 +219,7 @@ void NTrackInfoWidget::showToolTip(int x, int y)
         int durationSec = tagReader->toString("%D").toInt();
         float posAtX = (float)x / width();
         int secAtX = durationSec * posAtX;
-        QTime timeAtX = QTime().addSecs(secAtX);
+        QTime timeAtX = QTime(0, 0).addSecs(secAtX);
         QString strAtPos;
         if (secAtX > 60 * 60) // has hours
             strAtPos = timeAtX.toString("h:mm:ss");
@@ -229,7 +229,7 @@ void NTrackInfoWidget::showToolTip(int x, int y)
 
         int secCur = m_msec / 1000;
         int secDiff = secAtX - secCur;
-        QTime timeDiff = QTime().addSecs(qAbs(secDiff));
+        QTime timeDiff = QTime(0, 0).addSecs(qAbs(secDiff));
         QString diffStr;
         if (qAbs(secDiff) > 60 * 60) // has hours
             diffStr = timeDiff.toString("h:mm:ss");
