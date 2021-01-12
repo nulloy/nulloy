@@ -27,14 +27,12 @@ bool logToFile = false;
 
 static void print_out(const QString &out)
 {
-    QTextStream stream(stdout);
-    stream << out  << "\n";
+    fprintf(stdout, "%s\n", out.toStdString().c_str());
 }
 
 static void print_err(const QString &err)
 {
-    QTextStream stream(stderr);
-    stream << err << "\n";
+    fprintf(stderr, "%s\n", err.toStdString().c_str());
 }
 
 static void print_help()
