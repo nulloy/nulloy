@@ -56,6 +56,8 @@ void NTagReaderTaglib::setSource(const QString &file)
         NTaglib::_tagRef = NULL;
     }
 
+    NTaglib::_filePath = "";
+
     if (!QFileInfo(file).exists())
         return;
 

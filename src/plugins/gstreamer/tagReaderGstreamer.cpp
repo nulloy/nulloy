@@ -58,6 +58,7 @@ void NTagReaderGstreamer::setSource(const QString &file)
     }
 
     m_isValid = false;
+    m_path = "";
 
     QFileInfo fileInfo(file);
     if (!fileInfo.exists())
