@@ -114,9 +114,11 @@ void NWaveformSlider::checkForUpdate()
 
     if (m_needsUpdate) {
         QPainter painter;
+        qreal dpr = devicePixelRatioF();
+        QImage image(width() * dpr, height() * dpr, QImage::Format_ARGB32_Premultiplied);
+        image.setDevicePixelRatio(dpr);
         QImage waveImage;
-        QImage backgroundImage;
-        waveImage = backgroundImage = m_progressPlayingImage = m_progressPausedImage = m_remainingPlayingImage = m_remainingPausedImage = QImage(size(), QImage::Format_ARGB32_Premultiplied);
+        waveImage = m_backgroundImage = m_progressPlayingImage = m_progressPausedImage = m_remainingPlayingImage = m_remainingPausedImage = image;
 
         m_oldBuilderPos = builderPos;
         m_oldBuilderIndex = builderIndex;
@@ -132,16 +134,12 @@ void NWaveformSlider::checkForUpdate()
         wavePen.setColor(m_waveBorderColor);
         painter.setPen(wavePen);
 
-        painter.translate(1, 1);
-        painter.scale((qreal)(width() - 1) / m_oldBuilderIndex * m_oldBuilderPos, (height() - 2) / 2);
-        painter.translate(0, 1);
-
         QPainterPath pathPos;
         QPainterPath pathNeg;
         NWaveformPeaks *peaks = m_waveBuilder->peaks();
         for (int i = 0; i < m_oldBuilderIndex; ++i) {
-            pathPos.lineTo(i, peaks->positive(i));
-            pathNeg.lineTo(i, peaks->negative(i));
+            pathPos.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(), (1 + peaks->positive(i)) * (height() / 2.0));
+            pathNeg.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(), (1 + peaks->negative(i)) * (height() / 2.0));
         }
         QPainterPath fullPath(pathNeg);
         fullPath.connectPath(pathPos.toReversed());
@@ -153,8 +151,8 @@ void NWaveformSlider::checkForUpdate()
 
 
         // main background >>
-        painter.begin(&backgroundImage);
-        backgroundImage.fill(0);
+        painter.begin(&m_backgroundImage);
+        m_backgroundImage.fill(0);
         painter.setPen(Qt::NoPen);
         painter.setBrush(m_background);
         painter.setRenderHint(QPainter::Antialiasing);
@@ -168,18 +166,15 @@ void NWaveformSlider::checkForUpdate()
         QList<QBrush> brushes; brushes << m_progressPlayingBackground << m_progressPausedBackground << m_remainingPlayingBackground << m_remainingPausedBackground;
         for (int i = 0; i < images.size(); ++i) {
             painter.begin(images[i]);
-            // background
             images[i]->fill(0);
-            // + overlay
             painter.setPen(Qt::NoPen);
             painter.setBrush(brushes[i]);
             painter.setRenderHint(QPainter::Antialiasing);
-            painter.drawRoundedRect(rect(), m_radius, m_radius);
-            // + waveform
+            painter.drawRect(rect());
             painter.setCompositionMode(modes[i]);
             painter.drawImage(0, 0, waveImage);
-            painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-            painter.drawImage(0, 0, backgroundImage);
+            painter.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
+            painter.drawImage(0, 0, m_backgroundImage);
             painter.end();
         }
 
@@ -193,18 +188,21 @@ void NWaveformSlider::paintEvent(QPaintEvent *)
     QPainter painter(this);
 
     if (m_hasMedia) {
-        int x = qRound((qreal)value() / maximum() * width());
+        qreal x = (qreal)value() / maximum() * width();
+        qreal dpr = devicePixelRatioF();
+        QTransform transform;
+        transform.scale(dpr, dpr);
 
-        QRect left = rect().adjusted(0, 0, x - width(), 0);
-        painter.drawImage(left, m_pausedState ? m_progressPausedImage : m_progressPlayingImage, left);
+        QRectF left = QRectF(0, 0, x, height());
+        painter.drawImage(left, m_pausedState ? m_progressPausedImage : m_progressPlayingImage, transform.mapRect(left));
 
-        QRect right = rect().adjusted(x, 0, 0, 0);
-        painter.drawImage(right, m_pausedState ? m_remainingPausedImage : m_remainingPlayingImage, right);
+        QRectF right = QRectF(x, 0, width() - x, height());
+        painter.drawImage(right, m_pausedState ? m_remainingPausedImage : m_remainingPlayingImage, transform.mapRect(right));
 
         QColor grooveColor = m_pausedState ? m_groovePausedColor : m_groovePlayingColor;
         if (grooveColor != Qt::transparent) {
             painter.setPen(grooveColor);
-            painter.drawLine(x, 0, x, height());
+            painter.drawLine(QLineF(x, 0, x, height()));
         }
     } else {
         painter.setRenderHint(QPainter::Antialiasing);

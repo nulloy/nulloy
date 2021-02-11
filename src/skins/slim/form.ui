@@ -204,7 +204,7 @@ QToolButton {
 
 #waveformSlider {
 	background: green;
-	qproperty-background: transparent;
+	qproperty-background: #3B4047;
 	qproperty-wave_background: white;
 	qproperty-wave_border_color: transparent;
 	qproperty-progress_playing_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #fff657, stop:1 #ffa519);
