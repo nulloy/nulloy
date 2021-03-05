@@ -17,11 +17,14 @@
 
 #include "global.h"
 #include "scriptQtPrototypes.h"
-#include "skinFileSystem.h"
 #include "player.h"
 #include "mainWindow.h"
 #include "playbackEngineInterface.h"
 #include "settings.h"
+
+#ifndef _N_NO_SKINS_
+#include "skinFileSystem.h"
+#endif
 
 NWidgetPrototype widgetPrototype;
 NLayoutPrototype layoutPrototype;
@@ -65,6 +68,7 @@ void enumFromScriptValue(const QScriptValue &value, T &en)
     en = (T)value.toInt32();
 }
 
+#ifndef _N_NO_SKINS_
 QScriptValue readFile(QScriptContext *context, QScriptEngine *)
 {
     if (context->argumentCount() != 1)
@@ -133,6 +137,7 @@ QScriptValue addApplicationFont(QScriptContext *context, QScriptEngine *)
 
     return QFontDatabase::addApplicationFontFromData(byteArray);
 }
+#endif
 
 NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
 {
@@ -204,8 +209,10 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
     qScriptRegisterMetaType<NSettings *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
     global.setProperty("Settings", newQObject(NSettings::instance()));
 
+#ifndef _N_NO_SKINS_
     globalObject().setProperty("readFile", newFunction(readFile));
     globalObject().setProperty("maskImage", newFunction(maskImage));
     globalObject().setProperty("addApplicationFont", newFunction(addApplicationFont));
+#endif
 }
 

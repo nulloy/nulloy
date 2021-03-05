@@ -48,16 +48,11 @@ unix:!mac:PKGCONFIG += x11
 
     HEADERS -= $$SRC_DIR/skinFileSystem.h   $$SRC_DIR/skinLoader.h
     SOURCES -= $$SRC_DIR/skinFileSystem.cpp $$SRC_DIR/skinLoader.cpp
-    HEADERS += $$SRC_DIR/widgetCollection/label.h \
-               $$SRC_DIR/widgetCollection/playlistWidget.h \
-               $$SRC_DIR/widgetCollection/slider.h \
-               $$SRC_DIR/widgetCollection/waveformSlider.h \
-               $$SRC_DIR/widgetCollection/playlistWidgetItem.h
-    SOURCES += $$SRC_DIR/widgetCollection/label.cpp \
-               $$SRC_DIR/widgetCollection/playlistWidget.cpp \
-               $$SRC_DIR/widgetCollection/slider.cpp \
-               $$SRC_DIR/widgetCollection/waveformSlider.cpp \
-               $$SRC_DIR/widgetCollection/playlistWidgetItem.cpp
+
+    HEADERS += $$files($$SRC_DIR/widgetCollection/*.h)
+    SOURCES += $$files($$SRC_DIR/widgetCollection/*.cpp)
+    HEADERS -= $$SRC_DIR/widgetCollection/widgetCollection.h
+    SOURCES -= $$SRC_DIR/widgetCollection/widgetCollection.cpp
 
     DEPENDPATH +=  $$SRC_DIR/widgetCollection
     INCLUDEPATH += $$SRC_DIR/widgetCollection

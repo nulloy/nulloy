@@ -27,7 +27,7 @@ class NMainWindow : public QDialog
 
 private:
 #ifdef _N_NO_SKINS_
-    Ui::Dialog ui;
+    Ui::mainWindow ui;
 #endif
     bool m_resizeActive;
     Qt::WindowFrameSection m_resizeSection;

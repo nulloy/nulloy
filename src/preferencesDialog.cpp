@@ -82,13 +82,6 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     ui.customTrashContainer->hide();
 #endif
 
-    QPixmap pixmap = QIcon::fromTheme("dialog-warning", style()->standardIcon(QStyle::SP_MessageBoxWarning)).pixmap(16);
-    QByteArray byteArray;
-    QBuffer buffer(&byteArray);
-    pixmap.save(&buffer, "PNG");
-    NSkinFileSystem::addFile("warning.png", byteArray);
-    QString url = "<img src=\"skin:warning.png\"/>";
-
     QVBoxLayout *scrollLayout = new QVBoxLayout;
     ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
 
@@ -106,13 +99,13 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     else
         ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
 
-    ui.pluginsRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.pluginsRestartLabel->text());
+    ui.pluginsRestartLabel->setText("⚠ " + ui.pluginsRestartLabel->text());
     ui.pluginsRestartLabel->setVisible(false);
 
-    ui.languageRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.languageRestartLabel->text());
+    ui.languageRestartLabel->setText("⚠ " + ui.languageRestartLabel->text());
     ui.languageRestartLabel->setVisible(false);
 
-    ui.skinRestartLabel->setText(url + "&nbsp;&nbsp;" + ui.skinRestartLabel->text());
+    ui.skinRestartLabel->setText("⚠ " + ui.skinRestartLabel->text());
     ui.skinRestartLabel->setVisible(false);
     connect(ui.skinComboBox, SIGNAL(activated(int)), ui.skinRestartLabel, SLOT(show()));
 
