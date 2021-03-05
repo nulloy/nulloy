@@ -46,7 +46,7 @@ while test $# -gt 0; do
     case "$1" in
         --prefix)
             shift
-            if command -v realpath &> /dev/null && -d $(dirname "$1"); then
+            if command -v realpath &> /dev/null && [[ -d $(dirname "$1") ]]; then
                 PREFIX=$(realpath "$1")
             else
                 PREFIX=$(readlink -m "$1")
