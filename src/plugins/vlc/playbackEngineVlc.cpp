@@ -61,6 +61,7 @@ void NPlaybackEngineVlc::init()
 
     m_oldVolume = -1;
     m_oldPosition = -1;
+    m_oldTime = -1;
     m_oldState = N::PlaybackStopped;
 
     m_timer = new QTimer(this);
@@ -123,12 +124,31 @@ void NPlaybackEngineVlc::setPosition(qreal pos)
     libvlc_media_player_set_position(m_mediaPlayer, qBound(0.0, pos, 1.0));
 }
 
+qreal NPlaybackEngineVlc::interpolatePosition()
+{
+    if (!hasMedia())
+        return -1;
+
+    // VLC only updates the position a few times per second. To avoid choppy
+    // movement of the position indicator, interpolate from the last updated
+    // position.
+    qint64 time = libvlc_media_player_get_time(m_mediaPlayer);
+    qint64 duration = libvlc_media_player_get_length(m_mediaPlayer);
+    if (time == m_oldTime && libvlc_media_player_get_state(m_mediaPlayer) == libvlc_Playing) {
+        time += m_positionTimer.elapsed();
+    } else {
+        m_oldTime = time;
+        m_positionTimer.start();
+    }
+    return (qreal) time / duration;
+}
+
 qreal NPlaybackEngineVlc::position() const
 {
     if (!hasMedia())
         return -1;
 
-    return libvlc_media_player_get_position(m_mediaPlayer);
+    return m_oldPosition;
 }
 
 void NPlaybackEngineVlc::jump(qint64 msec)
@@ -191,7 +211,7 @@ QString NPlaybackEngineVlc::currentMedia() const
 
 void NPlaybackEngineVlc::checkStatus()
 {
-    qreal pos = position();
+    qreal pos = interpolatePosition();
     if (m_oldPosition != pos) {
         m_oldPosition = pos;
         emit positionChanged(pos);
