@@ -1,4 +1,4 @@
-# ![Icon](http://nulloy.com/files/github-icon.png) Nulloy Music Player [![Build Status](https://travis-ci.org/nulloy/nulloy.svg?branch=master)](https://travis-ci.org/nulloy/nulloy)
+# ![Icon](http://nulloy.com/files/github-icon.png) Nulloy Music Player
 
 ![Screenshot](http://nulloy.com/files/screen.png)
 
