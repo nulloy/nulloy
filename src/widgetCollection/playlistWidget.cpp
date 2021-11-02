@@ -123,10 +123,10 @@ void NPlaylistWidget::processVisibleItems()
     QListWidgetItem *maxItem = itemAt(0, this->height());
     int maxRow = maxItem ? row(maxItem) : count() - 1;
 
-    int totalRows = maxRow - minRow;
+    int totalRows = maxRow - minRow + 1;
     minRow = qMax(0, minRow - totalRows);
     maxRow = qMin(maxRow + totalRows, count() - 1);
-    for (int i = minRow; i < maxRow; ++i)
+    for (int i = minRow; i <= maxRow; ++i)
         formatItemTitle(reinterpret_cast<NPlaylistWidgetItem *>(item(i)));
 }
 
