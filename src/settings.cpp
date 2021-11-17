@@ -70,7 +70,6 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
     initValue("Repeat", false);
 
     initValue("Maximized", false);
-    initValue("MinimizeToTray", false);
     initValue("TrayIcon", false);
     initValue("AlwaysOnTop", false);
     initValue("WhilePlayingOnTop", false);
@@ -91,6 +90,12 @@ NSettings::NSettings(QObject *parent) : QSettings(NCore::settingsPath(), QSettin
 
 #ifdef Q_OS_WIN
     initValue("TaskbarProgress", true);
+#endif
+
+#ifdef Q_OS_MAC
+    initValue("QuitOnClose", false);
+#else
+    initValue("MinimizeToTray", false);
 #endif
 
     initValue("CustomTrash", false);

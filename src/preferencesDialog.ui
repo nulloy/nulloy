@@ -191,15 +191,36 @@ padding: 5px;</string>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_12">
-             <item>
-              <widget class="QCheckBox" name="minimizeToTrayCheckBox">
-               <property name="text">
-                <string>Hide to system tray when closed</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QWidget" name="minimizeToTrayContainer" native="true">
+              <layout class="QHBoxLayout" name="horizontalLayout_12">
+                <property name="margin">
+                <number>0</number>
+                </property>
+                <item>
+                  <widget class="QCheckBox" name="minimizeToTrayCheckBox">
+                  <property name="text">
+                    <string>Hide to system tray when closed</string>
+                  </property>
+                  </widget>
+                </item>
+              </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="quitOnCloseContainer" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_17">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="quitOnCloseCheckBox">
+                <property name="text">
+                 <string>Quit when closed</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_11">

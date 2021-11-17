@@ -82,6 +82,12 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     ui.customTrashContainer->hide();
 #endif
 
+#if defined Q_OS_MAC
+    ui.minimizeToTrayContainer->hide();
+#else
+    ui.quitOnCloseContainer->hide();
+#endif
+
     QVBoxLayout *scrollLayout = new QVBoxLayout;
     ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
 

@@ -676,8 +676,12 @@ void NPlayer::on_mainWindow_closed()
     if (m_settings->value("MinimizeToTray").toBool()) {
         m_systemTray->setVisible(true);
     } else {
-#ifndef Q_OS_MAC
-        quit();
+#ifdef Q_OS_MAC
+        if (m_settings->value("QuitOnClose").toBool()) {
+            quit();
+        }
+#else
+    quit();
 #endif
     }
 }
