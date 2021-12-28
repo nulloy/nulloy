@@ -87,6 +87,8 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 
     m_itemDrag = NULL;
     m_fileDrop = false;
+    m_dragStart = DragStartInside;
+    m_dropEnd = DropEndInside;
 
     m_repeatMode = NSettings::instance()->value("Repeat").toBool();
     m_shuffleMode = false;
@@ -650,8 +652,12 @@ void NPlaylistWidget::paintEvent(QPaintEvent *e)
 
 
 // DRAG & DROP >>
-bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAction)
+bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAction action)
 {
+    if (action == Qt::MoveAction && m_dragStart == DragStartInside) { // moving within playlist
+        return false;
+    }
+
     bool wasEmpty = false;
     if (count() == 0)
         wasEmpty = true;
@@ -679,13 +685,6 @@ QStringList NPlaylistWidget::mimeTypes() const
     return qstrList;
 }
 
-#ifdef Q_OS_MAC
-Qt::DropActions NPlaylistWidget::supportedDropActions() const
-{
-    return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
-}
-#endif
-
 QMimeData* NPlaylistWidget::mimeData(const QList<QListWidgetItem *> items) const
 {
     QList<QUrl> urls;
@@ -712,7 +711,8 @@ void NPlaylistWidget::mouseMoveEvent(QMouseEvent *event)
         return;
 
     QList<QUrl> urls;
-    urls << QUrl::fromLocalFile(currentItem()->data(N::PathRole).toString());
+    foreach (QListWidgetItem *item, selectedItems())
+        urls << QUrl::fromLocalFile(item->data(N::PathRole).toString());
 
     QMimeData *mimeData = new QMimeData;
     mimeData->setUrls(urls);
@@ -720,16 +720,18 @@ void NPlaylistWidget::mouseMoveEvent(QMouseEvent *event)
 
     m_itemDrag = new QDrag(this);
     m_itemDrag->setMimeData(mimeData);
-    // restrct to move action
-    m_itemDrag->start(Qt::MoveAction);
+    Qt::DropAction dropAction = m_itemDrag->exec(Qt::CopyAction | Qt::MoveAction, Qt::MoveAction); // blocking
+    if (dropAction == Qt::MoveAction && m_dropEnd == DropEndOutside) { // dropping to file manager
+        on_removeAction_triggered();
+    }
 }
 
 void NPlaylistWidget::dropEvent(QDropEvent *event)
 {
-    if (m_itemDrag) // moving withing playlist
-        event->setDropAction(Qt::MoveAction);
+    if (event->source()) // moving within playlist
+        m_dragStart = DragStartInside;
     else // dropping from file manager
-        event->setDropAction(Qt::CopyAction);
+        m_dragStart = DragStartOutside;
 
     QListWidget::dropEvent(event);
 
@@ -739,6 +741,8 @@ void NPlaylistWidget::dropEvent(QDropEvent *event)
 
 void NPlaylistWidget::dragEnterEvent(QDragEnterEvent *event)
 {
+    m_dropEnd = DropEndInside;
+
     if (m_itemDrag && !m_mimeDataUrls.isEmpty())
         m_itemDrag->mimeData()->setUrls(m_mimeDataUrls); // recover old data
 
@@ -747,33 +751,29 @@ void NPlaylistWidget::dragEnterEvent(QDragEnterEvent *event)
         viewport()->update();
     }
 
-    // change to move action
-    event->setDropAction(Qt::MoveAction);
     QListWidget::dragEnterEvent(event);
 }
 
 void NPlaylistWidget::dragMoveEvent(QDragMoveEvent *event)
 {
-    // change to move action
-    event->setDropAction(Qt::MoveAction);
-    QListWidget::dragMoveEvent(event);
-
     if (!m_itemDrag)
         m_fileDrop = (!itemAt(event->pos())) ? true : false;
+
+    QListWidget::dragMoveEvent(event);
 }
 
 void NPlaylistWidget::dragLeaveEvent(QDragLeaveEvent *event)
 {
+    m_dropEnd = DropEndOutside;
+
     if (m_itemDrag) {
         m_mimeDataUrls = m_itemDrag->mimeData()->urls(); // backup
-
-        // forbid drag outside, set dummy mime data
-        m_itemDrag->mimeData()->clear();
     }
-    event->ignore();
 
     m_fileDrop = false;
     viewport()->update();
+
+    QListWidget::dragLeaveEvent(event);
 }
 // << DRAG & DROP
 

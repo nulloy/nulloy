@@ -113,16 +113,20 @@ signals:
     void repeatModeChanged(bool enable);
 
 // DRAG & DROP >>
+public:
+    enum DragStart { DragStartInside, DragStartOutside };
+    Q_ENUM(DragStart)
+    enum DropEnd { DropEndInside, DropEndOutside };
+    Q_ENUM(DropEnd)
 private:
+    DragStart m_dragStart;
+    DropEnd m_dropEnd;
     QPointer<QDrag> m_itemDrag;
     bool m_fileDrop;
     QList<QUrl> m_mimeDataUrls;
     QStringList mimeTypes() const;
     QMimeData* mimeData(const QList<QListWidgetItem *> items) const;
     bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
-#ifdef Q_OS_MAC
-    Qt::DropActions supportedDropActions() const;
-#endif
 protected:
     void dropEvent(QDropEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
