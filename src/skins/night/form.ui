@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainWindow</class>
+ <widget class="QDialog" name="mainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>447</width>
+    <height>289</height>
+   </rect>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+#coverWidget {
+	background: transparent;
+	border: 1px solid transparent;
+}
+#coverWidget:hover {
+	border: 1px solid #E0A500;
+}
+NTrackInfoWidget {
+	margin: 2;
+}
+NTrackInfoWidget QLabel {
+	color: #D1D8DB;
+	min-height: 11px;
+	font-size: 10px;
+	font-weight: bold;
+	border-radius: 2;
+
+	background: rgba(36, 43, 47, 200);
+	padding: 0 1;
+}
+NTrackInfoWidget #MiddleCenter {
+	font-size: 11px;
+	min-height: 14px;
+}
+
+#playlistWidget {
+	background: #000;
+	color: #b6c0c6;
+	qproperty-current_text_color: #e9f2f7;
+	qproperty-failed_text_color: #555961;
+	qproperty-file_drop_border_color: #E0A500;
+	qproperty-file_drop_background: rgba(224, 165, 0, 50);
+}
+
+#playlistWidget::item {
+	background: transparent;
+}
+#playlistWidget::item:selected {
+	color: #fff;
+	background: #3E484F;
+}
+#playlistWidget::item:hover {
+	color: #fff;
+	background: red;
+}
+
+#playlistWidget QScrollBar {
+	background: transparent;
+	width: 6;
+	margin-left: 1px;
+}
+#playlistWidget QScrollBar::handle {
+	background: #636970;
+	min-height: 30px;
+}
+#playlistWidget QScrollBar::handle:hover {
+	background: #E0A500;
+}
+#playlistWidget QScrollBar::add-line,
+#playlistWidget QScrollBar::sub-line,
+#playlistWidget QScrollBar::add-page,
+#playlistWidget QScrollBar::sub-page {
+	height: 0px;
+	background: transparent;
+}
+
+QToolButton {
+	border: none;
+}
+
+#volumeSlider {
+	width: 5;
+	background: #636970;
+	margin-left: 1;
+}
+#volumeSlider:hover {
+	background: #F0B000;
+}
+#volumeSlider::sub-page {
+	background: #3B4047;
+	margin-bottom: 3px;
+}
+#volumeSlider::groove:vertical {
+	background: transparent;
+}
+#volumeSlider::handle {
+	height: 5;
+	background: rgba(180, 180, 180, 180);
+}
+#volumeSlider::handle:hover {
+	background: #ff7b00;
+}
+
+#waveformSlider {
+	background: green;
+	qproperty-background: #000;
+	qproperty-wave_background: white;
+	qproperty-wave_border_color: transparent;
+	qproperty-progress_playing_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #fff657, stop:1 #ffa519);
+	qproperty-remaining_playing_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #c0cacd, stop:1 #919ca1);
+	qproperty-progress_paused_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #9BA0AA, stop:1 #686E79);
+	qproperty-remaining_paused_background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #6d717b, stop:1 #545860);
+	qproperty-groove_playing_background: #ff7b00;
+	qproperty-groove_paused_background: #B0B5BF;
+	qproperty-playing_composition: DestinationIn;
+	qproperty-paused_composition: DestinationIn;
+	qproperty-file_drop_border_color: #E0A500;
+	qproperty-file_drop_background: rgba(224, 165, 0, 50);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="borderWidget" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>2</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QWidget" name="titleWidget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>21</height>
+         </size>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="iconLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>18</width>
+             <height>18</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>18</width>
+             <height>18</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="menuButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>25</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>25</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string notr="true"/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="titleBarSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::MinimumExpanding</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>10</width>
+             <height>10</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="NLabel" name="titleLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>1</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string notr="true">Nulloy</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="titleBarSpacer_1">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::MinimumExpanding</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>10</width>
+             <height>10</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QToolButton" name="minimizeButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>25</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>25</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>Minimize</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="closeButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>25</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>25</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>Close</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSplitter" name="splitter">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="handleWidth">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="splitTop" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QWidget" name="controlsContainer" native="true">
+           </widget>
+          </item>
+          <item>
+           <widget class="NCoverWidget" name="coverWidget">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="NWaveformSlider" name="waveformSlider" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="NVolumeSlider" name="volumeSlider">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="toolTip">
+             <string>Volume</string>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="singleStep">
+             <number>2</number>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::NoTicks</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="NPlaylistWidget" name="playlistWidget">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
+         <property name="acceptDrops">
+          <bool>true</bool>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::ExtendedSelection</enum>
+         </property>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>NWaveformSlider</class>
+   <extends>QWidget</extends>
+   <header>waveformSlider.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>NPlaylistWidget</class>
+   <extends>QListWidget</extends>
+   <header>playlistWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>NLabel</class>
+   <extends>QLabel</extends>
+   <header>label.h</header>
+  </customwidget>
+  <customwidget>
+   <class>NCoverWidget</class>
+   <extends>QLabel</extends>
+   <header>coverWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>NVolumeSlider</class>
+   <extends>QSlider</extends>
+   <header>volumeSlider.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
