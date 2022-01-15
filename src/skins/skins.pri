@@ -12,8 +12,8 @@ win32 {
     ZIP_DEL_CMD = 7z d -tzip
 }
 
-unix:SKINS =  metro silver slim
-win32:SKINS = Metro Silver Slim
+unix:SKINS =  metro silver slim night
+win32:SKINS = Metro Silver Slim Night
 for(skin, SKINS) {
     _depends = $$SRC_DIR/skins/$$lower($${skin})/*
     _target = $$SKIN_DEST_DIR/$${skin}.nzs
