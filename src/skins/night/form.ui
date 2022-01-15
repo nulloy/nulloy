@@ -85,7 +85,6 @@ QToolButton {
 #volumeSlider {
 	width: 5;
 	background: #636970;
-	margin-left: 1;
 }
 #volumeSlider:hover {
 	background: #F0B000;
