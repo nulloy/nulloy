@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "waveformSlider.h"
+#include "playlistDataItem.h"
 #include "waveformBuilderInterface.h"
 #include "pluginLoader.h"
 #include "settings.h"
@@ -431,11 +432,11 @@ void NWaveformSlider::dropEvent(QDropEvent *event)
 {
     const QMimeData *data = event->mimeData();
     if (data->hasUrls()) {
-        QStringList files;
+        QList<NPlaylistDataItem> dataItems;
         foreach (QUrl url, data->urls()) {
-            files << NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '));
+            dataItems << NCore::dirListRecursive(url.toLocalFile());
         }
-        emit filesDropped(files);
+        emit filesDropped(dataItems);
     }
 
     event->acceptProposedAction();

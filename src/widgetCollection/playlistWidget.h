@@ -21,6 +21,7 @@
 #include <QList>
 #include <QPointer>
 
+class NPlaylistDataItem;
 class NPlaylistWidgetItem;
 class NTagReaderInterface;
 class NPlaybackEngineInterface;
@@ -94,8 +95,11 @@ public slots:
     void playRow(int row);
 
     void addFiles(const QStringList &files);
+    void addItems(const QList<NPlaylistDataItem> &dataItems);
     void setFiles(const QStringList &files);
+    void setItems(const QList<NPlaylistDataItem> &dataItems);
     void playFiles(const QStringList &files);
+    void playItems(const QList<NPlaylistDataItem> &dataItems);
     bool setPlaylist(const QString &file);
     void processVisibleItems();
 

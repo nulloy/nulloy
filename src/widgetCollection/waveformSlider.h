@@ -20,6 +20,7 @@
 #include <QVector>
 #include <QPainter>
 
+class NPlaylistDataItem;
 class NWaveformBuilderInterface;
 
 class NWaveformSlider : public QAbstractSlider
@@ -91,7 +92,7 @@ protected:
     virtual void dropEvent(QDropEvent *event);
 
 signals:
-    void filesDropped(const QStringList &file);
+    void filesDropped(const QList<NPlaylistDataItem> &dataItems);
 // << DRAG & DROP
 
 // STYLESHEET PROPERTIES >>

@@ -19,26 +19,6 @@
 #include <QFileInfo>
 #include <QTextStream>
 
-QList<NPlaylistDataItem> _processDataItem(const NPlaylistDataItem &dataItem)
-{
-    QList<NPlaylistDataItem> dataItemsList;
-    QString fileName = QFileInfo(dataItem.path).fileName();
-    if (fileName.endsWith(".m3u") || fileName.endsWith(".m3u8")) {
-        QList<NPlaylistDataItem> _dataItemsList = NPlaylistStorage::readM3u(dataItem.path);
-        foreach (NPlaylistDataItem _dataItem, _dataItemsList)
-            dataItemsList << _processDataItem(_dataItem);
-    } else {
-        dataItemsList << dataItem;
-    }
-
-    return dataItemsList;
-}
-
-QList<NPlaylistDataItem> NPlaylistStorage::readPlaylist(const QString &file)
-{
-    return _processDataItem(NPlaylistDataItem(file));
-}
-
 /*
 *  Prefixed data order:
 *  #NULLOY:failed,playbackCount,playbackPosition,titleFormat
@@ -56,6 +36,7 @@ QList<NPlaylistDataItem> NPlaylistStorage::readM3u(const QString &file)
     if (!playlist.exists() || !playlist.open(QFile::ReadOnly))
         return dataItemsList;
 
+    QFileInfo playlistInfo(file);
     NPlaylistDataItem dataItem;
     QTextStream in(&playlist);
     in.setCodec("UTF-8");
@@ -90,14 +71,16 @@ QList<NPlaylistDataItem> NPlaylistStorage::readM3u(const QString &file)
             }
         } else {
             QFileInfo fileInfo(line);
+            if (fileInfo.isAbsolute()) {
+                dataItem.path = line;
+            } else {
+                dataItem.path = playlistInfo.absolutePath() + "/" + line;
+                fileInfo = QFileInfo(dataItem.path);
+            }
+
             if (!fileInfo.exists()) {
                 dataItem.failed = 1;
                 dataItem.path = line;
-            } else {
-                if (fileInfo.isAbsolute())
-                    dataItem.path = line;
-                else
-                    dataItem.path = fileInfo.absolutePath() + "/" + line;
             }
 
             if (dataItem.title.isEmpty())

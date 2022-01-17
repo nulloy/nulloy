@@ -19,6 +19,7 @@
 #include "common.h"
 #include "trash.h"
 
+#include "playlistDataItem.h"
 #include "playlistWidgetItem.h"
 #include "playlistStorage.h"
 
@@ -334,23 +335,6 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
     }
 
     QString file = item->data(N::PathRole).toString();
-    // check if it's a playlist file:
-    QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readPlaylist(file);
-    if (dataItemsList.count() > 1) {
-        int index = row(item);
-        int index_bkp = index;
-
-        delete takeItem(row(item));
-
-        foreach (NPlaylistDataItem dataItem, dataItemsList) {
-            insertItem(index, new NPlaylistWidgetItem(dataItem));
-            ++index;
-        }
-
-        setCurrentItem(NPlaylistWidget::item(index_bkp));
-        return;
-    }
-
     m_tagReader->setSource(file);
     formatItemTitle(item, true);
     if (m_tagReader->isValid()) {
@@ -443,6 +427,13 @@ void NPlaylistWidget::addFiles(const QStringList &files)
     processVisibleItems();
 }
 
+void NPlaylistWidget::addItems(const QList<NPlaylistDataItem> &dataItems)
+{
+    foreach (NPlaylistDataItem dataItem, dataItems)
+        addItem(new NPlaylistWidgetItem(dataItem));
+    processVisibleItems();
+}
+
 void NPlaylistWidget::setFiles(const QStringList &files)
 {
     clear();
@@ -453,13 +444,23 @@ void NPlaylistWidget::setFiles(const QStringList &files)
     processVisibleItems();
 }
 
+void NPlaylistWidget::setItems(const QList<NPlaylistDataItem> &dataItems)
+{
+    clear();
+    m_shuffledItems.clear();
+    m_currentItem = NULL;
+    foreach (NPlaylistDataItem dataItem, dataItems)
+        addItem(new NPlaylistWidgetItem(dataItem));
+    processVisibleItems();
+}
+
 bool NPlaylistWidget::setPlaylist(const QString &file)
 {
     clear();
     m_shuffledItems.clear();
     m_currentItem = NULL;
 
-    QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readPlaylist(file);
+    QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readM3u(file);
 
     if (dataItemsList.isEmpty())
         return false;
@@ -475,7 +476,12 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
 void NPlaylistWidget::playFiles(const QStringList &files)
 {
     setFiles(files);
-    processVisibleItems();
+    playRow(0);
+}
+
+void NPlaylistWidget::playItems(const QList<NPlaylistDataItem> &dataItems)
+{
+    setItems(dataItems);
     playRow(0);
 }
 
@@ -663,8 +669,9 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
         wasEmpty = true;
 
     foreach (QUrl url, data->urls()) {
-        foreach (QString file, NCore::dirListRecursive(url.toLocalFile(), NSettings::instance()->value("FileFilters").toString().split(' '))) {
-            NPlaylistWidgetItem *item = new NPlaylistWidgetItem(QFileInfo(file));
+        foreach (NPlaylistDataItem dataItem, NCore::dirListRecursive(url.toLocalFile())) {
+            qDebug() << dataItem.path;
+            NPlaylistWidgetItem *item = new NPlaylistWidgetItem(dataItem);
             insertItem(index, item);
             formatItemTitle(item);
             ++index;

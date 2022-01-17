@@ -14,6 +14,8 @@
 *********************************************************************/
 
 #include "common.h"
+#include "playlistStorage.h"
+#include "settings.h"
 
 #include <QtCore>
 #include <QCoreApplication>
@@ -33,7 +35,7 @@ namespace NCore
     static bool _rcDir_init = false;
     static QString _rcDir = "./";
 
-    static QStringList _processPath(const QString &path, const QStringList &nameFilters);
+    static QList<NPlaylistDataItem> _processPath(const QString &path, const QStringList &nameFilters);
 }
 
 void NCore::cArgs(int *argc, const char ***argv)
@@ -106,11 +108,11 @@ QString NCore::rcDir()
     return _rcDir;
 }
 
-QStringList NCore::_processPath(const QString &path, const QStringList &nameFilters)
+QList<NPlaylistDataItem> NCore::_processPath(const QString &path, const QStringList &nameFilters)
 {
-    QStringList list;
-    QFileInfo fileinfo = QFileInfo(path);
-    if (fileinfo.isDir()) {
+    QList<NPlaylistDataItem> dataItemsList;
+    QFileInfo fileInfo = QFileInfo(path);
+    if (fileInfo.isDir()) {
         QStringList entryList;
         if (!nameFilters.isEmpty())
             entryList = QDir(path).entryList(nameFilters, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
@@ -118,16 +120,22 @@ QStringList NCore::_processPath(const QString &path, const QStringList &nameFilt
             entryList = QDir(path).entryList(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 
         foreach (QString f, entryList)
-            list << _processPath(path + "/" + f, nameFilters);
+            dataItemsList << _processPath(path + "/" + f, nameFilters);
     } else {
-        if (QDir::match(nameFilters, fileinfo.fileName()))
-            list << path;
+        if (QDir::match(nameFilters, fileInfo.fileName())) {
+            if (path.endsWith(".m3u") || path.endsWith(".m3u8")) {
+                dataItemsList << NPlaylistStorage::readM3u(path);
+            } else {
+                dataItemsList << NPlaylistDataItem(path);
+            }
+        }
     }
 
-    return list;
+    return dataItemsList;
 }
 
-QStringList NCore::dirListRecursive(const QString &path, const QStringList &nameFilters)
+QList<NPlaylistDataItem> NCore::dirListRecursive(const QString &path)
 {
+    QStringList nameFilters = NSettings::instance()->value("FileFilters").toString().split(' ');
     return _processPath(path, nameFilters);
 }

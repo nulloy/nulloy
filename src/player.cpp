@@ -24,6 +24,7 @@
 #include "waveformSlider.h"
 #include "volumeSlider.h"
 #include "playbackEngineInterface.h"
+#include "playlistDataItem.h"
 #include "playlistWidget.h"
 #include "playlistWidgetItem.h"
 #include "pluginLoader.h"
@@ -443,7 +444,7 @@ void NPlayer::connectSignals()
     connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), m_shufflePlaylistAction, SLOT(setChecked(bool)));
     connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), m_repeatPlaylistAction, SLOT(setChecked(bool)));
 
-    connect(m_waveformSlider, SIGNAL(filesDropped(const QStringList &)), m_playlistWidget, SLOT(playFiles(const QStringList &)));
+    connect(m_waveformSlider, SIGNAL(filesDropped(const QList<NPlaylistDataItem> &)), m_playlistWidget, SLOT(playItems(const QList<NPlaylistDataItem> &)));
     connect(m_waveformSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setPosition(qreal)));
 
     connect(m_showHideAction, SIGNAL(triggered()), this, SLOT(toggleWindowVisibility()));
@@ -900,7 +901,7 @@ void NPlayer::showOpenDirDialog()
     m_settings->setValue("LastDirectory", lastDir);
 
     bool isEmpty = (m_playlistWidget->count() == 0);
-    m_playlistWidget->addFiles(NCore::dirListRecursive(dir, NSettings::instance()->value("FileFilters").toString().split(' ')));
+    m_playlistWidget->addItems(NCore::dirListRecursive(dir));
     if (isEmpty)
         m_playlistWidget->playRow(0);
 }
