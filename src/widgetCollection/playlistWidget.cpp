@@ -129,8 +129,9 @@ void NPlaylistWidget::processVisibleItems()
     int totalRows = maxRow - minRow + 1;
     minRow = qMax(0, minRow - totalRows);
     maxRow = qMin(maxRow + totalRows, count() - 1);
+    QString titleFormat = NSettings::instance()->value("PlaylistTrackInfo").toString();
     for (int i = minRow; i <= maxRow; ++i)
-        formatItemTitle(reinterpret_cast<NPlaylistWidgetItem *>(item(i)));
+        formatItemTitle(reinterpret_cast<NPlaylistWidgetItem *>(item(i)), titleFormat);
 }
 
 void NPlaylistWidget::wheelEvent(QWheelEvent *event)
@@ -297,9 +298,8 @@ void NPlaylistWidget::resetCurrentItem()
     emit setMedia("");
 }
 
-void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, bool force)
+void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force)
 {
-    QString titleFormat = NSettings::instance()->value("PlaylistTrackInfo").toString();
     if (!force && titleFormat == item->data(N::TitleFormatRole) && !item->text().isEmpty())
         return;
 
@@ -310,11 +310,12 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, bool force)
 
     if (m_tagReader->isValid()) {
         QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
-        item->setData(N::TitleFormatRole, titleFormat);
         item->setText(m_tagReader->toString(titleFormat, encoding));
     } else {
         item->setText(QFileInfo(file).fileName());
     }
+
+    item->setData(N::TitleFormatRole, titleFormat);
 
     m_tagReader->setSource(oldSource);
 }
@@ -334,13 +335,9 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
         return;
     }
 
-    QString file = item->data(N::PathRole).toString();
-    m_tagReader->setSource(file);
-    formatItemTitle(item, true);
-    if (m_tagReader->isValid()) {
-        item->setData(N::DurationRole, m_tagReader->toString("%D").toInt());
-    }
     item->setData(N::FailedRole, false); // reset failed role
+
+    formatItemTitle(item, NSettings::instance()->value("PlaylistTrackInfo").toString(), true); // with force
 
     // setting currently playing font to bold, colors set in delegate
     QFont f = item->font();
@@ -351,6 +348,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
     m_currentItem = item;
     update();
 
+    QString file = item->data(N::PathRole).toString();
     emit setMedia(file);
 }
 
@@ -668,12 +666,12 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
     if (count() == 0)
         wasEmpty = true;
 
+    QString titleFormat = NSettings::instance()->value("PlaylistTrackInfo").toString();
     foreach (QUrl url, data->urls()) {
         foreach (NPlaylistDataItem dataItem, NCore::dirListRecursive(url.toLocalFile())) {
-            qDebug() << dataItem.path;
             NPlaylistWidgetItem *item = new NPlaylistWidgetItem(dataItem);
             insertItem(index, item);
-            formatItemTitle(item);
+            formatItemTitle(item, titleFormat);
             ++index;
         }
     }

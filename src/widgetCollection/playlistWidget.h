@@ -57,7 +57,7 @@ private:
     void resizeEvent(QResizeEvent *event);
     void setCurrentItem(NPlaylistWidgetItem *item);
     void activateItem(NPlaylistWidgetItem *item);
-    void formatItemTitle(NPlaylistWidgetItem *item, bool force = false);
+    void formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force = false);
     void resetCurrentItem();
     bool revealInFileManager(const QString &file, QString *error) const;
 
