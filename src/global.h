@@ -16,27 +16,38 @@
 #ifndef N_GLOBAL_H
 #define N_GLOBAL_H
 
-#include <QtCore>
 #include <QPainter>
+#include <QtCore>
 
-template <typename T>
-class NFlagIterator
+template <typename T> class NFlagIterator
 {
 public:
     NFlagIterator(unsigned flags) : mFlags(flags), mFlag(0) {}
     inline T value() { return static_cast<T>(mFlag); }
     inline bool hasNext() { return mFlags > mFlag; }
-    void next() { if (mFlag == 0) mFlag = 1; else mFlag <<= 1;
-                  while ((mFlags & mFlag) == 0) mFlag <<= 1;
-                  mFlags &= ~mFlag; }
+    void next()
+    {
+        if (mFlag == 0) {
+            mFlag = 1;
+        } else {
+            mFlag <<= 1;
+        }
+        while ((mFlags & mFlag) == 0) {
+            mFlag <<= 1;
+        }
+        mFlags &= ~mFlag;
+    }
+
 private:
     unsigned mFlags;
     unsigned mFlag;
 };
 
 #define MSG_SPLITTER "<|>"
-#define ENUM_TO_STR(c,e,v) (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).valueToKey(v))
-#define STR_TO_ENUM(c,e,k) (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).keyToValue(k))
+#define ENUM_TO_STR(c, e, v)                                                                       \
+    (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).valueToKey(v))
+#define STR_TO_ENUM(c, e, k)                                                                       \
+    (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).keyToValue(k))
 
 #ifndef Q_MOC_RUN
 namespace N
@@ -52,7 +63,8 @@ class N
 public:
 #endif
 
-    enum PlaylistRole {
+    enum PlaylistRole
+    {
         FailedRole = Qt::UserRole + 1,
         PathRole,
         DurationRole,
@@ -61,18 +73,21 @@ public:
         TitleFormatRole
     };
 
-    enum PlaybackState {
+    enum PlaybackState
+    {
         PlaybackStopped,
         PlaybackPlaying,
         PlaybackPaused
     };
 
-    enum M3uExtention {
+    enum M3uExtention
+    {
         MinimalM3u = 0,
-        ExtM3u     = 1,
-        NulloyM3u  = 2
+        ExtM3u = 1,
+        NulloyM3u = 2
     };
 
+    // clang-format off
     enum PluginType {
         OtherPlugin     = 0,
         PlaybackEngine  = (1<<0), // 1
@@ -81,8 +96,10 @@ public:
         CoverReader     = (1<<3), // 8
         MaxPlugin       = (1<<4) - 1
     };
+    // clang-format on
 
-    enum MessageIcon {
+    enum MessageIcon
+    {
         NoIcon = 0,
         Question = 4,
         Information = 1,
@@ -93,6 +110,7 @@ public:
     Q_DECLARE_FLAGS(PluginTypeFlags, PluginType)
     Q_DECLARE_OPERATORS_FOR_FLAGS(PluginTypeFlags)
 
+    // clang-format off
     enum CompositionMode {
         SourceOver      = QPainter::CompositionMode_SourceOver,
         DestinationOver = QPainter::CompositionMode_DestinationOver,
@@ -119,9 +137,9 @@ public:
         Difference      = QPainter::CompositionMode_Difference,
         Exclusion       = QPainter::CompositionMode_Exclusion,
     };
+    // clang-format on
 
     extern const QMetaObject staticMetaObject;
-};
+}; // namespace N
 
 #endif
-

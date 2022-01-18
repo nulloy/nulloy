@@ -16,17 +16,17 @@
 #ifndef TEST_PLAYLIST_WIDGET_H
 #define TEST_PLAYLIST_WIDGET_H
 
-#include <QtTest/QtTest>
 #include <QSignalSpy>
+#include <QtTest/QtTest>
 
+#include "playbackEngineInterface.h"
 #include "playlistWidget.h"
 #include "pluginLoader.h"
-#include "playbackEngineInterface.h"
 #include "settings.h"
 
 #define DELAY 50
 
-class TestPlaylistWidget: public QObject
+class TestPlaylistWidget : public QObject
 {
     Q_OBJECT
 
@@ -76,7 +76,7 @@ private slots:
         // deleting neighbour rows doesn't change the playing item
         {
             widget.playRow(2); // 3rd
-            NPlaylistWidgetItem* item = widget.item(widget.currentRow());
+            NPlaylistWidgetItem *item = widget.item(widget.currentRow());
             // go 2nd
             reinterpret_cast<QListWidget *>(&widget)->setCurrentRow(1);
             // select 2nd and 4th
@@ -125,7 +125,8 @@ private slots:
     {
         init();
 
-        NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
+        NPlaybackEngineInterface *playbackEngine =
+                dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
         Q_ASSERT(playbackEngine);
         playbackEngine->stop();
 
@@ -134,9 +135,11 @@ private slots:
         int count = 0;
         int row = 0;
 
-        connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
+        connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()),
+                Qt::BlockingQueuedConnection);
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
-        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
+        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), this,
+                SLOT(message(N::MessageIcon, const QString &, const QString &)));
         connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 
@@ -155,10 +158,12 @@ private slots:
         QCOMPARE(spy.count(), count);
     }
 
-    void testRepeat() {
+    void testRepeat()
+    {
         init();
 
-        NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
+        NPlaybackEngineInterface *playbackEngine =
+                dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
         Q_ASSERT(playbackEngine);
         playbackEngine->stop();
 
@@ -167,9 +172,11 @@ private slots:
         int count = 0;
         int row = 0;
 
-        connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
+        connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()),
+                Qt::BlockingQueuedConnection);
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
-        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
+        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), this,
+                SLOT(message(N::MessageIcon, const QString &, const QString &)));
         connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 
@@ -201,10 +208,7 @@ private slots:
         QCOMPARE(widget.currentRow(), row);
     }
 
-    void message(N::MessageIcon, const QString &, const QString &msg)
-    {
-        QFAIL(msg.toUtf8().constData());
-    }
+    void message(N::MessageIcon, const QString &, const QString &msg) { QFAIL(msg.toUtf8().constData()); }
 };
 
 #endif

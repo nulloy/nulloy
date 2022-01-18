@@ -31,7 +31,8 @@ private:
     NW7TaskBar operator=(NW7TaskBar const &copy);
 
 public:
-    enum State {
+    enum State
+    {
         NoProgress,
         Indeterminate,
         Normal,
@@ -39,7 +40,7 @@ public:
         Paused
     };
 
-    static NW7TaskBar* instance();
+    static NW7TaskBar *instance();
     void setWindow(QWidget *window);
     bool nativeEvent(const QByteArray &eventType, void *message, long *result);
     bool isEnabled() const;
@@ -54,4 +55,3 @@ public slots:
 #endif // WIN32
 
 #endif
-

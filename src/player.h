@@ -16,8 +16,9 @@
 #ifndef N_PLAYER_H
 #define N_PLAYER_H
 
-#include <QWidget>
 #include <QSystemTrayIcon>
+#include <QWidget>
+
 #include "global.h"
 
 class NLogDialog;
@@ -108,8 +109,8 @@ public:
     NPlayer();
     ~NPlayer();
 
-    NMainWindow* mainWindow();
-    NPlaybackEngineInterface* playbackEngine();
+    NMainWindow *mainWindow();
+    NPlaybackEngineInterface *playbackEngine();
 
 private slots:
     void loadSettings();
@@ -155,4 +156,3 @@ public slots:
 };
 
 #endif
-

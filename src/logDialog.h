@@ -17,6 +17,7 @@
 #define N_LOG_DIALOG_H
 
 #include <QDialog>
+
 #include "global.h"
 
 class QCheckBox;
@@ -45,4 +46,3 @@ public slots:
 };
 
 #endif
-

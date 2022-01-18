@@ -24,8 +24,7 @@ class NScriptEngine : public QScriptEngine
 {
 public:
     NScriptEngine(NPlayer *player);
-    virtual ~NScriptEngine() {};
+    virtual ~NScriptEngine(){};
 };
 
 #endif
-

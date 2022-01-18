@@ -31,8 +31,8 @@ private:
     qint64 m_msec;
     int m_heightThreshold;
     QString m_tooltipFormat;
-    QMap <NLabel *, QString> m_staticFormatsMap;
-    QMap <NLabel *, QString> m_dynamicFormatsMap;
+    QMap<NLabel *, QString> m_staticFormatsMap;
+    QMap<NLabel *, QString> m_dynamicFormatsMap;
     QGraphicsOpacityEffect *m_effect;
     QPropertyAnimation *m_animation;
     QWidget *m_container;
@@ -57,4 +57,3 @@ private slots:
 };
 
 #endif
-

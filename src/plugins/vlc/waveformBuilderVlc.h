@@ -16,12 +16,13 @@
 #ifndef N_WAVEFORM_BUILDER_VLC_H
 #define N_WAVEFORM_BUILDER_VLC_H
 
+#include <vlc/vlc.h>
+
+#include <QTimer>
+
+#include "abstractWaveformBuilder.h"
 #include "plugin.h"
 #include "waveformBuilderInterface.h"
-#include "abstractWaveformBuilder.h"
-
-#include <vlc/vlc.h>
-#include <QTimer>
 
 class NWaveformBuilderVlc : public NWaveformBuilderInterface,
                             public NPlugin,
@@ -48,8 +49,11 @@ public:
 
     void start(const QString &file);
     void stop();
-    void positionAndIndex(float &pos, int &index) { NAbstractWaveformBuilder::positionAndIndex(pos, index); }
-    NWaveformPeaks* peaks() { return NAbstractWaveformBuilder::peaks(); }
+    void positionAndIndex(float &pos, int &index)
+    {
+        NAbstractWaveformBuilder::positionAndIndex(pos, index);
+    }
+    NWaveformPeaks *peaks() { return NAbstractWaveformBuilder::peaks(); }
 
     void prepareBuffer(uint8_t **pcmBuffer, unsigned int size);
     void handleBuffer(uint8_t *pcmBuffer, unsigned int nChannels, unsigned int nSamples);
@@ -59,4 +63,3 @@ private slots:
 };
 
 #endif
-

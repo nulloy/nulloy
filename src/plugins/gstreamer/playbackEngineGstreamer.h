@@ -16,11 +16,11 @@
 #ifndef N_PLAYBACK_ENGINE_GSTREAMER_H
 #define N_PLAYBACK_ENGINE_GSTREAMER_H
 
-#include "global.h"
-#include "plugin.h"
-#include "playbackEngineInterface.h"
-
 #include <gst/gst.h>
+
+#include "global.h"
+#include "playbackEngineInterface.h"
+#include "plugin.h"
 
 class QTimer;
 
@@ -89,4 +89,3 @@ signals:
 };
 
 #endif
-

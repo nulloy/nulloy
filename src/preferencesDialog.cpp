@@ -15,11 +15,11 @@
 
 #include "preferencesDialog.h"
 
-#include "settings.h"
-#include "player.h"
-#include "skinFileSystem.h"
-#include "plugin.h"
 #include "i18nLoader.h"
+#include "player.h"
+#include "plugin.h"
+#include "settings.h"
+#include "skinFileSystem.h"
 
 #ifdef Q_OS_WIN
 #include "w7TaskBar.h"
@@ -35,13 +35,17 @@
 #include <QRadioButton>
 #include <QSpacerItem>
 #include <QTextBrowser>
-#include <QVBoxLayout>
 #include <QTextCodec>
+#include <QVBoxLayout>
 
 using namespace NPluginLoader;
 
-static QStringList vNames = QStringList() << "Top" << "Middle" << "Bottom";
-static QStringList hNames = QStringList() << "Left" << "Center" << "Right";
+static QStringList vNames = QStringList() << "Top"
+                                          << "Middle"
+                                          << "Bottom";
+static QStringList hNames = QStringList() << "Left"
+                                          << "Center"
+                                          << "Right";
 static const char *LANGUAGE = QT_TRANSLATE_NOOP("PreferencesDialog", "English");
 
 NPreferencesDialog::~NPreferencesDialog() {}
@@ -50,18 +54,25 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 {
     ui.setupUi(this);
 
-    connect(ui.buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(saveSettings()));
+    connect(ui.buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this,
+            SLOT(saveSettings()));
     connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
     ui.buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
     ui.buttonBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancel"));
     ui.buttonBox->button(QDialogButtonBox::Apply)->setText(tr("Apply"));
 
-    connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.enqueueFilesCheckBox, SLOT(setEnabled(bool)));
-    connect(ui.enqueueFilesCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
-    connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox, SLOT(setEnabled(bool)));
-    connect(ui.restorePlaylistCheckBox, SIGNAL(toggled(bool)), ui.startPausedCheckBox, SLOT(setEnabled(bool)));
-    connect(ui.customFileManagerCheckBox, SIGNAL(toggled(bool)), ui.customFileManagerCommandLineEdit, SLOT(setEnabled(bool)));
-    connect(ui.customTrashCheckBox, SIGNAL(toggled(bool)), ui.customTrashCommandLineEdit, SLOT(setEnabled(bool)));
+    connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.enqueueFilesCheckBox,
+            SLOT(setEnabled(bool)));
+    connect(ui.enqueueFilesCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox,
+            SLOT(setEnabled(bool)));
+    connect(ui.singleInstanceCheckBox, SIGNAL(toggled(bool)), ui.playEnqueuedCheckBox,
+            SLOT(setEnabled(bool)));
+    connect(ui.restorePlaylistCheckBox, SIGNAL(toggled(bool)), ui.startPausedCheckBox,
+            SLOT(setEnabled(bool)));
+    connect(ui.customFileManagerCheckBox, SIGNAL(toggled(bool)),
+            ui.customFileManagerCommandLineEdit, SLOT(setEnabled(bool)));
+    connect(ui.customTrashCheckBox, SIGNAL(toggled(bool)), ui.customTrashCommandLineEdit,
+            SLOT(setEnabled(bool)));
 
     setWindowTitle(QCoreApplication::applicationName() + tr(" Preferences"));
 
@@ -96,14 +107,17 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
         iter.next();
         N::PluginType type = iter.value();
         QGroupBox *groupBox = createGroupBox(type);
-        if (groupBox)
+        if (groupBox) {
             scrollLayout->addWidget(groupBox);
+        }
     }
 
-    if (scrollLayout->count() > 0)
-        scrollLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
-    else
+    if (scrollLayout->count() > 0) {
+        scrollLayout->addItem(
+            new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding));
+    } else {
         ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
+    }
 
     ui.pluginsRestartLabel->setText("⚠ " + ui.pluginsRestartLabel->text());
     ui.pluginsRestartLabel->setVisible(false);
@@ -121,8 +135,9 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     foreach (int mib, QTextCodec::availableMibs()) {
         QString codecName = QTextCodec::codecForMib(mib)->name();
         ui.encodingTrackInfoComboBox->addItem(codecName, mib);
-        if (codecName == "UTF-8")
+        if (codecName == "UTF-8") {
             ui.encodingTrackInfoComboBox->setCurrentIndex(i);
+        }
         ++i;
     }
 }
@@ -155,6 +170,7 @@ void NPreferencesDialog::on_fileManagerHelpButton_clicked()
     dialog->setLayout(layout);
 
     QTextBrowser *textBrowser = new QTextBrowser(this);
+    // clang-format off
     textBrowser->setHtml(
         tr("Supported parameters:") +
         "<ul>" +
@@ -167,6 +183,7 @@ void NPreferencesDialog::on_fileManagerHelpButton_clicked()
             "<li>open -a '/Applications/Path Finder.app' '%p'</li>" +
             "<li>pcmanfm -n '%P' & sleep 1.5 && xdotool type '%F' && xdotool key Escape</li>" +
         "</ul>");
+    // clang-format on
     textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
     textBrowser->setFrameShape(QFrame::NoFrame);
 
@@ -194,18 +211,20 @@ void NPreferencesDialog::on_customTrashHelpButton_clicked()
     dialog->setLayout(layout);
 
     QTextBrowser *textBrowser = new QTextBrowser(this);
+    // clang-format off
     textBrowser->setHtml(
         tr("Supported parameters:") +
         "<ul>" +
-            "<li><b>%F</b> - " + tr("File name") + "</li>" +
-            "<li><b>%p</b> - " + tr("File name including absolute path") + "</li>" +
-            "<li><b>%P</b> - " + tr("Directory path without file name") + "</li>" +
+            "<li><b>%F</b> - " + tr("File name") +
+            "</li>" + "<li><b>%p</b> - " + tr("File name including absolute path") +
+            "</li>" + "<li><b>%P</b> - " + tr("Directory path without file name") +
+            "</li>" +
         "</ul>" +
         tr("Examples:") +
         "<ul style=\"font-family: 'Lucida Console', Monaco, monospace\">" +
-            "<li>trash-put '%p'</li>" +
-            "<li>mv '%p' $HOME/.Trash</li>" +
+            "<li>trash-put '%p'</li>" + "<li>mv '%p' $HOME/.Trash</li>" +
         "</ul>");
+    // clang-format on
     textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
     textBrowser->setFrameShape(QFrame::NoFrame);
 
@@ -233,6 +252,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
     dialog->setLayout(layout);
 
     QTextBrowser *textBrowser = new QTextBrowser(this);
+    // clang-format off
     textBrowser->setHtml(
         tr("Supported parameters:") +
         "<ul>" +
@@ -269,8 +289,9 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
         tr("Examples:") +
         "<ul>" +
             "<li><b>{%a - %t|%F}</b> - " + tr("Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.") + "</li>"
-            "<li><b>{%g|}</b> - " + tr("Print Genre. If not available, print nothing.") + "</li>"
+            "<li><b>{%g|}</b> - " + tr("Print Genre. If not available, print nothing.") + "</li>" +
         "</ul>");
+    // clang-format on
     textBrowser->setStyleSheet("QTextBrowser { background: transparent }");
     textBrowser->setFrameShape(QFrame::NoFrame);
 
@@ -288,7 +309,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
     dialog->resize(640, 480);
 }
 
-QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
+QGroupBox *NPreferencesDialog::createGroupBox(N::PluginType type)
 {
     QList<Descriptor> descriptors = NPluginLoader::descriptors();
 
@@ -297,12 +318,14 @@ QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
 
     QList<int> indexesFilteredByType;
     for (int i = 0; i < descriptors.count(); ++i) {
-        if (descriptors.at(i)[TypeRole] == type)
+        if (descriptors.at(i)[TypeRole] == type) {
             indexesFilteredByType << i;
+        }
     }
 
-    if (indexesFilteredByType.count() < 2) // need at least two plugins to choose from
+    if (indexesFilteredByType.count() < 2) { // need at least two plugins to choose from
         return NULL;
+    }
 
     QGroupBox *groupBox = new QGroupBox(typeString);
     QVBoxLayout *layout = new QVBoxLayout;
@@ -314,8 +337,9 @@ QGroupBox* NPreferencesDialog::createGroupBox(N::PluginType type)
         QString containerName = descriptors.at(i)[ContainerNameRole].toString();
         QRadioButton *button = new QRadioButton(containerName);
         connect(button, SIGNAL(toggled(bool)), ui.pluginsRestartLabel, SLOT(show()));
-        if (containerName == settingsContainer)
+        if (containerName == settingsContainer) {
             button->setChecked(true);
+        }
         m_radioButtons[button] = descriptors.at(i);
         layout->addWidget(button);
     }
@@ -328,8 +352,10 @@ void NPreferencesDialog::on_languageComboBox_activated(int index)
     ui.languageRestartLabel->setVisible(true);
 
     QLocale locale = ui.languageComboBox->itemData(index).toLocale();
-    QString newText = NI18NLoader::translate(locale.language(), "PreferencesDialog", "Switching languages requires restart");
-    ui.languageRestartLabel->setText(ui.languageRestartLabel->text().replace(QRegExp("(.*)&nbsp;.*"), "\\1&nbsp;" + newText));
+    QString newText = NI18NLoader::translate(locale.language(), "PreferencesDialog",
+                                             "Switching languages requires restart");
+    ui.languageRestartLabel->setText(
+        ui.languageRestartLabel->text().replace(QRegExp("(.*)&nbsp;.*"), "\\1&nbsp;" + newText));
 }
 
 QString NPreferencesDialog::selectedContainer(N::PluginType type)
@@ -337,8 +363,9 @@ QString NPreferencesDialog::selectedContainer(N::PluginType type)
     QList<Descriptor> descriptors = NPluginLoader::descriptors();
     QList<int> indexesFilteredByType;
     for (int i = 0; i < descriptors.count(); ++i) {
-        if (descriptors.at(i)[TypeRole] == type)
+        if (descriptors.at(i)[TypeRole] == type) {
             indexesFilteredByType << i;
+        }
     }
 
     QString containerName;
@@ -358,48 +385,59 @@ void NPreferencesDialog::loadSettings()
     // general >>
     QList<QWidget *> widgets = findChildren<QWidget *>();
     foreach (QWidget *widget, widgets) {
-        if (!widget->inherits("QCheckBox") && !widget->inherits("QLineEdit") && !widget->inherits("QAbstractSpinBox"))
+        if (!widget->inherits("QCheckBox") && !widget->inherits("QLineEdit") &&
+            !widget->inherits("QAbstractSpinBox")) {
             continue;
+        }
         QString className = QString(widget->metaObject()->className()).mid(1); // remove leading 'Q'
         QString objectName = widget->objectName();
-        if (objectName == "qt_spinbox_lineedit") // QSpinBox inner widget
+        if (objectName == "qt_spinbox_lineedit") { // QSpinBox inner widget
             continue;
-        if (objectName.startsWith("tooltipOffset"))
+        }
+        if (objectName.startsWith("tooltipOffset")) {
             continue;
+        }
         QString settingsName = objectName;
         settingsName.remove(className);
         settingsName[0] = settingsName.at(0).toUpper();
         if (widget->inherits("QCheckBox")) {
-            qobject_cast<QCheckBox *>(widget)->setChecked(NSettings::instance()->value(settingsName).toBool());
+            qobject_cast<QCheckBox *>(widget)->setChecked(
+                NSettings::instance()->value(settingsName).toBool());
         } else if (widget->inherits("QLineEdit")) {
-            qobject_cast<QLineEdit *>(widget)->setText(NSettings::instance()->value(settingsName).toString());
+            qobject_cast<QLineEdit *>(widget)->setText(
+                NSettings::instance()->value(settingsName).toString());
         } else if (widget->inherits("QDoubleSpinBox")) {
-            qobject_cast<QDoubleSpinBox *>(widget)->setValue(NSettings::instance()->value(settingsName).toDouble());
+            qobject_cast<QDoubleSpinBox *>(widget)->setValue(
+                NSettings::instance()->value(settingsName).toDouble());
         }
     }
 
     ui.startPausedCheckBox->setEnabled(NSettings::instance()->value("RestorePlaylist").toBool());
     ui.enqueueFilesCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool());
-    ui.playEnqueuedCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool() && NSettings::instance()->value("EnqueueFiles").toBool());
-    ui.customFileManagerCommandLineEdit->setEnabled(NSettings::instance()->value("CustomFileManager").toBool());
+    ui.playEnqueuedCheckBox->setEnabled(NSettings::instance()->value("SingleInstance").toBool() &&
+                                        NSettings::instance()->value("EnqueueFiles").toBool());
+    ui.customFileManagerCommandLineEdit->setEnabled(
+        NSettings::instance()->value("CustomFileManager").toBool());
     ui.customTrashCommandLineEdit->setEnabled(NSettings::instance()->value("CustomTrash").toBool());
     ui.versionLabel->setText("");
     // << general
 
-
     // track info overlay >>
     for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
         for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {
-            QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() + ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
-            QTableWidgetItem *item = new QTableWidgetItem(NSettings::instance()->value("TrackInfo/" + vNames.at(i) + hNames.at(j)).toString());
+            QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() +
+                                ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
+            QTableWidgetItem *item = new QTableWidgetItem(
+                NSettings::instance()->value("TrackInfo/" + vNames.at(i) + hNames.at(j)).toString());
             item->setTextAlignment(Qt::AlignCenter);
             ui.waveformTrackInfoTable->setItem(i, j, item);
         }
     }
 
     int height = ui.waveformTrackInfoTable->horizontalHeader()->height();
-    for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i)
+    for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
         height += ui.waveformTrackInfoTable->rowHeight(i);
+    }
     height += 2; // frame
     ui.waveformTrackInfoTable->setMaximumHeight(height);
     // << track info overlay
@@ -431,12 +469,14 @@ void NPreferencesDialog::loadSettings()
         ui.skinComboBox->addItem(text, userData);
     }
 
-    if (ui.skinComboBox->count() == 1)
+    if (ui.skinComboBox->count() == 1) {
         ui.skinComboBox->setEnabled(false);
+    }
 
     skinIndex = ui.skinComboBox->findData(NSettings::instance()->value("Skin"));
-    if (skinIndex != -1)
+    if (skinIndex != -1) {
         ui.skinComboBox->setCurrentIndex(skinIndex);
+    }
 #endif
     // << skins
 
@@ -446,17 +486,20 @@ void NPreferencesDialog::loadSettings()
     foreach (QLocale::Language language, NI18NLoader::translations()) {
         QString languageString = QLocale::languageToString(language);
         QString localizedString = NI18NLoader::translate(language, "PreferencesDialog", LANGUAGE);
-        ui.languageComboBox->addItem(QString("%1 (%2)").arg(localizedString).arg(languageString), QLocale(language));
+        ui.languageComboBox->addItem(QString("%1 (%2)").arg(localizedString).arg(languageString),
+                                     QLocale(language));
     }
 
-    if (ui.languageComboBox->count() == 1)
+    if (ui.languageComboBox->count() == 1) {
         ui.languageComboBox->setEnabled(false);
+    }
 
-    localeIndex = ui.languageComboBox->findData(QLocale(NSettings::instance()->value("Language").toString()));
-    if (localeIndex != -1)
+    localeIndex = ui.languageComboBox->findData(
+        QLocale(NSettings::instance()->value("Language").toString()));
+    if (localeIndex != -1) {
         ui.languageComboBox->setCurrentIndex(localeIndex);
+    }
     // << translations
-
 
     // shortcuts >>
     ui.shortcutEditorWidget->init(NSettings::instance()->shortcuts());
@@ -468,23 +511,29 @@ void NPreferencesDialog::saveSettings()
     // general >>
     QList<QWidget *> widgets = findChildren<QWidget *>();
     foreach (QWidget *widget, widgets) {
-        if (!widget->inherits("QCheckBox") && !widget->inherits("QLineEdit") && !widget->inherits("QAbstractSpinBox"))
+        if (!widget->inherits("QCheckBox") && !widget->inherits("QLineEdit") &&
+            !widget->inherits("QAbstractSpinBox")) {
             continue;
+        }
         QString className = QString(widget->metaObject()->className()).mid(1); // remove leading 'Q'
         QString objectName = widget->objectName();
-        if (objectName == "qt_spinbox_lineedit") // QSpinBox inner widget
+        if (objectName == "qt_spinbox_lineedit") { // QSpinBox inner widget
             continue;
-        if (objectName.startsWith("tooltipOffset"))
+        }
+        if (objectName.startsWith("tooltipOffset")) {
             continue;
+        }
         QString settingsName = objectName;
         settingsName.remove(className);
         settingsName[0] = settingsName.at(0).toUpper();
         if (widget->inherits("QCheckBox")) {
-            NSettings::instance()->setValue(settingsName, qobject_cast<QCheckBox *>(widget)->isChecked());
+            NSettings::instance()->setValue(settingsName,
+                                            qobject_cast<QCheckBox *>(widget)->isChecked());
         } else if (widget->inherits("QLineEdit")) {
             NSettings::instance()->setValue(settingsName, qobject_cast<QLineEdit *>(widget)->text());
         } else if (widget->inherits("QDoubleSpinBox")) {
-            NSettings::instance()->setValue(settingsName, qobject_cast<QDoubleSpinBox *>(widget)->value());
+            NSettings::instance()->setValue(settingsName,
+                                            qobject_cast<QDoubleSpinBox *>(widget)->value());
         }
     }
 
@@ -493,24 +542,29 @@ void NPreferencesDialog::saveSettings()
 #endif
     // << general
 
-
     // track info overlay >>
     for (int i = 0; i < ui.waveformTrackInfoTable->rowCount(); ++i) {
         for (int j = 0; j < ui.waveformTrackInfoTable->columnCount(); ++j) {
-            QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() + ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
-            NSettings::instance()->setValue("TrackInfo/" + vNames.at(i) + hNames.at(j), ui.waveformTrackInfoTable->item(i, j)->text());
+            QString objecName = ui.waveformTrackInfoTable->verticalHeaderItem(i)->text() +
+                                ui.waveformTrackInfoTable->horizontalHeaderItem(j)->text();
+            NSettings::instance()->setValue("TrackInfo/" + vNames.at(i) + hNames.at(j),
+                                            ui.waveformTrackInfoTable->item(i, j)->text());
         }
     }
     // << track info overlay
 
     // track info encoding >>
-    NSettings::instance()->setValue("EncodingTrackInfo", ui.encodingTrackInfoComboBox->itemText(ui.encodingTrackInfoComboBox->currentIndex()));
+    NSettings::instance()->setValue("EncodingTrackInfo",
+                                    ui.encodingTrackInfoComboBox->itemText(
+                                        ui.encodingTrackInfoComboBox->currentIndex()));
     // << track info encoding
 
     // tooltip offset >>
     int tooltipOffsetX = ui.tooltipOffsetXSpinBox->value();
     int tooltipOffsetY = ui.tooltipOffsetYSpinBox->value();
-    NSettings::instance()->setValue("TooltipOffset", QStringList() << QString::number(tooltipOffsetX) << QString::number(tooltipOffsetY));
+    NSettings::instance()->setValue("TooltipOffset", QStringList()
+                                                         << QString::number(tooltipOffsetX)
+                                                         << QString::number(tooltipOffsetY));
     // << tooltip offset
 
     // plugins >>
@@ -520,23 +574,27 @@ void NPreferencesDialog::saveSettings()
         N::PluginType type = iter.value();
         QString typeString = ENUM_TO_STR(N, PluginType, type);
         QString containerName = selectedContainer(type);
-        if (!containerName.isEmpty())
+        if (!containerName.isEmpty()) {
             NSettings::instance()->setValue(QString() + "Plugins/" + typeString, containerName);
+        }
     }
     // << plugins
 
-
     // skins >>
 #ifndef _N_NO_SKINS_
-    NSettings::instance()->setValue("Skin", ui.skinComboBox->itemData(ui.skinComboBox->currentIndex()));
+    NSettings::instance()->setValue("Skin",
+                                    ui.skinComboBox->itemData(ui.skinComboBox->currentIndex()));
 #endif
     // << skins
 
-
     // translations >>
-    NSettings::instance()->setValue("Language", ui.languageComboBox->itemData(ui.languageComboBox->currentIndex()).toLocale().bcp47Name().split('-').first());
+    NSettings::instance()->setValue("Language", ui.languageComboBox
+                                                    ->itemData(ui.languageComboBox->currentIndex())
+                                                    .toLocale()
+                                                    .bcp47Name()
+                                                    .split('-')
+                                                    .first());
     // << translations
-
 
     // shortcuts >>
     ui.shortcutEditorWidget->applyShortcuts();
@@ -544,10 +602,11 @@ void NPreferencesDialog::saveSettings()
     emit settingsChanged();
     // << shortcuts
 
-
     // systray check >>
-    if (ui.trayIconCheckBox->isChecked() && !QSystemTrayIcon::isSystemTrayAvailable())
-        QMessageBox::warning(this, "Systray Error", QObject::tr("System Tray (Notification Area) is not available on your system."));
+    if (ui.trayIconCheckBox->isChecked() && !QSystemTrayIcon::isSystemTrayAvailable()) {
+        QMessageBox::warning(this, "Systray Error",
+                             QObject::tr("System Tray (Notification Area) is "
+                                         "not available on your system."));
+    }
     // << systray check
 }
-

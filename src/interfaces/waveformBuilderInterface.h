@@ -17,6 +17,7 @@
 #define N_WAVEFORM_BUILDER_INTERFACE_H
 
 #include <QtCore>
+
 #include "waveformPeaks.h"
 
 #define WAVEFORM_INTERFACE "Nulloy/NWaveformBuilderInterface/0.7"
@@ -30,7 +31,7 @@ public:
     virtual void start(const QString &file) = 0;
     virtual void stop() = 0;
     virtual void positionAndIndex(float &pos, int &index) = 0;
-    virtual NWaveformPeaks* peaks() = 0;
+    virtual NWaveformPeaks *peaks() = 0;
 
     static QString interfaceString() { return WAVEFORM_INTERFACE; }
 };
@@ -38,4 +39,3 @@ public:
 Q_DECLARE_INTERFACE(NWaveformBuilderInterface, WAVEFORM_INTERFACE)
 
 #endif
-

@@ -1,3 +1,4 @@
+// clang-format off
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -59,13 +60,13 @@ private:
         T *t;
         int c;
 
-        friend inline QDataStream& operator<<(QDataStream &out, const Node &n)
+        friend inline QDataStream &operator<<(QDataStream &out, const Node &n)
         {
             out << *n.t << n.c;
             return out;
         }
 
-        friend inline QDataStream& operator>>(QDataStream &in, Node &n)
+        friend inline QDataStream &operator>>(QDataStream &in, Node &n)
         {
             T obj;
             in >> obj >> n.c;
@@ -129,13 +130,13 @@ public:
     bool remove(const Key &key);
     T *take(const Key &key);
 
-    friend inline QDataStream& operator<<(QDataStream &out, const NCache<Key, T> &c)
+    friend inline QDataStream &operator<<(QDataStream &out, const NCache<Key, T> &c)
     {
         out << c.hash << c.list << c.mx << c.total;
         return out;
     }
 
-    friend inline QDataStream& operator>>(QDataStream &in, NCache<Key, T> &c)
+    friend inline QDataStream &operator>>(QDataStream &in, NCache<Key, T> &c)
     {
         c.clear();
         in >> c.hash >> c.list >> c.mx >> c.total;
@@ -214,4 +215,4 @@ template <class Key, class T> void NCache<Key, T>::trim(int m)
 }
 
 #endif
-
+// clang-format on

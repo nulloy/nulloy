@@ -16,14 +16,14 @@
 #ifndef N_WAVEFORM_PEAKS_H
 #define N_WAVEFORM_PEAKS_H
 
-#include <QVector>
-#include <QPair>
 #include <QDataStream>
+#include <QPair>
+#include <QVector>
 
 class NWaveformPeaks
 {
 private:
-    QVector< QPair<qreal, qreal> > m_vector;
+    QVector<QPair<qreal, qreal>> m_vector;
     bool m_completed;
     int m_index;
     int m_factor;
@@ -40,13 +40,13 @@ public:
     qreal positive(int index) const;
     qreal negative(int index) const;
 
-    friend inline QDataStream& operator<<(QDataStream &out, const NWaveformPeaks &p)
+    friend inline QDataStream &operator<<(QDataStream &out, const NWaveformPeaks &p)
     {
         out << p.m_vector << p.m_index << p.m_completed;
         return out;
     }
 
-    friend inline QDataStream& operator>>(QDataStream &in, NWaveformPeaks &p)
+    friend inline QDataStream &operator>>(QDataStream &in, NWaveformPeaks &p)
     {
         p.m_vector.clear();
         in >> p.m_vector >> p.m_index >> p.m_completed;
@@ -55,4 +55,3 @@ public:
 };
 
 #endif
-

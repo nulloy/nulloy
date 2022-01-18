@@ -14,13 +14,13 @@
 *********************************************************************/
 
 #include "containerPhonon.h"
+
 #include "playbackEnginePhonon.h"
 #include "waveformBuilderPhonon.h"
 
 NContainerPhonon::NContainerPhonon(QObject *parent) : QObject(parent)
 {
-    m_plugins << new NPlaybackEnginePhonon()
-              << new NWaveformBuilderPhonon();
+    m_plugins << new NPlaybackEnginePhonon() << new NWaveformBuilderPhonon();
 }
 
 NContainerPhonon::~NContainerPhonon()

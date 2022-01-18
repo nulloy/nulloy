@@ -32,7 +32,7 @@ protected:
     virtual void wheelEvent(QWheelEvent *event);
 
 private slots:
-    void setValue(int) {};
+    void setValue(int){};
 
 public slots:
     void setValue(qreal value);
@@ -42,4 +42,3 @@ signals:
 };
 
 #endif
-

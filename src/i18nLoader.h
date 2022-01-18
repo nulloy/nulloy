@@ -23,7 +23,6 @@ namespace NI18NLoader
     void init();
     QList<QLocale::Language> translations();
     QString translate(QLocale::Language language, const char *context, const char *sourceText);
-}
+} // namespace NI18NLoader
 
 #endif
-

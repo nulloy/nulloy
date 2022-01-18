@@ -27,11 +27,11 @@ class NLabel : public QLabel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QPoint shadow_offset   READ shadowOffset  WRITE setShadowOffset)
-    Q_PROPERTY(int    shadow_offset_x READ shadowOffsetX WRITE setShadowOffsetX)
-    Q_PROPERTY(int    shadow_offset_y READ shadowOffsetY WRITE setShadowOffsetY)
-    Q_PROPERTY(QColor shadow_color    READ shadowColor   WRITE setShadowColor)
-    Q_PROPERTY(bool   shadow_enabled  READ shadowEnabled WRITE setShadowEnabled)
+    Q_PROPERTY(QPoint shadow_offset READ shadowOffset WRITE setShadowOffset)
+    Q_PROPERTY(int shadow_offset_x READ shadowOffsetX WRITE setShadowOffsetX)
+    Q_PROPERTY(int shadow_offset_y READ shadowOffsetY WRITE setShadowOffsetY)
+    Q_PROPERTY(QColor shadow_color READ shadowColor WRITE setShadowColor)
+    Q_PROPERTY(bool shadow_enabled READ shadowEnabled WRITE setShadowEnabled)
     Q_PROPERTY(QString text READ text WRITE setText)
 
 private:
@@ -71,4 +71,3 @@ public:
 };
 
 #endif
-

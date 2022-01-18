@@ -18,11 +18,12 @@
 
 //#include <QAbstractFileEngineHandler>
 #include <QtCore/private/qabstractfileengine_p.h>
+
 #include <QHash>
 
 class QByteArray;
 class QString;
-//class QAbstractFileEngineHandler;
+// class QAbstractFileEngineHandler;
 
 class NSkinFileSystem : public QAbstractFileEngineHandler
 {
@@ -39,4 +40,3 @@ private:
 };
 
 #endif
-

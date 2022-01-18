@@ -15,11 +15,11 @@
 
 #include "abstractWaveformBuilder.h"
 
-#include "common.h"
-
 #include <QCryptographicHash>
 #include <QObject>
 #include <QtCore>
+
+#include "common.h"
 
 NAbstractWaveformBuilder::NAbstractWaveformBuilder()
 {
@@ -33,8 +33,9 @@ void NAbstractWaveformBuilder::cacheLoad()
 {
     QFile cache(m_cacheFile);
 
-    if (m_cacheLoaded || !cache.exists())
+    if (m_cacheLoaded || !cache.exists()) {
         return;
+    }
 
     QByteArray compressed;
     cache.open(QIODevice::ReadOnly);
@@ -66,18 +67,20 @@ void NAbstractWaveformBuilder::cacheSave()
 bool NAbstractWaveformBuilder::peaksFindFromCache(const QString &file)
 {
     cacheLoad();
-    if (!m_cacheLoaded)
+    if (!m_cacheLoaded) {
         return false;
+    }
 
     QDir dir(QFileInfo(m_cacheFile).absolutePath());
     QString path = dir.relativeFilePath(QFileInfo(file).absoluteFilePath());
 
     QByteArray pathHash = QCryptographicHash::hash(path.toUtf8(), QCryptographicHash::Sha1);
     QString modifDate = m_dateHash.value(pathHash);
-    if (modifDate.isEmpty())
+    if (modifDate.isEmpty()) {
         return false;
+    }
 
-    if (modifDate ==  QFileInfo(file).lastModified().toString(Qt::ISODate)) {
+    if (modifDate == QFileInfo(file).lastModified().toString(Qt::ISODate)) {
         NWaveformPeaks *peaks = m_peaksCache.object(pathHash);
         if (peaks) {
             m_peaks = *peaks;
@@ -95,8 +98,9 @@ bool NAbstractWaveformBuilder::peaksFindFromCache(const QString &file)
 
 void NAbstractWaveformBuilder::peaksAppendToCache(const QString &file)
 {
-    if (!m_peaks.isCompleted())
+    if (!m_peaks.isCompleted()) {
         return;
+    }
 
     QDir dir(QFileInfo(m_cacheFile).absolutePath());
     QString path = dir.relativeFilePath(QFileInfo(file).absoluteFilePath());
@@ -132,4 +136,3 @@ void NAbstractWaveformBuilder::positionAndIndex(float &pos, int &index)
     pos = m_oldPos;
     index = m_oldIndex;
 }
-

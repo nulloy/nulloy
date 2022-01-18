@@ -16,10 +16,11 @@
 #ifndef N_TAG_READER_GSTREAMER_H
 #define N_TAG_READER_GSTREAMER_H
 
+#include <gst/gst.h>
+
 #include "global.h"
 #include "plugin.h"
 #include "tagReaderInterface.h"
-#include <gst/gst.h>
 
 class NTagReaderGstreamer : public NTagReaderInterface, public NPlugin
 {
@@ -34,7 +35,8 @@ private:
     int m_bitDepth;
     bool m_isValid;
     QString m_codecName;
-    QString parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail = false) const;
+    QString parse(const QString &format, bool *success, const QString &encoding,
+                  bool stopOnFail = false) const;
 
 public:
     NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}
@@ -51,4 +53,3 @@ public:
 };
 
 #endif
-

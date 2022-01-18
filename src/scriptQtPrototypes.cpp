@@ -14,16 +14,19 @@
 *********************************************************************/
 
 #include "scriptQtPrototypes.h"
-#include "global.h"
+
 #include <QMouseEvent>
+
+#include "global.h"
 
 NWidgetPrototype::NWidgetPrototype(QObject *parent) : QObject(parent) {}
 
 void NWidgetPrototype::enableDoubleClick()
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget)
+    if (widget) {
         widget->installEventFilter(this);
+    }
 }
 
 bool NWidgetPrototype::eventFilter(QObject *obj, QEvent *event)
@@ -32,8 +35,9 @@ bool NWidgetPrototype::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::MouseButtonDblClick) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
 
-        if (mouseEvent->button() == Qt::LeftButton)
+        if (mouseEvent->button() == Qt::LeftButton) {
             emit doubleClicked();
+        }
     }
 
     return false;
@@ -42,68 +46,77 @@ bool NWidgetPrototype::eventFilter(QObject *obj, QEvent *event)
 void NWidgetPrototype::setParent(QWidget *parent)
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget)
+    if (widget) {
         widget->setParent(parent);
+    }
 }
 
 int NWidgetPrototype::windowFlags() const
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget)
+    if (widget) {
         return (int)widget->windowFlags();
-    else
+    } else {
         return 0;
+    }
 }
 
 void NWidgetPrototype::setWindowFlags(int flags)
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget)
+    if (widget) {
         widget->setWindowFlags((Qt::WindowFlags)flags);
+    }
 }
 
 void NWidgetPrototype::setAttribute(int attribute, bool enable)
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget)
+    if (widget) {
         widget->setAttribute((Qt::WidgetAttribute)attribute, enable);
+    }
 }
 
-QWidget* NWidgetPrototype::parentWidget() const
+QWidget *NWidgetPrototype::parentWidget() const
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget)
+    if (widget) {
         return widget->parentWidget();
-    else
+    } else {
         return NULL;
+    }
 }
 
 void NWidgetPrototype::move(int x, int y)
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget)
+    if (widget) {
         widget->move(x, y);
+    }
 }
 
 void NWidgetPrototype::resize(int w, int h)
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget)
+    if (widget) {
         widget->resize(w, h);
+    }
 }
 
 void NWidgetPrototype::setStandardIcon(QString name, QString fallback)
 {
     QAbstractButton *button = qscriptvalue_cast<QAbstractButton *>(thisObject());
-    if (button)
+    if (button) {
         button->setIcon(QIcon::fromTheme(name, QIcon(fallback)));
+    }
 }
 
 void NWidgetPrototype::setSizeGripEnabled(bool enabled)
 {
     QDialog *dialog = qscriptvalue_cast<QDialog *>(thisObject());
-    if (dialog)
+    if (dialog) {
         dialog->setSizeGripEnabled(enabled);
+    }
 }
 
 void NWidgetPrototype::setFontSize(int size)
@@ -116,13 +129,14 @@ void NWidgetPrototype::setFontSize(int size)
     }
 }
 
-QLayout* NWidgetPrototype::layout() const
+QLayout *NWidgetPrototype::layout() const
 {
     QWidget *widget = qscriptvalue_cast<QWidget *>(thisObject());
-    if (widget)
+    if (widget) {
         return widget->layout();
-    else
+    } else {
         return NULL;
+    }
 }
 
 NLayoutPrototype::NLayoutPrototype(QObject *parent) : QObject(parent) {}
@@ -130,31 +144,35 @@ NLayoutPrototype::NLayoutPrototype(QObject *parent) : QObject(parent) {}
 QMargins NLayoutPrototype::contentsMargins() const
 {
     QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
-    if (layout)
+    if (layout) {
         return layout->contentsMargins();
-    else
+    } else {
         return QMargins();
+    }
 }
 
 void NLayoutPrototype::setContentsMargins(int left, int top, int right, int bottom)
 {
     QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
-    if (layout)
+    if (layout) {
         layout->setContentsMargins(left, top, right, bottom);
+    }
 }
 
 void NLayoutPrototype::setContentsMargins(QMargins margins)
 {
     QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
-    if (layout)
+    if (layout) {
         layout->setContentsMargins(margins);
+    }
 }
 
 void NLayoutPrototype::setSpacing(int spacing)
 {
     QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
-    if (layout)
+    if (layout) {
         layout->setSpacing(spacing);
+    }
 }
 
 void NLayoutPrototype::setSpacingAt(int index, int spacing)
@@ -169,8 +187,9 @@ void NLayoutPrototype::setSpacingAt(int index, int spacing)
 void NLayoutPrototype::insertWidget(int index, QWidget *widget)
 {
     QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
-    if (layout)
+    if (layout) {
         qobject_cast<QBoxLayout *>(layout)->insertWidget(index, widget);
+    }
 }
 
 NSplitterPrototype::NSplitterPrototype(QObject *parent) : QObject(parent) {}
@@ -178,17 +197,19 @@ NSplitterPrototype::NSplitterPrototype(QObject *parent) : QObject(parent) {}
 QList<int> NSplitterPrototype::sizes() const
 {
     QSplitter *splitter = qscriptvalue_cast<QSplitter *>(thisObject());
-    if (splitter)
+    if (splitter) {
         return splitter->sizes();
-    else
+    } else {
         return QList<int>();
+    }
 }
 
 void NSplitterPrototype::setSizes(const QList<int> &list)
 {
     QSplitter *splitter = qscriptvalue_cast<QSplitter *>(thisObject());
-    if (splitter)
+    if (splitter) {
         splitter->setSizes(list);
+    }
 }
 
 QScriptValue NMarginsPrototype::toScriptValue(QScriptEngine *engine, const QMargins &m)
@@ -222,4 +243,3 @@ void NPointPrototype::fromScriptValue(const QScriptValue &obj, QPoint &p)
     p.setX(obj.property("x").toInt32());
     p.setY(obj.property("y").toInt32());
 }
-

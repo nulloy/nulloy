@@ -16,17 +16,16 @@
 #ifndef N_SCRIPT_PROTOTYPES_H
 #define N_SCRIPT_PROTOTYPES_H
 
-#include <QObject>
-#include <QScriptable>
-#include <QScriptValue>
-#include <QScriptEngine>
-#include <QtGui>
-
-#include <QLayout>
-#include <QWidget>
-#include <QSplitter>
-#include <QDialog>
 #include <QAbstractButton>
+#include <QDialog>
+#include <QLayout>
+#include <QObject>
+#include <QScriptEngine>
+#include <QScriptValue>
+#include <QScriptable>
+#include <QSplitter>
+#include <QWidget>
+#include <QtGui>
 
 Q_DECLARE_METATYPE(QWidget *)
 Q_DECLARE_METATYPE(QLayout *)
@@ -46,12 +45,12 @@ public:
     int windowFlags() const;
     void setWindowFlags(int flags);
     Q_INVOKABLE void setAttribute(int attribute, bool enable = true);
-    Q_INVOKABLE QWidget* parentWidget() const;
+    Q_INVOKABLE QWidget *parentWidget() const;
     Q_INVOKABLE void move(int x, int y);
     Q_INVOKABLE void resize(int w, int h);
     Q_INVOKABLE void setSizeGripEnabled(bool enabled);
     Q_INVOKABLE void setStandardIcon(QString name, QString fallback = "");
-    Q_INVOKABLE QLayout* layout() const;
+    Q_INVOKABLE QLayout *layout() const;
     Q_INVOKABLE void setFontSize(int size);
     Q_INVOKABLE void enableDoubleClick();
 
@@ -93,13 +92,12 @@ namespace NMarginsPrototype
 {
     QScriptValue toScriptValue(QScriptEngine *engine, const QMargins &m);
     void fromScriptValue(const QScriptValue &obj, QMargins &m);
-}
+} // namespace NMarginsPrototype
 
 namespace NPointPrototype
 {
     QScriptValue toScriptValue(QScriptEngine *engine, const QPoint &p);
     void fromScriptValue(const QScriptValue &obj, QPoint &p);
-}
+} // namespace NPointPrototype
 
 #endif
-

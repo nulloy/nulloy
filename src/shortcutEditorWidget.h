@@ -16,8 +16,8 @@
 #ifndef N_SHORTCUT_EDITOR_WIDGET_H
 #define N_SHORTCUT_EDITOR_WIDGET_H
 
-#include <QTableWidget>
 #include <QList>
+#include <QTableWidget>
 
 class NAction;
 class QKeyEvent;
@@ -32,7 +32,8 @@ private:
     QList<NAction *> m_actionList;
     static QString keyEventToString(QKeyEvent *e);
     void keyPressEvent(QKeyEvent *e);
-    enum Columns {
+    enum Columns
+    {
         Name = 0,
         Description = 1,
         Shortcut = 2,
@@ -47,4 +48,3 @@ public:
 };
 
 #endif
-

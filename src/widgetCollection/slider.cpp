@@ -15,8 +15,8 @@
 
 #include "slider.h"
 
-#include <QStyleOptionSlider>
 #include <QMouseEvent>
+#include <QStyleOptionSlider>
 #include <QWheelEvent>
 
 NSlider::NSlider(QWidget *parent) : QSlider(parent) {}
@@ -31,14 +31,16 @@ qreal NSlider::valueAtPos(int pos)
     int pxMin;
     int pxMax;
     if (orientation() == Qt::Horizontal) {
-        pxMin = gr.x() +  sr.width() / 2;
-        pxMax = gr.right() -  sr.width() / 2 + 1;
+        pxMin = gr.x() + sr.width() / 2;
+        pxMax = gr.right() - sr.width() / 2 + 1;
     } else {
         pxMin = gr.y() + sr.height() / 2;
         pxMax = gr.bottom() - sr.height() / 2 + 1;
     }
 
-    return QStyle::sliderValueFromPosition(minimum(), maximum(), pos - pxMin, pxMax - pxMin, opt.upsideDown) / (qreal)maximum();
+    return QStyle::sliderValueFromPosition(minimum(), maximum(), pos - pxMin, pxMax - pxMin,
+                                           opt.upsideDown) /
+           (qreal)maximum();
 }
 
 void NSlider::mousePressEvent(QMouseEvent *event)
@@ -76,4 +78,3 @@ void NSlider::setValue(qreal value)
 {
     QSlider::setValue(qRound(value * maximum()));
 }
-

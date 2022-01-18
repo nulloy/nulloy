@@ -17,15 +17,22 @@
 
 #include "w7TaskBar.h"
 
-#include <QtWin> 
-#include <windows.h>
 #include <shlobj.h>
+#include <windows.h>
+
 #include <QIcon>
+#include <QtWin>
 
 #if defined(__GNUC__)
 // mingw fails to define this
-const GUID CLSID_TaskbarList={0x56fdf344,0xfd6d,0x11d0,{0x95,0x8a,0x00,0x60,0x97,0xc9,0xa0,0x90}};
-const GUID IID_ITaskbarList3={0xea1afb91,0x9e28,0x4b86,{0x90,0xe9,0x9e,0x9f,0x8a,0x5e,0xef,0xaf}};
+const GUID CLSID_TaskbarList = {0x56fdf344,
+                                0xfd6d,
+                                0x11d0,
+                                {0x95, 0x8a, 0x00, 0x60, 0x97, 0xc9, 0xa0, 0x90}};
+const GUID IID_ITaskbarList3 = {0xea1afb91,
+                                0x9e28,
+                                0x4b86,
+                                {0x90, 0xe9, 0x9e, 0x9f, 0x8a, 0x5e, 0xef, 0xaf}};
 #endif
 
 static NW7TaskBar *_instance = NULL;
@@ -34,7 +41,7 @@ static ITaskbarList3 *_taskBar = NULL;
 static UINT _messageId;
 static bool _enabled = true;
 
-NW7TaskBar* NW7TaskBar::instance()
+NW7TaskBar *NW7TaskBar::instance()
 {
     if (!_instance) {
         _instance = new NW7TaskBar();
@@ -68,12 +75,10 @@ bool NW7TaskBar::isEnabled() const
 bool NW7TaskBar::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
     Q_UNUSED(eventType);
-    MSG* msg = reinterpret_cast<MSG*>(message);
+    MSG *msg = reinterpret_cast<MSG *>(message);
     if (msg->message == _messageId) {
-        HRESULT hr = CoCreateInstance(CLSID_TaskbarList, NULL,
-                                      CLSCTX_INPROC_SERVER,
-                                      IID_ITaskbarList3,
-                                      reinterpret_cast<void **>(&_taskBar));
+        HRESULT hr = CoCreateInstance(CLSID_TaskbarList, NULL, CLSCTX_INPROC_SERVER,
+                                      IID_ITaskbarList3, reinterpret_cast<void **>(&_taskBar));
         if (SUCCEEDED(hr)) {
             hr = _taskBar->HrInit();
             if (FAILED(hr)) {
@@ -145,4 +150,3 @@ void NW7TaskBar::setOverlayIcon(const QIcon &icon, const QString &text)
 }
 
 #endif
-

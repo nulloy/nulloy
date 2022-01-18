@@ -14,14 +14,13 @@
 *********************************************************************/
 
 #include "tagReaderTaglib.h"
-#include "tagLibFileRef.h"
 
+#include <aiffproperties.h>
 #include <apeproperties.h>
 #include <flacproperties.h>
 #include <mp4properties.h>
-#include <wavpackproperties.h>
 #include <trueaudioproperties.h>
-#include <aiffproperties.h>
+#include <wavpackproperties.h>
 #include <wavproperties.h>
 
 #include <QCoreApplication>
@@ -29,13 +28,16 @@
 #include <QString>
 #include <QTextCodec>
 
+#include "tagLibFileRef.h"
+
 TagLib::FileRef *NTaglib::_tagRef;
 QString NTaglib::_filePath;
 
 void NTagReaderTaglib::init()
 {
-    if (m_init)
+    if (m_init) {
         return;
+    }
 
     m_init = true;
     NTaglib::_tagRef = NULL;
@@ -48,8 +50,9 @@ QString NTagReaderTaglib::getSource()
 
 void NTagReaderTaglib::setSource(const QString &file)
 {
-    if (NTaglib::_filePath == file)
+    if (NTaglib::_filePath == file) {
         return;
+    }
 
     if (NTaglib::_tagRef) {
         delete NTaglib::_tagRef;
@@ -58,8 +61,9 @@ void NTagReaderTaglib::setSource(const QString &file)
 
     NTaglib::_filePath = "";
 
-    if (!QFileInfo(file).exists())
+    if (!QFileInfo(file).exists()) {
         return;
+    }
 
     NTaglib::_filePath = file;
 
@@ -72,8 +76,9 @@ void NTagReaderTaglib::setSource(const QString &file)
 
 NTagReaderTaglib::~NTagReaderTaglib()
 {
-    if (!m_init)
+    if (!m_init) {
         return;
+    }
 
     if (NTaglib::_tagRef) {
         delete NTaglib::_tagRef;
@@ -87,15 +92,18 @@ QString NTagReaderTaglib::toString(const QString &format, const QString &encodin
     return parse(format, &res, encoding);
 }
 
-QString NTagReaderTaglib::parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail) const
+QString NTagReaderTaglib::parse(const QString &format, bool *success, const QString &encoding,
+                                bool stopOnFail) const
 {
-    if (format.isEmpty())
+    if (format.isEmpty()) {
         return "";
+    }
 
     *success = true;
 
-    if (!isValid())
+    if (!isValid()) {
         return "NTagReaderTaglib::InvalidFile";
+    }
 
     TagLib::Tag *tag = NTaglib::_tagRef->tag();
     TagLib::AudioProperties *ap = NTaglib::_tagRef->audioProperties();
@@ -111,28 +119,33 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
             QChar ch = format.at(i);
             if (ch == 'a') {
                 QString str = codec->toUnicode(tag->artist().toCString(isUtf8));
-                if (!(*success = !str.isEmpty()))
+                if (!(*success = !str.isEmpty())) {
                     str = "<Unknown artist>";
+                }
                 res += str;
             } else if (ch == 't') {
                 QString str = codec->toUnicode(tag->title().toCString(isUtf8));
-                if (!(*success = !str.isEmpty()))
+                if (!(*success = !str.isEmpty())) {
                     str = "<Unknown title>";
+                }
                 res += str;
             } else if (ch == 'A') {
                 QString str = codec->toUnicode(tag->album().toCString(isUtf8));
-                if (!(*success = !str.isEmpty()))
+                if (!(*success = !str.isEmpty())) {
                     str = "<Unknown album>";
+                }
                 res += str;
             } else if (ch == 'c') {
                 QString str = codec->toUnicode(tag->comment().toCString(isUtf8));
-                if (!(*success = !str.isEmpty()))
+                if (!(*success = !str.isEmpty())) {
                     str = "<Empty comment>";
+                }
                 res += str;
             } else if (ch == 'g') {
                 QString str = TStringToQString(tag->genre());
-                if (!(*success = !str.isEmpty()))
+                if (!(*success = !str.isEmpty())) {
                     str = "<Unknown genre>";
+                }
                 res += str;
             } else if (ch == 'y') {
                 QString str = QString::number(tag->year());
@@ -151,32 +164,19 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
             } else if (ch == 'b') {
                 if (auto *prop = dynamic_cast<TagLib::APE::Properties *>(ap)) {
                     res += QString::number(prop->bitsPerSample());
-                }
-                else
-                if (auto *prop = dynamic_cast<TagLib::FLAC::Properties *>(ap)) {
+                } else if (auto *prop = dynamic_cast<TagLib::FLAC::Properties *>(ap)) {
                     res += QString::number(prop->sampleWidth());
-                }
-                else
-                if (auto *prop = dynamic_cast<TagLib::MP4::Properties *>(ap)) {
+                } else if (auto *prop = dynamic_cast<TagLib::MP4::Properties *>(ap)) {
                     res += QString::number(prop->bitsPerSample());
-                }
-                else
-                if (auto *prop = dynamic_cast<TagLib::RIFF::AIFF::Properties *>(ap)) {
+                } else if (auto *prop = dynamic_cast<TagLib::RIFF::AIFF::Properties *>(ap)) {
                     res += QString::number(prop->sampleWidth());
-                }
-                else
-                if (auto *prop = dynamic_cast<TagLib::RIFF::WAV::Properties *>(ap)) {
+                } else if (auto *prop = dynamic_cast<TagLib::RIFF::WAV::Properties *>(ap)) {
                     res += QString::number(prop->sampleWidth());
-                }
-                else
-                if (auto *prop = dynamic_cast<TagLib::TrueAudio::Properties *>(ap)) {
+                } else if (auto *prop = dynamic_cast<TagLib::TrueAudio::Properties *>(ap)) {
                     res += QString::number(prop->bitsPerSample());
-                }
-                else
-                if (auto *prop = dynamic_cast<TagLib::WavPack::Properties *>(ap)) {
+                } else if (auto *prop = dynamic_cast<TagLib::WavPack::Properties *>(ap)) {
                     res += QString::number(prop->bitsPerSample());
-                }
-                else {
+                } else {
                     res += "<Unknown bit depth>";
                     *success = false;
                 }
@@ -187,10 +187,11 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
                     int minutes = (seconds_total - seconds) / 60;
                     int hours = minutes / 60;
                     minutes = minutes % 60;
-                    if (hours > 0)
+                    if (hours > 0) {
                         duration.sprintf("%d:%02d:%02d", hours, minutes, seconds);
-                    else
+                    } else {
                         duration.sprintf("%d:%02d", minutes, seconds);
+                    }
                 } else {
                     duration = "<Unknown duration>";
                     *success = false;
@@ -278,8 +279,9 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
         } else {
             res += format.at(i);
         }
-        if (!*success && stopOnFail)
+        if (!*success && stopOnFail) {
             return "";
+        }
     }
 
     return res;
@@ -289,4 +291,3 @@ bool NTagReaderTaglib::isValid() const
 {
     return (NTaglib::_tagRef && NTaglib::_tagRef->file() && NTaglib::_tagRef->file()->isValid());
 }
-

@@ -16,10 +16,10 @@
 #include "scriptEngine.h"
 
 #include "global.h"
-#include "scriptQtPrototypes.h"
-#include "player.h"
 #include "mainWindow.h"
 #include "playbackEngineInterface.h"
+#include "player.h"
+#include "scriptQtPrototypes.h"
 #include "settings.h"
 
 #ifndef _N_NO_SKINS_
@@ -38,14 +38,12 @@ Q_DECLARE_METATYPE(NPlaybackEngineInterface *)
 Q_DECLARE_METATYPE(N::PlaybackState)
 Q_DECLARE_METATYPE(NSettings *)
 
-template <typename T>
-QScriptValue qObjectToScriptVlaue(QScriptEngine *engine, T const &obj)
+template <typename T> QScriptValue qObjectToScriptVlaue(QScriptEngine *engine, T const &obj)
 {
     return engine->newQObject(obj);
 }
 
-template <typename T>
-void qObjectFromScriptValue(const QScriptValue &value, T &obj)
+template <typename T> void qObjectFromScriptValue(const QScriptValue &value, T &obj)
 {
     obj = qobject_cast<T>(value.toQObject());
 }
@@ -56,14 +54,12 @@ public:
     static const QMetaObject *get() { return &static_cast<QtMetaObject *>(0)->staticQtMetaObject; }
 };
 
-template <typename T>
-QScriptValue enumToScriptValue(QScriptEngine *engine, T const &en)
+template <typename T> QScriptValue enumToScriptValue(QScriptEngine *engine, T const &en)
 {
     return engine->newVariant((int)en);
 }
 
-template <typename T>
-void enumFromScriptValue(const QScriptValue &value, T &en)
+template <typename T> void enumFromScriptValue(const QScriptValue &value, T &en)
 {
     en = (T)value.toInt32();
 }
@@ -71,28 +67,32 @@ void enumFromScriptValue(const QScriptValue &value, T &en)
 #ifndef _N_NO_SKINS_
 QScriptValue readFile(QScriptContext *context, QScriptEngine *)
 {
-    if (context->argumentCount() != 1)
+    if (context->argumentCount() != 1) {
         return QString();
+    }
 
     QString fileName = context->argument(0).toString();
 
     QFile file(NSkinFileSystem::prefix() + fileName);
-    if (!file.open(QIODevice::ReadOnly))
+    if (!file.open(QIODevice::ReadOnly)) {
         return QString();
+    }
     return QLatin1String(file.readAll());
 }
 
 QScriptValue maskImage(QScriptContext *context, QScriptEngine *)
 {
-    if (context->argumentCount() < 2)
+    if (context->argumentCount() < 2) {
         return QScriptValue();
+    }
 
     QString fileName = context->argument(0).toString();
     QColor color(context->argument(1).toString());
 
     qsreal opacity = 1.0;
-    if (context->argumentCount() == 3)
+    if (context->argumentCount() == 3) {
         opacity = context->argument(2).toNumber();
+    }
 
     QImage mask(NSkinFileSystem::prefix() + fileName);
     QImage result(mask.size(), QImage::Format_ARGB32_Premultiplied);
@@ -125,14 +125,16 @@ QScriptValue maskImage(QScriptContext *context, QScriptEngine *)
 
 QScriptValue addApplicationFont(QScriptContext *context, QScriptEngine *)
 {
-    if (context->argumentCount() != 1)
+    if (context->argumentCount() != 1) {
         return -1;
+    }
 
     QString fileName = context->argument(0).toString();
 
     QFile file(NSkinFileSystem::prefix() + fileName);
-    if (!file.open(QIODevice::ReadOnly))
+    if (!file.open(QIODevice::ReadOnly)) {
         return -1;
+    }
     QByteArray byteArray = file.readAll();
 
     return QFontDatabase::addApplicationFontFromData(byteArray);
@@ -167,25 +169,28 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
             dconf.start("dconf read \"/org/mate/marco/general/button-layout\"");
             dconf.waitForStarted();
             dconf.waitForFinished();
-            if (dconf.readAll().endsWith(":'\n"))
+            if (dconf.readAll().endsWith(":'\n")) {
                 direction = "left";
+            }
         } else if (system("pidof metacity >/dev/null") == 0) {
             QProcess gconftool;
             gconftool.start("gconftool-2 --get \"/apps/metacity/general/button_layout\"");
             gconftool.waitForStarted();
             gconftool.waitForFinished();
-            if (gconftool.readAll().endsWith(":\n"))
+            if (gconftool.readAll().endsWith(":\n")) {
                 direction = "left";
+            }
         }
     }
     global.setProperty("WS_WM_BUTTON_DIRECTION", direction);
 
-    qScriptRegisterMetaType(this, NMarginsPrototype::toScriptValue, NMarginsPrototype::fromScriptValue);
+    qScriptRegisterMetaType(this, NMarginsPrototype::toScriptValue,
+                            NMarginsPrototype::fromScriptValue);
     qScriptRegisterMetaType(this, NPointPrototype::toScriptValue, NPointPrototype::fromScriptValue);
     setDefaultPrototype(qMetaTypeId<QWidget *>(), newQObject(&widgetPrototype));
     setDefaultPrototype(qMetaTypeId<QLayout *>(), newQObject(&layoutPrototype));
     setDefaultPrototype(qMetaTypeId<QSplitter *>(), newQObject(&splitterPrototype));
-    qScriptRegisterSequenceMetaType< QList<QWidget *> >(this);
+    qScriptRegisterSequenceMetaType<QList<QWidget *>>(this);
 
     qScriptRegisterMetaType<N::PlaybackState>(this, enumToScriptValue, enumFromScriptValue);
     QScriptValue N = newQMetaObject(&N::staticMetaObject);
@@ -203,7 +208,8 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
     qScriptRegisterMetaType<NPlayer *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
     global.setProperty("Player", newQObject(player));
 
-    qScriptRegisterMetaType<NPlaybackEngineInterface *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
+    qScriptRegisterMetaType<NPlaybackEngineInterface *>(this, qObjectToScriptVlaue,
+                                                        qObjectFromScriptValue);
     global.setProperty("PlaybackEngine", newQObject(player->playbackEngine()));
 
     qScriptRegisterMetaType<NSettings *>(this, qObjectToScriptVlaue, qObjectFromScriptValue);
@@ -215,4 +221,3 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
     globalObject().setProperty("addApplicationFont", newFunction(addApplicationFont));
 #endif
 }
-

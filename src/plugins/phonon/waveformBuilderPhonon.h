@@ -16,14 +16,15 @@
 #ifndef N_WAVEFORM_BUILDER_PHONON_H
 #define N_WAVEFORM_BUILDER_PHONON_H
 
+#include <phonon/audiodataoutput.h>
+#include <phonon/audiooutput.h>
+#include <phonon/mediaobject.h>
+
+#include <QTimer>
+
+#include "abstractWaveformBuilder.h"
 #include "plugin.h"
 #include "waveformBuilderInterface.h"
-#include "abstractWaveformBuilder.h"
-
-#include <phonon/audiooutput.h>
-#include <phonon/audiodataoutput.h>
-#include <phonon/mediaobject.h>
-#include <QTimer>
 
 class NWaveformBuilderPhonon : public NWaveformBuilderInterface,
                                public NPlugin,
@@ -50,13 +51,15 @@ public:
 
     void start(const QString &file);
     void stop();
-    void positionAndIndex(float &pos, int &index) { NAbstractWaveformBuilder::positionAndIndex(pos, index); }
-    NWaveformPeaks* peaks() { return NAbstractWaveformBuilder::peaks(); }
+    void positionAndIndex(float &pos, int &index)
+    {
+        NAbstractWaveformBuilder::positionAndIndex(pos, index);
+    }
+    NWaveformPeaks *peaks() { return NAbstractWaveformBuilder::peaks(); }
 
 private slots:
     void update();
-    void handleData(const QMap< Phonon::AudioDataOutput::Channel, QVector<qint16> > &data);
+    void handleData(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16>> &data);
 };
 
 #endif
-

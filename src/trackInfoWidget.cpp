@@ -15,24 +15,28 @@
 
 #include "trackInfoWidget.h"
 
-#include "tagReaderInterface.h"
-#include "settings.h"
-#include "pluginLoader.h"
-#include "label.h"
-
+#include <QGraphicsOpacityEffect>
 #include <QLayout>
+#include <QMouseEvent>
+#include <QPropertyAnimation>
 #include <QTime>
 #include <QToolTip>
-#include <QGraphicsOpacityEffect>
-#include <QPropertyAnimation>
-#include <QMouseEvent>
+
+#include "label.h"
+#include "pluginLoader.h"
+#include "settings.h"
+#include "tagReaderInterface.h"
 
 NTrackInfoWidget::~NTrackInfoWidget() {}
 
 NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 {
-    QStringList vNames = QStringList() << "Top" << "Middle" << "Bottom";
-    QStringList hNames = QStringList() << "Left" << "Center" << "Right";
+    QStringList vNames = QStringList() << "Top"
+                                       << "Middle"
+                                       << "Bottom";
+    QStringList hNames = QStringList() << "Left"
+                                       << "Center"
+                                       << "Right";
     QVBoxLayout *vLayout = new QVBoxLayout;
     for (int i = 0; i < vNames.count(); ++i) {
         QWidget *hContainer = new QWidget;
@@ -42,12 +46,14 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
         hLayout->setSpacing(0);
         hContainer->setLayout(hLayout);
         if (i > 0) {
-            QSpacerItem *vSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+            QSpacerItem *vSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum,
+                                                   QSizePolicy::Expanding);
             vLayout->addItem(vSpacer);
         }
         for (int j = 0; j < hNames.count(); ++j) {
             if (j > 0) {
-                QSpacerItem *hSpacer = new QSpacerItem(40, 14, QSizePolicy::Expanding, QSizePolicy::Minimum);
+                QSpacerItem *hSpacer = new QSpacerItem(40, 14, QSizePolicy::Expanding,
+                                                       QSizePolicy::Minimum);
                 hLayout->addItem(hSpacer);
             }
             NLabel *label = new NLabel;
@@ -96,8 +102,9 @@ void NTrackInfoWidget::enterEvent(QEvent *)
 {
 #ifndef Q_OS_MAC // QTBUG-15367
     m_animation->setDirection(QAbstractAnimation::Forward);
-    if (m_animation->state() == QAbstractAnimation::Stopped)
+    if (m_animation->state() == QAbstractAnimation::Stopped) {
         m_animation->start();
+    }
 #else
     m_container->hide();
 #endif
@@ -107,8 +114,9 @@ void NTrackInfoWidget::leaveEvent(QEvent *)
 {
     m_container->show();
     m_animation->setDirection(QAbstractAnimation::Backward);
-    if (m_animation->state() == QAbstractAnimation::Stopped)
+    if (m_animation->state() == QAbstractAnimation::Stopped) {
         m_animation->start();
+    }
 }
 
 void NTrackInfoWidget::resizeEvent(QResizeEvent *event)
@@ -126,8 +134,9 @@ void NTrackInfoWidget::resizeEvent(QResizeEvent *event)
 
 bool NTrackInfoWidget::event(QEvent *event)
 {
-    if (event->type() == QEvent::ToolTip)
+    if (event->type() == QEvent::ToolTip) {
         QToolTip::hideText();
+    }
 
     return QFrame::event(event);
 }
@@ -139,9 +148,11 @@ void NTrackInfoWidget::mouseMoveEvent(QMouseEvent *event)
 
 void NTrackInfoWidget::updateStaticTags()
 {
-    NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-    if (!tagReader)
+    NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(
+        NPluginLoader::getPlugin(N::TagReader));
+    if (!tagReader) {
         return;
+    }
     QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
     if (!tagReader->isValid()) {
         hide();
@@ -164,10 +175,11 @@ void NTrackInfoWidget::loadSettings()
     for (int i = 0; i < labels.size(); ++i) {
         NLabel *label = labels.at(i);
         QString format = NSettings::instance()->value("TrackInfo/" + label->objectName()).toString();
-        if (format.contains("%T") || format.contains("%r"))
+        if (format.contains("%T") || format.contains("%r")) {
             m_dynamicFormatsMap[label] = format;
-        else
+        } else {
             m_staticFormatsMap[label] = format;
+        }
         label->setVisible(!format.isEmpty());
     }
 
@@ -178,9 +190,11 @@ void NTrackInfoWidget::tick(qint64 msec)
 {
     m_msec = msec;
 
-    NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-    if (!tagReader)
+    NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(
+        NPluginLoader::getPlugin(N::TagReader));
+    if (!tagReader) {
         return;
+    }
     QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
     int total = tagReader->toString("%D").toInt();
     int hours = total / 60 / 60;
@@ -195,8 +209,9 @@ void NTrackInfoWidget::tick(qint64 msec)
             text.replace("%T", current.toString("m:ss"));
             text.replace("%r", remaining.toString("m:ss"));
         }
-        if (text.contains("%"))
+        if (text.contains("%")) {
             text = tagReader->toString(text, encoding);
+        }
         label->setText(text);
         label->setVisible(!text.isEmpty());
     }
@@ -209,9 +224,11 @@ void NTrackInfoWidget::showToolTip(int x, int y)
         return;
     }
 
-    NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-    if (!tagReader)
+    NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(
+        NPluginLoader::getPlugin(N::TagReader));
+    if (!tagReader) {
         return;
+    }
 
     QString text = m_tooltipFormat;
 
@@ -221,25 +238,28 @@ void NTrackInfoWidget::showToolTip(int x, int y)
         int secAtX = durationSec * posAtX;
         QTime timeAtX = QTime(0, 0).addSecs(secAtX);
         QString strAtPos;
-        if (secAtX > 60 * 60) // has hours
+        if (secAtX > 60 * 60) { // has hours
             strAtPos = timeAtX.toString("h:mm:ss");
-        else
+        } else {
             strAtPos = timeAtX.toString("m:ss");
+        }
         text.replace("%C", strAtPos);
 
         int secCur = m_msec / 1000;
         int secDiff = secAtX - secCur;
         QTime timeDiff = QTime(0, 0).addSecs(qAbs(secDiff));
         QString diffStr;
-        if (qAbs(secDiff) > 60 * 60) // has hours
+        if (qAbs(secDiff) > 60 * 60) { // has hours
             diffStr = timeDiff.toString("h:mm:ss");
-        else
+        } else {
             diffStr = timeDiff.toString("m:ss");
+        }
         text.replace("%o", QString("%1%2").arg(secDiff < 0 ? "-" : "+").arg(diffStr));
     }
 
     text = tagReader->toString(text);
     QStringList offsetList = NSettings::instance()->value("TooltipOffset").toStringList();
-    QToolTip::showText(mapToGlobal(QPoint(x, y) + QPoint(offsetList.at(0).toInt(), offsetList.at(1).toInt())), text);
+    QToolTip::showText(mapToGlobal(QPoint(x, y) +
+                                   QPoint(offsetList.at(0).toInt(), offsetList.at(1).toInt())),
+                       text);
 }
-

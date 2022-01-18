@@ -32,15 +32,16 @@ void NWaveformPeaks::reset()
     m_counter = 0;
     m_completed = false;
 
-    m_vector = QVector< QPair<qreal, qreal> >(MAX_RES, qMakePair(0.0, 0.0));
+    m_vector = QVector<QPair<qreal, qreal>>(MAX_RES, qMakePair(0.0, 0.0));
 }
 
 int NWaveformPeaks::size() const
 {
-    if (m_completed)
+    if (m_completed) {
         return m_vector.size();
-    else
+    } else {
         return m_index;
+    }
 }
 
 void NWaveformPeaks::complete()
@@ -69,7 +70,8 @@ void NWaveformPeaks::append(qreal value)
     if (m_index == m_vector.size() - 1) {
         m_factor *= m_factor_k;
 #if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
-        qDebug() << "WaveformPeaks   ::" << "resized  " << m_factor;
+        qDebug() << "WaveformPeaks   ::"
+                 << "resized  " << m_factor;
 #endif
 
         qreal max;
@@ -105,4 +107,3 @@ void NWaveformPeaks::append(qreal value)
     m_vector[m_index].first = qMax(m_vector[m_index].first, value);
     m_vector[m_index].second = qMin(m_vector[m_index].second, value);
 }
-

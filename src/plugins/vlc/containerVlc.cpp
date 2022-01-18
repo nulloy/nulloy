@@ -14,13 +14,13 @@
 *********************************************************************/
 
 #include "containerVlc.h"
+
 #include "playbackEngineVlc.h"
 #include "waveformBuilderVlc.h"
 
 NContainerVlc::NContainerVlc(QObject *parent) : QObject(parent)
 {
-    m_plugins << new NPlaybackEngineVlc()
-              << new NWaveformBuilderVlc();
+    m_plugins << new NPlaybackEngineVlc() << new NWaveformBuilderVlc();
 }
 
 NContainerVlc::~NContainerVlc()

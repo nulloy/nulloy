@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "playbackEngineVlc.h"
+
 #include <QtGlobal>
 
 #include "common.h"
@@ -50,7 +51,8 @@ void NPlaybackEngineVlc::init()
     for (int i = 0; i < argc; ++i)
         argVector << argv[i];
 
-    argVector << "-I" << "dummy"
+    argVector << "-I"
+              << "dummy"
               << "--ignore-config"
               << "--no-xlib";
 
@@ -72,8 +74,9 @@ void NPlaybackEngineVlc::init()
 
 NPlaybackEngineVlc::~NPlaybackEngineVlc()
 {
-    if (!m_init)
+    if (!m_init) {
         return;
+    }
 
     stop();
     libvlc_media_player_release(m_mediaPlayer);
@@ -84,8 +87,9 @@ void NPlaybackEngineVlc::setMedia(const QString &file)
 {
     stop();
 
-    if (file.isEmpty())
+    if (file.isEmpty()) {
         return;
+    }
 
     if (!QFile(file).exists()) {
         emit message(N::Warning, file, "No such file or directory");
@@ -117,16 +121,18 @@ qreal NPlaybackEngineVlc::volume() const
 
 void NPlaybackEngineVlc::setPosition(qreal pos)
 {
-    if (!hasMedia() || pos < 0)
+    if (!hasMedia() || pos < 0) {
         return;
+    }
 
     libvlc_media_player_set_position(m_mediaPlayer, qBound(0.0, pos, 1.0));
 }
 
 qreal NPlaybackEngineVlc::position() const
 {
-    if (!hasMedia())
+    if (!hasMedia()) {
         return -1;
+    }
 
     return libvlc_media_player_get_position(m_mediaPlayer);
 }
@@ -142,16 +148,18 @@ void NPlaybackEngineVlc::jump(qint64 msec)
 
 qint64 NPlaybackEngineVlc::durationMsec() const
 {
-    if (!hasMedia())
+    if (!hasMedia()) {
         return -1;
+    }
 
     return libvlc_media_player_get_length(m_mediaPlayer);
 }
 
 void NPlaybackEngineVlc::play()
 {
-    if (!hasMedia())
+    if (!hasMedia()) {
         return;
+    }
 
     if (!libvlc_media_player_is_playing(m_mediaPlayer))
         libvlc_media_player_play(m_mediaPlayer);
@@ -161,16 +169,18 @@ void NPlaybackEngineVlc::play()
 
 void NPlaybackEngineVlc::pause()
 {
-    if (!hasMedia())
+    if (!hasMedia()) {
         return;
+    }
 
     libvlc_media_player_set_pause(m_mediaPlayer, true);
 }
 
 void NPlaybackEngineVlc::stop()
 {
-    if (!hasMedia())
+    if (!hasMedia()) {
         return;
+    }
 
     libvlc_media_player_stop(m_mediaPlayer);
 }
@@ -217,4 +227,3 @@ void NPlaybackEngineVlc::_emitFinished()
 {
     emit finished();
 }
-

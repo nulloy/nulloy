@@ -17,6 +17,7 @@
 #define N_ABSTRACT_WAVEFORM_BUILDER_H
 
 #include <QHash>
+
 #include "cache.h"
 #include "waveformPeaks.h"
 
@@ -47,9 +48,8 @@ public:
     NAbstractWaveformBuilder();
     ~NAbstractWaveformBuilder();
 
-    NWaveformPeaks* peaks() { return &m_peaks; }
+    NWaveformPeaks *peaks() { return &m_peaks; }
     void positionAndIndex(float &pos, int &index);
 };
 
 #endif
-

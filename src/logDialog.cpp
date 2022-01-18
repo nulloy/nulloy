@@ -15,8 +15,6 @@
 
 #include "logDialog.h"
 
-#include "settings.h"
-
 #include <QCheckBox>
 #include <QCoreApplication>
 #include <QHBoxLayout>
@@ -25,6 +23,8 @@
 #include <QSpacerItem>
 #include <QTextBrowser>
 #include <QVBoxLayout>
+
+#include "settings.h"
 
 NLogDialog::NLogDialog(QWidget *parent) : QDialog(parent)
 {
@@ -57,25 +57,27 @@ NLogDialog::~NLogDialog() {}
 
 void NLogDialog::showMessage(N::MessageIcon icon, const QString &title, const QString &msg)
 {
-    if (!m_text.isEmpty())
+    if (!m_text.isEmpty()) {
         m_text.append("<br>");
+    }
 
     if (m_oldTitle != title) {
-        if (!m_text.isEmpty())
+        if (!m_text.isEmpty()) {
             m_text.append("<br>");
+        }
         m_text.append("<b>" + title + "</b><br>");
         m_oldTitle = title;
     }
 
     switch (icon) {
-    case N::Critical:
-        m_text.append("<span style=\"background-color: #ff0000\">Error</span>: ");
-        break;
-    case N::Warning:
-        m_text.append("<span style=\"background-color: #ffaa00\">Warning</span>: ");
-        break;
-    default:
-        break;
+        case N::Critical:
+            m_text.append("<span style=\"background-color: #ff0000\">Error</span>: ");
+            break;
+        case N::Warning:
+            m_text.append("<span style=\"background-color: #ffaa00\">Warning</span>: ");
+            break;
+        default:
+            break;
     }
 
     m_text.append(msg);
@@ -87,8 +89,9 @@ void NLogDialog::showMessage(N::MessageIcon icon, const QString &title, const QS
 
     m_checkBox->setChecked(!NSettings::instance()->value("DisplayLogDialog").toBool());
 
-    if (!NSettings::instance()->value("DisplayLogDialog").toBool())
+    if (!NSettings::instance()->value("DisplayLogDialog").toBool()) {
         return;
+    }
 
     showNormal();
     activateWindow();
@@ -104,4 +107,3 @@ void NLogDialog::closeEvent(QCloseEvent *event)
     m_text.clear();
     m_oldTitle.clear();
 }
-

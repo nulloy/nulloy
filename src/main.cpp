@@ -13,10 +13,11 @@
 **
 *********************************************************************/
 
+#include <qtsingleapplication.h>
+
 #include "common.h"
 #include "player.h"
 #include "settings.h"
-#include <qtsingleapplication.h>
 
 #ifndef _N_NO_SKINS_
 #include "skinFileSystem.h"
@@ -37,23 +38,22 @@ static void print_err(const QString &err)
 
 static void print_help()
 {
-    print_out(
-        "Usage:  " + NCore::applicationBasenameName() + " [[option] | [files]]\n"
-        "\n"
-        "Options:\n"
-        "    --next         play next file\n"
-        "    --prev         play previous file\n"
-        "    --stop         stop playback\n"
-        "    --pause        pause playback\n"
-        "    --log          log to file\n"
-        "    --version      print version\n"
-        "    -h, --help     print this message\n"
-    );
+    print_out("Usage:  " + NCore::applicationBasenameName() +
+              " [[option] | [files]]\n"
+              "\n"
+              "Options:\n"
+              "    --next         play next file\n"
+              "    --prev         play previous file\n"
+              "    --stop         stop playback\n"
+              "    --pause        pause playback\n"
+              "    --log          log to file\n"
+              "    --version      print version\n"
+              "    -h, --help     print this message\n");
 }
 
 static void print_try()
 {
-    print_out("Try `" +  NCore::applicationBasenameName() + " --help' for more information");
+    print_out("Try `" + NCore::applicationBasenameName() + " --help' for more information");
 }
 
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -83,7 +83,10 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
         QFile logFile(NCore::rcDir() + "/" + NCore::applicationBinaryName() + ".log");
         logFile.open(QIODevice::Text | QIODevice::WriteOnly | QIODevice::Append);
         QTextStream stream(&logFile);
-        stream << QString("%1 %2: %3").arg(QTime::currentTime().toString("hh:mm:ss.zzz"), prefix, msg.toLocal8Bit().constData()) << endl;
+        stream << QString("%1 %2: %3")
+                      .arg(QTime::currentTime().toString("hh:mm:ss.zzz"), prefix,
+                           msg.toLocal8Bit().constData())
+               << endl;
         logFile.close();
     }
 }
@@ -125,12 +128,7 @@ int main(int argc, char *argv[])
                 print_help();
                 return 0;
             } else if (arg.startsWith("--")) {
-                if (
-                    arg == "--next" ||
-                    arg == "--prev" ||
-                    arg == "--stop" ||
-                    arg == "--pause")
-                {
+                if (arg == "--next" || arg == "--prev" || arg == "--stop" || arg == "--pause") {
                     options << arg;
                 } else if (arg == "--log") {
                     logToFile = true;
@@ -159,8 +157,9 @@ int main(int argc, char *argv[])
     QString msg = (options + files).join(MSG_SPLITTER);
     if (NSettings::instance()->value("SingleInstance").toBool()) {
         // try to send it to an already running instrance
-        if (instance.sendMessage(msg))
+        if (instance.sendMessage(msg)) {
             return 0; // return if delivered
+        }
     }
 
 #ifndef _N_NO_SKINS_
@@ -168,20 +167,20 @@ int main(int argc, char *argv[])
 #endif
 
     NPlayer p;
-    QObject::connect(&instance, SIGNAL(messageReceived(const QString &)),
-                     &p, SLOT(readMessage(const QString &)));
-    QObject::connect(&instance, SIGNAL(aboutToQuit()),
-                     &p, SLOT(quit()));
+    QObject::connect(&instance, SIGNAL(messageReceived(const QString &)), &p,
+                     SLOT(readMessage(const QString &)));
+    QObject::connect(&instance, SIGNAL(aboutToQuit()), &p, SLOT(quit()));
 
-    if (NSettings::instance()->value("RestorePlaylist").toBool())
+    if (NSettings::instance()->value("RestorePlaylist").toBool()) {
         p.loadDefaultPlaylist();
+    }
 
     // manually read the message
-    if (!msg.isEmpty())
+    if (!msg.isEmpty()) {
         p.readMessage(msg);
+    }
 
     instance.installEventFilter(&p);
 
     return instance.exec();
 }
-

@@ -15,16 +15,17 @@
 
 #include "widgetCollection.h"
 
+#include <QSizeGrip>
+#include <QtPlugin>
+
+#include "coverWidget.h"
 #include "label.h"
 #include "playlistWidget.h"
 #include "slider.h"
 #include "volumeSlider.h"
 #include "waveformSlider.h"
-#include "coverWidget.h"
 
-#include <QtPlugin>
-#include <QSizeGrip>
-
+// clang-format off
 #define N_WIDGET_PLUGIN(CLASS_NAME) \
 class CLASS_NAME##Plugin : public QObject, public NWidgetPlugin \
 { \
@@ -33,6 +34,7 @@ public: \
     virtual QWidget* createWidget(QWidget *parent) { return new CLASS_NAME(parent); } \
     virtual bool isContainer() const { return false; } \
 }; \
+// clang-format on
 
 N_WIDGET_PLUGIN(NLabel)
 N_WIDGET_PLUGIN(NPlaylistWidget)
@@ -47,7 +49,9 @@ static inline QString _domXml(const QString &className, const QString &name)
     return QString("<ui language=\"c++\">\n"
                    " <widget class=\"%1\" name=\"%2\">\n"
                    " </widget>\n"
-                   "</ui>").arg(className).arg(name);
+                   "</ui>")
+            .arg(className)
+            .arg(name);
 }
 
 NWidgetPlugin::NWidgetPlugin(const QString &className)
@@ -68,8 +72,9 @@ void NWidgetPlugin::initialize(QDesignerFormEditorInterface *core)
 {
     Q_UNUSED(core);
 
-    if (m_initialized)
+    if (m_initialized) {
         return;
+    }
 
     m_initialized = true;
 }

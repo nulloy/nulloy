@@ -15,12 +15,12 @@
 
 #include "coverWidget.h"
 
-#include "coverWidgetPopup.h"
+#include <QResizeEvent>
+
 #include "coverReaderInterface.h"
+#include "coverWidgetPopup.h"
 #include "pluginLoader.h"
 #include "settings.h"
-
-#include <QResizeEvent>
 
 NCoverWidget::NCoverWidget(QWidget *parent) : QLabel(parent)
 {
@@ -36,8 +36,9 @@ NCoverWidget::~NCoverWidget() {}
 void NCoverWidget::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::EnabledChange) {
-        if (!m_pixmap.isNull())
+        if (!m_pixmap.isNull()) {
             setVisible(isEnabled());
+        }
     }
 
     QLabel::changeEvent(event);
@@ -49,8 +50,9 @@ void NCoverWidget::setSource(const QString &file)
     init();
 
     QFileInfo fileInfo(file);
-    if (!fileInfo.exists())
+    if (!fileInfo.exists()) {
         return;
+    }
 
     if (m_coverReader) {
         m_coverReader->setSource(file);
@@ -60,7 +62,10 @@ void NCoverWidget::setSource(const QString &file)
     if (m_pixmap.isNull()) { // fallback to external file
         QString pixmapFile;
         QDir dir = fileInfo.absoluteDir();
-        QStringList images = dir.entryList(QStringList() << "*.jpg" << "*.jpeg" << "*.png", QDir::Files);
+        QStringList images = dir.entryList(QStringList() << "*.jpg"
+                                                         << "*.jpeg"
+                                                         << "*.png",
+                                           QDir::Files);
 
         // search for image which file name starts same as source file
         QString baseName = fileInfo.completeBaseName();
@@ -73,9 +78,11 @@ void NCoverWidget::setSource(const QString &file)
 
         // search for cover.* or folder.* or front.*
         if (pixmapFile.isEmpty()) {
-            QStringList matchedImages = images.filter(QRegExp("^(cover|folder|front)\\..*$", Qt::CaseInsensitive));
-            if (!matchedImages.isEmpty())
+            QStringList matchedImages = images.filter(
+                QRegExp("^(cover|folder|front)\\..*$", Qt::CaseInsensitive));
+            if (!matchedImages.isEmpty()) {
                 pixmapFile = dir.absolutePath() + "/" + matchedImages.first();
+            }
         }
 
         m_pixmap = QPixmap(pixmapFile);
@@ -84,8 +91,9 @@ void NCoverWidget::setSource(const QString &file)
     if (!m_pixmap.isNull()) { // first scale, then show
         setPixmap(m_pixmap);
         fitToHeight(height());
-        if (isEnabled())
+        if (isEnabled()) {
             show();
+        }
     }
 }
 
@@ -111,8 +119,9 @@ void NCoverWidget::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    if (!m_popup)
+    if (!m_popup) {
         m_popup = new NCoverWidgetPopup(QWidget::window());
+    }
     m_popup->setPixmap(m_pixmap);
     m_popup->show();
 }
@@ -125,9 +134,10 @@ void NCoverWidget::fitToHeight(int height)
     setMaximumWidth(fixedAspect.width());
     setMinimumWidth(fixedAspect.width());
 
-    if (fixedAspect.width() >= parentWidget()->width() / 2) // stop scaling, leave space for waveform slider
+    if (fixedAspect.width() >=
+        parentWidget()->width() / 2) { // stop scaling, leave space for waveform slider
         setMaximumHeight(fixedAspect.height());
-    else
+    } else {
         setMaximumHeight(QWIDGETSIZE_MAX);
+    }
 }
-

@@ -24,7 +24,6 @@ namespace NSkinLoader
     QStringList skinIdentifiers();
     QString skinUiFormFile();
     QString skinScriptFile();
-}
+} // namespace NSkinLoader
 
 #endif
-

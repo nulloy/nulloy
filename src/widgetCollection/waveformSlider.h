@@ -17,8 +17,8 @@
 #define N_WAVEFORM_SLIDER_H
 
 #include <QAbstractSlider>
-#include <QVector>
 #include <QPainter>
+#include <QVector>
 
 class NPlaylistDataItem;
 class NWaveformBuilderInterface;
@@ -26,6 +26,7 @@ class NWaveformBuilderInterface;
 class NWaveformSlider : public QAbstractSlider
 {
     Q_OBJECT
+    // clang-format off
     Q_PROPERTY(int radius READ radius WRITE setRadius)
     Q_PROPERTY(QBrush background READ background WRITE setBackground)
     Q_PROPERTY(QBrush wave_background READ waveBackground WRITE setWaveBackground)
@@ -40,6 +41,7 @@ class NWaveformSlider : public QAbstractSlider
     Q_PROPERTY(QColor groove_paused_background READ groovePausedColor WRITE setGroovePausedColor)
     Q_PROPERTY(QColor file_drop_border_color READ fileDropBorderColor WRITE setFileDropBorderColor)
     Q_PROPERTY(QBrush file_drop_background READ fileDropBackground WRITE setFileDropBackground)
+    // clang-format on
 
 private:
     NWaveformBuilderInterface *m_waveBuilder;
@@ -75,12 +77,12 @@ public slots:
 
 private slots:
     void checkForUpdate();
-    void setValue(int) {};
+    void setValue(int){};
 
 signals:
     void sliderMoved(qreal value);
 
-// DRAG & DROP >>
+    // DRAG & DROP >>
 private:
     bool m_fileDrop;
 
@@ -93,9 +95,9 @@ protected:
 
 signals:
     void filesDropped(const QList<NPlaylistDataItem> &dataItems);
-// << DRAG & DROP
+    // << DRAG & DROP
 
-// STYLESHEET PROPERTIES >>
+    // STYLESHEET PROPERTIES >>
 private:
     int m_radius;
     QBrush m_background;
@@ -154,8 +156,7 @@ public:
 
     QBrush fileDropBackground() const;
     void setFileDropBackground(QBrush brush);
-// << STYLESHEET PROPERTIES
+    // << STYLESHEET PROPERTIES
 };
 
 #endif
-

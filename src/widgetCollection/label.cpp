@@ -15,9 +15,9 @@
 
 #include "label.h"
 
-#include <QPen>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QPen>
 #include <QPoint>
 
 NLabel::NLabel(QWidget *parent) : QLabel(parent)
@@ -96,8 +96,9 @@ void NLabel::paintEvent(QPaintEvent *event)
     QPainter painter;
     QRect rect = contentsRect();
 
-    if (painter.isActive())
+    if (painter.isActive()) {
         painter.setFont(font());
+    }
 
     if (m_enabled && m_shadowOffset != QPoint(0, 0)) {
         painter.begin(this);
@@ -110,4 +111,3 @@ void NLabel::paintEvent(QPaintEvent *event)
     painter.drawText(rect, alignment(), m_elidedText);
     painter.end();
 }
-

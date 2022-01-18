@@ -38,8 +38,9 @@ QList<QKeySequence> NAction::globalShortcuts()
 void NAction::setGlobalShortcut(const QKeySequence &shortcut)
 {
     QList<QKeySequence> list;
-    if (!shortcut.isEmpty())
+    if (!shortcut.isEmpty()) {
         list << shortcut;
+    }
     setGlobalShortcuts(list);
 }
 
@@ -61,4 +62,3 @@ void NAction::setGlobalShortcuts(const QList<QKeySequence> &shortcuts)
         m_globalShortcuts << s;
     }
 }
-

@@ -60,4 +60,3 @@ signals:
 Q_DECLARE_INTERFACE(NPlaybackEngineInterface, PLAYBACK_INTERFACE)
 
 #endif
-

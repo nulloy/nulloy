@@ -16,6 +16,7 @@
 #include "skinFileSystem.h"
 
 #include <QtCore/private/qabstractfileengine_p.h>
+
 #include <QByteArray>
 #include <QString>
 
@@ -70,18 +71,20 @@ NSkinFileEngine::NSkinFileEngine(const QByteArray &ba, const QString &fileName)
     m_fileName = fileName;
 }
 
-QAbstractFileEngine* NSkinFileSystem::create(const QString &fileName) const
+QAbstractFileEngine *NSkinFileSystem::create(const QString &fileName) const
 {
     init();
 
-    if (!fileName.startsWith(_prefix))
+    if (!fileName.startsWith(_prefix)) {
         return NULL;
+    }
 
     QString key = fileName.mid(strlen(_prefix));
-    if (m_fileHash.contains(key))
+    if (m_fileHash.contains(key)) {
         return new NSkinFileEngine(m_fileHash.value(key), fileName);
-    else
+    } else {
         return NULL;
+    }
 }
 
 void NSkinFileSystem::addFile(const QString &filePath, const QByteArray &ba)
@@ -111,8 +114,9 @@ qint64 NSkinFileEngine::read(char *data, qint64 maxlen)
 
 bool NSkinFileEngine::seek(qint64 offset)
 {
-    if (offset < 0 || offset >= m_bytes.size())
+    if (offset < 0 || offset >= m_bytes.size()) {
         return false;
+    }
     m_pos = offset;
     return true;
 }
@@ -135,4 +139,3 @@ QAbstractFileEngine::FileFlags NSkinFileEngine::fileFlags(QAbstractFileEngine::F
     flags |= HiddenFlag;
     return flags;
 }
-

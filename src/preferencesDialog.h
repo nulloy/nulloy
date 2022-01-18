@@ -17,9 +17,10 @@
 #define N_PREFERENCES_DIALOG_H
 
 #include <QDialog>
-#include "ui_preferencesDialog.h"
+
 #include "global.h"
 #include "pluginLoader.h"
+#include "ui_preferencesDialog.h"
 
 class QGroupBox;
 class QRadioButton;
@@ -31,7 +32,7 @@ class NPreferencesDialog : public QDialog
 private:
     Ui::PreferencesDialog ui;
     void showEvent(QShowEvent *event);
-    QGroupBox* createGroupBox(N::PluginType type);
+    QGroupBox *createGroupBox(N::PluginType type);
     QString selectedContainer(N::PluginType type);
     QMap<QRadioButton *, NPluginLoader::Descriptor> m_radioButtons;
 
@@ -63,4 +64,3 @@ signals:
 };
 
 #endif
-

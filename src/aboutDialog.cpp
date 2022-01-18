@@ -16,14 +16,14 @@
 #include "aboutDialog.h"
 
 #include <QCoreApplication>
-#include <QVBoxLayout>
+#include <QFile>
+#include <QLabel>
+#include <QPushButton>
 #include <QSpacerItem>
 #include <QTabWidget>
-#include <QLabel>
 #include <QTextBrowser>
 #include <QTextStream>
-#include <QPushButton>
-#include <QFile>
+#include <QVBoxLayout>
 
 #ifdef Q_OS_MAC
 #include <QBitmap>
@@ -31,6 +31,7 @@
 
 NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 {
+    // clang-format off
     QString aboutHtml = QString() +
 #ifdef Q_OS_MAC
         "<span style=\"font-size:14pt;\">" +
@@ -51,6 +52,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
             "<br><br>" +
             "Copyright (C) 2010-2018 Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
         "</span>";
+    // clang-format on
 
     setWindowTitle(QObject::tr("About ") + QCoreApplication::applicationName());
     setMaximumSize(0, 0);
@@ -99,7 +101,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
     thanksTabLayout->setContentsMargins(0, 0, 0, 0);
     thanksTab->setLayout(thanksTabLayout);
 
-    QFile thanksFile( ":/THANKS");
+    QFile thanksFile(":/THANKS");
     thanksFile.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream thanksStream(&thanksFile);
     QString thanksText = thanksStream.readAll();
@@ -120,7 +122,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
     changelogTabLayout->setContentsMargins(0, 0, 0, 0);
     changelogTab->setLayout(changelogTabLayout);
 
-    QFile changelogFile( ":/ChangeLog");
+    QFile changelogFile(":/ChangeLog");
     changelogFile.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream changelogStream(&changelogFile);
     QString changelogHtml = changelogStream.readAll();
@@ -140,6 +142,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
     QVBoxLayout *licenseTabLayout = new QVBoxLayout;
     licenseTab->setLayout(licenseTabLayout);
 
+    // clang-format off
     QString licenseHtml =
 #ifdef Q_OS_MAC
         "<span style=\"font-size:10pt;\">"
@@ -159,6 +162,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
             "along with this program. If not, see "
             "<a href='http://www.gnu.org/licenses/gpl-3.0.html'>http://www.gnu.org/licenses/gpl-3.0.html</a>."
         "</span>";
+    // clang-format on
 
     QTextBrowser *licenseTextBrowser = new QTextBrowser;
     licenseTextBrowser->setObjectName("licenseTextBrowser");
@@ -190,10 +194,10 @@ void NAboutDialog::show()
     QDialog::show();
 
     // resize according to content
-    foreach (QString objectName, QStringList() << "aboutTextBrowser" << "licenseTextBrowser") {
+    foreach (QString objectName, QStringList() << "aboutTextBrowser"
+                                               << "licenseTextBrowser") {
         QTextBrowser *textBrowser = parent()->findChild<QTextBrowser *>(objectName);
         QSize textSize = textBrowser->document()->size().toSize();
         textBrowser->setMinimumHeight(textSize.height());
     }
 }
-

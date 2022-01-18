@@ -15,16 +15,15 @@
 
 #include "player.h"
 
-#include "action.h"
 #include "aboutDialog.h"
+#include "action.h"
 #include "common.h"
+#include "i18nLoader.h"
 #include "logDialog.h"
-#include "playlistStorage.h"
 #include "mainWindow.h"
-#include "waveformSlider.h"
-#include "volumeSlider.h"
 #include "playbackEngineInterface.h"
 #include "playlistDataItem.h"
+#include "playlistStorage.h"
 #include "playlistWidget.h"
 #include "playlistWidgetItem.h"
 #include "pluginLoader.h"
@@ -33,11 +32,12 @@
 #include "settings.h"
 #include "tagReaderInterface.h"
 #include "trackInfoWidget.h"
-#include "i18nLoader.h"
+#include "volumeSlider.h"
+#include "waveformSlider.h"
 
 #ifndef _N_NO_SKINS_
-#include "skinLoader.h"
 #include "skinFileSystem.h"
+#include "skinLoader.h"
 #endif
 
 #ifdef Q_OS_WIN
@@ -50,11 +50,11 @@
 
 #include <QFileDialog>
 #include <QFileInfo>
-#include <QMessageBox>
 #include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
 #include <QMetaObject>
 #include <QResizeEvent>
-#include <QMenuBar>
 
 #ifndef _N_NO_UPDATE_CHECK_
 #include <QNetworkAccessManager>
@@ -70,7 +70,8 @@ NPlayer::NPlayer()
     NI18NLoader::init();
     NPluginLoader::init();
 
-    m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
+    m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
+        NPluginLoader::getPlugin(N::PlaybackEngine));
     Q_ASSERT(m_playbackEngine);
     m_playbackEngine->setParent(this);
 
@@ -100,8 +101,10 @@ NPlayer::NPlayer()
     m_coverWidget = m_mainWindow->findChild<QWidget *>("coverWidget");
 
     m_playlistWidget = m_mainWindow->findChild<NPlaylistWidget *>("playlistWidget");
-    if (QAbstractButton *repeatButton = m_mainWindow->findChild<QAbstractButton *>("repeatButton"))
+    if (QAbstractButton *repeatButton = m_mainWindow->findChild<QAbstractButton *>(
+            "repeatButton")) {
         repeatButton->setChecked(m_playlistWidget->repeatMode());
+    }
 
     m_trackInfoWidget = new NTrackInfoWidget();
     QVBoxLayout *trackInfoLayout = new QVBoxLayout;
@@ -112,7 +115,8 @@ NPlayer::NPlayer()
 
 #ifndef _N_NO_UPDATE_CHECK_
     m_versionDownloader = new QNetworkAccessManager(this);
-    connect(m_versionDownloader, SIGNAL(finished(QNetworkReply *)), this, SLOT(on_versionDownloader_finished(QNetworkReply *)));
+    connect(m_versionDownloader, SIGNAL(finished(QNetworkReply *)), this,
+            SLOT(on_versionDownloader_finished(QNetworkReply *)));
     connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
 #endif
 
@@ -123,7 +127,8 @@ NPlayer::NPlayer()
 #ifdef Q_OS_WIN
     NW7TaskBar::instance()->setWindow(m_mainWindow);
     NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
-    connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(), SLOT(setProgress(qreal)));
+    connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(),
+            SLOT(setProgress(qreal)));
 #endif
 
 #ifdef Q_OS_MAC
@@ -131,7 +136,8 @@ NPlayer::NPlayer()
     connect(NMacDock::instance(), SIGNAL(clicked()), m_mainWindow, SLOT(show()));
 #endif
 
-    m_mainWindow->setTitle(QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion());
+    m_mainWindow->setTitle(QCoreApplication::applicationName() + " " +
+                           QCoreApplication::applicationVersion());
     m_mainWindow->show();
     m_mainWindow->loadSettings();
     QResizeEvent e(m_mainWindow->size(), m_mainWindow->size());
@@ -149,51 +155,73 @@ NPlayer::~NPlayer()
 
 void NPlayer::createActions()
 {
-    m_showHideAction = new NAction(QIcon::fromTheme("preferences-system-windows", QIcon(":/trolltech/styles/commonstyle/images/dockdock-16.png")), tr("Show / Hide"), this);
+    m_showHideAction =
+        new NAction(QIcon::fromTheme("preferences-system-windows",
+                                     QIcon(
+                                         ":/trolltech/styles/commonstyle/images/dockdock-16.png")),
+                    tr("Show / Hide"), this);
     m_showHideAction->setObjectName("ShowHideAction");
     m_showHideAction->setStatusTip(tr("Toggle window visibility"));
     m_showHideAction->setCustomizable(true);
 
-    m_playAction = new NAction(QIcon::fromTheme("media-playback-start", style()->standardIcon(QStyle::SP_MediaPlay)), tr("Play / Pause"), this);
+    m_playAction = new NAction(QIcon::fromTheme("media-playback-start",
+                                                style()->standardIcon(QStyle::SP_MediaPlay)),
+                               tr("Play / Pause"), this);
     m_playAction->setObjectName("PlayAction");
     m_playAction->setStatusTip(tr("Toggle playback"));
     m_playAction->setCustomizable(true);
 
-    m_stopAction = new NAction(QIcon::fromTheme("media-playback-stop", style()->standardIcon(QStyle::SP_MediaStop)), tr("Stop"), this);
+    m_stopAction = new NAction(QIcon::fromTheme("media-playback-stop",
+                                                style()->standardIcon(QStyle::SP_MediaStop)),
+                               tr("Stop"), this);
     m_stopAction->setObjectName("StopAction");
     m_stopAction->setStatusTip(tr("Stop playback"));
     m_stopAction->setCustomizable(true);
 
-    m_prevAction = new NAction(QIcon::fromTheme("media-playback-backward", style()->standardIcon(QStyle::SP_MediaSkipBackward)), tr("Previous"), this);
+    m_prevAction = new NAction(QIcon::fromTheme("media-playback-backward",
+                                                style()->standardIcon(QStyle::SP_MediaSkipBackward)),
+                               tr("Previous"), this);
     m_prevAction->setObjectName("PrevAction");
     m_prevAction->setStatusTip(tr("Play previous track in playlist"));
     m_prevAction->setCustomizable(true);
 
-    m_nextAction = new NAction(QIcon::fromTheme("media-playback-forward", style()->standardIcon(QStyle::SP_MediaSkipForward)), tr("Next"), this);
+    m_nextAction = new NAction(QIcon::fromTheme("media-playback-forward",
+                                                style()->standardIcon(QStyle::SP_MediaSkipForward)),
+                               tr("Next"), this);
     m_nextAction->setObjectName("NextAction");
     m_nextAction->setStatusTip(tr("Play next track in playlist"));
     m_nextAction->setCustomizable(true);
 
-    m_preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop", style()->standardIcon(QStyle::SP_MessageBoxInformation)), tr("Preferences..."), this);
+    m_preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
+                                                       style()->standardIcon(
+                                                           QStyle::SP_MessageBoxInformation)),
+                                      tr("Preferences..."), this);
     m_preferencesAction->setShortcut(QKeySequence("Ctrl+P"));
 
-    m_exitAction = new NAction(QIcon::fromTheme("exit", style()->standardIcon(QStyle::SP_DialogCloseButton)), tr("Exit"), this);
+    m_exitAction = new NAction(QIcon::fromTheme("exit", style()->standardIcon(
+                                                            QStyle::SP_DialogCloseButton)),
+                               tr("Exit"), this);
     m_exitAction->setShortcut(QKeySequence("Ctrl+Q"));
 
-    m_addFilesAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Add Files") + "...", this);
+    m_addFilesAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton),
+                                   tr("Add Files") + "...", this);
     m_addFilesAction->setShortcut(QKeySequence("Ctrl+O"));
 
-    m_addDirAction = new NAction(style()->standardIcon(QStyle::SP_FileDialogNewFolder), tr("Add Directory") + "...", this);
+    m_addDirAction = new NAction(style()->standardIcon(QStyle::SP_FileDialogNewFolder),
+                                 tr("Add Directory") + "...", this);
     m_addDirAction->setShortcut(QKeySequence("Ctrl+Shift+O"));
 
-    m_savePlaylistAction = new NAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save Playlist") + "...", this);
+    m_savePlaylistAction = new NAction(style()->standardIcon(QStyle::SP_DialogSaveButton),
+                                       tr("Save Playlist") + "...", this);
     m_savePlaylistAction->setShortcut(QKeySequence("Ctrl+S"));
 
     m_showCoverAction = new NAction(tr("Show Cover Art"), this);
     m_showCoverAction->setCheckable(true);
     m_showCoverAction->setObjectName("ShowCoverAction");
 
-    m_aboutAction = new NAction(QIcon::fromTheme("help-about", style()->standardIcon(QStyle::SP_MessageBoxQuestion)), tr("About"), this);
+    m_aboutAction = new NAction(QIcon::fromTheme("help-about", style()->standardIcon(
+                                                                   QStyle::SP_MessageBoxQuestion)),
+                                tr("About"), this);
 
     m_playingOnTopAction = new NAction(tr("On Top During Playback"), this);
     m_playingOnTopAction->setCheckable(true);
@@ -229,11 +257,13 @@ void NPlayer::createActions()
     m_nextFileEnableAction->setCheckable(true);
     m_nextFileEnableAction->setObjectName("NextFileEnableAction");
 
-    m_nextFileByNameAscdAction = new NAction(QString::fromUtf8("    ├  %1 ↓").arg(tr("By Name")), this);
+    m_nextFileByNameAscdAction = new NAction(QString::fromUtf8("    ├  %1 ↓").arg(tr("By Name")),
+                                             this);
     m_nextFileByNameAscdAction->setCheckable(true);
     m_nextFileByNameAscdAction->setObjectName("NextFileByNameAscdAction");
 
-    m_nextFileByNameDescAction = new NAction(QString::fromUtf8("    ├  %1 ↑").arg(tr("By Name")), this);
+    m_nextFileByNameDescAction = new NAction(QString::fromUtf8("    ├  %1 ↑").arg(tr("By Name")),
+                                             this);
     m_nextFileByNameDescAction->setCheckable(true);
     m_nextFileByNameDescAction->setObjectName("NextFileByNameDescAction");
 
@@ -272,8 +302,9 @@ void NPlayer::createActions()
     m_settings->initShortcuts(this);
     m_settings->loadShortcuts();
     foreach (NAction *action, findChildren<NAction *>()) {
-        if (!action->shortcuts().isEmpty())
+        if (!action->shortcuts().isEmpty()) {
             m_mainWindow->addAction(action);
+        }
     }
 
     createContextMenu();
@@ -281,7 +312,7 @@ void NPlayer::createActions()
     createTrayIcon();
 }
 
-NMainWindow* NPlayer::mainWindow()
+NMainWindow *NPlayer::mainWindow()
 {
     return m_mainWindow;
 }
@@ -388,64 +419,91 @@ void NPlayer::createTrayIcon()
 
 void NPlayer::connectSignals()
 {
-    connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), this, SLOT(on_playbackEngine_mediaChanged(const QString &)));
-    connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_waveformSlider, SLOT(setMedia(const QString &)));
-    connect(m_playbackEngine, SIGNAL(stateChanged(N::PlaybackState)), this, SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));
-    connect(m_playbackEngine, SIGNAL(aboutToFinish()), m_playlistWidget, SLOT(currentFinished()), Qt::BlockingQueuedConnection);
-    connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), m_waveformSlider, SLOT(setValue(qreal)));
+    connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), this,
+            SLOT(on_playbackEngine_mediaChanged(const QString &)));
+    connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_waveformSlider,
+            SLOT(setMedia(const QString &)));
+    connect(m_playbackEngine, SIGNAL(stateChanged(N::PlaybackState)), this,
+            SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));
+    connect(m_playbackEngine, SIGNAL(aboutToFinish()), m_playlistWidget, SLOT(currentFinished()),
+            Qt::BlockingQueuedConnection);
+    connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), m_waveformSlider,
+            SLOT(setValue(qreal)));
     connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
     connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(currentFinished()));
     connect(m_playbackEngine, SIGNAL(failed()), this, SLOT(on_playbackEngine_failed()));
-    connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
+    connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
+            m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
 
     connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
 
-    connect(m_preferencesDialog, SIGNAL(settingsChanged()), this, SLOT(on_preferencesDialog_settingsChanged()));
+    connect(m_preferencesDialog, SIGNAL(settingsChanged()), this,
+            SLOT(on_preferencesDialog_settingsChanged()));
 
-    if (m_coverWidget)
-        connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_coverWidget, SLOT(setSource(const QString &)));
+    if (m_coverWidget) {
+        connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_coverWidget,
+                SLOT(setSource(const QString &)));
+    }
 
-    if (QAbstractButton *playButton = m_mainWindow->findChild<QAbstractButton *>("playButton"))
+    if (QAbstractButton *playButton = m_mainWindow->findChild<QAbstractButton *>("playButton")) {
         connect(playButton, SIGNAL(clicked()), this, SLOT(on_playButton_clicked()));
+    }
 
-    if (QAbstractButton *stopButton = m_mainWindow->findChild<QAbstractButton *>("stopButton"))
+    if (QAbstractButton *stopButton = m_mainWindow->findChild<QAbstractButton *>("stopButton")) {
         connect(stopButton, SIGNAL(clicked()), m_playbackEngine, SLOT(stop()));
+    }
 
-    if (QAbstractButton *prevButton = m_mainWindow->findChild<QAbstractButton *>("prevButton"))
+    if (QAbstractButton *prevButton = m_mainWindow->findChild<QAbstractButton *>("prevButton")) {
         connect(prevButton, SIGNAL(clicked()), m_playlistWidget, SLOT(playPrevItem()));
+    }
 
-    if (QAbstractButton *nextButton = m_mainWindow->findChild<QAbstractButton *>("nextButton"))
+    if (QAbstractButton *nextButton = m_mainWindow->findChild<QAbstractButton *>("nextButton")) {
         connect(nextButton, SIGNAL(clicked()), m_playlistWidget, SLOT(playNextItem()));
+    }
 
-    if (QAbstractButton *closeButton = m_mainWindow->findChild<QAbstractButton *>("closeButton"))
+    if (QAbstractButton *closeButton = m_mainWindow->findChild<QAbstractButton *>("closeButton")) {
         connect(closeButton, SIGNAL(clicked()), m_mainWindow, SLOT(close()));
+    }
 
-    if (QAbstractButton *minimizeButton = m_mainWindow->findChild<QAbstractButton *>("minimizeButton"))
+    if (QAbstractButton *minimizeButton = m_mainWindow->findChild<QAbstractButton *>(
+            "minimizeButton")) {
         connect(minimizeButton, SIGNAL(clicked()), m_mainWindow, SLOT(showMinimized()));
+    }
 
     if (m_volumeSlider) {
-        connect(m_volumeSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setVolume(qreal)));
-        connect(m_playbackEngine, SIGNAL(volumeChanged(qreal)), m_volumeSlider, SLOT(setValue(qreal)));
+        connect(m_volumeSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine,
+                SLOT(setVolume(qreal)));
+        connect(m_playbackEngine, SIGNAL(volumeChanged(qreal)), m_volumeSlider,
+                SLOT(setValue(qreal)));
         connect(m_mainWindow, SIGNAL(scrolled(int)), this, SLOT(on_mainWindow_scrolled(int)));
     }
 
-    if (QAbstractButton *repeatButton = m_mainWindow->findChild<QAbstractButton *>("repeatButton")) {
+    if (QAbstractButton *repeatButton = m_mainWindow->findChild<QAbstractButton *>(
+            "repeatButton")) {
         connect(repeatButton, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setRepeatMode(bool)));
-        connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), repeatButton, SLOT(setChecked(bool)));
+        connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), repeatButton,
+                SLOT(setChecked(bool)));
     }
 
-    if (QAbstractButton *shuffleButton = m_mainWindow->findChild<QAbstractButton *>("shuffleButton")) {
+    if (QAbstractButton *shuffleButton = m_mainWindow->findChild<QAbstractButton *>(
+            "shuffleButton")) {
         connect(shuffleButton, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setShuffleMode(bool)));
-        connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), shuffleButton, SLOT(setChecked(bool)));
+        connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), shuffleButton,
+                SLOT(setChecked(bool)));
     }
 
-    connect(m_playlistWidget, SIGNAL(setMedia(const QString &)), m_playbackEngine, SLOT(setMedia(const QString &)));
+    connect(m_playlistWidget, SIGNAL(setMedia(const QString &)), m_playbackEngine,
+            SLOT(setMedia(const QString &)));
     connect(m_playlistWidget, SIGNAL(currentActivated()), m_playbackEngine, SLOT(play()));
-    connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), m_shufflePlaylistAction, SLOT(setChecked(bool)));
-    connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), m_repeatPlaylistAction, SLOT(setChecked(bool)));
+    connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), m_shufflePlaylistAction,
+            SLOT(setChecked(bool)));
+    connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), m_repeatPlaylistAction,
+            SLOT(setChecked(bool)));
 
-    connect(m_waveformSlider, SIGNAL(filesDropped(const QList<NPlaylistDataItem> &)), m_playlistWidget, SLOT(playItems(const QList<NPlaylistDataItem> &)));
-    connect(m_waveformSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine, SLOT(setPosition(qreal)));
+    connect(m_waveformSlider, SIGNAL(filesDropped(const QList<NPlaylistDataItem> &)),
+            m_playlistWidget, SLOT(playItems(const QList<NPlaylistDataItem> &)));
+    connect(m_waveformSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine,
+            SLOT(setPosition(qreal)));
 
     connect(m_showHideAction, SIGNAL(triggered()), this, SLOT(toggleWindowVisibility()));
     connect(m_playAction, SIGNAL(triggered()), m_playbackEngine, SLOT(play()));
@@ -459,29 +517,38 @@ void NPlayer::connectSignals()
     connect(m_savePlaylistAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
     connect(m_showCoverAction, SIGNAL(toggled(bool)), this, SLOT(on_showCoverAction_toggled(bool)));
     connect(m_aboutAction, SIGNAL(triggered()), this, SLOT(showAboutMessageBox()));
-    connect(m_playingOnTopAction, SIGNAL(toggled(bool)), this, SLOT(on_whilePlayingOnTopAction_toggled(bool)));
-    connect(m_alwaysOnTopAction, SIGNAL(toggled(bool)), this, SLOT(on_alwaysOnTopAction_toggled(bool)));
+    connect(m_playingOnTopAction, SIGNAL(toggled(bool)), this,
+            SLOT(on_whilePlayingOnTopAction_toggled(bool)));
+    connect(m_alwaysOnTopAction, SIGNAL(toggled(bool)), this,
+            SLOT(on_alwaysOnTopAction_toggled(bool)));
     connect(m_fullScreenAction, SIGNAL(triggered()), m_mainWindow, SLOT(toggleFullScreen()));
-    connect(m_shufflePlaylistAction, SIGNAL(triggered(bool)), m_playlistWidget, SLOT(setShuffleMode(bool)));
-    connect(m_repeatPlaylistAction, SIGNAL(triggered(bool)), m_playlistWidget, SLOT(setRepeatMode(bool)));
+    connect(m_shufflePlaylistAction, SIGNAL(triggered(bool)), m_playlistWidget,
+            SLOT(setShuffleMode(bool)));
+    connect(m_repeatPlaylistAction, SIGNAL(triggered(bool)), m_playlistWidget,
+            SLOT(setRepeatMode(bool)));
     connect(m_loopPlaylistAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
     connect(m_nextFileEnableAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
-    connect(m_nextFileByNameAscdAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
-    connect(m_nextFileByNameDescAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
+    connect(m_nextFileByNameAscdAction, SIGNAL(triggered()), this,
+            SLOT(on_playlistAction_triggered()));
+    connect(m_nextFileByNameDescAction, SIGNAL(triggered()), this,
+            SLOT(on_playlistAction_triggered()));
     connect(m_nextFileByDateAscd, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
     connect(m_nextFileByDateDesc, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
 
     foreach (NAction *action, findChildren<NAction *>()) {
-        if (action->objectName().startsWith("Jump"))
+        if (action->objectName().startsWith("Jump")) {
             connect(action, SIGNAL(triggered()), this, SLOT(on_jumpAction_triggered()));
+        }
     }
 
-    connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
-    connect(m_systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_trayIcon_activated(QSystemTrayIcon::ActivationReason)));
+    connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this,
+            SLOT(showContextMenu(QPoint)));
+    connect(m_systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,
+            SLOT(on_trayIcon_activated(QSystemTrayIcon::ActivationReason)));
     connect(m_trayClickTimer, SIGNAL(timeout()), this, SLOT(on_trayClickTimer_timeout()));
 }
 
-NPlaybackEngineInterface* NPlayer::playbackEngine()
+NPlaybackEngineInterface *NPlayer::playbackEngine()
 {
     return m_playbackEngine;
 }
@@ -491,8 +558,9 @@ bool NPlayer::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::FileOpen) {
         QFileOpenEvent *fileEvent = static_cast<QFileOpenEvent *>(event);
 
-        if (!fileEvent->file().isEmpty())
-        m_playlistWidget->playFiles(QStringList() << fileEvent->file());
+        if (!fileEvent->file().isEmpty()) {
+            m_playlistWidget->playFiles(QStringList() << fileEvent->file());
+        }
 
         return false;
     }
@@ -512,10 +580,11 @@ void NPlayer::readMessage(const QString &str)
     QStringList files;
     QStringList options;
     foreach (QString arg, argList) {
-        if (arg.startsWith("--"))
+        if (arg.startsWith("--")) {
             options << arg;
-        else if (QFile(arg).exists())
+        } else if (QFile(arg).exists()) {
             files << arg;
+        }
     }
 
     foreach (QString arg, options) {
@@ -538,7 +607,8 @@ void NPlayer::readMessage(const QString &str)
         if (NSettings::instance()->value("EnqueueFiles").toBool()) {
             int lastRow = m_playlistWidget->count();
             m_playlistWidget->addFiles(files);
-            if (m_playbackEngine->state() == N::PlaybackStopped || NSettings::instance()->value("PlayEnqueued").toBool()) {
+            if (m_playbackEngine->state() == N::PlaybackStopped ||
+                NSettings::instance()->value("PlayEnqueued").toBool()) {
                 m_playlistWidget->playRow(lastRow);
                 m_playbackEngine->setPosition(0); // overrides setPosition() in loadDefaultPlaylist()
             }
@@ -553,22 +623,26 @@ void NPlayer::readMessage(const QString &str)
 
 void NPlayer::loadDefaultPlaylist()
 {
-    if (!QFileInfo(NCore::defaultPlaylistPath()).exists() || !m_playlistWidget->setPlaylist(NCore::defaultPlaylistPath()))
+    if (!QFileInfo(NCore::defaultPlaylistPath()).exists() ||
+        !m_playlistWidget->setPlaylist(NCore::defaultPlaylistPath())) {
         return;
+    }
 
     QStringList playlistRowValues = m_settings->value("PlaylistRow").toStringList();
     if (!playlistRowValues.isEmpty()) {
         int row = playlistRowValues.at(0).toInt();
         qreal pos = playlistRowValues.at(1).toFloat();
 
-        if (row > m_playlistWidget->count() - 1)
+        if (row > m_playlistWidget->count() - 1) {
             return;
+        }
 
         if (pos > 0 && pos < 1) {
             m_playlistWidget->playRow(row);
             m_playbackEngine->setPosition(pos); // postponed till file duration is available
-            if (m_settings->value("StartPaused").toBool())
+            if (m_settings->value("StartPaused").toBool()) {
                 m_playbackEngine->pause();
+            }
         } else {
             m_playlistWidget->setCurrentRow(row);
         }
@@ -594,7 +668,8 @@ void NPlayer::saveDefaultPlaylist()
 
     int row = m_playlistWidget->currentRow();
     qreal pos = m_playbackEngine->position();
-    m_settings->setValue("PlaylistRow", QStringList() << QString::number(row) << QString::number(pos));
+    m_settings->setValue("PlaylistRow", QStringList()
+                                            << QString::number(row) << QString::number(pos));
 }
 
 void NPlayer::loadSettings()
@@ -602,13 +677,15 @@ void NPlayer::loadSettings()
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
 
 #ifndef _N_NO_UPDATE_CHECK_
-    if (m_settings->value("AutoCheckUpdates").toBool())
+    if (m_settings->value("AutoCheckUpdates").toBool()) {
         downloadVersion();
+    }
 #endif
 
     m_showCoverAction->setChecked(m_settings->value("ShowCoverArt").toBool());
-    if (m_coverWidget)
+    if (m_coverWidget) {
         m_coverWidget->setEnabled(m_settings->value("ShowCoverArt").toBool());
+    }
 
     m_alwaysOnTopAction->setChecked(m_settings->value("AlwaysOnTop").toBool());
     m_playingOnTopAction->setChecked(m_settings->value("WhilePlayingOnTop").toBool());
@@ -616,16 +693,17 @@ void NPlayer::loadSettings()
     m_nextFileEnableAction->setChecked(m_settings->value("LoadNext").toBool());
 
     QDir::SortFlag flag = (QDir::SortFlag)m_settings->value("LoadNextSort").toInt();
-    if (flag == (QDir::Name))
+    if (flag == (QDir::Name)) {
         m_nextFileByNameAscdAction->setChecked(true);
-    else if (flag == (QDir::Name | QDir::Reversed))
+    } else if (flag == (QDir::Name | QDir::Reversed)) {
         m_nextFileByNameDescAction->setChecked(true);
-    else if (flag == (QDir::Time | QDir::Reversed))
+    } else if (flag == (QDir::Time | QDir::Reversed)) {
         m_nextFileByDateAscd->setChecked(true);
-    else if (flag == (QDir::Time))
+    } else if (flag == (QDir::Time)) {
         m_nextFileByDateDesc->setChecked(true);
-    else
+    } else {
         m_nextFileByNameAscdAction->setChecked(true);
+    }
 
     m_playbackEngine->setVolume(m_settings->value("Volume").toFloat());
 }
@@ -643,11 +721,11 @@ void NPlayer::on_preferencesDialog_settingsChanged()
     m_playlistWidget->processVisibleItems();
 }
 
-
 #ifndef _N_NO_UPDATE_CHECK_
 void NPlayer::downloadVersion()
 {
-    m_versionDownloader->get(QNetworkRequest(QUrl("https://static." + QCoreApplication::organizationDomain() + "/release/version")));
+    m_versionDownloader->get(QNetworkRequest(
+        QUrl("https://static." + QCoreApplication::organizationDomain() + "/release/version")));
 }
 
 void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
@@ -655,16 +733,18 @@ void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
     if (!reply->error()) {
         QString versionOnline = reply->readAll().simplified();
 
-        if (m_preferencesDialog->isVisible())
+        if (m_preferencesDialog->isVisible()) {
             m_preferencesDialog->setVersionLabel(tr("Latest: ") + versionOnline);
+        }
 
         if (QCoreApplication::applicationVersion() < versionOnline) {
-            QMessageBox::information(
-                         m_mainWindow,
-                         QCoreApplication::applicationName() + tr(" Update"),
-                         tr("A newer version is available: ") + versionOnline + "<br><br>" +
-                         "<a href='https://" + QCoreApplication::organizationDomain() + "/download'>https://" +
-                         QCoreApplication::organizationDomain() + "/download</a>");
+            QMessageBox::information(m_mainWindow,
+                                     QCoreApplication::applicationName() + tr(" Update"),
+                                     tr("A newer version is available: ") + versionOnline +
+                                         "<br><br>" + "<a href='https://" +
+                                         QCoreApplication::organizationDomain() +
+                                         "/download'>https://" +
+                                         QCoreApplication::organizationDomain() + "/download</a>");
         }
     }
 
@@ -682,15 +762,16 @@ void NPlayer::on_mainWindow_closed()
             quit();
         }
 #else
-    quit();
+        quit();
 #endif
     }
 }
 
 void NPlayer::on_trayClickTimer_timeout()
 {
-    if (!m_trayIconDoubleClickCheck)
+    if (!m_trayIconDoubleClickCheck) {
         trayIconCountClicks(1);
+    }
 }
 
 void NPlayer::on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason)
@@ -728,8 +809,9 @@ void NPlayer::trayIconCountClicks(int clicks)
     } else if (clicks == 2) {
         toggleWindowVisibility();
     }
-    if (!m_settings->value("TrayIcon").toBool())
+    if (!m_settings->value("TrayIcon").toBool()) {
         m_systemTray->setVisible(!m_mainWindow->isVisible());
+    }
 }
 
 void NPlayer::quit()
@@ -743,17 +825,21 @@ void NPlayer::quit()
 void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
 {
     QString title;
-    QString titleDefault = QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion();
+    QString titleDefault = QCoreApplication::applicationName() + " " +
+                           QCoreApplication::applicationVersion();
     if (QFile(file).exists()) {
-        NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-        if (!tagReader)
+        NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(
+            NPluginLoader::getPlugin(N::TagReader));
+        if (!tagReader) {
             return;
+        }
         QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
         QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
-        if (!format.isEmpty() && tagReader->isValid())
+        if (!format.isEmpty() && tagReader->isValid()) {
             title = tagReader->toString(format, encoding);
-        else
+        } else {
             title = titleDefault;
+        }
     } else {
         title = titleDefault;
     }
@@ -768,8 +854,9 @@ void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
     bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
     bool oldOnTop = m_mainWindow->isOnTop();
     bool newOnTop = (whilePlaying && state == N::PlaybackPlaying);
-    if (!alwaysOnTop && (oldOnTop != newOnTop))
+    if (!alwaysOnTop && (oldOnTop != newOnTop)) {
         m_mainWindow->setOnTop(newOnTop);
+    }
 #ifdef Q_OS_WIN
     if (NW7TaskBar::instance()->isEnabled()) {
         if (state == N::PlaybackPlaying) {
@@ -791,8 +878,9 @@ void NPlayer::on_alwaysOnTopAction_toggled(bool checked)
     m_settings->setValue("AlwaysOnTop", checked);
 
     bool whilePlaying = m_settings->value("WhilePlayingOnTop").toBool();
-    if (!whilePlaying || m_playbackEngine->state() != N::PlaybackPlaying)
+    if (!whilePlaying || m_playbackEngine->state() != N::PlaybackPlaying) {
         m_mainWindow->setOnTop(checked);
+    }
 }
 
 void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)
@@ -800,25 +888,27 @@ void NPlayer::on_whilePlayingOnTopAction_toggled(bool checked)
     m_settings->setValue("WhilePlayingOnTop", checked);
 
     bool alwaysOnTop = m_settings->value("AlwaysOnTop").toBool();
-    if (!alwaysOnTop)
+    if (!alwaysOnTop) {
         m_mainWindow->setOnTop(checked && m_playbackEngine->state() == N::PlaybackPlaying);
+    }
 }
 
 void NPlayer::on_playlistAction_triggered()
 {
     NAction *action = reinterpret_cast<NAction *>(QObject::sender());
-    if (action == m_loopPlaylistAction)
+    if (action == m_loopPlaylistAction) {
         m_settings->setValue("LoopPlaylist", action->isChecked());
-    else if (action == m_nextFileEnableAction)
+    } else if (action == m_nextFileEnableAction) {
         m_settings->setValue("LoadNext", action->isChecked());
-    else if (action == m_nextFileByNameAscdAction)
+    } else if (action == m_nextFileByNameAscdAction) {
         m_settings->setValue("LoadNextSort", (int)QDir::Name);
-    else if (action == m_nextFileByNameDescAction)
+    } else if (action == m_nextFileByNameDescAction) {
         m_settings->setValue("LoadNextSort", (int)(QDir::Name | QDir::Reversed));
-    else if (action == m_nextFileByDateAscd)
+    } else if (action == m_nextFileByDateAscd) {
         m_settings->setValue("LoadNextSort", (int)QDir::Time | QDir::Reversed);
-    else if (action == m_nextFileByDateDesc)
+    } else if (action == m_nextFileByDateDesc) {
         m_settings->setValue("LoadNextSort", (int)(QDir::Time));
+    }
 }
 
 void NPlayer::on_jumpAction_triggered()
@@ -826,23 +916,26 @@ void NPlayer::on_jumpAction_triggered()
     NAction *action = reinterpret_cast<NAction *>(QObject::sender());
     QRegExp regex("(\\w+\\d)(\\w+)Action");
     regex.indexIn(action->objectName());
-    m_playbackEngine->jump((regex.cap(2) == "Forward" ? 1 : -1) * NSettings::instance()->value(regex.cap(1)).toDouble() * 1000);
+    m_playbackEngine->jump((regex.cap(2) == "Forward" ? 1 : -1) *
+                           NSettings::instance()->value(regex.cap(1)).toDouble() * 1000);
 }
 
 void NPlayer::on_showCoverAction_toggled(bool checked)
 {
     m_settings->setValue("ShowCoverArt", checked);
-    if (m_coverWidget)
+    if (m_coverWidget) {
         m_coverWidget->setEnabled(checked);
+    }
 }
 
 void NPlayer::on_playButton_clicked()
 {
     if (!m_playlistWidget->hasCurrent()) {
-        if (m_playlistWidget->count() > 0)
+        if (m_playlistWidget->count() > 0) {
             m_playlistWidget->playRow(0);
-        else
+        } else {
             showOpenFileDialog();
+        }
     } else {
         m_playbackEngine->play(); // toggle play/pause
     }
@@ -855,30 +948,32 @@ void NPlayer::on_playbackEngine_failed()
 
 void NPlayer::showAboutMessageBox()
 {
-    if (!m_aboutDialog)
+    if (!m_aboutDialog) {
         m_aboutDialog = new NAboutDialog(m_mainWindow);
+    }
     m_aboutDialog->show();
 }
 
 void NPlayer::showOpenFileDialog()
 {
     QString filters = NSettings::instance()->value("FileFilters").toString();
-    QStringList files = QFileDialog::getOpenFileNames(
-                        m_mainWindow, tr("Add Files"),
-                        m_settings->value("LastDirectory").toString(),
-                        tr("All supported") + " (" + filters + ");;" +
-                        tr("All files") + " (*)");
+    QStringList files = QFileDialog::getOpenFileNames(m_mainWindow, tr("Add Files"),
+                                                      m_settings->value("LastDirectory").toString(),
+                                                      tr("All supported") + " (" + filters + ");;" +
+                                                          tr("All files") + " (*)");
 
-    if (files.isEmpty())
+    if (files.isEmpty()) {
         return;
+    }
 
     QString lastDir = QFileInfo(files.first()).path();
     m_settings->setValue("LastDirectory", lastDir);
 
     bool isEmpty = (m_playlistWidget->count() == 0);
     m_playlistWidget->addFiles(files);
-    if (isEmpty)
+    if (isEmpty) {
         m_playlistWidget->playRow(0);
+    }
 }
 
 void NPlayer::on_mainWindow_scrolled(int delta)
@@ -889,46 +984,50 @@ void NPlayer::on_mainWindow_scrolled(int delta)
 
 void NPlayer::showOpenDirDialog()
 {
-    QString dir = QFileDialog::getExistingDirectory(
-                  m_mainWindow, tr("Add Directory"),
-                  m_settings->value("LastDirectory").toString(),
-                  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    QString dir = QFileDialog::getExistingDirectory(m_mainWindow, tr("Add Directory"),
+                                                    m_settings->value("LastDirectory").toString(),
+                                                    QFileDialog::ShowDirsOnly |
+                                                        QFileDialog::DontResolveSymlinks);
 
-    if (dir.isEmpty())
+    if (dir.isEmpty()) {
         return;
+    }
 
     QString lastDir = QFileInfo(dir).path();
     m_settings->setValue("LastDirectory", lastDir);
 
     bool isEmpty = (m_playlistWidget->count() == 0);
     m_playlistWidget->addItems(NCore::dirListRecursive(dir));
-    if (isEmpty)
+    if (isEmpty) {
         m_playlistWidget->playRow(0);
+    }
 }
 
 void NPlayer::showSavePlaylistDialog()
 {
     QString selectedFilter;
-    QString file = QFileDialog::getSaveFileName(
-                   m_mainWindow, tr("Save Playlist"),
-                   m_settings->value("LastDirectory").toString(),
-                   tr("M3U Playlist") + " (*.m3u);;" +
-                   tr("Extended M3U Playlist") + " (*.m3u)",
-                   &selectedFilter);
+    QString file = QFileDialog::getSaveFileName(m_mainWindow, tr("Save Playlist"),
+                                                m_settings->value("LastDirectory").toString(),
+                                                tr("M3U Playlist") + " (*.m3u);;" +
+                                                    tr("Extended M3U Playlist") + " (*.m3u)",
+                                                &selectedFilter);
 
-    if (file.isEmpty())
+    if (file.isEmpty()) {
         return;
+    }
 
     QString lastDir = QFileInfo(file).path();
     m_settings->setValue("LastDirectory", lastDir);
 
-    if (!file.endsWith(".m3u"))
+    if (!file.endsWith(".m3u")) {
         file.append(".m3u");
+    }
 
-    if (selectedFilter.startsWith("Extended"))
+    if (selectedFilter.startsWith("Extended")) {
         writePlaylist(file, N::ExtM3u);
-    else
+    } else {
         writePlaylist(file, N::MinimalM3u);
+    }
 }
 
 void NPlayer::showContextMenu(QPoint pos)
@@ -936,4 +1035,3 @@ void NPlayer::showContextMenu(QPoint pos)
     // (1, 1) offset to avoid accidental item activation
     m_contextMenu->exec(m_mainWindow->mapToGlobal(pos) + QPoint(1, 1));
 }
-

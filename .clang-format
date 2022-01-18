@@ -1,0 +1,29 @@
+---
+IndentWidth: 4
+AccessModifierOffset: -4
+ReflowComments: false
+ColumnLimit: 100
+UseTab: Never
+
+AlignAfterOpenBracket: Align
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: false
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  IndentBraces: false
+
+AllowShortFunctionsOnASingleLine: Inline
+PointerAlignment: Right
+KeepEmptyLinesAtTheStartOfBlocks: true
+SpaceInEmptyBlock: false
+NamespaceIndentation: All
+IndentCaseLabels: true
+
+PenaltyBreakAssignment: 100
+PenaltyBreakBeforeFirstCallParameter: 200
+PenaltyExcessCharacter: 50

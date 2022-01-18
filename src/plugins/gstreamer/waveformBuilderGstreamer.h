@@ -16,12 +16,12 @@
 #ifndef N_WAVEFORM_BUILDER_GSTREAMER_H
 #define N_WAVEFORM_BUILDER_GSTREAMER_H
 
+#include <gst/gst.h>
+
+#include "abstractWaveformBuilder.h"
 #include "global.h"
 #include "plugin.h"
 #include "waveformBuilderInterface.h"
-#include "abstractWaveformBuilder.h"
-
-#include <gst/gst.h>
 
 class QTimer;
 
@@ -51,11 +51,13 @@ public:
 
     void start(const QString &file);
     void stop();
-    void positionAndIndex(float &pos, int &index) { NAbstractWaveformBuilder::positionAndIndex(pos, index); }
-    NWaveformPeaks* peaks() { return NAbstractWaveformBuilder::peaks(); }
+    void positionAndIndex(float &pos, int &index)
+    {
+        NAbstractWaveformBuilder::positionAndIndex(pos, index);
+    }
+    NWaveformPeaks *peaks() { return NAbstractWaveformBuilder::peaks(); }
 
     void handleBuffer(gint16 *pcmBuffer, int nChannels, int nSamples);
 };
 
 #endif
-

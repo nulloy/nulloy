@@ -14,17 +14,18 @@
 *********************************************************************/
 
 #include "waveformSlider.h"
-#include "playlistDataItem.h"
-#include "waveformBuilderInterface.h"
-#include "pluginLoader.h"
-#include "settings.h"
-#include "common.h"
 
-#include <QMouseEvent>
 #include <QFile>
-#include <QStylePainter>
+#include <QMouseEvent>
 #include <QPainterPath>
 #include <QStyleOptionFocusRect>
+#include <QStylePainter>
+
+#include "common.h"
+#include "playlistDataItem.h"
+#include "pluginLoader.h"
+#include "settings.h"
+#include "waveformBuilderInterface.h"
 
 #define IDLE_INTERVAL 60
 #define FAST_INTERVAL 10
@@ -50,7 +51,8 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
     setMinimum(0);
     setMaximum(10000);
 
-    m_waveBuilder = dynamic_cast<NWaveformBuilderInterface *>(NPluginLoader::getPlugin(N::WaveformBuilder));
+    m_waveBuilder = dynamic_cast<NWaveformBuilderInterface *>(
+        NPluginLoader::getPlugin(N::WaveformBuilder));
     Q_ASSERT(m_waveBuilder);
 
     m_timer = new QTimer(this);
@@ -97,21 +99,23 @@ void NWaveformSlider::resizeEvent(QResizeEvent *event)
 
 void NWaveformSlider::checkForUpdate()
 {
-    if (!m_waveBuilder)
+    if (!m_waveBuilder) {
         return;
+    }
 
     float builderPos;
     int builderIndex;
     m_waveBuilder->positionAndIndex(builderPos, builderIndex);
 
-    if (m_oldSize != size() || m_oldBuilderIndex != builderIndex)
+    if (m_oldSize != size() || m_oldBuilderIndex != builderIndex) {
         m_needsUpdate = true;
+    }
 
-    if ((builderPos != 0.0 && builderPos != 1.0) && m_timer->interval() != FAST_INTERVAL)
+    if ((builderPos != 0.0 && builderPos != 1.0) && m_timer->interval() != FAST_INTERVAL) {
         m_timer->setInterval(FAST_INTERVAL);
-    else
-    if ((builderPos == 0.0 || builderPos == 1.0) && m_timer->interval() != IDLE_INTERVAL)
+    } else if ((builderPos == 0.0 || builderPos == 1.0) && m_timer->interval() != IDLE_INTERVAL) {
         m_timer->setInterval(IDLE_INTERVAL);
+    }
 
     if (m_needsUpdate) {
         QPainter painter;
@@ -119,12 +123,12 @@ void NWaveformSlider::checkForUpdate()
         QImage image(width() * dpr, height() * dpr, QImage::Format_ARGB32_Premultiplied);
         image.setDevicePixelRatio(dpr);
         QImage waveImage;
-        waveImage = m_backgroundImage = m_progressPlayingImage = m_progressPausedImage = m_remainingPlayingImage = m_remainingPausedImage = image;
+        waveImage = m_backgroundImage = m_progressPlayingImage = m_progressPausedImage =
+            m_remainingPlayingImage = m_remainingPausedImage = image;
 
         m_oldBuilderPos = builderPos;
         m_oldBuilderIndex = builderIndex;
         m_oldSize = size();
-
 
         // waveform >>
         waveImage.fill(0);
@@ -139,8 +143,10 @@ void NWaveformSlider::checkForUpdate()
         QPainterPath pathNeg;
         NWaveformPeaks *peaks = m_waveBuilder->peaks();
         for (int i = 0; i < m_oldBuilderIndex; ++i) {
-            pathPos.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(), (1 + peaks->positive(i)) * (height() / 2.0));
-            pathNeg.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(), (1 + peaks->negative(i)) * (height() / 2.0));
+            pathPos.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(),
+                           (1 + peaks->positive(i)) * (height() / 2.0));
+            pathNeg.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(),
+                           (1 + peaks->negative(i)) * (height() / 2.0));
         }
         QPainterPath fullPath(pathNeg);
         fullPath.connectPath(pathPos.toReversed());
@@ -149,7 +155,6 @@ void NWaveformSlider::checkForUpdate()
         painter.drawPath(fullPath);
         painter.end();
         // << waveform
-
 
         // main background >>
         painter.begin(&m_backgroundImage);
@@ -161,10 +166,15 @@ void NWaveformSlider::checkForUpdate()
         painter.end();
         // << main background
 
-
-        QList<QImage *> images; images << &m_progressPlayingImage << &m_progressPausedImage << &m_remainingPlayingImage << &m_remainingPausedImage;
-        QList<QPainter::CompositionMode> modes; modes << m_playingComposition << m_pausedComposition << m_playingComposition << m_pausedComposition;
-        QList<QBrush> brushes; brushes << m_progressPlayingBackground << m_progressPausedBackground << m_remainingPlayingBackground << m_remainingPausedBackground;
+        QList<QImage *> images;
+        images << &m_progressPlayingImage << &m_progressPausedImage << &m_remainingPlayingImage
+               << &m_remainingPausedImage;
+        QList<QPainter::CompositionMode> modes;
+        modes << m_playingComposition << m_pausedComposition << m_playingComposition
+              << m_pausedComposition;
+        QList<QBrush> brushes;
+        brushes << m_progressPlayingBackground << m_progressPausedBackground
+                << m_remainingPlayingBackground << m_remainingPausedBackground;
         for (int i = 0; i < images.size(); ++i) {
             painter.begin(images[i]);
             images[i]->fill(0);
@@ -195,10 +205,12 @@ void NWaveformSlider::paintEvent(QPaintEvent *)
         transform.scale(dpr, dpr);
 
         QRectF left = QRectF(0, 0, x, height());
-        painter.drawImage(left, m_pausedState ? m_progressPausedImage : m_progressPlayingImage, transform.mapRect(left));
+        painter.drawImage(left, m_pausedState ? m_progressPausedImage : m_progressPlayingImage,
+                          transform.mapRect(left));
 
         QRectF right = QRectF(x, 0, width() - x, height());
-        painter.drawImage(right, m_pausedState ? m_remainingPausedImage : m_remainingPlayingImage, transform.mapRect(right));
+        painter.drawImage(right, m_pausedState ? m_remainingPausedImage : m_remainingPlayingImage,
+                          transform.mapRect(right));
 
         QColor grooveColor = m_pausedState ? m_groovePausedColor : m_groovePlayingColor;
         if (grooveColor != Qt::transparent) {
@@ -216,14 +228,16 @@ void NWaveformSlider::paintEvent(QPaintEvent *)
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setPen(m_fileDropBorderColor);
         painter.setBrush(m_fileDropBackground);
-        painter.drawRoundedRect(QRectF(rect()).adjusted(0.5, 0.5, -0.5, -0.5), m_radius - 1, m_radius - 1);
+        painter.drawRoundedRect(QRectF(rect()).adjusted(0.5, 0.5, -0.5, -0.5), m_radius - 1,
+                                m_radius - 1);
     }
 }
 
 void NWaveformSlider::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::RightButton)
+    if (event->button() == Qt::RightButton) {
         return;
+    }
 
     qreal value = (qreal)event->x() / width();
 
@@ -238,8 +252,9 @@ void NWaveformSlider::wheelEvent(QWheelEvent *event)
 
 void NWaveformSlider::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::StyleChange)
+    if (event->type() == QEvent::StyleChange) {
         m_needsUpdate = true;
+    }
     QWidget::changeEvent(event);
 }
 
@@ -369,7 +384,8 @@ QString NWaveformSlider::playingComposition() const
 
 void NWaveformSlider::setPlayingComposition(const QString &mode)
 {
-    m_playingComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toLatin1());
+    m_playingComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode,
+                                                                  mode.toLatin1());
 }
 
 QString NWaveformSlider::pausedComposition() const
@@ -379,7 +395,8 @@ QString NWaveformSlider::pausedComposition() const
 
 void NWaveformSlider::setPausedComposition(const QString &mode)
 {
-    m_pausedComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode, mode.toLatin1());
+    m_pausedComposition = (QPainter::CompositionMode)STR_TO_ENUM(N, CompositionMode,
+                                                                 mode.toLatin1());
 }
 
 QColor NWaveformSlider::fileDropBorderColor() const
@@ -402,7 +419,6 @@ void NWaveformSlider::setFileDropBackground(QBrush brush)
     m_fileDropBackground = brush;
 }
 // << STYLESHEET PROPERTIES
-
 
 // DRAG & DROP >>
 void NWaveformSlider::dragEnterEvent(QDragEnterEvent *event)

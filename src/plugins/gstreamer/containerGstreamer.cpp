@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "containerGstreamer.h"
+
 #include "playbackEngineGstreamer.h"
 #include "waveformBuilderGstreamer.h"
 #ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
@@ -44,4 +45,3 @@ QList<NPlugin *> NContainerGstreamer::plugins() const
 {
     return m_plugins;
 }
-

@@ -16,10 +16,11 @@
 #ifndef N_PLAYLIST_WIDGET_H
 #define N_PLAYLIST_WIDGET_H
 
-#include "global.h"
-#include <QListWidget>
 #include <QList>
+#include <QListWidget>
 #include <QPointer>
+
+#include "global.h"
 
 class NPlaylistDataItem;
 class NPlaylistWidgetItem;
@@ -78,7 +79,7 @@ public:
     NPlaylistWidget(QWidget *parent = 0);
     ~NPlaylistWidget();
 
-    NPlaylistWidgetItem* item(int row, bool loop = false) const;
+    NPlaylistWidgetItem *item(int row, bool loop = false) const;
 
     int currentRow() const;
     void setCurrentRow(int row);
@@ -116,11 +117,19 @@ signals:
     void shuffleModeChanged(bool enable);
     void repeatModeChanged(bool enable);
 
-// DRAG & DROP >>
+    // DRAG & DROP >>
 public:
-    enum DragStart { DragStartInside, DragStartOutside };
+    enum DragStart
+    {
+        DragStartInside,
+        DragStartOutside
+    };
     Q_ENUM(DragStart)
-    enum DropEnd { DropEndInside, DropEndOutside };
+    enum DropEnd
+    {
+        DropEndInside,
+        DropEndOutside
+    };
     Q_ENUM(DropEnd)
 private:
     DragStart m_dragStart;
@@ -129,17 +138,18 @@ private:
     bool m_fileDrop;
     QList<QUrl> m_mimeDataUrls;
     QStringList mimeTypes() const;
-    QMimeData* mimeData(const QList<QListWidgetItem *> items) const;
+    QMimeData *mimeData(const QList<QListWidgetItem *> items) const;
     bool dropMimeData(int index, const QMimeData *data, Qt::DropAction action);
+
 protected:
     void dropEvent(QDropEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
     void dragLeaveEvent(QDragLeaveEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
-// << DRAG & DROP
+    // << DRAG & DROP
 
-// STYLESHEET PROPERTIES >>
+    // STYLESHEET PROPERTIES >>
 private:
     QColor m_failedTextColor;
     QColor m_currentTextColor;
@@ -162,8 +172,7 @@ public:
 
     int fileDropRadius() const;
     void setFileDropRadius(int radius);
-// << STYLESHEET PROPERTIES
+    // << STYLESHEET PROPERTIES
 };
 
 #endif
-

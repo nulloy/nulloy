@@ -19,27 +19,29 @@
 #include "settings.h"
 
 #ifndef _N_NO_SKINS_
-#include "skinFileSystem.h"
 #include <QUiLoader>
+
+#include "skinFileSystem.h"
 #endif
 
 #ifdef Q_OS_WIN
-#include "w7TaskBar.h"
-#include <windows.h>
 #include <dwmapi.h>
+#include <windows.h>
+
+#include "w7TaskBar.h"
 // These window messages are not defined in dwmapi.h
 #ifndef WM_DWMCOMPOSITIONCHANGED
 #define WM_DWMCOMPOSITIONCHANGED 0x031E
 #endif
 #endif
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QEvent>
 #include <QIcon>
 #include <QLayout>
-#include <QWindowStateChangeEvent>
 #include <QTime>
-#include <QDesktopWidget>
-#include <QApplication>
+#include <QWindowStateChangeEvent>
 
 #define RESIZE_BORDER 5
 
@@ -112,10 +114,11 @@ void NMainWindow::loadSettings()
 
     QSize _size;
     QStringList sizeList = NSettings::instance()->value("Size").toStringList();
-    if (!sizeList.isEmpty())
+    if (!sizeList.isEmpty()) {
         _size = QSize(sizeList.at(0).toInt(), sizeList.at(1).toInt());
-    else
+    } else {
         _size = QSize(430, 350);
+    }
     resize(_size);
 
     if (NSettings::instance()->value("Maximized").toBool()) {
@@ -136,8 +139,10 @@ void NMainWindow::saveSettings()
         _size = m_unmaximizedSize;
     }
 
-    NSettings::instance()->setValue("Position", QStringList() << QString::number(_pos.x()) << QString::number(_pos.y()));
-    NSettings::instance()->setValue("Size", QStringList() << QString::number(_size.width()) << QString::number(_size.height()));
+    NSettings::instance()->setValue("Position", QStringList() << QString::number(_pos.x())
+                                                              << QString::number(_pos.y()));
+    NSettings::instance()->setValue("Size", QStringList() << QString::number(_size.width())
+                                                          << QString::number(_size.height()));
 }
 
 void NMainWindow::show()
@@ -240,40 +245,23 @@ Qt::WindowFrameSection NMainWindow::getSection(const QPoint &pos)
     int top = r.top();
     int bottom = r.bottom();
 
-    if (x >= left && x < left + RESIZE_BORDER &&
-        y >= top && y < top + RESIZE_BORDER)
-    {
+    if ((x >= left && x < left + RESIZE_BORDER) && (y >= top && y < top + RESIZE_BORDER)) {
         return Qt::TopLeftSection;
-    } else
-    if (x < right && x >= right - RESIZE_BORDER &&
-        y >= top && y < top + RESIZE_BORDER)
-    {
+    } else if ((x < right && x >= right - RESIZE_BORDER) && (y >= top && y < top + RESIZE_BORDER)) {
         return Qt::TopRightSection;
-    } else
-    if (x < right && x >= right - RESIZE_BORDER &&
-        y < bottom && y >= bottom - RESIZE_BORDER)
-    {
+    } else if ((x < right && x >= right - RESIZE_BORDER) &&
+               (y < bottom && y >= bottom - RESIZE_BORDER)) {
         return Qt::BottomRightSection;
-    } else
-    if (x >= left && x < left + RESIZE_BORDER &&
-        y < bottom && y >= bottom - RESIZE_BORDER)
-    {
+    } else if ((x >= left && x < left + RESIZE_BORDER) &&
+               (y < bottom && y >= bottom - RESIZE_BORDER)) {
         return Qt::BottomLeftSection;
-    } else
-    if (y >= top && y < top + RESIZE_BORDER)
-    {
+    } else if (y >= top && y < top + RESIZE_BORDER) {
         return Qt::TopSection;
-    } else
-    if (x < right && x >= right - RESIZE_BORDER)
-    {
+    } else if (x < right && x >= right - RESIZE_BORDER) {
         return Qt::RightSection;
-    } else
-    if (y < bottom && y >= bottom - RESIZE_BORDER)
-    {
+    } else if (y < bottom && y >= bottom - RESIZE_BORDER) {
         return Qt::BottomSection;
-    } else
-    if (x >= left && x < left + RESIZE_BORDER)
-    {
+    } else if (x >= left && x < left + RESIZE_BORDER) {
         return Qt::LeftSection;
     } else {
         return Qt::NoSection;
@@ -386,54 +374,60 @@ void NMainWindow::mouseMoveEvent(QMouseEvent *event)
             }
             QSize min = QLayout::closestAcceptableSize(this, g.size());
             QRect desk = QApplication::desktop()->availableGeometry(this);
-            if (min.width() > g.width() || min.height() > g.height() ||
-                desk.left() > g.left() || desk.right() < g.right() ||
-                desk.top() > g.top() || desk.bottom() < g.bottom())
-            {
+            if (min.width() > g.width() || min.height() > g.height() || desk.left() > g.left() ||
+                desk.right() < g.right() || desk.top() > g.top() || desk.bottom() < g.bottom()) {
                 switch (m_resizeSection) {
                     case Qt::TopLeftSection:
                     case Qt::TopSection:
                     case Qt::LeftSection:
-                        if (min.width() > g.width())
+                        if (min.width() > g.width()) {
                             g.setLeft(origR.left());
-                        else if (desk.left() > g.left())
+                        } else if (desk.left() > g.left()) {
                             g.setLeft(desk.left());
-                        if (min.height() > g.height())
+                        }
+                        if (min.height() > g.height()) {
                             g.setTop(origR.top());
-                        else if (desk.top() > g.top())
+                        } else if (desk.top() > g.top()) {
                             g.setTop(desk.top());
+                        }
                         break;
                     case Qt::TopRightSection:
-                        if (min.width() > g.width())
+                        if (min.width() > g.width()) {
                             g.setRight(origR.right());
-                        else if (desk.right() < g.right())
+                        } else if (desk.right() < g.right()) {
                             g.setRight(desk.right());
-                        if (min.height() > g.height())
+                        }
+                        if (min.height() > g.height()) {
                             g.setTop(origR.top());
-                        else if (desk.top() > g.top())
+                        } else if (desk.top() > g.top()) {
                             g.setTop(desk.top());
+                        }
                         break;
                     case Qt::BottomRightSection:
                     case Qt::BottomSection:
                     case Qt::RightSection:
-                        if (min.width() > g.width())
+                        if (min.width() > g.width()) {
                             g.setRight(origR.right());
-                        else if (desk.right() < g.right())
+                        } else if (desk.right() < g.right()) {
                             g.setRight(desk.right());
-                        if (min.height() > g.height())
+                        }
+                        if (min.height() > g.height()) {
                             g.setBottom(origR.bottom());
-                        else if (desk.bottom() < g.bottom())
+                        } else if (desk.bottom() < g.bottom()) {
                             g.setBottom(desk.bottom());
+                        }
                         break;
                     case Qt::BottomLeftSection:
-                        if (min.width() > g.width())
+                        if (min.width() > g.width()) {
                             g.setLeft(origR.left());
-                        else if (desk.left() > g.left())
+                        } else if (desk.left() > g.left()) {
                             g.setLeft(desk.left());
-                        if (min.height() > g.height())
+                        }
+                        if (min.height() > g.height()) {
                             g.setBottom(origR.bottom());
-                        else if (desk.bottom() < g.bottom())
+                        } else if (desk.bottom() < g.bottom()) {
                             g.setBottom(desk.bottom());
+                        }
                         break;
                     default:
                         break;
@@ -457,8 +451,9 @@ void NMainWindow::wheelEvent(QWheelEvent *event)
 {
     QDialog::wheelEvent(event);
 
-    if (event->orientation() == Qt::Vertical)
+    if (event->orientation() == Qt::Vertical) {
         emit scrolled(event->delta());
+    }
 }
 
 void NMainWindow::resizeEvent(QResizeEvent *event)
@@ -481,7 +476,9 @@ bool _DwmIsCompositionEnabled()
     bool result = false;
     if (library) {
         BOOL enabled = false;
+        // clang-format off
         HRESULT (WINAPI *pFn)(BOOL *enabled) = (HRESULT (WINAPI *)(BOOL *enabled))(GetProcAddress(library, "DwmIsCompositionEnabled"));
+        // clang-format on
         result = SUCCEEDED(pFn(&enabled)) && enabled;
         FreeLibrary(library);
     }
@@ -499,12 +496,15 @@ void NMainWindow::setFramelessShadow(bool enabled)
 void NMainWindow::updateFramelessShadow()
 {
     DWORD version = GetVersion();
-    DWORD major = (DWORD) (LOBYTE(LOWORD(version))); // major = 6 for vista/7/2008
+    DWORD major = (DWORD)(LOBYTE(LOWORD(version))); // major = 6 for vista/7/2008
 
-    if (_DwmIsCompositionEnabled() && m_framelessShadow && major == 6)
-        SetClassLongPtr((HWND)winId(), GCL_STYLE, GetClassLongPtr((HWND)winId(), GCL_STYLE) | CS_DROPSHADOW);
-    else
-        SetClassLongPtr((HWND)winId(), GCL_STYLE, GetClassLongPtr((HWND)winId(), GCL_STYLE) & ~CS_DROPSHADOW);
+    if (_DwmIsCompositionEnabled() && m_framelessShadow && major == 6) {
+        SetClassLongPtr((HWND)winId(), GCL_STYLE,
+                        GetClassLongPtr((HWND)winId(), GCL_STYLE) | CS_DROPSHADOW);
+    } else {
+        SetClassLongPtr((HWND)winId(), GCL_STYLE,
+                        GetClassLongPtr((HWND)winId(), GCL_STYLE) & ~CS_DROPSHADOW);
+    }
 
     hide();
     show();
@@ -512,7 +512,7 @@ void NMainWindow::updateFramelessShadow()
 
 bool NMainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
-    MSG* msg = reinterpret_cast<MSG*>(message);
+    MSG *msg = reinterpret_cast<MSG *>(message);
     if (msg->message == WM_DWMCOMPOSITIONCHANGED) {
         updateFramelessShadow();
         return true;
@@ -537,15 +537,18 @@ void NMainWindow::setOnTop(bool onTop)
 {
 #ifdef Q_OS_WIN
     if (onTop)
-        SetWindowPos((HWND)this->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        SetWindowPos((HWND)this->winId(), HWND_TOPMOST, 0, 0, 0, 0,
+                     SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     else
-        SetWindowPos((HWND)this->winId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        SetWindowPos((HWND)this->winId(), HWND_NOTOPMOST, 0, 0, 0, 0,
+                     SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 #else
     Qt::WindowFlags flags = windowFlags();
-    if (onTop)
+    if (onTop) {
         flags |= Qt::WindowStaysOnTopHint;
-    else
+    } else {
         flags &= ~Qt::WindowStaysOnTopHint;
+    }
     setWindowFlags(flags);
     show();
 #endif
@@ -554,4 +557,3 @@ void NMainWindow::setOnTop(bool onTop)
     NW7TaskBar::instance()->setWindow(this);
 #endif
 }
-

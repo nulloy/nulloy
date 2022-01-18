@@ -15,10 +15,10 @@
 
 #include "coverWidgetPopup.h"
 
-#include <QGraphicsDropShadowEffect>
-#include <QPropertyAnimation>
-#include <QMouseEvent>
 #include <QBoxLayout>
+#include <QGraphicsDropShadowEffect>
+#include <QMouseEvent>
+#include <QPropertyAnimation>
 
 #define MARGIN 50
 
@@ -70,8 +70,9 @@ void NCoverWidgetPopup::mousePressEvent(QMouseEvent *event)
 
 #ifndef Q_OS_MAC // QTBUG-15367
     m_animation->setDirection(QAbstractAnimation::Backward);
-    if (m_animation->state() == QAbstractAnimation::Stopped)
+    if (m_animation->state() == QAbstractAnimation::Stopped) {
         m_animation->start();
+    }
 #else
     hide();
 #endif
@@ -89,8 +90,9 @@ void NCoverWidgetPopup::resize(const QSize &size)
     QSize margin = QSize(MARGIN * 2, MARGIN * 2);
     QSize pixmapMaxSize = size - margin;
     QPixmap pixmap = m_pixmap;
-    if (m_pixmap.height() > pixmapMaxSize.height() || m_pixmap.width() > pixmapMaxSize.width())
+    if (m_pixmap.height() > pixmapMaxSize.height() || m_pixmap.width() > pixmapMaxSize.width()) {
         pixmap = m_pixmap.scaled(pixmapMaxSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
     m_pixmapLabel->setPixmap(pixmap);
     setMinimumSize(size);
     setMaximumSize(size);
@@ -98,22 +100,25 @@ void NCoverWidgetPopup::resize(const QSize &size)
 
 void NCoverWidgetPopup::on_animation_finished()
 {
-    if (m_animation->direction() == QAbstractAnimation::Backward)
+    if (m_animation->direction() == QAbstractAnimation::Backward) {
         hide();
+    }
 }
 
 void NCoverWidgetPopup::show()
 {
     QWidget::show();
     m_animation->setDirection(QAbstractAnimation::Forward);
-    if (m_animation->state() == QAbstractAnimation::Stopped)
+    if (m_animation->state() == QAbstractAnimation::Stopped) {
         m_animation->start();
+    }
 }
 
 bool NCoverWidgetPopup::eventFilter(QObject *, QEvent *event)
 {
-    if (event->type() == QEvent::Resize)
+    if (event->type() == QEvent::Resize) {
         resize(dynamic_cast<QResizeEvent *>(event)->size());
+    }
 
     return false;
 }

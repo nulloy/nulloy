@@ -28,14 +28,8 @@ struct NPlaylistDataItem
     float playbackPosition;
     QString titleFormat;
 
-    NPlaylistDataItem(const QString &file = "") :
-        path(file),
-        duration(-1),
-        failed(false),
-        playbackCount(0),
-        playbackPosition(0.0)
-    {};
+    NPlaylistDataItem(const QString &file = "")
+        : path(file), duration(-1), failed(false), playbackCount(0), playbackPosition(0.0){};
 };
 
 #endif
-

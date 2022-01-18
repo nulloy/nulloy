@@ -16,11 +16,13 @@
 #ifndef N_PLAYBACK_ENGINE_PHONON_H
 #define N_PLAYBACK_ENGINE_PHONON_H
 
-#include "plugin.h"
-#include "playbackEngineInterface.h"
-#include <QTimer>
 #include <phonon/audiooutput.h>
 #include <phonon/mediaobject.h>
+
+#include <QTimer>
+
+#include "playbackEngineInterface.h"
+#include "plugin.h"
 
 class NPlaybackEnginePhonon : public NPlaybackEngineInterface, public NPlugin
 {
@@ -74,4 +76,3 @@ signals:
 };
 
 #endif
-

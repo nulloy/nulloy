@@ -21,8 +21,8 @@
 #include <QTimer>
 #endif
 
-#include <QFile>
 #include <QDebug>
+#include <QFile>
 
 static QMutex _mutex;
 
@@ -53,15 +53,16 @@ void NWaveformBuilderGstreamer::handleBuffer(gint16 *pcmBuffer, int nChannels, i
             const qint16 *ptr = pcmBuffer + i * nChannels + j;
             pcmValue += *ptr;
         }
-        qreal realValue = -((qreal)pcmValue / nChannels) / (1<<15);
+        qreal realValue = -((qreal)pcmValue / nChannels) / (1 << 15);
         m_peaks.append(realValue);
     }
 }
 
 void NWaveformBuilderGstreamer::init()
 {
-    if (m_init)
+    if (m_init) {
         return;
+    }
 
     int argc;
     const char **argv;
@@ -70,8 +71,9 @@ void NWaveformBuilderGstreamer::init()
     gst_init(&argc, (char ***)&argv);
     if (!gst_init_check(&argc, (char ***)&argv, &err)) {
         qCritical() << "WaveformBuilder :: error ::" << QString::fromUtf8(err->message);
-        if (err)
+        if (err) {
             g_error_free(err);
+        }
     }
 
     m_playbin = NULL;
@@ -86,8 +88,9 @@ void NWaveformBuilderGstreamer::init()
 
 NWaveformBuilderGstreamer::~NWaveformBuilderGstreamer()
 {
-    if (!m_init)
+    if (!m_init) {
         return;
+    }
 
     stop();
 }
@@ -97,8 +100,9 @@ void NWaveformBuilderGstreamer::stop()
     m_timer->stop();
 
     if (m_playbin) {
-        if (m_peaks.isCompleted())
+        if (m_peaks.isCompleted()) {
             peaksAppendToCache(m_currentFile);
+        }
 
         gst_element_set_state(m_playbin, GST_STATE_NULL);
         gst_object_unref(m_playbin);
@@ -115,43 +119,51 @@ void NWaveformBuilderGstreamer::start(const QString &file)
 {
     stop();
 
-    if (peaksFindFromCache(file))
+    if (peaksFindFromCache(file)) {
         return;
-    if (!QFileInfo(file).exists())
+    }
+    if (!QFileInfo(file).exists()) {
         return;
+    }
     m_currentFile = file;
 
     m_playbin = gst_parse_launch("uridecodebin name=w_uridecodebin \
                                   ! audioconvert ! audio/x-raw, format=S16LE \
-                                  ! fakesink name=w_sink", NULL);
+                                  ! fakesink name=w_sink",
+                                 NULL);
 
-    gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL, NULL);
+    gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL,
+                                   NULL);
     GstElement *uridecodebin = gst_bin_get_by_name(GST_BIN(m_playbin), "w_uridecodebin");
     g_object_set(uridecodebin, "uri", uri, NULL);
     gst_object_unref(uridecodebin);
 
     GstElement *sink = gst_bin_get_by_name(GST_BIN(m_playbin), "w_sink");
     GstPad *pad = gst_element_get_static_pad(sink, "sink");
-    gst_pad_add_probe(pad, GST_PAD_PROBE_TYPE_BUFFER, (GstPadProbeCallback)_handleBuffer, this, NULL);
+    gst_pad_add_probe(pad, GST_PAD_PROBE_TYPE_BUFFER, (GstPadProbeCallback)_handleBuffer, this,
+                      NULL);
     gst_object_unref(sink);
     gst_object_unref(pad);
 
     reset();
     QThread::start();
 
-    if (!m_timer->isActive())
+    if (!m_timer->isActive()) {
         m_timer->start(100);
+    }
 
     gst_element_set_state(m_playbin, GST_STATE_PLAYING);
 }
 
 qreal NWaveformBuilderGstreamer::position() const
 {
-    if (!m_playbin)
+    if (!m_playbin) {
         return 0;
+    }
 
-    if (!isRunning())
+    if (!isRunning()) {
         return 0;
+    }
 
     gint64 len, pos;
     gst_element_query_duration(m_playbin, GST_FORMAT_TIME, &len);
@@ -168,7 +180,8 @@ void NWaveformBuilderGstreamer::update()
         switch (GST_MESSAGE_TYPE(msg)) {
             case GST_MESSAGE_EOS:
                 peaks()->complete();
-                qDebug() <<  "WaveformBuilder ::" << "completed" << peaks()->size();
+                qDebug() << "WaveformBuilder ::"
+                         << "completed" << peaks()->size();
                 stop();
                 break;
             case GST_MESSAGE_ERROR: {
@@ -179,8 +192,9 @@ void NWaveformBuilderGstreamer::update()
                 g_free(debug);
 
                 qWarning() << "WaveformBuilder :: error ::" << QString::fromUtf8(err->message);
-                if (err)
+                if (err) {
                     g_error_free(err);
+                }
                 break;
             }
             default:

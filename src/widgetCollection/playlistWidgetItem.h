@@ -16,8 +16,9 @@
 #ifndef N_PLAYLIST_ITEM_H
 #define N_PLAYLIST_ITEM_H
 
-#include "playlistDataItem.h"
 #include <QListWidgetItem>
+
+#include "playlistDataItem.h"
 
 class QFileInfo;
 
@@ -43,8 +44,8 @@ class NPlaylistWidgetItemDelegate : public QStyledItemDelegate
 {
 public:
     NPlaylistWidgetItemDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const;
 };
 
 #endif
-

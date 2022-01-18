@@ -16,8 +16,9 @@
 #ifndef N_PLUGIN_H
 #define N_PLUGIN_H
 
-#include "global.h"
 #include <QtCore>
+
+#include "global.h"
 
 class NPlugin
 {
@@ -27,7 +28,10 @@ protected:
 public:
     NPlugin() { m_init = false; }
     virtual ~NPlugin() {}
-    virtual QString name() const { return dynamic_cast<const QObject *>(this)->metaObject()->className(); }
+    virtual QString name() const
+    {
+        return dynamic_cast<const QObject *>(this)->metaObject()->className();
+    }
     virtual QString interfaceString() const = 0;
     virtual N::PluginType type() const { return N::OtherPlugin; }
     virtual void init() = 0;
@@ -36,4 +40,3 @@ public:
 Q_DECLARE_INTERFACE(NPlugin, "Nulloy/NPlugin/0.7")
 
 #endif
-

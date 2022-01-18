@@ -16,8 +16,9 @@
 #ifndef N_COMMON_H
 #define N_COMMON_H
 
-#include "playlistDataItem.h"
 #include <QStringList>
+
+#include "playlistDataItem.h"
 
 namespace NCore
 {
@@ -28,7 +29,6 @@ namespace NCore
     QString settingsPath();
     QString rcDir();
     QList<NPlaylistDataItem> dirListRecursive(const QString &path);
-}
+} // namespace NCore
 
 #endif
-

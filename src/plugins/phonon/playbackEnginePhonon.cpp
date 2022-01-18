@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "playbackEnginePhonon.h"
+
 #include <QtGlobal>
 
 static N::PlaybackState fromPhononState(Phonon::State state)
@@ -39,7 +40,8 @@ void NPlaybackEnginePhonon::init()
     m_mediaObject = new Phonon::MediaObject(this);
     connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(on_tick(qint64)));
     connect(m_mediaObject, SIGNAL(finished()), this, SIGNAL(finished()));
-    connect(m_mediaObject, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(on_stateChanged(Phonon::State)));
+    connect(m_mediaObject, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this,
+            SLOT(on_stateChanged(Phonon::State)));
     m_mediaObject->setTickInterval(100);
 
     Phonon::createPath(m_mediaObject, m_audioOutput);
@@ -54,8 +56,9 @@ void NPlaybackEnginePhonon::setMedia(const QString &file)
     stop();
     m_mediaObject->clearQueue();
 
-    if (file.isEmpty())
+    if (file.isEmpty()) {
         return;
+    }
 
     if (!QFile(file).exists()) {
         emit message(N::Warning, file, "No such file or directory");
@@ -81,8 +84,9 @@ qreal NPlaybackEnginePhonon::volume() const
 
 void NPlaybackEnginePhonon::setPosition(qreal pos)
 {
-    if (!hasMedia() || pos < 0)
+    if (!hasMedia() || pos < 0) {
         return;
+    }
 
     if (m_mediaObject->isSeekable())
         m_mediaObject->seek(qRound(pos * m_mediaObject->totalTime()));
@@ -92,16 +96,18 @@ void NPlaybackEnginePhonon::setPosition(qreal pos)
 
 qreal NPlaybackEnginePhonon::position() const
 {
-    if (!hasMedia())
+    if (!hasMedia()) {
         return -1;
+    }
 
     return (qreal)m_mediaObject->currentTime() / m_mediaObject->totalTime();
 }
 
 void NPlaybackEnginePhonon::play()
 {
-    if (!hasMedia())
+    if (!hasMedia()) {
         return;
+    }
 
     if (m_mediaObject->state() != Phonon::PlayingState)
         m_mediaObject->play();
@@ -111,16 +117,18 @@ void NPlaybackEnginePhonon::play()
 
 void NPlaybackEnginePhonon::pause()
 {
-    if (!hasMedia())
+    if (!hasMedia()) {
         return;
+    }
 
     m_mediaObject->pause();
 }
 
 void NPlaybackEnginePhonon::stop()
 {
-    if (!hasMedia())
+    if (!hasMedia()) {
         return;
+    }
 
     m_mediaObject->stop();
 }
@@ -130,8 +138,7 @@ bool NPlaybackEnginePhonon::hasMedia() const
     Phonon::MediaSource source = m_mediaObject->currentSource();
 
     if (source.type() == Phonon::MediaSource::Invalid ||
-        source.type() == Phonon::MediaSource::Empty)
-    {
+        source.type() == Phonon::MediaSource::Empty) {
         return false;
     } else {
         return true;
@@ -181,6 +188,7 @@ void NPlaybackEnginePhonon::jump(qint64 msec)
     if (!hasMedia() || !m_mediaObject->isSeekable())
         return;
 
-    qint64 posMsec = qBound(0LL, m_mediaObject->currentTime() + msec, durationMsec() - 1000); // 1000 msec gap to avoid phonon freeze
+    qint64 posMsec = qBound(0LL, m_mediaObject->currentTime() + msec,
+                            durationMsec() - 1000); // 1000 msec gap to avoid phonon freeze
     m_mediaObject->seek(posMsec);
 }

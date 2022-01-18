@@ -16,11 +16,13 @@
 #ifndef N_PLAYBACK_ENGINE_VLC_H
 #define N_PLAYBACK_ENGINE_VLC_H
 
-#include "plugin.h"
-#include "playbackEngineInterface.h"
-#include <QTimer>
 #include <vlc/vlc.h>
 #include <vlc_aout.h>
+
+#include <QTimer>
+
+#include "playbackEngineInterface.h"
+#include "plugin.h"
 
 class NPlaybackEngineVlc : public NPlaybackEngineInterface, public NPlugin
 {
@@ -80,4 +82,3 @@ signals:
 };
 
 #endif
-

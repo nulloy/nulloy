@@ -14,10 +14,13 @@
 *********************************************************************/
 
 #include "volumeSlider.h"
-#include "settings.h"
-#include <QToolTip>
-#include <QMouseEvent>
+
 #include <math.h>
+
+#include <QMouseEvent>
+#include <QToolTip>
+
+#include "settings.h"
 
 static const qreal log10over20 = qreal(0.1151292546497022842); // ln(10) / 20
 
@@ -67,9 +70,9 @@ QString NVolumeSlider::toolTipText(int value) const
 
 void NVolumeSlider::showToolTip(int x, int y)
 {
-    if (x == -1 || y == -1)
+    if (x == -1 || y == -1) {
         return;
+    }
 
     QToolTip::showText(mapToGlobal(QPoint(x, y)), toolTipText(value()));
 }
-

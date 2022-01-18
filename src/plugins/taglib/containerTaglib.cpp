@@ -14,13 +14,13 @@
 *********************************************************************/
 
 #include "containerTaglib.h"
-#include "tagReaderTaglib.h"
+
 #include "coverReaderTaglib.h"
+#include "tagReaderTaglib.h"
 
 NContainerTaglib::NContainerTaglib(QObject *parent) : QObject(parent)
 {
-    m_plugins << new NTagReaderTaglib()
-              << new NCoverReaderTaglib();
+    m_plugins << new NTagReaderTaglib() << new NCoverReaderTaglib();
 }
 
 NContainerTaglib::~NContainerTaglib()
@@ -33,4 +33,3 @@ QList<NPlugin *> NContainerTaglib::plugins() const
 {
     return m_plugins;
 }
-

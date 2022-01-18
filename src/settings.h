@@ -34,7 +34,7 @@ private:
 public:
     NSettings(QObject *parent = 0);
     ~NSettings();
-    static NSettings* instance();
+    static NSettings *instance();
 
     void initShortcuts(QObject *instance);
     void saveShortcuts();
@@ -50,4 +50,3 @@ signals:
 };
 
 #endif
-

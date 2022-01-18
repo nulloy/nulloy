@@ -13,10 +13,11 @@
 **
 *********************************************************************/
 
-#include "settings.h"
-#include <QProcess>
-#include <QFileInfo>
 #include <QDebug>
+#include <QFileInfo>
+#include <QProcess>
+
+#include "settings.h"
 
 int _trash(const QString &file, QString *error)
 {
@@ -49,10 +50,10 @@ int _trash(const QString &file, QString *error)
     qDebug() << qPrintable(cmd);
     int res = QProcess::execute("sh", QStringList() << "-c" << cmd);
     if (res != 0) {
-        *error = QString(QObject::tr("Custom Trash Command failed with exit code <b>%1</b>.")).arg(res);
+        *error =
+            QString(QObject::tr("Custom Trash Command failed with exit code <b>%1</b>.")).arg(res);
         return -1;
     }
 
     return 0;
 }
-

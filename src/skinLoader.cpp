@@ -15,15 +15,15 @@
 
 #include "skinLoader.h"
 
-#include "common.h"
-#include "settings.h"
-#include "skinFileSystem.h"
+#include <qtiocompressor.h>
 
 #include <QBuffer>
 #include <QCoreApplication>
 #include <QMessageBox>
 
-#include <qtiocompressor.h>
+#include "common.h"
+#include "settings.h"
+#include "skinFileSystem.h"
 
 static const char _skinPrefer[] = "Slim";
 static const char _skinSuffix[] = "nzs";
@@ -41,7 +41,7 @@ namespace NSkinLoader
 
     bool _nextFile(QFile &zipFile, QString &fileName, QByteArray &data);
     void _init();
-}
+} // namespace NSkinLoader
 
 bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
 {
@@ -53,8 +53,9 @@ bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
     in.setByteOrder(QDataStream::LittleEndian);
 
     in >> signature;
-    if (signature != 0x04034b50)
+    if (signature != 0x04034b50) {
         return false;
+    }
 
     in >> extractVersion >> bitFlag >> compMethod;
     in >> modTime >> modDate >> crc >> compSize >> unCompSize;
@@ -82,16 +83,19 @@ bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
 
 void NSkinLoader::_init()
 {
-    if (__init)
+    if (__init) {
         return;
+    }
     __init = true;
 
     QStringList skinsDirList;
     // ":" is a prefix for .qrc resources
-    skinsDirList << QString() + ":" + _skinsDirName << QCoreApplication::applicationDirPath() + "/" + _skinsDirName;
+    skinsDirList << QString() + ":" + _skinsDirName
+                 << QCoreApplication::applicationDirPath() + "/" + _skinsDirName;
 #ifndef Q_OS_WIN
-    if (NCore::rcDir() != QCoreApplication::applicationDirPath())
+    if (NCore::rcDir() != QCoreApplication::applicationDirPath()) {
         skinsDirList << NCore::rcDir() + "/" + _skinsDirName;
+    }
     if (QDir(QCoreApplication::applicationDirPath()).dirName() == "bin") {
         QDir dir(QCoreApplication::applicationDirPath());
         dir.cd(QString() + "../share/nulloy/" + _skinsDirName);
@@ -101,8 +105,10 @@ void NSkinLoader::_init()
     QFileInfoList containersInfoList;
     foreach (QString dirStr, skinsDirList) {
         QDir dir(dirStr);
-        if (dir.exists())
-            containersInfoList << dir.entryInfoList(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
+        if (dir.exists()) {
+            containersInfoList << dir.entryInfoList(QDir::AllDirs | QDir::Files |
+                                                    QDir::NoDotAndDotDot);
+        }
     }
 
     for (int i = 0; i < containersInfoList.size(); ++i) {
@@ -127,11 +133,13 @@ void NSkinLoader::_init()
             }
             zipFile.close();
         } else if (skinContainer.isDir()) {
-            QFileInfoList infoList = QDir(skinContainer.absoluteFilePath()).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+            QFileInfoList infoList = QDir(skinContainer.absoluteFilePath())
+                                         .entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
             bool isSkin = false;
             foreach (QFileInfo fileInfo, infoList) {
-                if (fileInfo.fileName() != _idFileName)
+                if (fileInfo.fileName() != _idFileName) {
                     continue;
+                }
                 isSkin = true;
                 QFile file(fileInfo.absoluteFilePath());
                 file.open(QIODevice::ReadOnly);
@@ -146,8 +154,9 @@ void NSkinLoader::_init()
                 continue;
             }
         }
-        if (skinContainer.absoluteFilePath().startsWith(QString() + ":" + _skinsDirName))
+        if (skinContainer.absoluteFilePath().startsWith(QString() + ":" + _skinsDirName)) {
             id.insert(id.lastIndexOf('/'), " (Built-in)");
+        }
         _identifiers.insert(i, id);
     }
 
@@ -155,13 +164,16 @@ void NSkinLoader::_init()
     QStringList values = _identifiers.values();
     int index;
     index = values.indexOf("Nulloy/Skin/" + skinStr);
-    if (index == -1)
+    if (index == -1) {
         index = values.indexOf(QRegExp(QString() + "Nulloy/Skin/" + _skinPrefer + ".*"));
-    if (index == -1)
+    }
+    if (index == -1) {
         index = 0;
+    }
 
     if (_identifiers.count() == 0) {
-        QMessageBox box(QMessageBox::Critical, QObject::tr("Skin loading error"), QObject::tr("No skins found."), QMessageBox::Close);
+        QMessageBox box(QMessageBox::Critical, QObject::tr("Skin loading error"),
+                        QObject::tr("No skins found."), QMessageBox::Close);
         box.exec();
         return;
     }
@@ -182,17 +194,20 @@ void NSkinLoader::_init()
             str.replace(rx, "\\1" + NSkinFileSystem::prefix() + "\\2");
             NSkinFileSystem::addFile(fileName, str.toUtf8());
 
-            if (fileName == _formFileName)
+            if (fileName == _formFileName) {
                 _formPath = NSkinFileSystem::prefix() + fileName;
-            else if (fileName == _scriptFileName)
+            } else if (fileName == _scriptFileName) {
                 _scriptPath = NSkinFileSystem::prefix() + fileName;
+            }
         }
         zipFile.close();
     } else if (skinContainer.isDir()) {
-        QFileInfoList infoList = QDir(skinContainer.absoluteFilePath()).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+        QFileInfoList infoList =
+            QDir(skinContainer.absoluteFilePath()).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
         foreach (QFileInfo fileInfo, infoList) {
-            if (fileInfo.fileName() != _scriptFileName && fileInfo.fileName() != _formFileName)
+            if (fileInfo.fileName() != _scriptFileName && fileInfo.fileName() != _formFileName) {
                 continue;
+            }
             QFile file(fileInfo.absoluteFilePath());
             file.open(QIODevice::ReadOnly);
             QByteArray data = file.readAll();
@@ -202,10 +217,11 @@ void NSkinLoader::_init()
             str.replace("<iconset resource=\"resources.qrc\">", "<iconset>");
             NSkinFileSystem::addFile(fileInfo.fileName(), str.toUtf8());
 
-            if (fileInfo.fileName() == _formFileName)
+            if (fileInfo.fileName() == _formFileName) {
                 _formPath = NSkinFileSystem::prefix() + fileInfo.fileName();
-            else if (fileInfo.fileName() == _scriptFileName)
+            } else if (fileInfo.fileName() == _scriptFileName) {
                 _scriptPath = NSkinFileSystem::prefix() + fileInfo.fileName();
+            }
         }
     }
 
@@ -229,4 +245,3 @@ QString NSkinLoader::skinScriptFile()
     _init();
     return _scriptPath;
 }
-

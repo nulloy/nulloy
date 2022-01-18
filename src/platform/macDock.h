@@ -29,7 +29,7 @@ private:
     NMacDock operator=(NMacDock const &copy);
 
 public:
-    static NMacDock* instance();
+    static NMacDock *instance();
     void registerClickHandler();
 
     void _emitClicked();

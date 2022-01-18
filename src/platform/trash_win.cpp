@@ -13,9 +13,10 @@
 **
 *********************************************************************/
 
-#include <QString>
-#include <windows.h>
 #include <shellapi.h>
+#include <windows.h>
+
+#include <QString>
 
 int _trash(const QString &file, QString *error)
 {
@@ -34,4 +35,3 @@ int _trash(const QString &file, QString *error)
     shfo.lpszProgressTitle = NULL;
     return SHFileOperation(&shfo);
 }
-

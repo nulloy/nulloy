@@ -15,17 +15,19 @@
 
 #include "tagReaderGstreamer.h"
 
-#include "common.h"
+#include <gst/pbutils/pbutils.h>
 
 #include <QCoreApplication>
-#include <gst/pbutils/pbutils.h>
 #include <QFileInfo>
 #include <QTextCodec>
 
+#include "common.h"
+
 void NTagReaderGstreamer::init()
 {
-    if (m_init)
+    if (m_init) {
         return;
+    }
 
     m_isValid = false;
     m_taglist = NULL;
@@ -35,15 +37,16 @@ void NTagReaderGstreamer::init()
     GError *err = NULL;
     NCore::cArgs(&argc, &argv);
     if (!gst_init_check(&argc, (char ***)&argv, &err)) {
-        qWarning() << "NTagReaderGstreamer :: gst_init_check error ::" << (err ? QString::fromUtf8(err->message) : "unknown error");
-        if (err)
+        qWarning() << "NTagReaderGstreamer :: gst_init_check error ::"
+                   << (err ? QString::fromUtf8(err->message) : "unknown error");
+        if (err) {
             g_error_free(err);
+        }
         return;
     }
 
     m_init = true;
 }
-
 
 QString NTagReaderGstreamer::getSource()
 {
@@ -61,8 +64,9 @@ void NTagReaderGstreamer::setSource(const QString &file)
     m_path = "";
 
     QFileInfo fileInfo(file);
-    if (!fileInfo.exists())
+    if (!fileInfo.exists()) {
         return;
+    }
 
     m_path = file;
     gchar *uri = g_filename_to_uri(fileInfo.absoluteFilePath().toUtf8().constData(), NULL, NULL);
@@ -70,20 +74,25 @@ void NTagReaderGstreamer::setSource(const QString &file)
     GError *err = NULL;
     GstDiscoverer *discoverer = gst_discoverer_new(GST_SECOND * 60, &err);
     if (discoverer == NULL) {
-        qWarning() << "NTagReaderGstreamer :: GstDiscoverer error ::" << (err ? QString::fromUtf8(err->message) : "unknown error");
-        if (err)
+        qWarning() << "NTagReaderGstreamer :: GstDiscoverer error ::"
+                   << (err ? QString::fromUtf8(err->message) : "unknown error");
+        if (err) {
             g_error_free(err);
+        }
         return;
     }
 
     GstDiscovererInfo *info = gst_discoverer_discover_uri(discoverer, uri, &err);
     GList *audioInfo = gst_discoverer_info_get_audio_streams(info);
     if (!audioInfo) {
-        qWarning() << "NTagReaderGstreamer :: GstDiscoverer error ::" << "not an audio file";
+        qWarning() << "NTagReaderGstreamer :: GstDiscoverer error ::"
+                   << "not an audio file";
         return;
     }
 
-    m_sampleRate = gst_discoverer_audio_info_get_sample_rate((GstDiscovererAudioInfo *)audioInfo->data) / (float)1000;
+    m_sampleRate = gst_discoverer_audio_info_get_sample_rate(
+                       (GstDiscovererAudioInfo *)audioInfo->data) /
+                   (float)1000;
     m_bitDepth = gst_discoverer_audio_info_get_depth((GstDiscovererAudioInfo *)audioInfo->data);
     gst_discoverer_stream_info_list_free(audioInfo);
 
@@ -93,19 +102,22 @@ void NTagReaderGstreamer::setSource(const QString &file)
     m_taglist = gst_tag_list_copy(tagList);
     if (GST_IS_TAG_LIST(m_taglist) && !gst_tag_list_is_empty(m_taglist)) {
         gchar *gstr = NULL;
-        if (gst_tag_list_get_string(m_taglist, GST_TAG_AUDIO_CODEC, &gstr))
+        if (gst_tag_list_get_string(m_taglist, GST_TAG_AUDIO_CODEC, &gstr)) {
             m_codecName = QString::fromUtf8(gstr);
+        }
         m_isValid = true;
     }
 }
 
 NTagReaderGstreamer::~NTagReaderGstreamer()
 {
-    if (!m_init)
+    if (!m_init) {
         return;
+    }
 
-    if (m_taglist)
+    if (m_taglist) {
         gst_tag_list_free(m_taglist);
+    }
 }
 
 QString NTagReaderGstreamer::toString(const QString &format, const QString &encoding) const
@@ -114,15 +126,18 @@ QString NTagReaderGstreamer::toString(const QString &format, const QString &enco
     return parse(format, &res, encoding);
 }
 
-QString NTagReaderGstreamer::parse(const QString &format, bool *success, const QString &encoding, bool stopOnFail) const
+QString NTagReaderGstreamer::parse(const QString &format, bool *success, const QString &encoding,
+                                   bool stopOnFail) const
 {
-    if (format.isEmpty())
+    if (format.isEmpty()) {
         return "";
+    }
 
     *success = true;
 
-    if (!m_isValid)
+    if (!m_isValid) {
         return "NTagReaderGstreamer::InvalidFile";
+    }
 
     int seconds_total = GST_TIME_AS_SECONDS(m_nanosecs);
 
@@ -134,37 +149,43 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
             ++i;
             QChar ch = format.at(i);
             if (ch == 'a') {
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_ARTIST, &gstr)))
+                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_ARTIST, &gstr))) {
                     res += "<Unknown artist>";
-                else
+                } else {
                     res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+                }
             } else if (ch == 't') {
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_TITLE, &gstr)))
+                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_TITLE, &gstr))) {
                     res += "<Unknown title>";
-                else
+                } else {
                     res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+                }
             } else if (ch == 'A') {
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_ALBUM, &gstr)))
+                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_ALBUM, &gstr))) {
                     res += "<Unknown album>";
-                else
+                } else {
                     res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+                }
             } else if (ch == 'c') {
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_COMMENT, &gstr)))
+                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_COMMENT, &gstr))) {
                     res += "<Empty comment>";
-                else
+                } else {
                     res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+                }
             } else if (ch == 'g') {
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_GENRE, &gstr)))
+                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_GENRE, &gstr))) {
                     res += "<Unknown genre>";
-                else
+                } else {
                     res += QString::fromUtf8(gstr);
+                }
             } else if (ch == 'y') {
                 GDate *date = NULL;
                 QString str = "0";
                 if (gst_tag_list_get_date(m_taglist, GST_TAG_DATE, &date)) {
                     GDateYear year = g_date_get_year(date);
-                    if (year != G_DATE_BAD_YEAR)
+                    if (year != G_DATE_BAD_YEAR) {
                         str = QString::number(year);
+                    }
                 }
                 if (str == "0") {
                     str = "<Unknown year>";
@@ -174,10 +195,11 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
             } else if (ch == 'n') {
                 unsigned int track = 0;
                 QString str;
-                if ((*success = gst_tag_list_get_uint(m_taglist, GST_TAG_TRACK_NUMBER, &track)))
+                if ((*success = gst_tag_list_get_uint(m_taglist, GST_TAG_TRACK_NUMBER, &track))) {
                     str = QString::number(track);
-                else
+                } else {
                     str = "<Unknown track number>";
+                }
                 res += str;
             } else if (ch == 'b') {
                 if (m_codecName.contains("MP3")) {
@@ -193,10 +215,11 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                     int minutes = (seconds_total - seconds) / 60;
                     int hours = minutes / 60;
                     minutes = minutes % 60;
-                    if (hours > 0)
+                    if (hours > 0) {
                         duration.sprintf("%d:%02d:%02d", hours, minutes, seconds);
-                    else
+                    } else {
                         duration.sprintf("%d:%02d", minutes, seconds);
+                    }
                 } else {
                     *success = false;
                     duration = "<Unknown duration>";
@@ -214,10 +237,11 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
             } else if (ch == 'B') {
                 unsigned int bitrate = 0;
                 QString str;
-                if ((*success = gst_tag_list_get_uint(m_taglist, GST_TAG_BITRATE, &bitrate)))
+                if ((*success = gst_tag_list_get_uint(m_taglist, GST_TAG_BITRATE, &bitrate))) {
                     str = QString::number(bitrate / 1000);
-                else
+                } else {
                     str = "<Unknown bitrate>";
+                }
                 res += str;
             } else if (ch == 's') {
                 res += QString::number(m_sampleRate);
@@ -277,8 +301,9 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
         } else {
             res += format.at(i);
         }
-        if (!*success && stopOnFail)
+        if (!*success && stopOnFail) {
             return "";
+        }
     }
 
     return res;
@@ -288,4 +313,3 @@ bool NTagReaderGstreamer::isValid() const
 {
     return m_isValid;
 }
-

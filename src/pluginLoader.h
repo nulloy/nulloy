@@ -16,13 +16,15 @@
 #ifndef N_PLUGIN_LOADER_H
 #define N_PLUGIN_LOADER_H
 
-#include "plugin.h"
 #include <QMap>
 #include <QVariant>
 
+#include "plugin.h"
+
 namespace NPluginLoader
 {
-    enum DescriptorRole {
+    enum DescriptorRole
+    {
         TypeRole = 0,
         ContainerNameRole,
         PluginObjectRole,
@@ -31,11 +33,10 @@ namespace NPluginLoader
     typedef QMap<DescriptorRole, QVariant> Descriptor;
     QList<Descriptor> descriptors();
 
-    NPlugin* getPlugin(N::PluginType type);
+    NPlugin *getPlugin(N::PluginType type);
 
     void init();
     void deinit();
-}
+} // namespace NPluginLoader
 
 #endif
-

@@ -15,14 +15,15 @@
 
 #include "waveformBuilderVlc.h"
 
-#include <QMutex>
-#include <QFile>
 #include <QDebug>
+#include <QFile>
+#include <QMutex>
+
 #include "common.h"
 
 static QMutex _mutex;
 
-static void _prepareBuffer(void *userData, uint8_t **pcmBuffer , unsigned int size)
+static void _prepareBuffer(void *userData, uint8_t **pcmBuffer, unsigned int size)
 {
     QMutexLocker locker(&_mutex);
 
@@ -30,9 +31,8 @@ static void _prepareBuffer(void *userData, uint8_t **pcmBuffer , unsigned int si
     obj->prepareBuffer(pcmBuffer, size);
 }
 
-static void _handleBuffer(void *userData, uint8_t *pcmBuffer,
-                          unsigned int nChannels, unsigned int frequency,
-                          unsigned int nSamples, unsigned int bitsPerSample,
+static void _handleBuffer(void *userData, uint8_t *pcmBuffer, unsigned int nChannels,
+                          unsigned int frequency, unsigned int nSamples, unsigned int bitsPerSample,
                           unsigned int size, int64_t pts)
 {
     QMutexLocker locker(&_mutex);
@@ -48,16 +48,19 @@ static void _handleBuffer(void *userData, uint8_t *pcmBuffer,
 
 void NWaveformBuilderVlc::prepareBuffer(uint8_t **pcmBuffer, unsigned int size)
 {
-    if (!m_timer->isActive())
+    if (!m_timer->isActive()) {
         m_timer->start(300);
+    }
 
-    if (m_pcmBuffer.size() < (int)size)
+    if (m_pcmBuffer.size() < (int)size) {
         m_pcmBuffer.resize(size);
+    }
 
     *pcmBuffer = (uint8_t *)(m_pcmBuffer.data());
 }
 
-void NWaveformBuilderVlc::handleBuffer(uint8_t *pcmBuffer, unsigned int nChannels, unsigned int nSamples)
+void NWaveformBuilderVlc::handleBuffer(uint8_t *pcmBuffer, unsigned int nChannels,
+                                       unsigned int nSamples)
 {
     for (unsigned int i = 0; i < nSamples; ++i) {
         qint32 pcmValue = 0;
@@ -65,25 +68,26 @@ void NWaveformBuilderVlc::handleBuffer(uint8_t *pcmBuffer, unsigned int nChannel
             const qint16 *ptr = reinterpret_cast<const qint16 *>(pcmBuffer) + i * nChannels + j;
             pcmValue += *ptr;
         }
-        qreal realValue = -((qreal)pcmValue / nChannels) / (1<<15);
+        qreal realValue = -((qreal)pcmValue / nChannels) / (1 << 15);
         m_peaks.append(realValue);
     }
 }
 
 void NWaveformBuilderVlc::init()
 {
-    if (m_init)
+    if (m_init) {
         return;
+    }
 
     char smem_options[512];
-    sprintf(smem_options, "#transcode{acodec=s16l}:smem{"
-                          "audio-prerender-callback=%lld,"
-                          "audio-postrender-callback=%lld,"
-                          "audio-data=%lld,"
-                          "no-time-sync}",
-            (long long int)(intptr_t)(void*)&_prepareBuffer,
-            (long long int)(intptr_t)(void*)&_handleBuffer,
-            (long long int)(intptr_t)(void*)this);
+    sprintf(smem_options,
+            "#transcode{acodec=s16l}:smem{"
+            "audio-prerender-callback=%lld,"
+            "audio-postrender-callback=%lld,"
+            "audio-data=%lld,"
+            "no-time-sync}",
+            (long long int)(intptr_t)(void *)&_prepareBuffer,
+            (long long int)(intptr_t)(void *)&_handleBuffer, (long long int)(intptr_t)(void *)this);
 
     int argc;
     const char **argv;
@@ -93,7 +97,8 @@ void NWaveformBuilderVlc::init()
     for (int i = 0; i < argc; ++i)
         argVector << argv[i];
 
-    argVector << "-I" << "dummy"
+    argVector << "-I"
+              << "dummy"
               << "--ignore-config"
               << "--no-xlib"
               << "--sout" << smem_options;
@@ -111,8 +116,9 @@ void NWaveformBuilderVlc::init()
 
 NWaveformBuilderVlc::~NWaveformBuilderVlc()
 {
-    if (!m_init)
+    if (!m_init) {
         return;
+    }
 
     stop();
 
@@ -139,10 +145,12 @@ void NWaveformBuilderVlc::start(const QString &file)
 {
     stop();
 
-    if (peaksFindFromCache(file))
+    if (peaksFindFromCache(file)) {
         return;
-    if (!QFileInfo(file).exists())
+    }
+    if (!QFileInfo(file).exists()) {
         return;
+    }
     m_currentFile = file;
 
     libvlc_media_t *media = libvlc_media_player_get_media(m_mediaPlayer);
@@ -164,7 +172,8 @@ void NWaveformBuilderVlc::update()
     if (!libvlc_media_player_is_playing(m_mediaPlayer)) {
         m_peaks.complete();
 #if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
-        qDebug() << "WaveformBuilder ::" << "completed" << m_peaks.size();
+        qDebug() << "WaveformBuilder ::"
+                 << "completed" << m_peaks.size();
 #endif
         peaksAppendToCache(m_currentFile);
         stop();
@@ -173,9 +182,9 @@ void NWaveformBuilderVlc::update()
 
 qreal NWaveformBuilderVlc::position() const
 {
-    if (!isRunning())
+    if (!isRunning()) {
         return 0;
+    }
 
     return libvlc_media_player_get_position(m_mediaPlayer);
 }
-

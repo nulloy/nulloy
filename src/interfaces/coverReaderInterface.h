@@ -38,4 +38,3 @@ public:
 Q_DECLARE_INTERFACE(NCoverReaderInterface, COVERREADER_INTERFACE)
 
 #endif
-
