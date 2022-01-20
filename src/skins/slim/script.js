@@ -40,6 +40,11 @@ function Main()
             Ui.titleWidget.layout().insertWidget(10, Ui.menuButton);
             Ui.titleWidget.layout().insertWidget(10, Ui.iconLabel);
         }
+
+        if (WS_WM_TILING) {
+            Ui.titleWidget.setVisible(false);
+            Ui.borderWidget.layout().insertSpacing(1, 4);
+        }
     } catch (err) {
         print("QtScript: " + err);
     }

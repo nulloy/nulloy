@@ -49,6 +49,11 @@ function Main()
             Ui.titleWidget.layout().insertWidget(1, Ui.minimizeWrapperOuter);
             Ui.titleWidget.layout().insertWidget(5, Ui.iconLabel);
         }
+
+        if (WS_WM_TILING) {
+            Ui.titleWidget.setVisible(false);
+            Ui.splitTop.layout().insertSpacing(0, 2);
+        }
     } catch (err) {
         print("QtScript: " + err);
     }

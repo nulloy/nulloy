@@ -184,6 +184,14 @@ void NLayoutPrototype::setSpacingAt(int index, int spacing)
     }
 }
 
+void NLayoutPrototype::insertSpacing(int index, int size)
+{
+    QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());
+    if (layout) {
+        qobject_cast<QBoxLayout *>(layout)->insertSpacing(index, size);
+    }
+}
+
 void NLayoutPrototype::insertWidget(int index, QWidget *widget)
 {
     QLayout *layout = qscriptvalue_cast<QLayout *>(thisObject());

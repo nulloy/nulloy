@@ -24,6 +24,7 @@ include($$SRC_DIR/i18n/i18n.pri)
 include($$SRC_DIR/platform/trash.pri)
 win32:include($$SRC_DIR/platform/w7TaskBar.pri)
 mac:include($$SRC_DIR/platform/macDock.pri)
+unix:!mac:include($$SRC_DIR/platform/xcb.pri)
 
 # zlib
 !mac {

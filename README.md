@@ -131,7 +131,7 @@ make install
 #### DEB-based distro
 
 ```sh
-apt install g++ qt5-default qttools5-dev qtscript5-dev qtbase5-private-dev libqt5x11extras5-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev zip libx11-dev libtag1-dev
+apt install g++ qttools5-dev qtscript5-dev qtbase5-private-dev libqt5x11extras5-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev zip libx11-dev libx11-xcb-dev libtag1-dev
 # install extra GStreamer plugins for more audio formats
 apt install gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
 ```
@@ -139,7 +139,7 @@ apt install gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plug
 #### RPM-based distro
 
 ```sh
-yum install gcc-c++ qt5-qtbase-devel qt5-qttools-devel qt5-qttools-static qt5-qtscript-devel qt5-qtbase-private-devel qt5-linguist gstreamer1-plugins-base-devel gstreamer1-devel zip libX11-devel taglib-devel
+yum install gcc-c++ qt5-qtbase-devel qt5-qttools-devel qt5-qttools-static qt5-qtscript-devel qt5-qtbase-private-devel qt5-linguist gstreamer1-plugins-base-devel gstreamer1-devel zip libX11-devel libxcb-devel taglib-devel
 # install extra GStreamer plugins for more audio formats
 yum install gstreamer1-plugins-good gstreamer1-plugins-bad gstreamer1-plugins-ugly
 ```

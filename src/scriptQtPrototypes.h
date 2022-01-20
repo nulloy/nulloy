@@ -76,6 +76,7 @@ public:
     Q_INVOKABLE void setSpacing(int spacing);
     Q_INVOKABLE void setSpacingAt(int index, int spacing);
     Q_INVOKABLE void insertWidget(int index, QWidget *widget);
+    Q_INVOKABLE void insertSpacing(int index, int size);
 };
 
 class NSplitterPrototype : public QObject, public QScriptable
