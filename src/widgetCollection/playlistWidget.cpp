@@ -137,20 +137,8 @@ void NPlaylistWidget::processVisibleItems()
 
 void NPlaylistWidget::wheelEvent(QWheelEvent *event)
 {
-    if (event->orientation() == Qt::Horizontal) {
-        QListWidget::wheelEvent(event);
-        return;
-    }
-
-    QScrollBar *vbar = verticalScrollBar();
-    int value = vbar->value();
-    int delta = event->delta();
-
-    if ((delta < 0 && value == vbar->maximum()) || (delta > 0 && value == vbar->minimum())) {
-        event->accept();
-    } else {
-        QListWidget::wheelEvent(event);
-    }
+    QListWidget::wheelEvent(event);
+    event->accept();
 }
 
 void NPlaylistWidget::contextMenuEvent(QContextMenuEvent *event)
