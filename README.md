@@ -111,6 +111,10 @@ export PATH=/usr/local/opt/qt/bin:$PATH
 # install extra GStreamer plugins for more audio formats
 brew install gst-plugins-good gst-plugins-bad gst-plugins-ugly
 ```
+  
+#### Gentoo
+  
+  Use this [work-in-progress ebuild](https://github.com/gentoo/gentoo/pull/23767)
 
 ### Build & Run Nulloy
 
