@@ -166,34 +166,34 @@ NScriptEngine::NScriptEngine(NPlayer *player) : QScriptEngine(player)
     global.setProperty("WS_WM_TILING", false);
 
     QString direction = "right";
-    if (ws == "mac") {
-        direction = "left";
-    } else if (ws == "x11") {
-        QString wmName = NXcb::wmName();
-        if (!wmName.isEmpty()) {
-            qDebug() << "detected window manager:" << wmName;
-            if (wmName == "Marco") {
-                QProcess dconf;
-                dconf.start("dconf read /org/mate/marco/general/button-layout");
-                dconf.waitForStarted();
-                dconf.waitForFinished();
-                if (dconf.readAll().endsWith(":'\n")) {
-                    direction = "left";
-                }
-            } else if (wmName == "Metacity") {
-                QProcess gconftool;
-                gconftool.start("gconftool-2 --get /apps/metacity/general/button_layout");
-                gconftool.waitForStarted();
-                gconftool.waitForFinished();
-                if (gconftool.readAll().endsWith(":\n")) {
-                    direction = "left";
-                }
+#if defined Q_OS_MAC
+    direction = "left";
+#elif defined Q_OS_LINUX
+    QString wmName = NXcb::wmName();
+    if (!wmName.isEmpty()) {
+        qDebug() << "detected window manager:" << wmName;
+        if (wmName == "Marco") {
+            QProcess dconf;
+            dconf.start("dconf read /org/mate/marco/general/button-layout");
+            dconf.waitForStarted();
+            dconf.waitForFinished();
+            if (dconf.readAll().endsWith(":'\n")) {
+                direction = "left";
             }
-            global.setProperty("WS_WM_TILING", wmName == "i3");
-        } else {
-            qWarning() << "window manager cannot be detected";
+        } else if (wmName == "Metacity") {
+            QProcess gconftool;
+            gconftool.start("gconftool-2 --get /apps/metacity/general/button_layout");
+            gconftool.waitForStarted();
+            gconftool.waitForFinished();
+            if (gconftool.readAll().endsWith(":\n")) {
+                direction = "left";
+            }
         }
+        global.setProperty("WS_WM_TILING", wmName == "i3");
+    } else {
+        qWarning() << "window manager cannot be detected";
     }
+#endif
 
     global.setProperty("WS_WM_BUTTON_DIRECTION", direction);
 
