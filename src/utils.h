@@ -13,19 +13,14 @@
 **
 *********************************************************************/
 
-#ifndef N_COMMON_H
-#define N_COMMON_H
+#ifndef N_UTILS_H
+#define N_UTILS_H
 
-#include <QStringList>
+#include "playlistDataItem.h"
 
-namespace NCore
+namespace NUtils
 {
-    void cArgs(int *argc, const char ***argv);
-    QString applicationBinaryName();
-    QString applicationBasenameName();
-    QString defaultPlaylistPath();
-    QString settingsPath();
-    QString rcDir();
-} // namespace NCore
+    QList<NPlaylistDataItem> dirListRecursive(const QString &path);
+} // namespace NUtils
 
 #endif

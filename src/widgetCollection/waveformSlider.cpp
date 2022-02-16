@@ -21,10 +21,10 @@
 #include <QStyleOptionFocusRect>
 #include <QStylePainter>
 
-#include "common.h"
 #include "playlistDataItem.h"
 #include "pluginLoader.h"
 #include "settings.h"
+#include "utils.h"
 #include "waveformBuilderInterface.h"
 
 #define IDLE_INTERVAL 60
@@ -450,7 +450,7 @@ void NWaveformSlider::dropEvent(QDropEvent *event)
     if (data->hasUrls()) {
         QList<NPlaylistDataItem> dataItems;
         foreach (QUrl url, data->urls()) {
-            dataItems << NCore::dirListRecursive(url.toLocalFile());
+            dataItems << NUtils::dirListRecursive(url.toLocalFile());
         }
         emit filesDropped(dataItems);
     }

@@ -25,7 +25,6 @@
 #include <QShortcut>
 #include <QUrl>
 
-#include "common.h"
 #include "playbackEngineInterface.h"
 #include "playlistDataItem.h"
 #include "playlistStorage.h"
@@ -34,6 +33,7 @@
 #include "settings.h"
 #include "tagReaderInterface.h"
 #include "trash.h"
+#include "utils.h"
 
 NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 {
@@ -704,7 +704,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
 
     QString titleFormat = NSettings::instance()->value("PlaylistTrackInfo").toString();
     foreach (QUrl url, data->urls()) {
-        foreach (NPlaylistDataItem dataItem, NCore::dirListRecursive(url.toLocalFile())) {
+        foreach (NPlaylistDataItem dataItem, NUtils::dirListRecursive(url.toLocalFile())) {
             NPlaylistWidgetItem *item = new NPlaylistWidgetItem(dataItem);
             insertItem(index, item);
             formatItemTitle(item, titleFormat);

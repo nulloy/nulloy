@@ -20,9 +20,6 @@
 #include <QFileInfo>
 #include <QtCore>
 
-#include "playlistStorage.h"
-#include "settings.h"
-
 #ifdef Q_OS_WIN
 #include <QSettings>
 #endif
@@ -35,9 +32,6 @@ namespace NCore
 
     static bool _rcDir_init = false;
     static QString _rcDir = "./";
-
-    static QList<NPlaylistDataItem> _processPath(const QString &path,
-                                                 const QStringList &nameFilters);
 } // namespace NCore
 
 void NCore::cArgs(int *argc, const char ***argv)
@@ -114,38 +108,4 @@ QString NCore::rcDir()
         _rcDir_init = true;
     }
     return _rcDir;
-}
-
-QList<NPlaylistDataItem> NCore::_processPath(const QString &path, const QStringList &nameFilters)
-{
-    QList<NPlaylistDataItem> dataItemsList;
-    QFileInfo fileInfo = QFileInfo(path);
-    if (fileInfo.isDir()) {
-        QStringList entryList;
-        if (!nameFilters.isEmpty()) {
-            entryList = QDir(path).entryList(nameFilters,
-                                             QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
-        } else {
-            entryList = QDir(path).entryList(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
-        }
-
-        foreach (QString f, entryList)
-            dataItemsList << _processPath(path + "/" + f, nameFilters);
-    } else {
-        if (QDir::match(nameFilters, fileInfo.fileName())) {
-            if (path.endsWith(".m3u") || path.endsWith(".m3u8")) {
-                dataItemsList << NPlaylistStorage::readM3u(path);
-            } else {
-                dataItemsList << NPlaylistDataItem(path);
-            }
-        }
-    }
-
-    return dataItemsList;
-}
-
-QList<NPlaylistDataItem> NCore::dirListRecursive(const QString &path)
-{
-    QStringList nameFilters = NSettings::instance()->value("FileFilters").toString().split(' ');
-    return _processPath(path, nameFilters);
 }

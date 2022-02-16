@@ -32,6 +32,7 @@
 #include "settings.h"
 #include "tagReaderInterface.h"
 #include "trackInfoWidget.h"
+#include "utils.h"
 #include "volumeSlider.h"
 #include "waveformSlider.h"
 
@@ -997,7 +998,7 @@ void NPlayer::showOpenDirDialog()
     m_settings->setValue("LastDirectory", lastDir);
 
     bool isEmpty = (m_playlistWidget->count() == 0);
-    m_playlistWidget->addItems(NCore::dirListRecursive(dir));
+    m_playlistWidget->addItems(NUtils::dirListRecursive(dir));
     if (isEmpty) {
         m_playlistWidget->playRow(0);
     }
