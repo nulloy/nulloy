@@ -244,6 +244,7 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
     }
 
     QString cmd;
+    int res = 0;
 
     bool customFileManager = NSettings::instance()->value("CustomFileManager").toBool();
     if (customFileManager) {
@@ -268,29 +269,32 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
         cmd.replace("%p", filePath);
         cmd.replace("%F", fileName);
         cmd.replace("%P", canonicalPath);
+
+#if !defined Q_OS_WIN
+        res = QProcess::execute("sh", QStringList{"-c", cmd});
+#else
+        res = QProcess::execute(cmd);
+#endif
     } else {
         QString path = fileInfo.canonicalFilePath();
 #if defined Q_OS_WIN
-        cmd = "explorer.exe /n,/select,\"" + path.replace('/', '\\') + "\"";
+        res = QProcess::execute("explorer.exe",
+                                QStringList{"/n", ",", "/select", ",", path.replace('/', '\\')});
 #elif defined Q_OS_LINUX
-        cmd = "xdg-open \"" + fileInfo.canonicalPath().replace("'", "'\\''") + "\"";
+        res = QProcess::execute("xdg-open",
+                                QStringList{fileInfo.canonicalPath().replace("'", "'\\''")});
 #elif defined Q_OS_MAC
-        cmd = "open -R \"" + path.replace("'", "'\\''") + "\"";
+        res = QProcess::execute("open", QStringList{"-R", path.replace("'", "'\\''")});
 #endif
     }
 
-    qDebug() << qPrintable(cmd);
-#if !defined Q_OS_WIN
-    int res = QProcess::execute("sh", QStringList() << "-c" << cmd);
-    if (res != 0 && customFileManager) {
-        *error = QString(QObject::tr("Custom File Manager command failed with "
-                                     "exit code <b>%1</b>."))
-                     .arg(res);
+#ifndef Q_OS_WIN
+    if (res != 0) {
+        *error = QString(QObject::tr("Command failed with exit code <b>%1</b>.")).arg(res);
         return false;
     }
-#else
-    QProcess::execute(cmd);
 #endif
+
     return true;
 }
 
