@@ -24,7 +24,14 @@ function Main()
         Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
         Ui.mainWindow["maximizeEnabled(bool)"].connect(this, "on_maximizeEnabled");
         Ui.mainWindow.resized.connect(this, "on_resized");
-        Ui.mainWindow["focusChanged(bool)"].connect(this, "on_focusChanged");
+
+        if (!Settings.value("MetroSkin/Splitter")) {
+            Settings.setValue("MetroSkin/Splitter", [200, 200]);
+        }
+
+        if (!Settings.value("MetroSkin/SplitterFullScreen")) {
+            Settings.setValue("MetroSkin/SplitterFullScreen", [999999, 0]);
+        }
 
         Ui.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
 
@@ -48,9 +55,14 @@ function Main()
             Ui.titleWidget.layout().insertWidget(10, Ui.iconLabel);
         }
 
+        this.marginsBkp_ = Ui.borderWidget.layout().contentsMargins();
+
+        this.undecoratedSpacing_ = 6;
+        Ui.splitTop.layout().insertSpacing(0, 0);
+
         if (WS_WM_TILING) {
             Ui.titleWidget.setVisible(false);
-            Ui.splitTop.layout().insertSpacing(0, 6);
+            Ui.splitTop.layout().setSpacingAt(0, this.undecoratedSpacing_);
         }
     } catch (err) {
         print("QtScript: " + err);
@@ -59,8 +71,7 @@ function Main()
 
 Main.prototype.afterShow = function()
 {
-    if (Settings.value("MetroSkin/Splitter"))
-        Ui.splitter.setSizes(Settings.value("MetroSkin/Splitter"));
+    Ui.splitter.setSizes(Settings.value("MetroSkin/Splitter"));
 
     this.darkTheme = Ui.mainWindow.styleSheet;
     this.lightTheme = readFile("light.css");
@@ -131,7 +142,11 @@ Main.prototype.on_resized = function()
 
 Main.prototype.on_splitterMoved = function(pos, index)
 {
-    Settings.setValue("MetroSkin/Splitter", Ui.splitter.sizes());
+    if (Ui.mainWindow.isFullSceen()) {
+        Settings.setValue("MetroSkin/SplitterFullScreen", Ui.splitter.sizes());
+    } else {
+        Settings.setValue("MetroSkin/Splitter", Ui.splitter.sizes());
+    }
 }
 
 Main.prototype.setTitle = function(title)
@@ -142,9 +157,16 @@ Main.prototype.setTitle = function(title)
 
 Main.prototype.on_fullScreenEnabled = function(enabled)
 {
+    if (enabled) {
+        Ui.splitter.setSizes(Settings.value("MetroSkin/SplitterFullScreen"));
+    } else {
+        Ui.splitter.setSizes(Settings.value("MetroSkin/Splitter"));
+    }
+
     Ui.controlsContainer.setVisible(!enabled);
     Ui.titleWidget.setVisible(!enabled);
-    Ui.playlistWidget.setVisible(!enabled);
+
+    Ui.splitTop.layout().setSpacingAt(0, enabled ? this.undecoratedSpacing_ : 0);
 
     this.setBorderVisible(!enabled);
 }
@@ -156,11 +178,10 @@ Main.prototype.on_maximizeEnabled = function(enabled)
 
 Main.prototype.setBorderVisible = function(enabled)
 {
-    Ui.borderWidget.styleSheet = enabled ? "" : "#borderWidget { background-color: #3D3D3D; }";
+    print(enabled);
+    if (!enabled) {
+        Ui.borderWidget.layout().setContentsMargins(0, 0, 0, 0);
+    } else {
+        Ui.borderWidget.layout().setContentsMargins(this.marginsBkp_);
+    }
 }
-
-Main.prototype.on_focusChanged = function(focused)
-{
-    this.setBorderVisible(focused);
-}
-

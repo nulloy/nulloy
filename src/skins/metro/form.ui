@@ -16,7 +16,7 @@
 }
 
 #borderWidget {
-	background-color: #5882CF;
+	background-color: #3D3D3D;
 }
 
 #coverWidget {

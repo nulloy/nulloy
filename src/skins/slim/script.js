@@ -28,6 +28,14 @@ function Main()
         Ui.mainWindow.windowFlags = (Ui.mainWindow.windowFlags | Qt.FramelessWindowHint | Qt.WindowCloseButtonHint) ^ (Qt.WindowTitleHint | Qt.Dialog);
         Ui.waveformSlider.minimumHeight = 30;
 
+        if (!Settings.value("SlimSkin/Splitter")) {
+            Settings.setValue("SlimSkin/Splitter", [30, 30]);
+        }
+
+        if (!Settings.value("SlimSkin/SplitterFullScreen")) {
+            Settings.setValue("SlimSkin/SplitterFullScreen", [999999, 0]);
+        }
+
         if (Q_WS == "mac") {
             Ui.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
             Ui.playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
@@ -41,9 +49,12 @@ function Main()
             Ui.titleWidget.layout().insertWidget(10, Ui.iconLabel);
         }
 
+        this.undecoratedSpacing_ = 4;
+        Ui.borderWidget.layout().insertSpacing(1, 0);
+
         if (WS_WM_TILING) {
             Ui.titleWidget.setVisible(false);
-            Ui.borderWidget.layout().insertSpacing(1, 4);
+            Ui.borderWidget.layout().setSpacingAt(1, this.undecoratedSpacing_);
         }
     } catch (err) {
         print("QtScript: " + err);
@@ -52,10 +63,7 @@ function Main()
 
 Main.prototype.afterShow = function()
 {
-    if (Settings.value("SlimSkin/Splitter"))
-        Ui.splitter.setSizes(Settings.value("SlimSkin/Splitter"));
-    else
-        Ui.splitter.setSizes([30, 0]);
+    Ui.splitter.setSizes(Settings.value("SlimSkin/Splitter"));
 
     Ui.menuButton["clicked()"].connect(this, "showMenu");
 }
@@ -69,7 +77,11 @@ Main.prototype.showMenu = function()
 
 Main.prototype.on_splitterMoved = function(pos, index)
 {
-    Settings.setValue("SlimSkin/Splitter", Ui.splitter.sizes());
+    if (Ui.mainWindow.isFullSceen()) {
+        Settings.setValue("SlimSkin/SplitterFullScreen", Ui.splitter.sizes());
+    } else {
+        Settings.setValue("SlimSkin/Splitter", Ui.splitter.sizes());
+    }
 }
 
 Main.prototype.setTitle = function(title)
@@ -88,9 +100,16 @@ Main.prototype.on_stateChanged = function(state)
 
 Main.prototype.on_fullScreenEnabled = function(enabled)
 {
+    if (enabled) {
+        Ui.splitter.setSizes(Settings.value("SlimSkin/SplitterFullScreen"));
+    } else {
+        Ui.splitter.setSizes(Settings.value("SlimSkin/Splitter"));
+    }
+
     Ui.controlsContainer.setVisible(!enabled);
     Ui.titleWidget.setVisible(!enabled);
-    Ui.playlistWidget.setVisible(!enabled);
+
+    Ui.borderWidget.layout().setSpacingAt(1, enabled ? this.undecoratedSpacing_ : 0);
 
     this.setBorderVisible(!enabled);
 }

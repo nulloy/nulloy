@@ -27,6 +27,10 @@ function Main()
 
         Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
 
+        if (!Settings.value("NativeSkin/Splitter")) {
+            Settings.setValue("NativeSkin/Splitter", [200, 200]);
+        }
+
         Ui.splitter["splitterMoved(int, int)"].connect(this, "on_splitterMoved");
 
         Ui.mainWindow.windowFlags = (Ui.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
@@ -71,13 +75,16 @@ function Main()
 
 Main.prototype.afterShow = function()
 {
-    if (Settings.value("NativeSkin/Splitter"))
-        Ui.splitter.setSizes(Settings.value("NativeSkin/Splitter"));
+    Ui.splitter.setSizes(Settings.value("NativeSkin/Splitter"));
 }
 
 Main.prototype.on_splitterMoved = function(pos, index)
 {
-    Settings.setValue("NativeSkin/Splitter", Ui.splitter.sizes());
+    if (Ui.mainWindow.isFullSceen()) {
+        Settings.setValue("NativeSkin/SplitterFullScreen", Ui.splitter.sizes());
+    } else {
+        Settings.setValue("NativeSkin/Splitter", Ui.splitter.sizes());
+    }
 }
 
 Main.prototype.on_stateChanged = function(state)
@@ -90,6 +97,11 @@ Main.prototype.on_stateChanged = function(state)
 
 Main.prototype.on_fullScreenEnabled = function(enabled)
 {
+    if (enabled) {
+        Ui.splitter.setSizes(Settings.value("NativeSkin/SplitterFullScreen"));
+    } else {
+        Ui.splitter.setSizes(Settings.value("NativeSkin/Splitter"));
+    }
+
     Ui.controlsContainer.setVisible(!enabled);
-    Ui.playlistContainer.setVisible(!enabled);
 }

@@ -66,6 +66,8 @@ public:
     Q_INVOKABLE void setFramelessShadow(bool enabled);
 #endif
 
+    Q_INVOKABLE bool isFullSceen();
+
 public slots:
     void loadSettings();
     void saveSettings();

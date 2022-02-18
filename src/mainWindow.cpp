@@ -103,6 +103,11 @@ NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(paren
 
 NMainWindow::~NMainWindow() {}
 
+bool NMainWindow::isFullSceen()
+{
+    return m_isFullScreen;
+}
+
 void NMainWindow::loadSettings()
 {
     QPoint _pos;
