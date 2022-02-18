@@ -59,7 +59,13 @@ NSettings::NSettings(QObject *parent)
     initValue("Jump2", 30);
     initValue("Jump3", 180);
 
-    initValue("Shortcuts/FullScreenAction", "F11");
+    {
+        QStringList fullScreenKeys;
+        foreach (QKeySequence seq, QKeySequence::keyBindings(QKeySequence::FullScreen)) {
+            fullScreenKeys << seq.toString();
+        }
+        initValue("Shortcuts/FullScreenAction", fullScreenKeys);
+    }
 
     initValue("PlaylistTrackInfo", "%F (%d)");
     initValue("WindowTitleTrackInfo",
