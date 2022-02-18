@@ -76,6 +76,7 @@ public slots:
     void toggleFullScreen();
     void setTitle(QString title);
     void setOnTop(bool onTop);
+    void showPlaybackControls(bool enable);
     void reject(){};
 
 signals:
@@ -86,6 +87,7 @@ signals:
     void maximizeEnabled(bool enabled);
     void focusChanged(bool focused);
     void scrolled(int delta);
+    void showPlaybackControlsEnabled(bool enabled);
 };
 
 #endif

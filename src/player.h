@@ -80,6 +80,7 @@ private:
     NAction *m_addDirAction;
     NAction *m_savePlaylistAction;
     NAction *m_showCoverAction;
+    NAction *m_showPlaybackControlsAction;
     NAction *m_aboutAction;
     NAction *m_playingOnTopAction;
     NAction *m_alwaysOnTopAction;

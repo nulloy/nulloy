@@ -86,6 +86,7 @@ NSettings::NSettings(QObject *parent)
     initValue("LoopPlaylist", false);
     initValue("LoadNext", false);
     initValue("ShowCoverArt", true);
+    initValue("ShowPlaybackControls", true);
     initValue("LoadNextSort", QDir::Name);
     initValue("Volume", 0.8);
     initValue("ShowDecibelsVolume", false);

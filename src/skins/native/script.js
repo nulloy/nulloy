@@ -26,6 +26,7 @@ function Main()
         PlaybackEngine["stateChanged(N::PlaybackState)"].connect(this, "on_stateChanged");
 
         Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
+        Ui.mainWindow["showPlaybackControlsEnabled(bool)"].connect(this, "on_showPlaybackControlsEnabled");
 
         if (!Settings.value("NativeSkin/Splitter")) {
             Settings.setValue("NativeSkin/Splitter", [200, 200]);
@@ -103,5 +104,14 @@ Main.prototype.on_fullScreenEnabled = function(enabled)
         Ui.splitter.setSizes(Settings.value("NativeSkin/Splitter"));
     }
 
-    Ui.controlsContainer.setVisible(!enabled);
+    if (Settings.value("ShowPlaybackControls")) {
+        Ui.controlsContainer.setVisible(!enabled);
+    }
+}
+
+Main.prototype.on_showPlaybackControlsEnabled = function(enabled)
+{
+    if (!Ui.mainWindow.isFullSceen()) {
+        Ui.controlsContainer.setVisible(enabled);
+    }
 }

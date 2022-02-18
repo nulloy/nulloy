@@ -22,6 +22,7 @@ function Main()
 
         Ui.mainWindow["newTitle(const QString &)"].connect(this, "setTitle");
         Ui.mainWindow["fullScreenEnabled(bool)"].connect(this, "on_fullScreenEnabled");
+        Ui.mainWindow["showPlaybackControlsEnabled(bool)"].connect(this, "on_showPlaybackControlsEnabled");
         Ui.mainWindow["maximizeEnabled(bool)"].connect(this, "on_maximizeEnabled");
         Ui.mainWindow.resized.connect(this, "on_resized");
 
@@ -128,12 +129,22 @@ Main.prototype.on_fullScreenEnabled = function(enabled)
         Ui.splitter.setSizes(Settings.value("SilverSkin/Splitter"));
     }
 
-    Ui.controlsContainer.setVisible(!enabled);
+    if (Settings.value("ShowPlaybackControls")) {
+        Ui.controlsContainer.setVisible(!enabled);
+    }
+
     Ui.titleWidget.setVisible(!enabled);
 
     Ui.splitTop.layout().setSpacingAt(0, enabled ? this.undecoratedSpacing_ : 0);
 
     this.setBorderVisible(!enabled);
+}
+
+Main.prototype.on_showPlaybackControlsEnabled = function(enabled)
+{
+    if (!Ui.mainWindow.isFullSceen()) {
+        Ui.controlsContainer.setVisible(enabled);
+    }
 }
 
 Main.prototype.on_maximizeEnabled = function(enabled)

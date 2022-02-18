@@ -220,6 +220,10 @@ void NPlayer::createActions()
     m_showCoverAction->setCheckable(true);
     m_showCoverAction->setObjectName("ShowCoverAction");
 
+    m_showPlaybackControlsAction = new NAction(tr("Show Playback Controls"), this);
+    m_showPlaybackControlsAction->setCheckable(true);
+    m_showPlaybackControlsAction->setObjectName("ShowPlaybackControls");
+
     m_aboutAction = new NAction(QIcon::fromTheme("help-about", style()->standardIcon(
                                                                    QStyle::SP_MessageBoxQuestion)),
                                 tr("About"), this);
@@ -328,6 +332,7 @@ void NPlayer::createContextMenu()
 
     m_windowSubMenu = new QMenu(tr("Window"), m_mainWindow);
     m_windowSubMenu->addAction(m_showCoverAction);
+    m_windowSubMenu->addAction(m_showPlaybackControlsAction);
     m_windowSubMenu->addAction(m_playingOnTopAction);
     m_windowSubMenu->addAction(m_alwaysOnTopAction);
     m_windowSubMenu->addAction(m_fullScreenAction);
@@ -389,6 +394,7 @@ void NPlayer::createGlobalMenu()
 
     QMenu *windowMenu = menuBar->addMenu(tr("Window"));
     windowMenu->addAction(m_showCoverAction);
+    windowMenu->addAction(m_showPlaybackControlsAction);
     windowMenu->addAction(m_playingOnTopAction);
     windowMenu->addAction(m_alwaysOnTopAction);
     windowMenu->addAction(m_fullScreenAction);
@@ -517,6 +523,8 @@ void NPlayer::connectSignals()
     connect(m_addDirAction, SIGNAL(triggered()), this, SLOT(showOpenDirDialog()));
     connect(m_savePlaylistAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
     connect(m_showCoverAction, SIGNAL(toggled(bool)), this, SLOT(on_showCoverAction_toggled(bool)));
+    connect(m_showPlaybackControlsAction, SIGNAL(toggled(bool)), m_mainWindow,
+            SLOT(showPlaybackControls(bool)));
     connect(m_aboutAction, SIGNAL(triggered()), this, SLOT(showAboutMessageBox()));
     connect(m_playingOnTopAction, SIGNAL(toggled(bool)), this,
             SLOT(on_whilePlayingOnTopAction_toggled(bool)));
@@ -687,6 +695,9 @@ void NPlayer::loadSettings()
     if (m_coverWidget) {
         m_coverWidget->setEnabled(m_settings->value("ShowCoverArt").toBool());
     }
+
+    m_showPlaybackControlsAction->setChecked(m_settings->value("ShowPlaybackControls").toBool());
+    m_mainWindow->showPlaybackControls(m_settings->value("ShowPlaybackControls").toBool());
 
     m_alwaysOnTopAction->setChecked(m_settings->value("AlwaysOnTop").toBool());
     m_playingOnTopAction->setChecked(m_settings->value("WhilePlayingOnTop").toBool());

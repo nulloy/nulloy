@@ -461,6 +461,12 @@ void NMainWindow::wheelEvent(QWheelEvent *event)
     }
 }
 
+void NMainWindow::showPlaybackControls(bool enable)
+{
+    NSettings::instance()->setValue("ShowPlaybackControls", enable);
+    emit showPlaybackControlsEnabled(enable);
+}
+
 void NMainWindow::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
