@@ -268,7 +268,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
             "<li><b>%C</b> - " + tr("Time position under cursor (Tooltip only)") + "</li>" +
             "<li><b>%o</b> - " + tr("Time offset under cursor (Tooltip only)") + "</li>" +
             "<li><b>%d</b> - " + tr("Duration in format hh:mm:ss") + "</li>" +
-            "<li><b>%d</b> - " + tr("Duration in seconds") + "</li>" +
+            "<li><b>%D</b> - " + tr("Duration in seconds") + "</li>" +
             "<li><b>%b</b> - " + tr("Bit depth") + "</li>" +
             "<li><b>%B</b> - " + tr("Bitrate in Kbps") + "</li>" +
             "<li><b>%s</b> - " + tr("Sample rate in kHz") + "</li>" +
@@ -279,7 +279,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
             "<li><b>%P</b> - " + tr("Directory path without file name") + "</li>" +
             "<li><b>%e</b> - " + tr("File name extension") + "</li>" +
             "<li><b>%E</b> - " + tr("File name extension, uppercased") + "</li>" +
-            "<li><b>%v</b> - " + tr("Version number") + "</li>" +
+            "<li><b>%v</b> - " + tr("Nulloy version number") + "</li>" +
             "<li><b>%%</b> - " + tr("\'%\' character") + "</li>" +
         "</ul>" +
         tr("Conditions:") +

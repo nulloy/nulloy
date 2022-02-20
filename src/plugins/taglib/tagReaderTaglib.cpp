@@ -43,11 +43,6 @@ void NTagReaderTaglib::init()
     NTaglib::_tagRef = NULL;
 }
 
-QString NTagReaderTaglib::getSource()
-{
-    return NTaglib::_filePath;
-}
-
 void NTagReaderTaglib::setSource(const QString &file)
 {
     if (NTaglib::_filePath == file) {
@@ -86,8 +81,13 @@ NTagReaderTaglib::~NTagReaderTaglib()
     }
 }
 
-QString NTagReaderTaglib::toString(const QString &format, const QString &encoding) const
+QString NTagReaderTaglib::toString(const QString &file, const QString &format,
+                                   const QString &encoding)
 {
+    setSource(file);
+    if (!isValid()) {
+        return "";
+    }
     bool res;
     return parse(format, &res, encoding);
 }
@@ -96,14 +96,10 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
                                 bool stopOnFail) const
 {
     if (format.isEmpty()) {
-        return "";
+        return "<Format is empty>";
     }
 
     *success = true;
-
-    if (!isValid()) {
-        return "NTagReaderTaglib::InvalidFile";
-    }
 
     TagLib::Tag *tag = NTaglib::_tagRef->tag();
     TagLib::AudioProperties *ap = NTaglib::_tagRef->audioProperties();
@@ -117,51 +113,51 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
         if (format.at(i) == '%') {
             ++i;
             QChar ch = format.at(i);
-            if (ch == 'a') {
+            if (ch == 'a') { // artist
                 QString str = codec->toUnicode(tag->artist().toCString(isUtf8));
                 if (!(*success = !str.isEmpty())) {
                     str = "<Unknown artist>";
                 }
                 res += str;
-            } else if (ch == 't') {
+            } else if (ch == 't') { // title
                 QString str = codec->toUnicode(tag->title().toCString(isUtf8));
                 if (!(*success = !str.isEmpty())) {
                     str = "<Unknown title>";
                 }
                 res += str;
-            } else if (ch == 'A') {
+            } else if (ch == 'A') { // album
                 QString str = codec->toUnicode(tag->album().toCString(isUtf8));
                 if (!(*success = !str.isEmpty())) {
                     str = "<Unknown album>";
                 }
                 res += str;
-            } else if (ch == 'c') {
+            } else if (ch == 'c') { // comment
                 QString str = codec->toUnicode(tag->comment().toCString(isUtf8));
                 if (!(*success = !str.isEmpty())) {
                     str = "<Empty comment>";
                 }
                 res += str;
-            } else if (ch == 'g') {
+            } else if (ch == 'g') { // genre
                 QString str = TStringToQString(tag->genre());
                 if (!(*success = !str.isEmpty())) {
                     str = "<Unknown genre>";
                 }
                 res += str;
-            } else if (ch == 'y') {
+            } else if (ch == 'y') { // year
                 QString str = QString::number(tag->year());
                 if (str == "0") {
                     str = "<Unknown year>";
                     *success = false;
                 }
                 res += str;
-            } else if (ch == 'n') {
+            } else if (ch == 'n') { // track number
                 QString str = QString::number(tag->track());
                 if (str == "0") {
                     str = "<Unknown track number>";
                     *success = false;
                 }
                 res += str;
-            } else if (ch == 'b') {
+            } else if (ch == 'b') { // bit depth
                 if (auto *prop = dynamic_cast<TagLib::APE::Properties *>(ap)) {
                     res += QString::number(prop->bitsPerSample());
                 } else if (auto *prop = dynamic_cast<TagLib::FLAC::Properties *>(ap)) {
@@ -180,7 +176,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
                     res += "<Unknown bit depth>";
                     *success = false;
                 }
-            } else if (ch == 'd') {
+            } else if (ch == 'd') { // duration as hh:mm:ss
                 QString duration;
                 if (seconds_total > 0) {
                     int seconds = seconds_total % 60;
@@ -197,7 +193,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
                     *success = false;
                 }
                 res += duration;
-            } else if (ch == 'D') {
+            } else if (ch == 'D') { // duration in seconds
                 QString duration;
                 if (seconds_total == 0) {
                     duration = "<Unknown duration>";
@@ -206,40 +202,40 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
                     duration = QString::number(seconds_total);
                 }
                 res += duration;
-            } else if (ch == 'B') {
+            } else if (ch == 'B') { // bitrate in Kbps
                 QString str = QString::number(ap->bitrate());
                 if (str == "0") {
                     str = "<Unknown bitrate>";
                     *success = false;
                 }
                 res += str;
-            } else if (ch == 's') {
+            } else if (ch == 's') { // sample rate in kHz
                 QString str = QString::number(ap->sampleRate() / (float)1000);
                 if (str == "0") {
                     str = "<Unknown sample rate>";
                     *success = false;
                 }
                 res += str;
-            } else if (ch == 'H') {
+            } else if (ch == 'H') { // number of channels
                 QString str = QString::number(ap->channels());
                 if (str == "0") {
                     str = "<Unknown channels number>";
                     *success = false;
                 }
                 res += str;
-            } else if (ch == 'f') {
+            } else if (ch == 'f') { // file name without extension
                 res += QFileInfo(NTaglib::_filePath).baseName();
-            } else if (ch == 'F') {
+            } else if (ch == 'F') { // file name
                 res += QFileInfo(NTaglib::_filePath).fileName();
-            } else if (ch == 'p') {
+            } else if (ch == 'p') { // file name including absolute path
                 res += QFileInfo(NTaglib::_filePath).absoluteFilePath();
-            } else if (ch == 'P') {
+            } else if (ch == 'P') { // directory path without file name
                 res += QFileInfo(NTaglib::_filePath).canonicalPath();
-            } else if (ch == 'e') {
+            } else if (ch == 'e') { // file name extension
                 res += QFileInfo(NTaglib::_filePath).suffix();
-            } else if (ch == 'E') {
+            } else if (ch == 'E') { // file name extension, uppercased
                 res += QFileInfo(NTaglib::_filePath).suffix().toUpper();
-            } else if (ch == 'v') {
+            } else if (ch == 'v') { // Nulloy version number
                 res += QCoreApplication::applicationVersion();
             } else {
                 res += ch;

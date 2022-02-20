@@ -48,11 +48,6 @@ void NTagReaderGstreamer::init()
     m_init = true;
 }
 
-QString NTagReaderGstreamer::getSource()
-{
-    return m_path;
-}
-
 void NTagReaderGstreamer::setSource(const QString &file)
 {
     if (m_taglist) {
@@ -120,8 +115,14 @@ NTagReaderGstreamer::~NTagReaderGstreamer()
     }
 }
 
-QString NTagReaderGstreamer::toString(const QString &format, const QString &encoding) const
+QString NTagReaderGstreamer::toString(const QString &file, const QString &format,
+                                      const QString &encoding)
 {
+    setSource(file);
+    if (!m_isValid) {
+        return "";
+    }
+
     bool res;
     return parse(format, &res, encoding);
 }
@@ -130,14 +131,10 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                                    bool stopOnFail) const
 {
     if (format.isEmpty()) {
-        return "";
+        return "<Format is empty>";
     }
 
     *success = true;
-
-    if (!m_isValid) {
-        return "NTagReaderGstreamer::InvalidFile";
-    }
 
     int seconds_total = GST_TIME_AS_SECONDS(m_nanosecs);
 
@@ -148,37 +145,37 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
             gchar *gstr = NULL;
             ++i;
             QChar ch = format.at(i);
-            if (ch == 'a') {
+            if (ch == 'a') { // artist
                 if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_ARTIST, &gstr))) {
                     res += "<Unknown artist>";
                 } else {
                     res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
                 }
-            } else if (ch == 't') {
+            } else if (ch == 't') { // title
                 if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_TITLE, &gstr))) {
                     res += "<Unknown title>";
                 } else {
                     res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
                 }
-            } else if (ch == 'A') {
+            } else if (ch == 'A') { // album
                 if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_ALBUM, &gstr))) {
                     res += "<Unknown album>";
                 } else {
                     res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
                 }
-            } else if (ch == 'c') {
+            } else if (ch == 'c') { // comment
                 if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_COMMENT, &gstr))) {
                     res += "<Empty comment>";
                 } else {
                     res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
                 }
-            } else if (ch == 'g') {
+            } else if (ch == 'g') { // genre
                 if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_GENRE, &gstr))) {
                     res += "<Unknown genre>";
                 } else {
                     res += QString::fromUtf8(gstr);
                 }
-            } else if (ch == 'y') {
+            } else if (ch == 'y') { // year
                 GDate *date = NULL;
                 QString str = "0";
                 if (gst_tag_list_get_date(m_taglist, GST_TAG_DATE, &date)) {
@@ -192,7 +189,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                     *success = false;
                 }
                 res += str;
-            } else if (ch == 'n') {
+            } else if (ch == 'n') { // track number
                 unsigned int track = 0;
                 QString str;
                 if ((*success = gst_tag_list_get_uint(m_taglist, GST_TAG_TRACK_NUMBER, &track))) {
@@ -201,14 +198,14 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                     str = "<Unknown track number>";
                 }
                 res += str;
-            } else if (ch == 'b') {
+            } else if (ch == 'b') { // bit depth
                 if (m_codecName.contains("MP3")) {
                     res += "<Unknown bit depth>";
                     *success = false;
                 } else {
                     res += QString::number(m_bitDepth);
                 }
-            } else if (ch == 'd') {
+            } else if (ch == 'd') { // duration as hh:mm:ss
                 QString duration;
                 if (seconds_total > 0) {
                     int seconds = seconds_total % 60;
@@ -225,7 +222,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                     duration = "<Unknown duration>";
                 }
                 res += duration;
-            } else if (ch == 'D') {
+            } else if (ch == 'D') { // duration in seconds
                 QString duration;
                 if (seconds_total == 0) {
                     duration = "<Unknown duration>";
@@ -234,7 +231,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                     duration = QString::number(seconds_total);
                 }
                 res += duration;
-            } else if (ch == 'B') {
+            } else if (ch == 'B') { // bitrate in Kbps
                 unsigned int bitrate = 0;
                 QString str;
                 if ((*success = gst_tag_list_get_uint(m_taglist, GST_TAG_BITRATE, &bitrate))) {
@@ -243,24 +240,24 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                     str = "<Unknown bitrate>";
                 }
                 res += str;
-            } else if (ch == 's') {
+            } else if (ch == 's') { // sample rate in kHz
                 res += QString::number(m_sampleRate);
-            } else if (ch == 'H') {
+            } else if (ch == 'H') { // number of channels
                 res += "<Usupported tag: channels number>";
                 *success = false;
-            } else if (ch == 'f') {
+            } else if (ch == 'f') { // file name without extension
                 res += QFileInfo(m_path).baseName();
-            } else if (ch == 'F') {
+            } else if (ch == 'F') { // file name
                 res += QFileInfo(m_path).fileName();
-            } else if (ch == 'p') {
+            } else if (ch == 'p') { // file name including absolute path
                 res += QFileInfo(m_path).absoluteFilePath();
-            } else if (ch == 'P') {
+            } else if (ch == 'P') { // directory path without file name
                 res += QFileInfo(m_path).canonicalPath();
-            } else if (ch == 'e') {
+            } else if (ch == 'e') { // file name extension
                 res += QFileInfo(m_path).suffix();
-            } else if (ch == 'E') {
+            } else if (ch == 'E') { // file name extension, uppercased
                 res += QFileInfo(m_path).suffix().toUpper();
-            } else if (ch == 'v') {
+            } else if (ch == 'v') { // Nulloy version number
                 res += QCoreApplication::applicationVersion();
             } else {
                 res += ch;
@@ -307,9 +304,4 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
     }
 
     return res;
-}
-
-bool NTagReaderGstreamer::isValid() const
-{
-    return m_isValid;
 }

@@ -36,6 +36,7 @@ private:
     QGraphicsOpacityEffect *m_effect;
     QPropertyAnimation *m_animation;
     QWidget *m_container;
+    int m_trackDurationSec;
 
     bool event(QEvent *event);
     void enterEvent(QEvent *event);
@@ -48,7 +49,7 @@ public:
     ~NTrackInfoWidget();
 
 public slots:
-    void updateStaticTags();
+    void updateStaticTags(const QString &file);
     void loadSettings();
     void tick(qint64 msec);
 

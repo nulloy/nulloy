@@ -303,31 +303,25 @@ NPlaylistWidget::~NPlaylistWidget() {}
 void NPlaylistWidget::resetCurrentItem()
 {
     m_currentItem = NULL;
-    m_tagReader->setSource("");
     emit setMedia("");
 }
 
 void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force)
 {
-    if (!force && titleFormat == item->data(N::TitleFormatRole) && !item->text().isEmpty()) {
+    if (!force && titleFormat == item->data(N::TitleFormatRole).toString() &&
+        !item->text().isEmpty()) {
         return;
     }
 
-    QString oldSource = m_tagReader->getSource();
-
     QString file = item->data(N::PathRole).toString();
-    m_tagReader->setSource(file);
-
-    if (m_tagReader->isValid()) {
-        QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
-        item->setText(m_tagReader->toString(titleFormat, encoding));
-    } else {
-        item->setText(QFileInfo(file).fileName());
+    QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
+    QString title = m_tagReader->toString(file, titleFormat, encoding);
+    if (title.isEmpty()) { // reading tags failed
+        title = QFileInfo(file).fileName();
     }
 
+    item->setText(title);
     item->setData(N::TitleFormatRole, titleFormat);
-
-    m_tagReader->setSource(oldSource);
 }
 
 void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
@@ -346,7 +340,6 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
     }
 
     item->setData(N::FailedRole, false); // reset failed role
-
     formatItemTitle(item, NSettings::instance()->value("PlaylistTrackInfo").toString(),
                     true); // with force
 

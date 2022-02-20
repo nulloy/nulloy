@@ -729,7 +729,7 @@ void NPlayer::on_preferencesDialog_settingsChanged()
 {
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
     m_trackInfoWidget->loadSettings();
-    m_trackInfoWidget->updateStaticTags();
+    m_trackInfoWidget->updateStaticTags(m_playbackEngine->currentMedia());
     m_playlistWidget->processVisibleItems();
 }
 
@@ -847,9 +847,11 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
         }
         QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
         QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
-        if (!format.isEmpty() && tagReader->isValid()) {
-            title = tagReader->toString(format, encoding);
-        } else {
+        QString title;
+        if (!format.isEmpty()) {
+            title = tagReader->toString(file, format, encoding);
+        }
+        if (title.isEmpty()) { // reading tags failed
             title = titleDefault;
         }
     } else {
@@ -857,7 +859,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
     }
     m_mainWindow->setTitle(title);
     m_systemTray->setToolTip(title);
-    m_trackInfoWidget->updateStaticTags();
+    m_trackInfoWidget->updateStaticTags(file);
 }
 
 void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)

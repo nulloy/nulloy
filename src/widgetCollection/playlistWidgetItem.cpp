@@ -33,6 +33,7 @@ NPlaylistWidgetItem::NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QLis
     : QListWidgetItem(parent)
 {
     m_data = dataItem;
+    setText(m_data.title);
 }
 
 QVariant NPlaylistWidgetItem::data(int role) const

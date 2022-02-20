@@ -32,7 +32,7 @@ public:
     ~NContainerTaglib();
     QList<NPlugin *> plugins() const;
     QString name() const { return "TagLib"; }
-    QString version() const { return "0.8.2"; }
+    QString version() const { return "0.9"; }
 };
 
 #endif

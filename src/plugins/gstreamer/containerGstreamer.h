@@ -32,7 +32,7 @@ public:
     ~NContainerGstreamer();
     QList<NPlugin *> plugins() const;
     QString name() const { return "GStreamer"; }
-    QString version() const { return "0.8.2"; }
+    QString version() const { return "0.9"; }
 };
 
 #endif

@@ -20,7 +20,7 @@
 
 class QString;
 
-#define TAGREADER_INTERFACE "Nulloy/NTagReaderInterface/0.7"
+#define TAGREADER_INTERFACE "Nulloy/NTagReaderInterface/0.9"
 
 class NTagReaderInterface : public QObject
 {
@@ -30,11 +30,8 @@ public:
 
     static QString interfaceString() { return TAGREADER_INTERFACE; }
 
-    virtual QString getSource() = 0;
-    virtual void setSource(const QString &file) = 0;
-    virtual QString toString(const QString &format,
-                             const QString &encoding = QString("UTF-8")) const = 0;
-    virtual bool isValid() const = 0;
+    virtual QString toString(const QString &file, const QString &format,
+                             const QString &encoding = QString("UTF-8")) = 0;
 };
 
 Q_DECLARE_INTERFACE(NTagReaderInterface, TAGREADER_INTERFACE)

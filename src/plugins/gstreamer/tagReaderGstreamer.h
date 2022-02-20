@@ -35,6 +35,8 @@ private:
     int m_bitDepth;
     bool m_isValid;
     QString m_codecName;
+
+    void setSource(const QString &file);
     QString parse(const QString &format, bool *success, const QString &encoding,
                   bool stopOnFail = false) const;
 
@@ -46,10 +48,7 @@ public:
     QString interfaceString() const { return NTagReaderInterface::interfaceString(); }
     N::PluginType type() const { return N::TagReader; }
 
-    QString getSource();
-    void setSource(const QString &file);
-    QString toString(const QString &format, const QString &encoding) const;
-    bool isValid() const;
+    QString toString(const QString &file, const QString &format, const QString &encoding);
 };
 
 #endif
