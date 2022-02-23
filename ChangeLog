@@ -1,3 +1,8 @@
+* 0.9, Thu Feb 24 2022
+- HiDPI support
+- Hide playback controls option
+- Other minor bug fixes and improvements
+
 * 0.8.2, Wed Feb 3 2016
 - Chinese translation
 - Fix: tags encoding doesn't apply to playlist
