@@ -259,8 +259,8 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                 res += QFileInfo(m_path).suffix().toUpper();
             } else if (ch == 'v') { // Nulloy version number
                 res += QCoreApplication::applicationVersion();
-            } else {
-                res += ch;
+            } else { // unrecognized
+                res += format.mid(i - 1, 2);
             }
             g_free(gstr);
         } else if (format.at(i) == '{') {

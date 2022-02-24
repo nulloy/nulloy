@@ -263,6 +263,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
             "<li><b>%g</b> - " + tr("Genre") + "</li>" +
             "<li><b>%y</b> - " + tr("Year") + "</li>" +
             "<li><b>%n</b> - " + tr("Track number") + "</li>" +
+            "<li><b>%i</b> - " + tr("Track index in playlist") + "</li>" +
             "<li><b>%T</b> - " + tr("Current time position (Waveform only)") + "</li>" +
             "<li><b>%r</b> - " + tr("Remaining time (Waveform only)") + "</li>" +
             "<li><b>%C</b> - " + tr("Time position under cursor (Tooltip only)") + "</li>" +

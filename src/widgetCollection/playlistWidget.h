@@ -103,6 +103,7 @@ public slots:
     void playItems(const QList<NPlaylistDataItem> &dataItems);
     bool setPlaylist(const QString &file);
     void processVisibleItems();
+    void updateTrackIndexes();
 
     void currentFinished();
     void currentFailed();

@@ -34,6 +34,7 @@ public:
 
     QVariant data(int role) const;
     void setData(int role, const QVariant &value);
+    void setText(const QString &text);
 
     NPlaylistDataItem dataItem() const;
 };

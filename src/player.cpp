@@ -665,7 +665,6 @@ void NPlayer::writePlaylist(const QString &file, N::M3uExtention ext)
     QList<NPlaylistDataItem> dataItemsList;
     for (int i = 0; i < m_playlistWidget->count(); ++i) {
         NPlaylistDataItem dataItem = m_playlistWidget->item(i)->dataItem();
-        dataItem.title = m_playlistWidget->item(i)->text();
         dataItemsList << dataItem;
     }
     NPlaylistStorage::writeM3u(file, dataItemsList, ext);

@@ -298,6 +298,13 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
     return true;
 }
 
+void NPlaylistWidget::updateTrackIndexes()
+{
+    for (int i = 0; i < count(); ++i) {
+        item(i)->setData(N::TrackIndexRole, i);
+    }
+}
+
 NPlaylistWidget::~NPlaylistWidget() {}
 
 void NPlaylistWidget::resetCurrentItem()
@@ -480,6 +487,7 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
         addItem(new NPlaylistWidgetItem(dataItemsList.at(i)));
     }
 
+    updateTrackIndexes();
     processVisibleItems();
 
     return true;
@@ -690,6 +698,8 @@ void NPlaylistWidget::paintEvent(QPaintEvent *e)
 // DRAG & DROP >>
 bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAction action)
 {
+    updateTrackIndexes();
+
     if (action == Qt::MoveAction && m_dragStart == DragStartInside) { // moving within playlist
         return false;
     }
@@ -765,6 +775,7 @@ void NPlaylistWidget::mouseMoveEvent(QMouseEvent *event)
                                                  Qt::MoveAction);      // blocking
     if (dropAction == Qt::MoveAction && m_dropEnd == DropEndOutside) { // dropping to file manager
         on_removeAction_triggered();
+        updateTrackIndexes();
     }
 }
 
@@ -777,6 +788,8 @@ void NPlaylistWidget::dropEvent(QDropEvent *event)
     }
 
     QListWidget::dropEvent(event);
+
+    updateTrackIndexes();
 
     m_fileDrop = false;
     viewport()->update();

@@ -36,6 +36,12 @@ NPlaylistWidgetItem::NPlaylistWidgetItem(const NPlaylistDataItem &dataItem, QLis
     setText(m_data.title);
 }
 
+void NPlaylistWidgetItem::setText(const QString &text)
+{
+    m_data.title = text;
+    QListWidgetItem::setText(text);
+}
+
 QVariant NPlaylistWidgetItem::data(int role) const
 {
     switch (role) {
@@ -51,6 +57,13 @@ QVariant NPlaylistWidgetItem::data(int role) const
             return m_data.playbackPosition;
         case (N::TitleFormatRole):
             return m_data.titleFormat;
+        case (N::TrackIndexRole):
+            return m_data.trackIndex;
+        case (Qt::DisplayRole):
+            return QVariant(
+                QListWidgetItem::data(Qt::DisplayRole)
+                    .toString()
+                    .replace("%i", QString::number(data(N::TrackIndexRole).toInt() + 1)));
         default:
             return QListWidgetItem::data(role);
     }
@@ -76,6 +89,9 @@ void NPlaylistWidgetItem::setData(int role, const QVariant &value)
             break;
         case (N::TitleFormatRole):
             m_data.titleFormat = value.toString();
+            break;
+        case (N::TrackIndexRole):
+            m_data.trackIndex = value.toInt();
             break;
         default:
             QListWidgetItem::setData(role, value);
