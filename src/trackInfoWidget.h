@@ -37,6 +37,7 @@ private:
     QPropertyAnimation *m_animation;
     QWidget *m_container;
     int m_trackDurationSec;
+    bool m_hasTags;
 
     bool event(QEvent *event);
     void enterEvent(QEvent *event);

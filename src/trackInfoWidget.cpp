@@ -95,10 +95,16 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
     m_heightThreshold = minimumSizeHint().height();
 
     loadSettings();
+
+    m_hasTags = false;
+    hide();
 }
 
 void NTrackInfoWidget::enterEvent(QEvent *)
 {
+    if (!m_hasTags) {
+        return;
+    }
 #ifndef Q_OS_MAC // QTBUG-15367
     m_animation->setDirection(QAbstractAnimation::Forward);
     if (m_animation->state() == QAbstractAnimation::Stopped) {
@@ -111,6 +117,9 @@ void NTrackInfoWidget::enterEvent(QEvent *)
 
 void NTrackInfoWidget::leaveEvent(QEvent *)
 {
+    if (!m_hasTags) {
+        return;
+    }
     m_container->show();
     m_animation->setDirection(QAbstractAnimation::Backward);
     if (m_animation->state() == QAbstractAnimation::Stopped) {
@@ -147,6 +156,7 @@ void NTrackInfoWidget::mouseMoveEvent(QMouseEvent *event)
 
 void NTrackInfoWidget::updateStaticTags(const QString &file)
 {
+    m_hasTags = false;
     NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(
         NPluginLoader::getPlugin(N::TagReader));
     if (!tagReader) {
@@ -167,6 +177,7 @@ void NTrackInfoWidget::updateStaticTags(const QString &file)
 
     m_trackDurationSec = tagReader->toString(file, "%D", encoding).toInt();
 
+    m_hasTags = true;
     show();
 }
 
@@ -192,6 +203,10 @@ void NTrackInfoWidget::loadSettings()
 
 void NTrackInfoWidget::tick(qint64 msec)
 {
+    if (!m_hasTags) {
+        return;
+    }
+
     m_msec = msec;
 
     QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
@@ -218,6 +233,10 @@ void NTrackInfoWidget::tick(qint64 msec)
 
 void NTrackInfoWidget::showToolTip(int x, int y)
 {
+    if (!m_hasTags) {
+        return;
+    }
+
     if (!rect().contains(QPoint(x, y)) || m_tooltipFormat.isEmpty()) {
         QToolTip::hideText();
         return;
