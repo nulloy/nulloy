@@ -50,7 +50,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 #endif
             tr("Version: ") + QCoreApplication::applicationVersion() +
             "<br><br>" +
-            "Copyright (C) 2010-2018 Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
+            "Copyright (C) 2010-2022 Sergey Vlasov &lt;sergey@vlasov.me&gt;" +
         "</span>";
     // clang-format on
 
