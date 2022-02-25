@@ -55,7 +55,7 @@ public:
     {
         NAbstractWaveformBuilder::positionAndIndex(pos, index);
     }
-    NWaveformPeaks *peaks() { return NAbstractWaveformBuilder::peaks(); }
+    const NWaveformPeaks &peaks() const { return NAbstractWaveformBuilder::peaks(); }
 
 private slots:
     void update();

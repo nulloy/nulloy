@@ -48,7 +48,7 @@ public:
     NAbstractWaveformBuilder();
     ~NAbstractWaveformBuilder();
 
-    NWaveformPeaks *peaks() { return &m_peaks; }
+    const NWaveformPeaks &peaks() const { return m_peaks; }
     void positionAndIndex(float &pos, int &index);
 };
 

@@ -55,7 +55,7 @@ public:
     {
         NAbstractWaveformBuilder::positionAndIndex(pos, index);
     }
-    NWaveformPeaks *peaks() { return NAbstractWaveformBuilder::peaks(); }
+    const NWaveformPeaks &peaks() const { return NAbstractWaveformBuilder::peaks(); }
 
     void handleBuffer(gint16 *pcmBuffer, int nChannels, int nSamples);
 };

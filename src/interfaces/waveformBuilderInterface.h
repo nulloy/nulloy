@@ -31,7 +31,7 @@ public:
     virtual void start(const QString &file) = 0;
     virtual void stop() = 0;
     virtual void positionAndIndex(float &pos, int &index) = 0;
-    virtual NWaveformPeaks *peaks() = 0;
+    virtual const NWaveformPeaks &peaks() const = 0;
 
     static QString interfaceString() { return WAVEFORM_INTERFACE; }
 };

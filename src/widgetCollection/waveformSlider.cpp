@@ -141,12 +141,12 @@ void NWaveformSlider::checkForUpdate()
 
         QPainterPath pathPos;
         QPainterPath pathNeg;
-        NWaveformPeaks *peaks = m_waveBuilder->peaks();
+        const NWaveformPeaks &peaks = m_waveBuilder->peaks();
         for (int i = 0; i < m_oldBuilderIndex; ++i) {
             pathPos.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(),
-                           (1 + peaks->positive(i)) * (height() / 2.0));
+                           (1 + peaks.positive(i)) * (height() / 2.0));
             pathNeg.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(),
-                           (1 + peaks->negative(i)) * (height() / 2.0));
+                           (1 + peaks.negative(i)) * (height() / 2.0));
         }
         QPainterPath fullPath(pathNeg);
         fullPath.connectPath(pathPos.toReversed());
