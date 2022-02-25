@@ -1,3 +1,8 @@
+* 0.9.1, Fri Feb 25 2022
+- %i for track index in playlist
+- Empty window title fix
+- Other minor bug fixes
+
 * 0.9, Thu Feb 24 2022
 - HiDPI support
 - Hide playback controls option
