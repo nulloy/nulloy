@@ -33,7 +33,7 @@ private:
     void setSource(const QString &file);
     bool isValid() const;
     QString parse(const QString &format, bool *success, const QString &encoding,
-                  bool stopOnFail = false) const;
+                  int recursion_level = 0) const;
 
 public:
     NTagReaderTaglib(QObject *parent = 0) : NTagReaderInterface(parent) {}

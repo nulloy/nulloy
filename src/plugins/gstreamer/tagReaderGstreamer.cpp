@@ -130,7 +130,11 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                                    bool stopOnFail) const
 {
     if (format.isEmpty()) {
-        return "<Format is empty>";
+        if (recursion_level == 0) {
+            return "<Format is empty>";
+        } else {
+            return "";
+        }
     }
 
     *success = true;
@@ -285,7 +289,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
             }
 
             bool cond_res;
-            QString cond_true = parse(values.at(0), &cond_res, encoding, true);
+            QString cond_true = parse(values.at(0), &cond_res, encoding, recursion_level + 1);
             if (cond_res) {
                 res += cond_true;
             } else {
@@ -295,7 +299,7 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
         } else {
             res += format.at(i);
         }
-        if (!*success && stopOnFail) {
+        if (!*success && recursion_level > 0) {
             return "";
         }
     }

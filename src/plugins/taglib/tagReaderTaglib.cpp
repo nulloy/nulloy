@@ -92,10 +92,14 @@ QString NTagReaderTaglib::toString(const QString &file, const QString &format,
 }
 
 QString NTagReaderTaglib::parse(const QString &format, bool *success, const QString &encoding,
-                                bool stopOnFail) const
+                                int recursion_level) const
 {
     if (format.isEmpty()) {
-        return "<Format is empty>";
+        if (recursion_level == 0) {
+            return "<Format is empty>";
+        } else {
+            return "";
+        }
     }
 
     *success = true;
@@ -262,7 +266,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
             }
 
             bool cond_res;
-            QString cond_true = parse(values.at(0), &cond_res, encoding, true);
+            QString cond_true = parse(values.at(0), &cond_res, encoding, recursion_level + 1);
             if (cond_res) {
                 res += cond_true;
             } else {
@@ -272,7 +276,7 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
         } else {
             res += format.at(i);
         }
-        if (!*success && stopOnFail) {
+        if (!*success && recursion_level > 0) {
             return "";
         }
     }

@@ -38,7 +38,7 @@ private:
 
     void setSource(const QString &file);
     QString parse(const QString &format, bool *success, const QString &encoding,
-                  bool stopOnFail = false) const;
+                  int recursion_level = 0) const;
 
 public:
     NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}
