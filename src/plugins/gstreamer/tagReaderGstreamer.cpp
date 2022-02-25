@@ -17,7 +17,6 @@
 
 #include <gst/pbutils/pbutils.h>
 
-#include <QCoreApplication>
 #include <QFileInfo>
 #include <QTextCodec>
 
@@ -257,8 +256,6 @@ QString NTagReaderGstreamer::parse(const QString &format, bool *success, const Q
                 res += QFileInfo(m_path).suffix();
             } else if (ch == 'E') { // file name extension, uppercased
                 res += QFileInfo(m_path).suffix().toUpper();
-            } else if (ch == 'v') { // Nulloy version number
-                res += QCoreApplication::applicationVersion();
             } else { // unrecognized
                 res += format.mid(i - 1, 2);
             }

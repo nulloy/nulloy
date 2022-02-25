@@ -280,7 +280,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
             "<li><b>%P</b> - " + tr("Directory path without file name") + "</li>" +
             "<li><b>%e</b> - " + tr("File name extension") + "</li>" +
             "<li><b>%E</b> - " + tr("File name extension, uppercased") + "</li>" +
-            "<li><b>%v</b> - " + tr("Nulloy version number") + "</li>" +
+            "<li><b>%v</b> - " + tr("Nulloy version number (Window title only)") + "</li>" +
             "<li><b>%%</b> - " + tr("\'%\' character") + "</li>" +
         "</ul>" +
         tr("Conditions:") +

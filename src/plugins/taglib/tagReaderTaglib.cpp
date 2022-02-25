@@ -23,7 +23,6 @@
 #include <wavpackproperties.h>
 #include <wavproperties.h>
 
-#include <QCoreApplication>
 #include <QFileInfo>
 #include <QString>
 #include <QTextCodec>
@@ -235,8 +234,6 @@ QString NTagReaderTaglib::parse(const QString &format, bool *success, const QStr
                 res += QFileInfo(NTaglib::_filePath).suffix();
             } else if (ch == 'E') { // file name extension, uppercased
                 res += QFileInfo(NTaglib::_filePath).suffix().toUpper();
-            } else if (ch == 'v') { // Nulloy version number
-                res += QCoreApplication::applicationVersion();
             } else { // unrecognized
                 res += format.mid(i - 1, 2);
             }

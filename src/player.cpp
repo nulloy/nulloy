@@ -838,17 +838,14 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
     QString title;
     QString titleDefault = QCoreApplication::applicationName() + " " +
                            QCoreApplication::applicationVersion();
-    if (QFile(file).exists()) {
-        NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(
-            NPluginLoader::getPlugin(N::TagReader));
-        if (!tagReader) {
-            return;
-        }
+    NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(
+        NPluginLoader::getPlugin(N::TagReader));
+    if (tagReader) {
         QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
         QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
-        QString title;
         if (!format.isEmpty()) {
             title = tagReader->toString(file, format, encoding);
+            title.replace("%v", QCoreApplication::applicationVersion());
         }
         if (title.isEmpty()) { // reading tags failed
             title = titleDefault;
