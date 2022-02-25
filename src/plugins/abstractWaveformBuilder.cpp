@@ -45,7 +45,16 @@ void NAbstractWaveformBuilder::cacheLoad()
 
     QByteArray buffer = qUncompress(compressed);
     QDataStream inBuffer(&buffer, QIODevice::ReadOnly);
-    inBuffer >> m_peaksCache >> m_dateHash;
+
+    QList<QByteArray> hashes;
+    QList<NWaveformPeaks> peaks;
+    inBuffer >> hashes >> peaks >> m_dateHash;
+
+    Q_ASSERT(hashes.count() == peaks.count());
+    m_peaksCache.clear();
+    for (int i = 0; i < hashes.count(); ++i) {
+        m_peaksCache.insert(hashes.at(i), new NWaveformPeaks(peaks.at(i)));
+    }
 
     m_cacheLoaded = true;
 }
@@ -54,7 +63,14 @@ void NAbstractWaveformBuilder::cacheSave()
 {
     QByteArray buffer;
     QDataStream outBuffer(&buffer, QIODevice::WriteOnly);
-    outBuffer << m_peaksCache << m_dateHash;
+
+    QList<QByteArray> hashes = m_peaksCache.keys();
+    QList<NWaveformPeaks> peaks;
+    foreach (QByteArray hash, hashes) {
+        peaks << *m_peaksCache.object(hash);
+    }
+
+    outBuffer << hashes << peaks << m_dateHash;
     QByteArray compressed = qCompress(buffer);
 
     QFile cache(m_cacheFile);

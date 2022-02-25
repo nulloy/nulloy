@@ -16,9 +16,9 @@
 #ifndef N_ABSTRACT_WAVEFORM_BUILDER_H
 #define N_ABSTRACT_WAVEFORM_BUILDER_H
 
+#include <QCache>
 #include <QHash>
 
-#include "cache.h"
 #include "waveformPeaks.h"
 
 class QString;
@@ -36,7 +36,7 @@ private:
 
 protected:
     NWaveformPeaks m_peaks;
-    NCache<QByteArray, NWaveformPeaks> m_peaksCache;
+    QCache<QByteArray, NWaveformPeaks> m_peaksCache;
     QHash<QByteArray, QString> m_dateHash;
 
     virtual void reset();
