@@ -127,7 +127,7 @@ QString NTagReaderGstreamer::toString(const QString &file, const QString &format
 }
 
 QString NTagReaderGstreamer::parse(const QString &format, bool *success, const QString &encoding,
-                                   bool stopOnFail) const
+                                   int recursion_level) const
 {
     if (format.isEmpty()) {
         if (recursion_level == 0) {
