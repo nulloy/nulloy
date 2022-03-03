@@ -1,18 +1,10 @@
-TARGET = test
-TEMPLATE = app
-CONFIG += qtestlib
-mac:CONFIG -= app_bundle
-DESTDIR = ..
+TEMPLATE = subdirs
 
-SRC_DIR = ../src
-include($$SRC_DIR/src.pri)
+test_projects = $$files(*.pro)
+test_projects -= tests.pro
 
-SOURCES += *.cpp
-HEADERS += *.h
-INCLUDEPATH += .
-
-system(gst-launch-1.0 audiotestsrc samplesperbuffer=441 num-buffers=500 ! audioconvert ! wavenc ! filesink location=sine.wav)
-LIST = 01 02 03 04 05 06 07 08 09 10
-for(index, LIST){
-    system($$QMAKE_COPY sine.wav $${index}.wav)
+for(test_pro, test_projects) {
+    test_name = $$replace(test_pro, .pro, )
+    eval($${test_name}.file = $${test_pro})
+    SUBDIRS += $${test_name}
 }

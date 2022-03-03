@@ -13,9 +13,6 @@
 **
 *********************************************************************/
 
-#ifndef TEST_PLAYLIST_WIDGET_H
-#define TEST_PLAYLIST_WIDGET_H
-
 #include <QSignalSpy>
 #include <QtTest/QtTest>
 
@@ -30,18 +27,17 @@ class TestPlaylistWidget : public QObject
 {
     Q_OBJECT
 
-private:
+private slots:
+    void initTestCase() { NPluginLoader::init(); }
+
     void init()
     {
         NSettings::instance()->clear();
         delete NSettings::instance();
     }
 
-private slots:
     void testPlaylistRemoval()
     {
-        init();
-
         NPlaylistWidget widget;
 
         widget.show();
@@ -123,10 +119,8 @@ private slots:
 
     void testAutoPlay()
     {
-        init();
-
-        NPlaybackEngineInterface *playbackEngine =
-                dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
+        NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
+            NPluginLoader::getPlugin(N::PlaybackEngine));
         Q_ASSERT(playbackEngine);
         playbackEngine->stop();
 
@@ -138,9 +132,10 @@ private slots:
         connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()),
                 Qt::BlockingQueuedConnection);
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
-        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), this,
-                SLOT(message(N::MessageIcon, const QString &, const QString &)));
-        connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
+        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
+                this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
+        connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine,
+                SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 
         widget.show();
@@ -160,10 +155,8 @@ private slots:
 
     void testRepeat()
     {
-        init();
-
-        NPlaybackEngineInterface *playbackEngine =
-                dynamic_cast<NPlaybackEngineInterface *>(NPluginLoader::getPlugin(N::PlaybackEngine));
+        NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
+            NPluginLoader::getPlugin(N::PlaybackEngine));
         Q_ASSERT(playbackEngine);
         playbackEngine->stop();
 
@@ -175,9 +168,10 @@ private slots:
         connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(currentFinished()),
                 Qt::BlockingQueuedConnection);
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
-        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)), this,
-                SLOT(message(N::MessageIcon, const QString &, const QString &)));
-        connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine, SLOT(setMedia(const QString &)));
+        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
+                this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
+        connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine,
+                SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 
         widget.setRepeatMode(true);
@@ -208,7 +202,11 @@ private slots:
         QCOMPARE(widget.currentRow(), row);
     }
 
-    void message(N::MessageIcon, const QString &, const QString &msg) { QFAIL(msg.toUtf8().constData()); }
+    void message(N::MessageIcon, const QString &, const QString &msg)
+    {
+        QFAIL(msg.toUtf8().constData());
+    }
 };
 
-#endif
+QTEST_MAIN(TestPlaylistWidget)
+#include "testPlaylistWidget.moc"
