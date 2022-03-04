@@ -16,11 +16,11 @@
 #ifndef N_TAG_READER_TAGLIB_H
 #define N_TAG_READER_TAGLIB_H
 
-#include <fileref.h>
-#include <tag.h>
-
 #include "plugin.h"
 #include "tagReaderInterface.h"
+
+#include <fileref.h>
+#include <tag.h>
 
 class QString;
 
@@ -30,10 +30,9 @@ class NTagReaderTaglib : public NTagReaderInterface, public NPlugin
     Q_INTERFACES(NTagReaderInterface NPlugin)
 
 private:
-    void setSource(const QString &file);
-    bool isValid() const;
-    QString parse(const QString &format, bool *success, const QString &encoding,
-                  int recursion_level = 0) const;
+    bool m_isValid;
+    bool m_isUtf8;
+    QTextCodec *m_codec;
 
 public:
     NTagReaderTaglib(QObject *parent = 0) : NTagReaderInterface(parent) {}
@@ -43,7 +42,9 @@ public:
     QString interfaceString() const { return NTagReaderInterface::interfaceString(); }
     N::PluginType type() const { return N::TagReader; }
 
-    QString toString(const QString &file, const QString &format, const QString &encoding);
+    void setSource(const QString &file);
+    void setEncoding(const QString &encoding);
+    QString getTag(char ch) const;
 };
 
 #endif

@@ -31,6 +31,7 @@ class NPreferencesDialog;
 class NAboutDialog;
 class NScriptEngine;
 class NSettings;
+class NTrackInfoReader;
 class NTrackInfoWidget;
 class QMenu;
 class NAction;
@@ -55,6 +56,7 @@ private:
     NPreferencesDialog *m_preferencesDialog;
     NAboutDialog *m_aboutDialog;
     NVolumeSlider *m_volumeSlider;
+    NTrackInfoReader *m_trackInfoReader;
     NPlaybackEngineInterface *m_playbackEngine;
     QMenu *m_contextMenu;
     QMenu *m_windowSubMenu;

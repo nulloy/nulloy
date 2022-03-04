@@ -8,6 +8,6 @@ include(../plugin.pri)
 CONFIG += link_pkgconfig
 PKGCONFIG += taglib
 
-HEADERS += *.h
-SOURCES += *.cpp
+HEADERS += $$files(*.h)
+SOURCES += $$files(*.cpp)
 

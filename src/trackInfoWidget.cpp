@@ -19,18 +19,19 @@
 #include <QLayout>
 #include <QMouseEvent>
 #include <QPropertyAnimation>
-#include <QTime>
 #include <QToolTip>
 
 #include "label.h"
 #include "pluginLoader.h"
 #include "settings.h"
-#include "tagReaderInterface.h"
+#include "trackInfoReader.h"
 
 NTrackInfoWidget::~NTrackInfoWidget() {}
 
 NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 {
+    m_trackInfoReader = NULL;
+
     QStringList vNames = QStringList() << "Top"
                                        << "Middle"
                                        << "Bottom";
@@ -88,23 +89,25 @@ NTrackInfoWidget::NTrackInfoWidget(QFrame *parent) : QFrame(parent)
 
     setMouseTracking(true);
     QList<NLabel *> labels = findChildren<NLabel *>();
-    foreach (NLabel *label, labels)
+    foreach (NLabel *label, labels) {
         label->setAttribute(Qt::WA_TransparentForMouseEvents);
+        label->hide();
+    }
+    hide();
 
     m_msec = 0;
     m_heightThreshold = minimumSizeHint().height();
 
     loadSettings();
+}
 
-    m_hasTags = false;
-    hide();
+void NTrackInfoWidget::setTrackInfoReader(NTrackInfoReader *reader)
+{
+    m_trackInfoReader = reader;
 }
 
 void NTrackInfoWidget::enterEvent(QEvent *)
 {
-    if (!m_hasTags) {
-        return;
-    }
 #ifndef Q_OS_MAC // QTBUG-15367
     m_animation->setDirection(QAbstractAnimation::Forward);
     if (m_animation->state() == QAbstractAnimation::Stopped) {
@@ -117,9 +120,6 @@ void NTrackInfoWidget::enterEvent(QEvent *)
 
 void NTrackInfoWidget::leaveEvent(QEvent *)
 {
-    if (!m_hasTags) {
-        return;
-    }
     m_container->show();
     m_animation->setDirection(QAbstractAnimation::Backward);
     if (m_animation->state() == QAbstractAnimation::Stopped) {
@@ -156,29 +156,26 @@ void NTrackInfoWidget::mouseMoveEvent(QMouseEvent *event)
 
 void NTrackInfoWidget::updateStaticTags(const QString &file)
 {
-    m_hasTags = false;
-    NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(
-        NPluginLoader::getPlugin(N::TagReader));
-    if (!tagReader) {
+    if (!m_trackInfoReader) {
         return;
+    }
+    m_trackInfoReader->setSource(file);
+
+    if (!QFileInfo(file).exists()) {
+        hide();
+        return;
+    } else {
+        show();
     }
 
     QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
     foreach (NLabel *label, m_staticFormatsMap.keys()) {
         QString format = m_staticFormatsMap[label];
-        QString text = tagReader->toString(file, format, encoding);
-        if (text.isEmpty()) { // reading tags failed
-            hide();
-            return;
-        }
+        QString text = m_trackInfoReader->toString(format);
 
         label->setText(text);
+        label->setVisible(!text.isEmpty());
     }
-
-    m_trackDurationSec = tagReader->toString(file, "%D", encoding).toInt();
-
-    m_hasTags = true;
-    show();
 }
 
 void NTrackInfoWidget::loadSettings()
@@ -190,12 +187,11 @@ void NTrackInfoWidget::loadSettings()
     for (int i = 0; i < labels.size(); ++i) {
         NLabel *label = labels.at(i);
         QString format = NSettings::instance()->value("TrackInfo/" + label->objectName()).toString();
-        if (format.contains("%T") || format.contains("%r")) {
+        if (format.contains("%T") || format.contains("%r")) { // elapsed or remaining playback time
             m_dynamicFormatsMap[label] = format;
-        } else if (format.contains("%")) {
+        } else {
             m_staticFormatsMap[label] = format;
         }
-        label->setVisible(!format.isEmpty());
     }
 
     m_tooltipFormat = NSettings::instance()->value("TooltipTrackInfo").toString();
@@ -203,29 +199,12 @@ void NTrackInfoWidget::loadSettings()
 
 void NTrackInfoWidget::tick(qint64 msec)
 {
-    if (!m_hasTags) {
-        return;
-    }
-
     m_msec = msec;
 
-    QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
-    QTime total = QTime(0, 0).addSecs(m_trackDurationSec);
-    QTime current = QTime(0, 0).addMSecs(msec);
-    QTime remaining = total.addMSecs(-msec);
-    int hours = m_trackDurationSec / 60 / 60;
+    m_trackInfoReader->updatePlaybackPosition(msec / 1000);
     foreach (NLabel *label, m_dynamicFormatsMap.keys()) {
-        QString text = m_dynamicFormatsMap[label];
-        if (hours > 0) {
-            text.replace("%d", total.toString("h:mm:ss"));
-            text.replace("%T", current.toString("h:mm:ss"));
-            text.replace("%r", remaining.toString("h:mm:ss"));
-        } else {
-            text.replace("%d", total.toString("m:ss"));
-            text.replace("%T", current.toString("m:ss"));
-            text.replace("%r", remaining.toString("m:ss"));
-        }
-        text.replace("%D", QString(m_trackDurationSec));
+        QString format = m_dynamicFormatsMap[label];
+        QString text = m_trackInfoReader->toString(format);
         label->setText(text);
         label->setVisible(!text.isEmpty());
     }
@@ -233,10 +212,6 @@ void NTrackInfoWidget::tick(qint64 msec)
 
 void NTrackInfoWidget::showToolTip(int x, int y)
 {
-    if (!m_hasTags) {
-        return;
-    }
-
     if (!rect().contains(QPoint(x, y)) || m_tooltipFormat.isEmpty()) {
         QToolTip::hideText();
         return;
@@ -247,27 +222,25 @@ void NTrackInfoWidget::showToolTip(int x, int y)
         return;
     }
 
-    float posAtX = (float)x / width();
-    int secAtX = m_trackDurationSec * posAtX;
-    QTime timeAtX = QTime(0, 0).addSecs(secAtX);
-    QString strAtPos;
-    if (secAtX > 60 * 60) { // has hours
-        strAtPos = timeAtX.toString("h:mm:ss");
-    } else {
-        strAtPos = timeAtX.toString("m:ss");
+    QString seconds = m_trackInfoReader->getInfo('D');
+    if (seconds.isEmpty()) {
+        return;
     }
-    text.replace("%C", strAtPos);
 
-    int secCur = m_msec / 1000;
-    int secDiff = secAtX - secCur;
-    QTime timeDiff = QTime(0, 0).addSecs(qAbs(secDiff));
-    QString diffStr;
-    if (qAbs(secDiff) > 60 * 60) { // has hours
-        diffStr = timeDiff.toString("h:mm:ss");
-    } else {
-        diffStr = timeDiff.toString("m:ss");
+    float mouse_pos = (float)x / width();
+    int seconds_at_mouse_pos = seconds.toInt() * mouse_pos;
+    // time position under mouse pointer:
+    text.replace("%C", NTrackInfoReader::formatTime(seconds_at_mouse_pos));
+
+    int seconds_elapsed = m_msec / 1000;
+    int seconds_delta = seconds_at_mouse_pos - seconds_elapsed;
+    QString delta_formatted = NTrackInfoReader::formatTime(qAbs(seconds_delta));
+    // time offset under mouse pointer:
+    text.replace("%o", QString("%1%2").arg(seconds_delta < 0 ? "-" : "+").arg(delta_formatted));
+
+    if (text.isEmpty()) {
+        return;
     }
-    text.replace("%o", QString("%1%2").arg(secDiff < 0 ? "-" : "+").arg(diffStr));
 
     QStringList offsetList = NSettings::instance()->value("TooltipOffset").toStringList();
     QToolTip::showText(mapToGlobal(QPoint(x, y) +

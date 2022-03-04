@@ -263,9 +263,9 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
             "<li><b>%g</b> - " + tr("Genre") + "</li>" +
             "<li><b>%y</b> - " + tr("Year") + "</li>" +
             "<li><b>%n</b> - " + tr("Track number") + "</li>" +
-            "<li><b>%i</b> - " + tr("Track index in playlist") + "</li>" +
-            "<li><b>%T</b> - " + tr("Current time position (Waveform only)") + "</li>" +
-            "<li><b>%r</b> - " + tr("Remaining time (Waveform only)") + "</li>" +
+            "<li><b>%i</b> - " + tr("Track index in playlist (Playlist only)") + "</li>" +
+            "<li><b>%T</b> - " + tr("Elapsed playback time (Waveform only)") + "</li>" +
+            "<li><b>%r</b> - " + tr("Remaining playback time (Waveform only)") + "</li>" +
             "<li><b>%C</b> - " + tr("Time position under cursor (Tooltip only)") + "</li>" +
             "<li><b>%o</b> - " + tr("Time offset under cursor (Tooltip only)") + "</li>" +
             "<li><b>%d</b> - " + tr("Duration in format hh:mm:ss") + "</li>" +
@@ -279,18 +279,18 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
             "<li><b>%p</b> - " + tr("File name including absolute path") + "</li>" +
             "<li><b>%P</b> - " + tr("Directory path without file name") + "</li>" +
             "<li><b>%e</b> - " + tr("File name extension") + "</li>" +
-            "<li><b>%E</b> - " + tr("File name extension, uppercased") + "</li>" +
-            "<li><b>%v</b> - " + tr("Nulloy version number (Window title only)") + "</li>" +
-            "<li><b>%%</b> - " + tr("\'%\' character") + "</li>" +
-        "</ul>" +
-        tr("Conditions:") +
-        "<ul>" +
-            "<li><b>{<i>" + tr("true") + "</i>|<i>" + tr("false") + "</i>}</b> - " + tr("Evaluate for <b><i>true</i></b> or <b><i>false</i></b> case. Note: nesting conditions is not supported yet.") + "</li>"
+            "<li><b>%E</b> - " + tr("File name extension in uppercase") + "</li>" +
+            "<li><b>%v</b> - " + tr("Nulloy version number") + "</li>" +
+            "<li><b>{</b> - " + tr("Start of a condition block. Use <b>\\{</b> to print <b>{</b> character.") + "</li>" +
+            "<li><b>}</b> - " + tr("End of a condition block. Use <b>\\}</b> to print <b>}</b> character.") + "</li>" +
+            "<li><b>|</b> - " + tr("Alternative separator, to be used inside a condition block. Use <b>\\|</b> to print <b>|</b> character.") + "</li>" +
+            "<li><b>\\%</b> - " + tr("Print <b>%</b> character") + "</li>" +
         "</ul>" +
         tr("Examples:") +
         "<ul>" +
+            "<li><b>{%g}</b> - " + tr("Print Genre. If not available, print nothing.") + "</li>" +
             "<li><b>{%a - %t|%F}</b> - " + tr("Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.") + "</li>"
-            "<li><b>{%g|}</b> - " + tr("Print Genre. If not available, print nothing.") + "</li>" +
+            "<li><b>{%B/%s|{%B}{%s}}</b> - " + tr("Print Bitrate and Sample rate, separated with \"/\". If either of the tags is not available, first try to print Bitrate, then try to print Sample rate.") + "</li>"
         "</ul>");
     // clang-format on
     textBrowser->setStyleSheet("QTextBrowser { background: transparent }");

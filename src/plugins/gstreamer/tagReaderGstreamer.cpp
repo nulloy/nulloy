@@ -103,6 +103,11 @@ void NTagReaderGstreamer::setSource(const QString &file)
     }
 }
 
+void NTagReaderGstreamer::setEncoding(const QString &encoding)
+{
+    m_codec = QTextCodec::codecForName(encoding.toUtf8());
+}
+
 NTagReaderGstreamer::~NTagReaderGstreamer()
 {
     if (!m_init) {
@@ -114,195 +119,90 @@ NTagReaderGstreamer::~NTagReaderGstreamer()
     }
 }
 
-QString NTagReaderGstreamer::toString(const QString &file, const QString &format,
-                                      const QString &encoding)
+QString NTagReaderGstreamer::getTag(char ch) const
 {
-    setSource(file);
     if (!m_isValid) {
         return "";
     }
 
-    bool res;
-    return parse(format, &res, encoding);
-}
-
-QString NTagReaderGstreamer::parse(const QString &format, bool *success, const QString &encoding,
-                                   int recursion_level) const
-{
-    if (format.isEmpty()) {
-        if (recursion_level == 0) {
-            return "<Format is empty>";
-        } else {
-            return "";
-        }
-    }
-
-    *success = true;
-
-    int seconds_total = GST_TIME_AS_SECONDS(m_nanosecs);
-
+    gchar *gstr = NULL;
     QString res;
-    QTextCodec *codec = QTextCodec::codecForName(encoding.toUtf8());
-    for (int i = 0; i < format.size(); ++i) {
-        if (format.at(i) == '%') {
-            gchar *gstr = NULL;
-            ++i;
-            QChar ch = format.at(i);
-            if (ch == 'a') { // artist
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_ARTIST, &gstr))) {
-                    res += "<Unknown artist>";
-                } else {
-                    res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
-                }
-            } else if (ch == 't') { // title
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_TITLE, &gstr))) {
-                    res += "<Unknown title>";
-                } else {
-                    res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
-                }
-            } else if (ch == 'A') { // album
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_ALBUM, &gstr))) {
-                    res += "<Unknown album>";
-                } else {
-                    res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
-                }
-            } else if (ch == 'c') { // comment
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_COMMENT, &gstr))) {
-                    res += "<Empty comment>";
-                } else {
-                    res += codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
-                }
-            } else if (ch == 'g') { // genre
-                if (!(*success = gst_tag_list_get_string(m_taglist, GST_TAG_GENRE, &gstr))) {
-                    res += "<Unknown genre>";
-                } else {
-                    res += QString::fromUtf8(gstr);
-                }
-            } else if (ch == 'y') { // year
-                GDate *date = NULL;
-                QString str = "0";
-                if (gst_tag_list_get_date(m_taglist, GST_TAG_DATE, &date)) {
-                    GDateYear year = g_date_get_year(date);
-                    if (year != G_DATE_BAD_YEAR) {
-                        str = QString::number(year);
-                    }
-                }
-                if (str == "0") {
-                    str = "<Unknown year>";
-                    *success = false;
-                }
-                res += str;
-            } else if (ch == 'n') { // track number
-                unsigned int track = 0;
-                QString str;
-                if ((*success = gst_tag_list_get_uint(m_taglist, GST_TAG_TRACK_NUMBER, &track))) {
-                    str = QString::number(track);
-                } else {
-                    str = "<Unknown track number>";
-                }
-                res += str;
-            } else if (ch == 'b') { // bit depth
-                if (m_codecName.contains("MP3")) {
-                    res += "<Unknown bit depth>";
-                    *success = false;
-                } else {
-                    res += QString::number(m_bitDepth);
-                }
-            } else if (ch == 'd') { // duration as hh:mm:ss
-                QString duration;
-                if (seconds_total > 0) {
-                    int seconds = seconds_total % 60;
-                    int minutes = (seconds_total - seconds) / 60;
-                    int hours = minutes / 60;
-                    minutes = minutes % 60;
-                    if (hours > 0) {
-                        duration.sprintf("%d:%02d:%02d", hours, minutes, seconds);
-                    } else {
-                        duration.sprintf("%d:%02d", minutes, seconds);
-                    }
-                } else {
-                    *success = false;
-                    duration = "<Unknown duration>";
-                }
-                res += duration;
-            } else if (ch == 'D') { // duration in seconds
-                QString duration;
-                if (seconds_total == 0) {
-                    duration = "<Unknown duration>";
-                    *success = false;
-                } else {
-                    duration = QString::number(seconds_total);
-                }
-                res += duration;
-            } else if (ch == 'B') { // bitrate in Kbps
-                unsigned int bitrate = 0;
-                QString str;
-                if ((*success = gst_tag_list_get_uint(m_taglist, GST_TAG_BITRATE, &bitrate))) {
-                    str = QString::number(bitrate / 1000);
-                } else {
-                    str = "<Unknown bitrate>";
-                }
-                res += str;
-            } else if (ch == 's') { // sample rate in kHz
-                res += QString::number(m_sampleRate);
-            } else if (ch == 'H') { // number of channels
-                res += "<Usupported tag: channels number>";
-                *success = false;
-            } else if (ch == 'f') { // file name without extension
-                res += QFileInfo(m_path).baseName();
-            } else if (ch == 'F') { // file name
-                res += QFileInfo(m_path).fileName();
-            } else if (ch == 'p') { // file name including absolute path
-                res += QFileInfo(m_path).absoluteFilePath();
-            } else if (ch == 'P') { // directory path without file name
-                res += QFileInfo(m_path).canonicalPath();
-            } else if (ch == 'e') { // file name extension
-                res += QFileInfo(m_path).suffix();
-            } else if (ch == 'E') { // file name extension, uppercased
-                res += QFileInfo(m_path).suffix().toUpper();
-            } else { // unrecognized
-                res += format.mid(i - 1, 2);
+    switch (ch) {
+        case 'a': { // artist
+            if (gst_tag_list_get_string(m_taglist, GST_TAG_ARTIST, &gstr)) {
+                res = m_codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
             }
-            g_free(gstr);
-        } else if (format.at(i) == '{') {
-            ++i;
-            int matchedAt = format.indexOf('}', i);
-            if (matchedAt == -1) {
-                res += "<condition error: unmatched '{'>";
-                return res;
-            }
-
-            QString condition = format.mid(i, matchedAt - i);
-
-            if (condition.indexOf('{') != -1) {
-                res += "<condition error: extra '{'>";
-                return res;
-            }
-
-            QStringList values = condition.split('|');
-            if (values.count() < 2) {
-                res += "<condition error: missing '|'>";
-                return res;
-            } else if (values.count() > 2) {
-                res += "<condition error: extra '|'>";
-                return res;
-            }
-
-            bool cond_res;
-            QString cond_true = parse(values.at(0), &cond_res, encoding, recursion_level + 1);
-            if (cond_res) {
-                res += cond_true;
-            } else {
-                res += parse(values.at(1), &cond_res, encoding);
-            }
-            i = matchedAt;
-        } else {
-            res += format.at(i);
+            break;
         }
-        if (!*success && recursion_level > 0) {
-            return "";
+        case 't': { // title
+            if (gst_tag_list_get_string(m_taglist, GST_TAG_TITLE, &gstr)) {
+                res = m_codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+            }
+            break;
+        }
+        case 'A': { // album
+            if (gst_tag_list_get_string(m_taglist, GST_TAG_ALBUM, &gstr)) {
+                res = m_codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+            }
+            break;
+        }
+        case 'c': { // comment
+            if (gst_tag_list_get_string(m_taglist, GST_TAG_COMMENT, &gstr)) {
+                res = m_codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+            }
+            break;
+        }
+        case 'g': { // genre
+            if (gst_tag_list_get_string(m_taglist, GST_TAG_GENRE, &gstr)) {
+                res = QString::fromUtf8(gstr);
+            }
+            break;
+        }
+        case 'y': { // year
+            GDate *date = NULL;
+            if (gst_tag_list_get_date(m_taglist, GST_TAG_DATE, &date)) {
+                GDateYear year = g_date_get_year(date);
+                if (year != G_DATE_BAD_YEAR) {
+                    res = QString::number(year);
+                }
+            }
+            break;
+        }
+        case 'n': { // track number
+            unsigned int track = 0;
+            if (gst_tag_list_get_uint(m_taglist, GST_TAG_TRACK_NUMBER, &track)) {
+                res = QString::number(track);
+            }
+            break;
+        }
+        case 'b': { // bit depth
+            if (!m_codecName.contains("MP3")) {
+                res = QString::number(m_bitDepth);
+            }
+            break;
+        }
+        case 'D': { // duration in seconds
+            int seconds_total = GST_TIME_AS_SECONDS(m_nanosecs);
+            if (seconds_total > 0) {
+                res = QString::number(seconds_total);
+            }
+            break;
+        }
+        case 'B': { // bitrate in Kbps
+            unsigned int bitrate = 0;
+            if (gst_tag_list_get_uint(m_taglist, GST_TAG_BITRATE, &bitrate)) {
+                res = QString::number(bitrate / 1000);
+            }
+            break;
+        }
+        case 's': { // sample rate in kHz
+            res = QString::number(m_sampleRate);
+            break;
+        }
+        case 'H': { // number of channels
+            break;  // unsupported
         }
     }
-
+    g_free(gstr);
     return res;
 }

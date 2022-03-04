@@ -30,7 +30,7 @@
 #include "preferencesDialog.h"
 #include "scriptEngine.h"
 #include "settings.h"
-#include "tagReaderInterface.h"
+#include "trackInfoReader.h"
 #include "trackInfoWidget.h"
 #include "utils.h"
 #include "volumeSlider.h"
@@ -71,6 +71,10 @@ NPlayer::NPlayer()
     NI18NLoader::init();
     NPluginLoader::init();
 
+    m_trackInfoReader = new NTrackInfoReader(dynamic_cast<NTagReaderInterface *>(
+                                                 NPluginLoader::getPlugin(N::TagReader)),
+                                             this);
+
     m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
         NPluginLoader::getPlugin(N::PlaybackEngine));
     Q_ASSERT(m_playbackEngine);
@@ -106,8 +110,10 @@ NPlayer::NPlayer()
             "repeatButton")) {
         repeatButton->setChecked(m_playlistWidget->repeatMode());
     }
+    m_playlistWidget->setTrackInfoReader(m_trackInfoReader);
 
     m_trackInfoWidget = new NTrackInfoWidget();
+    m_trackInfoWidget->setTrackInfoReader(m_trackInfoReader);
     QVBoxLayout *trackInfoLayout = new QVBoxLayout;
     trackInfoLayout->setContentsMargins(0, 0, 0, 0);
     trackInfoLayout->addWidget(m_trackInfoWidget);
@@ -836,23 +842,12 @@ void NPlayer::quit()
 void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
 {
     QString title;
-    QString titleDefault = QCoreApplication::applicationName() + " " +
-                           QCoreApplication::applicationVersion();
-    NTagReaderInterface *tagReader = dynamic_cast<NTagReaderInterface *>(
-        NPluginLoader::getPlugin(N::TagReader));
-    if (tagReader) {
-        QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
-        QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
-        if (!format.isEmpty()) {
-            title = tagReader->toString(file, format, encoding);
-            title.replace("%v", QCoreApplication::applicationVersion());
-        }
-        if (title.isEmpty()) { // reading tags failed
-            title = titleDefault;
-        }
-    } else {
-        title = titleDefault;
+    QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
+    if (!format.isEmpty()) {
+        m_trackInfoReader->setSource(file);
+        title = m_trackInfoReader->toString(format);
     }
+
     m_mainWindow->setTitle(title);
     m_systemTray->setToolTip(title);
     m_trackInfoWidget->updateStaticTags(file);

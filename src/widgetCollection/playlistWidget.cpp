@@ -31,7 +31,7 @@
 #include "playlistWidgetItem.h"
 #include "pluginLoader.h"
 #include "settings.h"
-#include "tagReaderInterface.h"
+#include "trackInfoReader.h"
 #include "trash.h"
 #include "utils.h"
 
@@ -43,8 +43,8 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     m_currentTextColor = QColor(Qt::black);
     m_fileDropRadius = 0;
 
-    m_tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
-    Q_ASSERT(m_tagReader);
+    m_trackInfoReader = NULL;
+
     m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
         NPluginLoader::getPlugin(N::PlaybackEngine));
     Q_ASSERT(m_playbackEngine);
@@ -103,6 +103,11 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     connect(m_processVisibleItemsTimer, SIGNAL(timeout()), this, SLOT(processVisibleItems()));
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this,
             SLOT(startProcessVisibleItemsTimer()));
+}
+
+void NPlaylistWidget::setTrackInfoReader(NTrackInfoReader *reader)
+{
+    m_trackInfoReader = reader;
 }
 
 void NPlaylistWidget::resizeEvent(QResizeEvent *event)
@@ -321,10 +326,10 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFo
     }
 
     QString file = item->data(N::PathRole).toString();
-    QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
-    QString title = m_tagReader->toString(file, titleFormat, encoding);
-    if (title.isEmpty()) { // reading tags failed
-        title = QFileInfo(file).fileName();
+    QString title;
+    if (m_trackInfoReader) {
+        m_trackInfoReader->setSource(file);
+        title = m_trackInfoReader->toString(titleFormat);
     }
 
     item->setText(title);

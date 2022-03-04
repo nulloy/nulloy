@@ -13,40 +13,36 @@
 **
 *********************************************************************/
 
-#ifndef N_TAG_READER_GSTREAMER_H
-#define N_TAG_READER_GSTREAMER_H
+#ifndef N_TRACK_INFO_READER_H
+#define N_TRACK_INFO_READER_H
 
-#include "plugin.h"
 #include "tagReaderInterface.h"
 
-#include <gst/gst.h>
+#include <QFileInfo>
+#include <QObject>
 
-class NTagReaderGstreamer : public NTagReaderInterface, public NPlugin
+class NTrackInfoReader : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(NTagReaderInterface NPlugin)
 
 private:
-    QString m_path;
-    GstTagList *m_taglist;
-    gint64 m_nanosecs;
-    float m_sampleRate;
-    int m_bitDepth;
-    bool m_isValid;
-    QString m_codecName;
-    QTextCodec *m_codec;
+    NTagReaderInterface *m_reader;
+    QFileInfo m_fileInfo;
+
+    int m_durationSec;
+    int m_positionSec;
+
+    QString parseFormat(const QString &format, int &cur, bool skip, bool &ok) const;
 
 public:
-    NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}
-    ~NTagReaderGstreamer();
-
-    void init();
-    QString interfaceString() const { return NTagReaderInterface::interfaceString(); }
-    N::PluginType type() const { return N::TagReader; }
+    NTrackInfoReader(NTagReaderInterface *tagReader, QObject *parent = 0);
+    ~NTrackInfoReader() {}
 
     void setSource(const QString &file);
-    void setEncoding(const QString &encoding);
-    QString getTag(char ch) const;
+    void updatePlaybackPosition(int seconds);
+    QString toString(const QString &format) const;
+    QString getInfo(char ch) const;
+    static QString formatTime(int durationSec);
 };
 
 #endif

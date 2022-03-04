@@ -24,7 +24,7 @@
 
 class NPlaylistDataItem;
 class NPlaylistWidgetItem;
-class NTagReaderInterface;
+class NTrackInfoReader;
 class NPlaybackEngineInterface;
 class QContextMenuEvent;
 class QDropEvent;
@@ -44,7 +44,7 @@ class NPlaylistWidget : public QListWidget
 private:
     NPlaylistWidgetItem *m_currentItem;
     QMenu *m_contextMenu;
-    NTagReaderInterface *m_tagReader;
+    NTrackInfoReader *m_trackInfoReader;
     NPlaybackEngineInterface *m_playbackEngine;
     QTimer *m_processVisibleItemsTimer;
 
@@ -80,6 +80,8 @@ public:
     ~NPlaylistWidget();
 
     NPlaylistWidgetItem *item(int row, bool loop = false) const;
+
+    void setTrackInfoReader(NTrackInfoReader *reader);
 
     int currentRow() const;
     void setCurrentRow(int row);

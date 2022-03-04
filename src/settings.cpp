@@ -67,9 +67,9 @@ NSettings::NSettings(QObject *parent)
         initValue("Shortcuts/FullScreenAction", fullScreenKeys);
     }
 
-    initValue("PlaylistTrackInfo", "%F (%d)");
+    initValue("PlaylistTrackInfo", "%F{ (%d)}");
     initValue("WindowTitleTrackInfo",
-              "\"{%a - %t|%F}\" - " + QCoreApplication::applicationName() + " %v");
+              "{\"%a - %t\" - |\"%F\" - }" + QCoreApplication::applicationName() + " %v");
     initValue("EncodingTrackInfo", "UTF-8");
     initValue("TooltipTrackInfo", "%C");
     initValue("TooltipOffset", QStringList() << QString::number(0) << QString::number(0));
@@ -117,9 +117,9 @@ NSettings::NSettings(QObject *parent)
         *.xm *.s3m *.it *.mod")
                                  .simplified());
 
-    initValue("TrackInfo/TopLeft", "{%B kbps/|}{%s kHz|}");
+    initValue("TrackInfo/TopLeft", "{%B kbps/%s kHz|{%B kbps}{%s kHz}}");
     initValue("TrackInfo/MiddleCenter", "{%a - %t|%F}");
-    initValue("TrackInfo/BottomRight", "%T/%d");
+    initValue("TrackInfo/BottomRight", "%T{/%d}");
 }
 
 NSettings::~NSettings()

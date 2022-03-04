@@ -22,6 +22,7 @@
 class QPropertyAnimation;
 class QGraphicsOpacityEffect;
 class NLabel;
+class NTrackInfoReader;
 
 class NTrackInfoWidget : public QFrame
 {
@@ -36,8 +37,7 @@ private:
     QGraphicsOpacityEffect *m_effect;
     QPropertyAnimation *m_animation;
     QWidget *m_container;
-    int m_trackDurationSec;
-    bool m_hasTags;
+    NTrackInfoReader *m_trackInfoReader;
 
     bool event(QEvent *event);
     void enterEvent(QEvent *event);
@@ -48,6 +48,8 @@ private:
 public:
     NTrackInfoWidget(QFrame *parent = 0);
     ~NTrackInfoWidget();
+
+    void setTrackInfoReader(NTrackInfoReader *reader);
 
 public slots:
     void updateStaticTags(const QString &file);
