@@ -4,3 +4,7 @@ Makefile*
 *.so
 qrc_*.cpp
 ui_*.h
+moc_*
+*.o
+.qmake.*
+.cache
