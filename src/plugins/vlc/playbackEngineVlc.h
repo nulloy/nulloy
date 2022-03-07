@@ -18,6 +18,7 @@
 
 #include <vlc/vlc.h>
 #include <vlc_aout.h>
+#undef msleep
 
 #include <QTimer>
 
