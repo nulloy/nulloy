@@ -12,7 +12,6 @@ BUILD_GSTREAMER=yes
 BUILD_GSTREAMER_TAGREADER=no
 BUILD_TAGLIB=yes
 BUILD_VLC=no
-BUILD_PHONON=no
 BUILD_TESTS=no
 UPDATE_CHECK=yes
 SUPPORT_SKINS=yes
@@ -26,7 +25,6 @@ echo_help() {
     echo '    --no-gstreamer              do not build GStreamer plugin'
     echo '    --gstreamer-tagreader       include TagReader in GStreamer plugin'
     echo '    --vlc                       build VLC plugin'
-    echo '    --phonon                    build Phonon plugin'
     echo '    --no-taglib                 do not build TagLib plugin'
     echo '    --no-skins                  disable skins support'
     echo '    --force-version VERSION     overrides version.pri'
@@ -62,8 +60,6 @@ while test $# -gt 0; do
             BUILD_GSTREAMER_TAGREADER=yes ;;
         --vlc)
             BUILD_VLC=yes ;;
-        --phonon)
-            BUILD_PHONON=yes ;;
         --no-taglib)
             BUILD_TAGLIB=no ;;
         --tests)
@@ -138,12 +134,10 @@ pkg_check_lib() {
 [[ $BUILD_GSTREAMER_TAGREADER == "yes" ]] && pkg_check_lib gstreamer-pbutils-1.0
 [[ $BUILD_VLC == "yes" ]]                 && pkg_check_lib libvlc vlc-plugin
 [[ $BUILD_TAGLIB == "yes" ]]              && pkg_check_lib taglib
-[[ $BUILD_PHONON == "yes" ]]              && pkg_check_lib phonon4qt5
 
 [[ $BUILD_GSTREAMER == "yes" ]]           && echo "CONFIG += gstreamer" >> $QMAKE_CACHE
 [[ $BUILD_GSTREAMER_TAGREADER == "yes" ]] && echo "CONFIG += gstreamer-tagreader" >> $QMAKE_CACHE
 [[ $BUILD_VLC == "yes" ]]                 && echo "CONFIG += vlc" >> $QMAKE_CACHE
-[[ $BUILD_PHONON == "yes" ]]              && echo "CONFIG += phonon" >> $QMAKE_CACHE
 [[ $BUILD_TAGLIB == "yes" ]]              && echo "CONFIG += taglib" >> $QMAKE_CACHE
 [[ $SUPPORT_SKINS == "no" ]]              && echo "CONFIG += no-skins" >> $QMAKE_CACHE
 [[ $UPDATE_CHECK == "no" ]]               && echo "CONFIG += no-update-check" >> $QMAKE_CACHE

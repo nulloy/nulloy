@@ -12,7 +12,6 @@ set BUILD_GSTREAMER=yes
 set BUILD_GSTREAMER_TAGREADER=no
 set BUILD_TAGLIB=yes
 set BUILD_VLC=no
-set BUILD_PHONON=no
 set BUILD_TESTS=no
 set SUPPORT_SKINS=yes
 
@@ -28,10 +27,6 @@ set SUPPORT_SKINS=yes
     )
     if "%0" == "--vlc" (
         set BUILD_VLC=yes
-        goto getopt
-    )
-    if "%0" == "--phonon" (
-        set BUILD_PHONON=yes
         goto getopt
     )
     if "%0" == "--no-taglib" (
@@ -76,7 +71,6 @@ set SUPPORT_SKINS=yes
     echo     --no-gstreamer              do not build GStreamer plugin
     echo     --gstreamer-tagreader       include TagReader in GStreamer plugin
     echo     --vlc                       build VLC plugin
-    echo     --phonon                    build Phonon plugin
     echo     --no-taglib                 do not build TagLib plugin
     echo     --no-skins                  disable skins support
     echo     --console                   build with console output support
@@ -103,7 +97,6 @@ echo. > %QMAKE_CACHE%
 if "%BUILD_GSTREAMER%" == "yes"           echo CONFIG += gstreamer>> %QMAKE_CACHE%
 if "%BUILD_GSTREAMER_TAGREADER%" == "yes" echo CONFIG += gstreamer-tagreader>> %QMAKE_CACHE%
 if "%BUILD_VLC%" == "yes"                 echo CONFIG += vlc>> %QMAKE_CACHE%
-if "%BUILD_PHONON%" == "yes"              echo CONFIG += phonon>> %QMAKE_CACHE%
 if "%BUILD_TAGLIB%" == "yes"              echo CONFIG += taglib>> %QMAKE_CACHE%
 if "%BUILD_TESTS%" == "yes"               echo CONFIG += tests>> %QMAKE_CACHE%
 if "%SUPPORT_SKINS%" == "no"              echo CONFIG += no-skins>> %QMAKE_CACHE%

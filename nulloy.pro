@@ -17,12 +17,6 @@ gstreamer {
     SUBDIRS += gstreamer
 }
 
-# qmake -config phonon
-phonon {
-    phonon.file = src/plugins/phonon/pluginPhonon.pro
-    SUBDIRS += phonon
-}
-
 # qmake -config vlc
 vlc {
     vlc.file = src/plugins/vlc/pluginVlc.pro
