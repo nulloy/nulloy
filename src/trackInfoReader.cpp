@@ -76,6 +76,8 @@ QString NTrackInfoReader::getInfo(char ch) const
             return m_fileInfo.absoluteFilePath();
         case 'P': // directory path without file name
             return m_fileInfo.canonicalPath();
+        case 'N': // directory name
+            return m_fileInfo.absoluteDir().dirName();
         case 'e': // file name extension
             return m_fileInfo.suffix();
         case 'E': // file name extension, uppercased

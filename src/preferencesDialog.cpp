@@ -279,6 +279,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
             "<li><b>%F</b> - " + tr("File name") + "</li>" +
             "<li><b>%p</b> - " + tr("File name including absolute path") + "</li>" +
             "<li><b>%P</b> - " + tr("Directory path without file name") + "</li>" +
+            "<li><b>%N</b> - " + tr("Directory name") + "</li>" +
             "<li><b>%e</b> - " + tr("File name extension") + "</li>" +
             "<li><b>%E</b> - " + tr("File name extension in uppercase") + "</li>" +
             "<li><b>%v</b> - " + tr("Nulloy version number") + "</li>" +
