@@ -19,6 +19,7 @@
 #include <apeproperties.h>
 #include <flacproperties.h>
 #include <mp4properties.h>
+#include <tpropertymap.h>
 #include <trueaudioproperties.h>
 #include <wavpackproperties.h>
 #include <wavproperties.h>
@@ -167,6 +168,9 @@ QString NTagReaderTaglib::getTag(char ch) const
                 return "";
             }
             return QString::number(res);
+        }
+        case 'M': { // beats per minute
+            return NTaglib::_tagRef->tag()->properties()["BPM"].toString().toCString(m_isUtf8);
         }
         default: // unsupported, convert to a tag and return
             return QString('%') + ch;

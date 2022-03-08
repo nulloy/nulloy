@@ -274,6 +274,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
             "<li><b>%B</b> - " + tr("Bitrate in Kbps") + "</li>" +
             "<li><b>%s</b> - " + tr("Sample rate in kHz") + "</li>" +
             "<li><b>%H</b> - " + tr("Number of channels") + "</li>" +
+            "<li><b>%M</b> - " + tr("BPM (beats per minute)") + "</li>" +
             "<li><b>%f</b> - " + tr("File name without extension") + "</li>" +
             "<li><b>%F</b> - " + tr("File name") + "</li>" +
             "<li><b>%p</b> - " + tr("File name including absolute path") + "</li>" +
