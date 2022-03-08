@@ -288,7 +288,8 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
         "</ul>" +
         tr("Examples:") +
         "<ul>" +
-            "<li><b>{%g}</b> - " + tr("Print Genre. If not available, print nothing.") + "</li>" +
+            "<li><b>%g</b> - " + tr("Print Genre. If not available, print nothing.") + "</li>" +
+            "<li><b>{Comment: %c}</b> - " + tr("Print \"Comment: &lt;comment text&gt;\". If not available, print nothing.") + "</li>" +
             "<li><b>{%a - %t|%F}</b> - " + tr("Print Artist and Title, separated with \"-\". If either of the tags is not available, print file name instead.") + "</li>"
             "<li><b>{%B/%s|{%B}{%s}}</b> - " + tr("Print Bitrate and Sample rate, separated with \"/\". If either of the tags is not available, first try to print Bitrate, then try to print Sample rate.") + "</li>"
         "</ul>");
