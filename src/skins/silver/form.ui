@@ -260,7 +260,7 @@ NTrackInfoWidget {
 }
 NTrackInfoWidget QLabel {
 	color: #FFFFFF;
-	background: argb(0, 0, 0, 180);
+	background: rgba(0, 0, 0, 180);
 	border-radius: 7;
 	padding: 0 3;
 	max-height: 14px;

@@ -209,7 +209,7 @@ NTrackInfoWidget QLabel {
 	font-size: 11px;
 	font-weight: bold;
 
-	background: argb(37, 37, 38, 200);
+	background: rgba(37, 37, 38, 200);
 	padding: 0 1;
 }
 NTrackInfoWidget #MiddleCenter {
