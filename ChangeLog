@@ -1,3 +1,9 @@
+* 0.9.3, Wed Mar 9 2022
+- %M for BPM (beats per minute) tag
+- %N for directory name tag
+- Nested conditions support in track info
+- Linux: icons installation fix
+
 * 0.9.1, Fri Feb 25 2022
 - %i for track index in playlist
 - Empty window title fix
