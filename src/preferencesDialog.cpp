@@ -156,6 +156,7 @@ void NPreferencesDialog::setVersionLabel(QString text)
 
 void NPreferencesDialog::on_versionCheckButton_clicked()
 {
+    NSettings::instance()->remove("UpdateIgnore");
     ui.versionLabel->setText("Checking...");
     emit versionRequested();
 }

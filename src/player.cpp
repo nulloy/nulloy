@@ -750,19 +750,25 @@ void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
     if (!reply->error()) {
         QString versionOnline = reply->readAll().simplified();
 
+        if (NSettings::instance()->value("UpdateIgnore", "").toString() == versionOnline) {
+            return;
+        }
+
         if (m_preferencesDialog->isVisible()) {
             m_preferencesDialog->setVersionLabel(tr("Latest: ") + versionOnline);
         }
 
         if (QCoreApplication::applicationVersion() < versionOnline) {
-            QMessageBox::information(m_mainWindow,
-                                     QCoreApplication::applicationName() + tr(" Update"),
-                                     tr("A newer version is available: ") + versionOnline +
-                                         "<br><br>" + "<a href='https://" +
+            QMessageBox::information(m_mainWindow, tr("Update"),
+                                     QCoreApplication::applicationName() + " " + versionOnline +
+                                         " " + tr("released!") + "<br><br>" + "<a href='https://" +
                                          QCoreApplication::organizationDomain() +
                                          "/download'>https://" +
-                                         QCoreApplication::organizationDomain() + "/download</a>");
+                                         QCoreApplication::organizationDomain() + "/download</a>",
+                                     QMessageBox::Ignore);
         }
+
+        NSettings::instance()->setValue("UpdateIgnore", versionOnline);
     }
 
     reply->deleteLater();
