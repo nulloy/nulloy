@@ -421,11 +421,7 @@ void NPlayer::createTrayIcon()
     trayIconMenu->addAction(m_exitAction);
     m_systemTray = new QSystemTrayIcon(this);
     m_systemTray->setContextMenu(trayIconMenu);
-#ifdef Q_OS_MAC
-    m_systemTray->setIcon(QIcon(":mac-systray.png"));
-#else
     m_systemTray->setIcon(m_mainWindow->windowIcon());
-#endif
     m_trayClickTimer = new QTimer(this);
     m_trayClickTimer->setSingleShot(true);
 }

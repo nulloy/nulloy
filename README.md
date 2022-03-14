@@ -16,6 +16,7 @@ More screenshots: https://nulloy.com/screenshots/
 * pkg-config and its dependencies (glib and gettext-runtime) https://download.gnome.org/binaries/win32/dependencies/, https://download.gnome.org/binaries/win32/glib/
 * CMake http://www.cmake.org/
 * TagLib source code https://github.com/taglib/taglib/
+* ImageMagick https://imagemagick.org/script/download.php#windows
 * 7zip http://www.7-zip.org/
 
 Disconnect from the Internet to skip creating Qt account. Run Qt 5 offline installer and select only the following components:
@@ -95,7 +96,7 @@ First install either MacPorts or HomeBrew.
 After installing MacPorts:
 
 ```sh
-sudo port install pkgconfig qt5 qt5-qtscript qt5-qttools gstreamer1 gstreamer1-gst-plugins-base taglib
+sudo port install pkgconfig qt5 qt5-qtscript qt5-qttools gstreamer1 gstreamer1-gst-plugins-base taglib ImageMagick librsvg
 export PATH=/opt/local/libexec/qt5/bin:$PATH
 # install extra GStreamer plugins for more audio formats
 sudo port install gstreamer1-gst-plugins-good gstreamer1-gst-plugins-bad gstreamer1-gst-plugins-ugly
@@ -106,7 +107,7 @@ sudo port install gstreamer1-gst-plugins-good gstreamer1-gst-plugins-bad gstream
 After installing HomeBrew:
 
 ```sh
-brew install pkgconfig qt5 gstreamer gst-plugins-base taglib
+brew install pkgconfig qt5 gstreamer gst-plugins-base taglib imagemagick librsvg
 export PATH=/usr/local/opt/qt/bin:$PATH
 # install extra GStreamer plugins for more audio formats
 brew install gst-plugins-good gst-plugins-bad gst-plugins-ugly
@@ -131,7 +132,7 @@ make install
 #### DEB-based distro
 
 ```sh
-apt install g++ qttools5-dev qtscript5-dev qtbase5-private-dev libqt5x11extras5-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev zip libx11-dev libx11-xcb-dev libtag1-dev
+apt install g++ qttools5-dev qtscript5-dev qtbase5-private-dev libqt5x11extras5-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev zip libx11-dev libx11-xcb-dev libtag1-dev imagemagick librsvg2-bin libqt5svg5-dev
 # install extra GStreamer plugins for more audio formats
 apt install gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
 ```
@@ -139,7 +140,7 @@ apt install gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plug
 #### RPM-based distro
 
 ```sh
-yum install gcc-c++ qt5-qtbase-devel qt5-qttools-devel qt5-qttools-static qt5-qtscript-devel qt5-qtbase-private-devel qt5-linguist gstreamer1-plugins-base-devel gstreamer1-devel zip libX11-devel libxcb-devel taglib-devel
+yum install gcc-c++ qt5-qtbase-devel qt5-qttools-devel qt5-qttools-static qt5-qtscript-devel qt5-qtbase-private-devel qt5-linguist gstreamer1-plugins-base-devel gstreamer1-devel zip libX11-devel libxcb-devel taglib-devel ImageMagick librsvg2 qt5-qtsvg-devel
 # install extra GStreamer plugins for more audio formats
 yum install gstreamer1-plugins-good gstreamer1-plugins-bad gstreamer1-plugins-ugly
 ```

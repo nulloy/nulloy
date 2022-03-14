@@ -100,6 +100,9 @@ int main(int argc, char *argv[])
     QCoreApplication::addLibraryPath(QFileInfo(argv[0]).dir().path() + "/plugins/");
 #endif
 
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
 #ifdef Q_OS_MAC
     // https://bugreports.qt-project.org/browse/QTBUG-32789
     if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_8)

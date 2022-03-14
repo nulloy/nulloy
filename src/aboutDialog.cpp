@@ -20,6 +20,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QSpacerItem>
+#include <QSvgWidget>
 #include <QTabWidget>
 #include <QTextBrowser>
 #include <QTextStream>
@@ -70,11 +71,10 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
     aboutTab->setLayout(aboutTabLayout);
 
     QLabel *iconLabel = new QLabel;
-    QPixmap pixmap(":icon-96.png");
-    iconLabel->setPixmap(pixmap);
-#ifdef Q_OS_MAC
-    iconLabel->setMask(pixmap.mask());
-#endif
+    QSvgWidget svgWidget(":icon.svg");
+    svgWidget.setStyleSheet("background: transparent");
+    svgWidget.resize(96, 96);
+    iconLabel->setPixmap(svgWidget.grab());
 
     QHBoxLayout *iconLayout = new QHBoxLayout;
     iconLayout->addStretch();

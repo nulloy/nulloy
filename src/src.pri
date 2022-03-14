@@ -1,4 +1,4 @@
-QT += script gui core-private
+QT += script gui svg core-private
 
 INCLUDEPATH += $$SRC_DIR $$SRC_DIR/interfaces
 
@@ -62,10 +62,6 @@ unix:!mac:PKGCONFIG += x11
     FORMS += $$SRC_DIR/skins/native/form.ui
 }
 
-RESOURCES += $$SRC_DIR/icons/icons.qrc
-win32:RC_FILE = $$SRC_DIR/icons/icon.rc
-mac:ICON = $$SRC_DIR/icons/icon.icns
-
 no-update-check:DEFINES += _N_NO_UPDATE_CHECK_
 
 include(version.pri)
@@ -76,23 +72,45 @@ build_pass:CONFIG(static, static|shared) {
     DEFINES += _N_SHARED_BUILD_
 }
 
+system(cp $$SRC_DIR/icons/icon.svg $$TMP_DIR/)
+system(cp $$SRC_DIR/icons/icons.qrc $$TMP_DIR/)
+RESOURCES += $$TMP_DIR/icons.qrc
+MAGICK_CMD = convert
+win32:!unix_mingw:MAGICK_CMD = magick convert
 
-# qmake "PREFIX=/usr"
-unix:!mac {
-    target.path = $$PREFIX/bin
+ico.depends = $$SRC_DIR/icons/icon.svg
+ico.target = $$TMP_DIR/icon.ico
+ico.commands = $$MAGICK_CMD $$ico.depends -define icon:auto-resize $$ico.target
+PRE_TARGETDEPS += $$ico.target
+QMAKE_EXTRA_TARGETS += ico
+system($$ico.commands)
 
-    SIZES = 16 22 24 32 48 64 96 128
+system(cp $$SRC_DIR/icons/icon.rc $$TMP_DIR/)
+win32:RC_FILE = $$TMP_DIR/icon.rc
+
+mac {
+    system(mkdir -p $$TMP_DIR/icon.iconset)
+    SIZES = 16 32 128 256
     for(size, SIZES) {
-        eval(icon$${size}.extra = mkdir -p $$TMP_DIR/icon-$${size}; cp $$SRC_DIR/icons/icon-$${size}.png $$TMP_DIR/icon-$${size}/$${APP_NAME}.png)
-        eval(icon$${size}.files = $$TMP_DIR/icon-$${size}/$${APP_NAME}.png)
-        eval(icon$${size}.path = $$PREFIX/share/icons/hicolor/$${size}x$${size}/apps)
-        eval(icon$${size}.CONFIG = no_check_exist)
-        eval(INSTALLS += icon$${size})
+        system($$MAGICK_CMD $$SRC_DIR/icons/icon.svg -density 72 -resize $${size}x$${size} -units PixelsPerInch $$TMP_DIR/icon.iconset/icon_$${size}x$${size}.png)
     }
+    system(iconutil -c icns -o $$TMP_DIR/icon.icns $$TMP_DIR/icon.iconset)
+    ICON = $$TMP_DIR/icon.icns
+}
+
+
+unix:!mac {
+    # qmake "PREFIX=/usr"
+    target.path = $$PREFIX/bin
+    INSTALLS += target
+
+    icon.extra = cp $$SRC_DIR/icons/icon.svg $$TMP_DIR/$${APP_NAME}.svg
+    icon.files = $$TMP_DIR/$${APP_NAME}.svg
+    icon.path = $$PREFIX/share/icons/hicolor/scalable/apps
+    INSTALLS += icon
 
     desktop.files = ../$${APP_NAME}.desktop
     desktop.path = $$PREFIX/share/applications
-
-    INSTALLS += target desktop
+    INSTALLS += desktop
 }
 

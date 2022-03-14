@@ -87,15 +87,9 @@ NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(paren
 #ifdef Q_OS_LINUX
     icon = QIcon::fromTheme("nulloy");
 #endif
-#ifndef Q_OS_MAC
     if (icon.isNull()) {
-        QStringList files = QDir(":").entryList(QStringList() << "icon-*", QDir::Files);
-        foreach (QString fileName, files)
-            icon.addFile(":" + fileName);
+        icon.addFile(":icon.svg");
     }
-#else
-    icon.addFile(":icon-16.png");
-#endif
     setWindowIcon(icon);
 
     QMetaObject::connectSlotsByName(this);
