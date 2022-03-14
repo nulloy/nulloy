@@ -40,7 +40,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
 #endif
             "<b>" +  QCoreApplication::applicationName() + " Music Player</b>" +
             "<br>" +
-            "<a href='http://" + QCoreApplication::organizationDomain() + "'>http://" +
+            "<a href='https://" + QCoreApplication::organizationDomain() + "'>https://" +
                                  QCoreApplication::organizationDomain() + "</a>" +
         "</span><br><br>" +
 #ifdef Q_OS_MAC
