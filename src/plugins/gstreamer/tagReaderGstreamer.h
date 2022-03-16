@@ -34,7 +34,10 @@ private:
     int m_bitDepth;
     bool m_isValid;
     QString m_codecName;
+    bool m_isUtf8;
     QTextCodec *m_codec;
+
+    QString gCharToUnicode(const char *str) const;
 
 public:
     NTagReaderGstreamer(QObject *parent = NULL) : NTagReaderInterface(parent) {}

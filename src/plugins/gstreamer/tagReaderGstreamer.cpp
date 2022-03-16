@@ -106,6 +106,16 @@ void NTagReaderGstreamer::setSource(const QString &file)
 void NTagReaderGstreamer::setEncoding(const QString &encoding)
 {
     m_codec = QTextCodec::codecForName(encoding.toUtf8());
+    m_isUtf8 = (encoding == QLatin1String("UTF-8"));
+}
+
+QString NTagReaderGstreamer::gCharToUnicode(const char *str) const
+{
+    if (!m_isUtf8) {
+        return m_codec->toUnicode(QString::fromUtf8(str).toLatin1());
+    } else {
+        return m_codec->toUnicode(str);
+    }
 }
 
 NTagReaderGstreamer::~NTagReaderGstreamer()
@@ -130,25 +140,25 @@ QString NTagReaderGstreamer::getTag(char ch) const
     switch (ch) {
         case 'a': { // artist
             if (gst_tag_list_get_string(m_taglist, GST_TAG_ARTIST, &gstr)) {
-                res = m_codec->toUnicode(gstr);
+                res = gCharToUnicode(gstr);
             }
             break;
         }
         case 't': { // title
             if (gst_tag_list_get_string(m_taglist, GST_TAG_TITLE, &gstr)) {
-                res = m_codec->toUnicode(gstr);
+                res = gCharToUnicode(gstr);
             }
             break;
         }
         case 'A': { // album
             if (gst_tag_list_get_string(m_taglist, GST_TAG_ALBUM, &gstr)) {
-                res = m_codec->toUnicode(gstr);
+                res = gCharToUnicode(gstr);
             }
             break;
         }
         case 'c': { // comment
             if (gst_tag_list_get_string(m_taglist, GST_TAG_COMMENT, &gstr)) {
-                res = m_codec->toUnicode(gstr);
+                res = gCharToUnicode(gstr);
             }
             break;
         }
