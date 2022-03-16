@@ -130,25 +130,25 @@ QString NTagReaderGstreamer::getTag(char ch) const
     switch (ch) {
         case 'a': { // artist
             if (gst_tag_list_get_string(m_taglist, GST_TAG_ARTIST, &gstr)) {
-                res = m_codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+                res = m_codec->toUnicode(gstr);
             }
             break;
         }
         case 't': { // title
             if (gst_tag_list_get_string(m_taglist, GST_TAG_TITLE, &gstr)) {
-                res = m_codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+                res = m_codec->toUnicode(gstr);
             }
             break;
         }
         case 'A': { // album
             if (gst_tag_list_get_string(m_taglist, GST_TAG_ALBUM, &gstr)) {
-                res = m_codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+                res = m_codec->toUnicode(gstr);
             }
             break;
         }
         case 'c': { // comment
             if (gst_tag_list_get_string(m_taglist, GST_TAG_COMMENT, &gstr)) {
-                res = m_codec->toUnicode(QString::fromUtf8(gstr).toLatin1());
+                res = m_codec->toUnicode(gstr);
             }
             break;
         }
