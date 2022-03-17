@@ -11,6 +11,7 @@ FORMS += $$SRC_DIR/*.ui
 CONFIG += app_bundle
 
 isEmpty(TMP_DIR):TMP_DIR = ../.tmp
+system($$QMAKE_MKDIR $$TMP_DIR)
 OBJECTS_DIR = $$TMP_DIR
 MOC_DIR     = $$TMP_DIR
 RCC_DIR     = $$TMP_DIR
@@ -89,7 +90,7 @@ system(cp $$SRC_DIR/icons/icon.rc $$TMP_DIR/)
 win32:RC_FILE = $$TMP_DIR/icon.rc
 
 mac {
-    system(mkdir -p $$TMP_DIR/icon.iconset)
+    system($$QMAKE_MKDIR $$TMP_DIR/icon.iconset)
     SIZES = 16 32 128 256
     for(size, SIZES) {
         system($$MAGICK_CMD $$SRC_DIR/icons/icon.svg -density 72 -resize $${size}x$${size} -units PixelsPerInch $$TMP_DIR/icon.iconset/icon_$${size}x$${size}.png)
