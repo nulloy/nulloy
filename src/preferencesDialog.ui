@@ -34,7 +34,16 @@
        <property name="spacing">
         <number>0</number>
        </property>
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -50,22 +59,75 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>666</width>
-            <height>498</height>
+            <width>566</width>
+            <height>514</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_11">
+          <layout class="QVBoxLayout" name="verticalLayout_8">
            <item>
             <layout class="QGridLayout" name="gridLayout">
-             <item row="0" column="0">
-              <widget class="QLabel" name="languageLabel">
+             <item row="0" column="3">
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>37</width>
+                 <height>23</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="skinLabel">
                <property name="text">
-                <string>Language:</string>
+                <string>Skin:</string>
                </property>
               </widget>
              </item>
+             <item row="1" column="2">
+              <widget class="QLabel" name="skinRestartLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: red;
+padding: 5px;</string>
+               </property>
+               <property name="text">
+                <string>Switching skins requires restart</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <spacer name="horizontalSpacer_6">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>37</width>
+                 <height>23</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
              <item row="0" column="1">
               <widget class="QComboBox" name="languageComboBox">
+               <property name="minimumSize">
+                <size>
+                 <width>200</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="skinComboBox">
                <property name="minimumSize">
                 <size>
                  <width>200</width>
@@ -82,21 +144,8 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
                <property name="styleSheet">
-                <string notr="true">color: black;
-background: qlineargradient(spread: repeat, x1:0, y1:0, x2:0.3, y2:0.04,
-                            stop:0 #FEF8C0,
-                            stop:0.49 #FEF8D6,
-                            stop:0.50 #FFFFEB,
-                            stop:1 #FFFFE5
-);
-border-radius: 5px;
+                <string notr="true">color: red;
 padding: 5px;</string>
                </property>
                <property name="text">
@@ -104,112 +153,60 @@ padding: 5px;</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="3">
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="skinLabel">
+             <item row="0" column="0">
+              <widget class="QLabel" name="languageLabel">
                <property name="text">
-                <string>Skin:</string>
+                <string>Language:</string>
                </property>
               </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QComboBox" name="skinComboBox">
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QLabel" name="skinRestartLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">color: black;
-background: qlineargradient(spread: repeat, x1:0, y1:0, x2:0.3, y2:0.04,
-                            stop:0 #FEF8C0,
-                            stop:0.49 #FEF8D6,
-                            stop:0.50 #FFFFEB,
-                            stop:1 #FFFFE5
-);
-border-radius: 5px;
-padding: 5px;</string>
-               </property>
-               <property name="text">
-                <string>Switching skins requires restart</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3">
-              <spacer name="horizontalSpacer_6">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
              </item>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_13">
-             <item>
-              <widget class="QCheckBox" name="trayIconCheckBox">
-               <property name="text">
-                <string>Always show icon in system tray</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QCheckBox" name="trayIconCheckBox">
+             <property name="text">
+              <string>Always show icon in system tray</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QWidget" name="minimizeToTrayContainer" native="true">
-              <layout class="QHBoxLayout" name="horizontalLayout_12">
-                <property name="margin">
-                <number>0</number>
+             <layout class="QHBoxLayout" name="horizontalLayout_12">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="minimizeToTrayCheckBox">
+                <property name="text">
+                 <string>Hide to system tray when closed</string>
                 </property>
-                <item>
-                  <widget class="QCheckBox" name="minimizeToTrayCheckBox">
-                  <property name="text">
-                    <string>Hide to system tray when closed</string>
-                  </property>
-                  </widget>
-                </item>
-              </layout>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
             <widget class="QWidget" name="quitOnCloseContainer" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_17">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item>
@@ -223,123 +220,69 @@ padding: 5px;</string>
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_11">
-             <item>
-              <widget class="QCheckBox" name="restorePlaylistCheckBox">
-               <property name="text">
-                <string>Restore playlist after restart</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QCheckBox" name="restorePlaylistCheckBox">
+             <property name="text">
+              <string>Restore playlist after restart</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
-             <item>
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="startPausedCheckBox">
-               <property name="text">
-                <string>Start in paused state</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QCheckBox" name="startPausedCheckBox">
+             <property name="styleSheet">
+              <string notr="true">margin-left: 20px;</string>
+             </property>
+             <property name="text">
+              <string>Start in paused state</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_10">
-             <item>
-              <widget class="QCheckBox" name="singleInstanceCheckBox">
-               <property name="text">
-                <string>Allow only one instance</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QCheckBox" name="singleInstanceCheckBox">
+             <property name="text">
+              <string>Allow only one instance</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
-             <item>
-              <spacer name="horizontalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="enqueueFilesCheckBox">
-               <property name="text">
-                <string>Enqueue files when in one instance</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QCheckBox" name="enqueueFilesCheckBox">
+             <property name="styleSheet">
+              <string notr="true">margin-left: 20px;</string>
+             </property>
+             <property name="text">
+              <string>Enqueue files when in one instance</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <spacer name="horizontalSpacer_4">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="playEnqueuedCheckBox">
-               <property name="text">
-                <string>Play enqueued files immediately</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QCheckBox" name="playEnqueuedCheckBox">
+             <property name="styleSheet">
+              <string notr="true">margin-left: 40px;</string>
+             </property>
+             <property name="text">
+              <string>Play enqueued files immediately</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_9">
-             <item>
-              <widget class="QCheckBox" name="showDecibelsVolumeCheckBox">
-               <property name="text">
-                <string>Show volume in decibels (using Stevens' law)</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QCheckBox" name="showDecibelsVolumeCheckBox">
+             <property name="text">
+              <string>Show volume in decibels (using Stevens' law)</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QWidget" name="taskbarProgressContainer" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_8">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item>
@@ -353,76 +296,67 @@ padding: 5px;</string>
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <widget class="QCheckBox" name="displayLogDialogCheckBox">
+             <property name="text">
+              <string>Display log dialog in case of errors</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
-              <widget class="QCheckBox" name="displayLogDialogCheckBox">
+              <widget class="QCheckBox" name="autoCheckUpdatesCheckBox">
                <property name="text">
-                <string>Display log dialog in case of errors</string>
+                <string>Automatically check for updates</string>
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QPushButton" name="versionCheckButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Check now</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="versionLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>90</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string notr="true">Latest: x.x</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QWidget" name="autoCheckUpdatesContainer" native="true">
-             <layout class="QHBoxLayout" name="horizontalLayout">
-              <property name="margin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QCheckBox" name="autoCheckUpdatesCheckBox">
-                <property name="text">
-                 <string>Automatically check for updates</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="versionCheckButton">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Check now</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="versionLabel">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>90</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string notr="true">Latest: x.x</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_14">
@@ -446,35 +380,30 @@ padding: 5px;</string>
             </layout>
            </item>
            <item>
-            <widget class="QWidget" name="customTrashContainer" native="true">
-             <layout class="QHBoxLayout" name="horizontalLayout_15">
-              <property name="margin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QCheckBox" name="customTrashCheckBox">
-                <property name="text">
-                 <string>Custom Trash Command:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="customTrashCommandLineEdit"/>
-              </item>
-              <item>
-               <widget class="QPushButton" name="customTrashHelpButton">
-                <property name="text">
-                 <string>Help</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_15">
+             <item>
+              <widget class="QCheckBox" name="customTrashCheckBox">
+               <property name="text">
+                <string>Custom Trash Command:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="customTrashCommandLineEdit"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="customTrashHelpButton">
+               <property name="text">
+                <string>Help</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
-              <widget class="QLabel" name="fileFiltersLabel">
+              <widget class="QLabel" name="fileFiltersMultiLabel">
                <property name="text">
                 <string>File filters:</string>
                </property>
@@ -512,7 +441,16 @@ padding: 5px;</string>
        <item>
         <widget class="QWidget" name="widget" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
@@ -585,7 +523,7 @@ padding: 5px;</string>
          <item>
           <widget class="QLabel" name="tooltipOffsetLabel">
            <property name="text">
-            <string>Tooltop offset:</string>
+            <string>Tooltop offset relative to mouse:</string>
            </property>
           </widget>
          </item>
@@ -853,7 +791,16 @@ padding: 5px;</string>
        <property name="spacing">
         <number>0</number>
        </property>
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -869,8 +816,8 @@ padding: 5px;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>678</width>
-            <height>446</height>
+            <width>578</width>
+            <height>486</height>
            </rect>
           </property>
          </widget>
@@ -884,21 +831,8 @@ padding: 5px;</string>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
          <property name="styleSheet">
-          <string notr="true">color: black;
-background: qlineargradient(spread: repeat, x1:0, y1:0, x2:0.3, y2:0.05,
-                            stop:0 rgba(255, 255, 229, 255),
-                            stop:0.49 rgba(255, 255, 229, 255),
-                            stop:0.50 rgba(254, 248, 214, 255),
-                            stop:1 rgba(254, 248, 214, 255)
-);
-border-radius: 5px;
+          <string notr="true">color: red;
 padding: 5px;</string>
          </property>
          <property name="text">
