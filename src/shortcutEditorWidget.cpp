@@ -34,8 +34,6 @@ NShortcutEditorWidget::NShortcutEditorWidget(QWidget *parent) : QTableWidget(par
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSelectionMode(QAbstractItemView::SingleSelection);
 
-    setStyleSheet("QTableView::item:disabled { color: black; }");
-
     m_init = false;
 }
 
@@ -54,12 +52,13 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
         NAction *action = m_actionList.at(i);
 
         QTableWidgetItem *nameItem = new QTableWidgetItem(action->text());
-        nameItem->setFlags(Qt::NoItemFlags);
+        nameItem->setFlags(nameItem->flags() ^ Qt::ItemIsEditable ^ Qt::ItemIsSelectable);
         nameItem->setData(Qt::UserRole, action->objectName());
         setItem(i, Name, nameItem);
 
         QTableWidgetItem *descriptionItem = new QTableWidgetItem(action->statusTip());
-        descriptionItem->setFlags(Qt::NoItemFlags);
+        descriptionItem->setFlags(descriptionItem->flags() ^ Qt::ItemIsEditable ^
+                                  Qt::ItemIsSelectable);
         setItem(i, Description, descriptionItem);
 
         QList<QKeySequence> shortcut = action->shortcuts();
@@ -152,6 +151,9 @@ QString NShortcutEditorWidget::keyEventToString(QKeyEvent *e)
 void NShortcutEditorWidget::keyPressEvent(QKeyEvent *e)
 {
     QTableWidgetItem *currentItem = item(currentRow(), currentColumn());
+    if (!(currentItem->flags() & Qt::ItemIsEditable)) {
+        return;
+    }
     QString text = currentItem->text();
 
     int keyInt = e->key();
