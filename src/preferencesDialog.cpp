@@ -391,10 +391,11 @@ void NPreferencesDialog::loadSettings()
     QList<QWidget *> widgets = findChildren<QWidget *>();
     foreach (QWidget *widget, widgets) {
         if (!widget->inherits("QCheckBox") && !widget->inherits("QLineEdit") &&
-            !widget->inherits("QAbstractSpinBox")) {
+            !widget->inherits("NMultiLineEdit") && !widget->inherits("QAbstractSpinBox")) {
             continue;
         }
-        QString className = QString(widget->metaObject()->className()).mid(1); // remove leading 'Q'
+        QString className =
+            QString(widget->metaObject()->className()).mid(1); // remove leading 'Q' or 'N'
         QString objectName = widget->objectName();
         if (objectName == "qt_spinbox_lineedit") { // QSpinBox inner widget
             continue;
@@ -410,6 +411,9 @@ void NPreferencesDialog::loadSettings()
                 NSettings::instance()->value(settingsName).toBool());
         } else if (widget->inherits("QLineEdit")) {
             qobject_cast<QLineEdit *>(widget)->setText(
+                NSettings::instance()->value(settingsName).toString());
+        } else if (widget->inherits("NMultiLineEdit")) {
+            qobject_cast<NMultiLineEdit *>(widget)->setText(
                 NSettings::instance()->value(settingsName).toString());
         } else if (widget->inherits("QDoubleSpinBox")) {
             qobject_cast<QDoubleSpinBox *>(widget)->setValue(
@@ -517,10 +521,11 @@ void NPreferencesDialog::saveSettings()
     QList<QWidget *> widgets = findChildren<QWidget *>();
     foreach (QWidget *widget, widgets) {
         if (!widget->inherits("QCheckBox") && !widget->inherits("QLineEdit") &&
-            !widget->inherits("QAbstractSpinBox")) {
+            !widget->inherits("NMultiLineEdit") && !widget->inherits("QAbstractSpinBox")) {
             continue;
         }
-        QString className = QString(widget->metaObject()->className()).mid(1); // remove leading 'Q'
+        QString className =
+            QString(widget->metaObject()->className()).mid(1); // remove leading 'Q' or 'N'
         QString objectName = widget->objectName();
         if (objectName == "qt_spinbox_lineedit") { // QSpinBox inner widget
             continue;
@@ -536,6 +541,9 @@ void NPreferencesDialog::saveSettings()
                                             qobject_cast<QCheckBox *>(widget)->isChecked());
         } else if (widget->inherits("QLineEdit")) {
             NSettings::instance()->setValue(settingsName, qobject_cast<QLineEdit *>(widget)->text());
+        } else if (widget->inherits("NMultiLineEdit")) {
+            NSettings::instance()->setValue(settingsName,
+                                            qobject_cast<NMultiLineEdit *>(widget)->text());
         } else if (widget->inherits("QDoubleSpinBox")) {
             NSettings::instance()->setValue(settingsName,
                                             qobject_cast<QDoubleSpinBox *>(widget)->value());

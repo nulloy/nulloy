@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>700</width>
-    <height>550</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="styleSheet">
@@ -59,8 +59,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>566</width>
-            <height>514</height>
+            <width>666</width>
+            <height>560</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -407,10 +407,13 @@ padding: 5px;</string>
                <property name="text">
                 <string>File filters:</string>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+               </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="fileFiltersLineEdit"/>
+              <widget class="NMultiLineEdit" name="fileFiltersMultiLineEdit"/>
              </item>
             </layout>
            </item>
@@ -816,8 +819,8 @@ padding: 5px;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>578</width>
-            <height>486</height>
+            <width>678</width>
+            <height>436</height>
            </rect>
           </property>
          </widget>
@@ -857,6 +860,11 @@ padding: 5px;</string>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>NMultiLineEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header>multiLineEdit.h</header>
+  </customwidget>
   <customwidget>
    <class>NShortcutEditorWidget</class>
    <extends>QTableView</extends>
