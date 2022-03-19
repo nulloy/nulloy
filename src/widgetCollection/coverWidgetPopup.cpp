@@ -17,6 +17,7 @@
 
 #include <QBoxLayout>
 #include <QGraphicsDropShadowEffect>
+#include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPropertyAnimation>
 
@@ -57,8 +58,6 @@ NCoverWidgetPopup::NCoverWidgetPopup(QWidget *parent) : QWidget(parent)
     m_animation->setEasingCurve(QEasingCurve::OutQuad);
     m_animation->setStartValue(0.0);
     m_animation->setEndValue(1.0);
-
-    QWidget::window()->installEventFilter(this);
 }
 
 void NCoverWidgetPopup::mousePressEvent(QMouseEvent *event)
@@ -67,15 +66,7 @@ void NCoverWidgetPopup::mousePressEvent(QMouseEvent *event)
         event->ignore();
         return;
     }
-
-#ifndef Q_OS_MAC // QTBUG-15367
-    m_animation->setDirection(QAbstractAnimation::Backward);
-    if (m_animation->state() == QAbstractAnimation::Stopped) {
-        m_animation->start();
-    }
-#else
     hide();
-#endif
 }
 
 void NCoverWidgetPopup::setPixmap(const QPixmap &pixmap)
@@ -101,12 +92,13 @@ void NCoverWidgetPopup::resize(const QSize &size)
 void NCoverWidgetPopup::on_animation_finished()
 {
     if (m_animation->direction() == QAbstractAnimation::Backward) {
-        hide();
+        QWidget::hide();
     }
 }
 
 void NCoverWidgetPopup::show()
 {
+    QWidget::window()->installEventFilter(this);
     QWidget::show();
     m_animation->setDirection(QAbstractAnimation::Forward);
     if (m_animation->state() == QAbstractAnimation::Stopped) {
@@ -114,10 +106,29 @@ void NCoverWidgetPopup::show()
     }
 }
 
+void NCoverWidgetPopup::hide()
+{
+#ifndef Q_OS_MAC // QTBUG-15367
+    m_animation->setDirection(QAbstractAnimation::Backward);
+    if (m_animation->state() == QAbstractAnimation::Stopped) {
+        m_animation->start();
+    }
+#else
+    QWidget::hide();
+#endif
+    QWidget::window()->removeEventFilter(this);
+}
+
 bool NCoverWidgetPopup::eventFilter(QObject *, QEvent *event)
 {
     if (event->type() == QEvent::Resize) {
         resize(dynamic_cast<QResizeEvent *>(event)->size());
+    } else if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = reinterpret_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Escape) {
+            hide();
+        }
+        return true;
     }
 
     return false;

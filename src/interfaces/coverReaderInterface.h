@@ -20,7 +20,7 @@
 
 class QString;
 
-#define COVERREADER_INTERFACE "Nulloy/NCoverReaderInterface/0.7"
+#define COVERREADER_INTERFACE "Nulloy/NCoverReaderInterface/0.9.5"
 
 class NCoverReaderInterface : public QObject
 {
@@ -31,7 +31,7 @@ public:
     static QString interfaceString() { return COVERREADER_INTERFACE; }
 
     virtual void setSource(const QString &file) = 0;
-    virtual QImage getImage() const = 0;
+    virtual QList<QImage> getImages() const = 0;
     virtual bool isValid() const = 0;
 };
 

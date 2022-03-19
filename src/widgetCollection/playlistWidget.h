@@ -73,6 +73,7 @@ private slots:
     void on_trashAction_triggered();
     void on_removeAction_triggered();
     void on_revealAction_triggered();
+    void on_tagEditorAction_triggered();
     void startProcessVisibleItemsTimer();
 
 public:
@@ -115,7 +116,8 @@ public slots:
 
 signals:
     void currentActivated();
-    void setMedia(const QString &file);
+    void mediaChanged(const QString &file);
+    void tagEditorRequested(const QString &file);
 
     void shuffleModeChanged(bool enable);
     void repeatModeChanged(bool enable);

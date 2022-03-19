@@ -80,6 +80,16 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     m_contextMenu->addAction(removeAction);
     m_contextMenu->addAction(trashAction);
 
+    if (dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader))
+            ->isWriteSupported()) {
+        QShortcut *tagEditorShortcut = new QShortcut(QKeySequence(Qt::Key_F4), this);
+        connect(tagEditorShortcut, SIGNAL(activated()), this, SLOT(on_tagEditorAction_triggered()));
+        QAction *tagEditorAction = new QAction(QIcon::fromTheme("edit"), tr("Tag Editor"), this);
+        tagEditorAction->setShortcut(tagEditorShortcut->key());
+        connect(tagEditorAction, SIGNAL(triggered()), this, SLOT(on_tagEditorAction_triggered()));
+        m_contextMenu->addAction(tagEditorAction);
+    }
+
     m_itemDrag = NULL;
     m_fileDrop = false;
     m_dragStart = DragStartInside;
@@ -236,6 +246,14 @@ void NPlaylistWidget::on_revealAction_triggered()
     }
 }
 
+void NPlaylistWidget::on_tagEditorAction_triggered()
+{
+    if (selectedItems().isEmpty()) {
+        return;
+    }
+    emit tagEditorRequested(selectedItems().first()->data(N::PathRole).toString());
+}
+
 bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) const
 {
     QFileInfo fileInfo(file);
@@ -313,7 +331,7 @@ NPlaylistWidget::~NPlaylistWidget() {}
 void NPlaylistWidget::resetCurrentItem()
 {
     m_currentItem = NULL;
-    emit setMedia("");
+    emit mediaChanged("");
 }
 
 void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force)
@@ -363,7 +381,7 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
     update();
 
     QString file = item->data(N::PathRole).toString();
-    emit setMedia(file);
+    emit mediaChanged(file);
 }
 
 void NPlaylistWidget::currentFailed()

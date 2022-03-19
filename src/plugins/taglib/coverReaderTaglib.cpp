@@ -73,81 +73,92 @@ QImage NCoverReaderTaglib::fromTagBytes(const TagLib::ByteVector &data) const
     return image;
 }
 
-QImage NCoverReaderTaglib::fromApe(TagLib::APE::Tag *tag) const
+QList<QImage> NCoverReaderTaglib::fromApe(TagLib::APE::Tag *tag) const
 {
+    QList<QImage> images;
     const TagLib::APE::ItemListMap &map = tag->itemListMap();
 
-    TagLib::String str = "COVER ART (FRONT)";
-    if (!map.contains(str)) {
-        return QImage();
+    for (auto iter = map.begin(); iter != map.end(); ++iter) {
+        TagLib::String key = iter->first;
+        if (!key.startsWith("COVER ART")) {
+            continue;
+        }
+
+        TagLib::String fileName = map[key].toString();
+        TagLib::ByteVector item = map[key].value();
+        images << fromTagBytes(item.mid(fileName.size() + 1));
     }
 
-    TagLib::String fileName = map[str].toString();
-    TagLib::ByteVector item = map[str].value();
-    return fromTagBytes(item.mid(fileName.size() + 1));
+    return images;
 }
 
-QImage NCoverReaderTaglib::fromAsf(TagLib::ASF::Tag *tag) const
+QList<QImage> NCoverReaderTaglib::fromAsf(TagLib::ASF::Tag *tag) const
 {
+    QList<QImage> images;
     const TagLib::ASF::AttributeListMap &map = tag->attributeListMap();
 
     TagLib::String str = "WM/Picture";
     if (!map.contains(str)) {
-        return QImage();
+        return images;
     }
 
     const TagLib::ASF::AttributeList &list = map[str];
-    if (list.isEmpty()) {
-        return QImage();
+
+    for (auto attribute : list) {
+        TagLib::ASF::Picture pic = attribute.toPicture();
+        if (pic.isValid()) {
+            images << fromTagBytes(pic.picture());
+        }
     }
 
-    TagLib::ASF::Picture pic = list[0].toPicture();
-    if (pic.isValid()) {
-        return fromTagBytes(pic.picture());
-    }
-
-    return QImage();
+    return images;
 }
 
-QImage NCoverReaderTaglib::fromFlac(TagLib::FLAC::File *file) const
+QList<QImage> NCoverReaderTaglib::fromFlac(TagLib::FLAC::File *file) const
 {
+    QList<QImage> images;
     const TagLib::List<TagLib::FLAC::Picture *> &list = file->pictureList();
-    if (list.isEmpty()) {
-        return QImage();
-    }
 
-    TagLib::FLAC::Picture *pic = list[0];
-    return fromTagBytes(pic->data());
+    for (TagLib::FLAC::Picture *pic : list) {
+        images << fromTagBytes(pic->data());
+    }
+    return images;
 }
 
-QImage NCoverReaderTaglib::fromId3(TagLib::ID3v2::Tag *tag) const
+QList<QImage> NCoverReaderTaglib::fromId3(TagLib::ID3v2::Tag *tag) const
 {
+    QList<QImage> images;
     const TagLib::ID3v2::FrameList &list = tag->frameList("APIC");
     if (list.isEmpty()) {
-        return QImage();
+        return images;
     }
 
-    auto *frame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(list.front());
-    return fromTagBytes(frame->picture());
+    for (auto *frame : list) {
+        auto pictureFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frame);
+        images << fromTagBytes(pictureFrame->picture());
+    }
+    return images;
 }
 
-QImage NCoverReaderTaglib::fromMp4(TagLib::MP4::Tag *tag) const
+QList<QImage> NCoverReaderTaglib::fromMp4(TagLib::MP4::Tag *tag) const
 {
+    QList<QImage> images;
     TagLib::String str = "covr";
     if (!tag->itemListMap().contains(str)) {
-        return QImage();
+        return images;
     }
 
     TagLib::MP4::CoverArtList coverList = tag->itemListMap()[str].toCoverArtList();
-    if (coverList[0].data().size() > 0) {
-        return fromTagBytes(coverList[0].data());
+    for (auto coverArt : coverList) {
+        images << fromTagBytes(coverArt.data());
     }
 
-    return QImage();
+    return images;
 }
 
-QImage NCoverReaderTaglib::fromVorbis(TagLib::Tag *tag) const
+QList<QImage> NCoverReaderTaglib::fromVorbis(TagLib::Tag *tag) const
 {
+    QList<QImage> images;
     if (auto *comment = dynamic_cast<TagLib::Ogg::XiphComment *>(tag)) {
         TagLib::String str = "COVERART";
 
@@ -156,7 +167,7 @@ QImage NCoverReaderTaglib::fromVorbis(TagLib::Tag *tag) const
         }
 
         if (!comment->contains(str)) {
-            return QImage();
+            return images;
         }
 
         TagLib::ByteVector tagBytes = comment->fieldListMap()[str].front().data(
@@ -165,61 +176,61 @@ QImage NCoverReaderTaglib::fromVorbis(TagLib::Tag *tag) const
         base64.setRawData(tagBytes.data(), tagBytes.size());
         QImage image;
         image.loadFromData(QByteArray::fromBase64(base64));
-        return image;
+        images << image;
     }
 
-    return QImage();
+    return images;
 }
 
-QImage NCoverReaderTaglib::getImage() const
+QList<QImage> NCoverReaderTaglib::getImages() const
 {
-    QImage image;
+    QList<QImage> images;
 
     if (!isValid()) {
-        return image;
+        return images;
     }
 
     TagLib::File *tagFile = NTaglib::_tagRef->file();
 
     if (auto *file = dynamic_cast<TagLib::APE::File *>(tagFile)) {
         if (file->APETag()) {
-            image = fromApe(file->APETag());
+            images = fromApe(file->APETag());
         }
     } else if (auto *file = dynamic_cast<TagLib::ASF::File *>(tagFile)) {
         if (file->tag()) {
-            image = fromAsf(file->tag());
+            images = fromAsf(file->tag());
         }
     } else if (auto *file = dynamic_cast<TagLib::FLAC::File *>(tagFile)) {
-        image = fromFlac(file);
+        images = fromFlac(file);
 
-        if (image.isNull() && file->ID3v2Tag()) {
-            image = fromId3(file->ID3v2Tag());
+        if (images.isEmpty() && file->ID3v2Tag()) {
+            images = fromId3(file->ID3v2Tag());
         }
     } else if (auto *file = dynamic_cast<TagLib::MP4::File *>(tagFile)) {
         if (file->tag()) {
-            image = fromMp4(file->tag());
+            images = fromMp4(file->tag());
         }
     } else if (auto *file = dynamic_cast<TagLib::MPC::File *>(tagFile)) {
         if (file->APETag()) {
-            image = fromApe(file->APETag());
+            images = fromApe(file->APETag());
         }
     } else if (auto *file = dynamic_cast<TagLib::MPEG::File *>(tagFile)) {
         if (file->ID3v2Tag()) {
-            image = fromId3(file->ID3v2Tag());
+            images = fromId3(file->ID3v2Tag());
         }
 
-        if (image.isNull() && file->APETag()) {
-            image = fromApe(file->APETag());
+        if (images.isEmpty() && file->APETag()) {
+            images = fromApe(file->APETag());
         }
     } else if (auto *file = dynamic_cast<TagLib::Ogg::Vorbis::File *>(tagFile)) {
         if (file->tag()) {
-            image = fromVorbis(file->tag());
+            images = fromVorbis(file->tag());
         }
     } else if (auto *file = dynamic_cast<TagLib::WavPack::File *>(tagFile)) {
         if (file->APETag()) {
-            image = fromApe(file->APETag());
+            images = fromApe(file->APETag());
         }
     }
 
-    return image;
+    return images;
 }

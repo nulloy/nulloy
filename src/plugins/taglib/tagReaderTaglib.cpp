@@ -170,9 +170,122 @@ QString NTagReaderTaglib::getTag(QChar ch) const
             return QString::number(res);
         }
         case 'M': { // beats per minute
-            return NTaglib::_tagRef->tag()->properties()["BPM"].toString().toCString(m_isUtf8);
+            return NTaglib::_tagRef->file()->properties()["BPM"].toString().toCString(m_isUtf8);
         }
         default: // unsupported, convert to a tag and return
             return QString('%') + ch;
     }
+}
+
+N::Tag NTagReaderTaglib::tagFromKey(const QString &key) const
+{
+    if (key == "ALBUM") {
+        return N::AlbumTag;
+    } else if (key == "ARTIST") {
+        return N::ArtistTag;
+    } else if (key == "BPM") {
+        return N::BpmTag;
+    } else if (key == "COMMENT") {
+        return N::CommentTag;
+    } else if (key == "COMPOSER") {
+        return N::ComposerTag;
+    } else if (key == "COPYRIGHT") {
+        return N::CopyrightTag;
+    } else if (key == "ENCODEDBY") {
+        return N::EncodedByTag;
+    } else if (key == "GENRE") {
+        return N::GenreTag;
+    } else if (key == "PUBLISHER") {
+        return N::PublisherTag;
+    } else if (key == "TITLE") {
+        return N::TitleTag;
+    } else if (key == "TRACKNUMBER") {
+        return N::TrackNumberTag;
+    } else if (key == "URL") {
+        return N::UrlTag;
+    } else if (key == "DATE") {
+        return N::DateTag;
+    } else {
+        return N::UnknownTag;
+    }
+}
+
+QString NTagReaderTaglib::tagToKey(N::Tag tag) const
+{
+    switch (tag) {
+        case N::AlbumTag:
+            return "ALBUM";
+        case N::ArtistTag:
+            return "ARTIST";
+        case N::BpmTag:
+            return "BPM";
+        case N::CommentTag:
+            return "COMMENT";
+        case N::ComposerTag:
+            return "COMPOSER";
+        case N::CopyrightTag:
+            return "COPYRIGHT";
+        case N::EncodedByTag:
+            return "ENCODEDBY";
+        case N::GenreTag:
+            return "GENRE";
+        case N::PublisherTag:
+            return "PUBLISHER";
+        case N::TitleTag:
+            return "TITLE";
+        case N::TrackNumberTag:
+            return "TRACKNUMBER";
+        case N::UrlTag:
+            return "URL";
+        case N::DateTag:
+            return "DATE";
+    }
+}
+
+QMap<QString, QStringList>
+NTagReaderTaglib::TMapToQMap(const TagLib::Map<TagLib::String, TagLib::StringList> &tmap) const
+{
+    QMap<QString, QStringList> qmap;
+    for (auto iter = tmap.begin(); iter != tmap.end(); ++iter) {
+        QStringList values;
+        TagLib::StringList tlist = iter->second;
+        for (auto iter = tlist.begin(); iter != tlist.end(); ++iter) {
+            values << m_codec->toUnicode((*iter).toCString(m_isUtf8));
+        }
+        qmap[TStringToQString(iter->first)] = values;
+    }
+    return qmap;
+}
+
+TagLib::Map<TagLib::String, TagLib::StringList>
+NTagReaderTaglib::QMapToTMap(const QMap<QString, QStringList> &qmap) const
+{
+    TagLib::Map<TagLib::String, TagLib::StringList> tmap;
+    foreach (QString key, qmap.keys()) {
+        TagLib::StringList tlist;
+        QStringList values = qmap[key];
+        foreach (QString value, values) {
+            tlist.append(QStringToTString(value));
+        }
+        tmap.insert(QStringToTString(key), tlist);
+    }
+    return tmap;
+}
+
+QMap<QString, QStringList> NTagReaderTaglib::getTags() const
+{
+    return TMapToQMap(NTaglib::_tagRef->file()->properties());
+}
+
+QMap<QString, QStringList> NTagReaderTaglib::setTags(const QMap<QString, QStringList> &tags)
+{
+    QMap<QString, QStringList> unsaved = TMapToQMap(
+        NTaglib::_tagRef->file()->setProperties(QMapToTMap(tags)));
+    if (unsaved.isEmpty()) {
+        bool success = NTaglib::_tagRef->file()->save();
+        if (!success) { // workaround to relay the error
+            unsaved["Error"] = QStringList() << "Write";
+        }
+    }
+    return unsaved;
 }

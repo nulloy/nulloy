@@ -90,6 +90,7 @@ NSettings::NSettings(QObject *parent)
     initValue("PlayEnqueued", true);
     initValue("AutoCheckUpdates", true);
     initValue("DisplayLogDialog", true);
+    initValue("DisplayTagEditorConfirmDialog", true);
     initValue("LastDirectory", QStandardPaths::standardLocations(QStandardPaths::MusicLocation));
     initValue("LoopPlaylist", false);
     initValue("LoadNext", false);

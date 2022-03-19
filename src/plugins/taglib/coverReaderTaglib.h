@@ -38,12 +38,12 @@ class NCoverReaderTaglib : public NCoverReaderInterface, public NPlugin
 
 private:
     QImage fromTagBytes(const TagLib::ByteVector &data) const;
-    QImage fromApe(TagLib::APE::Tag *tag) const;
-    QImage fromAsf(TagLib::ASF::Tag *tag) const;
-    QImage fromFlac(TagLib::FLAC::File *file) const;
-    QImage fromId3(TagLib::ID3v2::Tag *tag) const;
-    QImage fromMp4(TagLib::MP4::Tag *tag) const;
-    QImage fromVorbis(TagLib::Tag *tag) const;
+    QList<QImage> fromApe(TagLib::APE::Tag *tag) const;
+    QList<QImage> fromAsf(TagLib::ASF::Tag *tag) const;
+    QList<QImage> fromFlac(TagLib::FLAC::File *file) const;
+    QList<QImage> fromId3(TagLib::ID3v2::Tag *tag) const;
+    QList<QImage> fromMp4(TagLib::MP4::Tag *tag) const;
+    QList<QImage> fromVorbis(TagLib::Tag *tag) const;
 
 public:
     NCoverReaderTaglib(QObject *parent = 0) : NCoverReaderInterface(parent) {}
@@ -54,7 +54,7 @@ public:
     N::PluginType type() const { return N::CoverReader; }
 
     void setSource(const QString &file);
-    QImage getImage() const;
+    QList<QImage> getImages() const;
     bool isValid() const;
 };
 

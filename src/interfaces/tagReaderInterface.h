@@ -16,12 +16,11 @@
 #ifndef N_TAG_READER_INTERFACE_H
 #define N_TAG_READER_INTERFACE_H
 
-#include "qglobal.h"
+#include "global.h"
+#include <QMap>
 #include <QObject>
 
-class QString;
-
-#define TAGREADER_INTERFACE "Nulloy/NTagReaderInterface/0.9.3"
+#define TAGREADER_INTERFACE "Nulloy/NTagReaderInterface/0.9.5"
 
 class NTagReaderInterface : public QObject
 {
@@ -34,6 +33,12 @@ public:
     virtual void setSource(const QString &file) = 0;
     virtual void setEncoding(const QString &encoding) { Q_UNUSED(encoding); }
     virtual QString getTag(QChar ch) const = 0;
+    virtual N::Tag tagFromKey(const QString &) const { return N::UnknownTag; }
+    virtual QString tagToKey(N::Tag) const { return ""; }
+
+    virtual bool isWriteSupported() const { return false; }
+    virtual QMap<QString, QStringList> getTags() const { return QMap<QString, QStringList>(); }
+    virtual QMap<QString, QStringList> setTags(const QMap<QString, QStringList> &) {}
 };
 
 Q_DECLARE_INTERFACE(NTagReaderInterface, TAGREADER_INTERFACE)

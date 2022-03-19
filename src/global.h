@@ -48,6 +48,7 @@ private:
     (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).valueToKey(v))
 #define STR_TO_ENUM(c, e, k)                                                                       \
     (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)).keyToValue(k))
+#define ENUMERATOR(c, e) (c::staticMetaObject.enumerator(c::staticMetaObject.indexOfEnumerator(#e)))
 
 #ifndef Q_MOC_RUN
 namespace N
@@ -57,11 +58,30 @@ class N
 {
 #if defined(Q_MOC_RUN)
     Q_GADGET
+    Q_ENUMS(Tag)
     Q_ENUMS(PlaybackState)
     Q_ENUMS(PluginType)
     Q_ENUMS(CompositionMode)
 public:
 #endif
+
+    enum Tag
+    {
+        UnknownTag = 0,
+        TrackNumberTag,
+        BpmTag,
+        TitleTag,
+        ArtistTag,
+        AlbumTag,
+        DateTag,
+        GenreTag,
+        CommentTag,
+        PublisherTag,
+        ComposerTag,
+        CopyrightTag,
+        UrlTag,
+        EncodedByTag,
+    };
 
     enum PlaylistRole
     {
@@ -95,7 +115,8 @@ public:
         WaveformBuilder = (1<<1), // 2
         TagReader       = (1<<2), // 4
         CoverReader     = (1<<3), // 8
-        MaxPlugin       = (1<<4) - 1
+        TagWriter       = (1<<4), // 16
+        MaxPlugin       = (1<<5) - 1
     };
     // clang-format on
 

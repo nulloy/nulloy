@@ -21,6 +21,7 @@
 
 #include <fileref.h>
 #include <tag.h>
+#include <tmap.h>
 
 class QString;
 
@@ -45,6 +46,17 @@ public:
     void setSource(const QString &file);
     void setEncoding(const QString &encoding);
     QString getTag(QChar ch) const;
+    N::Tag tagFromKey(const QString &key) const;
+    QString tagToKey(N::Tag tag) const;
+
+    bool isWriteSupported() const { return true; }
+    QMap<QString, QStringList> getTags() const;
+    QMap<QString, QStringList> setTags(const QMap<QString, QStringList> &tags);
+
+    QMap<QString, QStringList>
+    TMapToQMap(const TagLib::Map<TagLib::String, TagLib::StringList> &tmap) const;
+    TagLib::Map<TagLib::String, TagLib::StringList>
+    QMapToTMap(const QMap<QString, QStringList> &qmap) const;
 };
 
 #endif

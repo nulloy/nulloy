@@ -26,6 +26,8 @@ class NMainWindow;
 class NPlaybackEngineInterface;
 class NPlaylistWidget;
 class NWaveformSlider;
+class NCoverWidget;
+class NCoverReaderInterface;
 class NVolumeSlider;
 class NPreferencesDialog;
 class NAboutDialog;
@@ -51,7 +53,8 @@ private:
     NSettings *m_settings;
     NScriptEngine *m_scriptEngine;
     NMainWindow *m_mainWindow;
-    QWidget *m_coverWidget;
+    NCoverWidget *m_coverWidget;
+    NCoverReaderInterface *m_coverReader;
     NWaveformSlider *m_waveformSlider;
     NPreferencesDialog *m_preferencesDialog;
     NAboutDialog *m_aboutDialog;
@@ -128,6 +131,7 @@ private slots:
     void on_playButton_clicked();
     void on_playbackEngine_failed();
     void on_playlistAction_triggered();
+    void on_playlist_tagEditorRequested(const QString &path);
     void on_jumpAction_triggered();
 
     void on_mainWindow_closed();

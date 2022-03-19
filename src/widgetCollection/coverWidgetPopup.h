@@ -20,6 +20,7 @@
 
 class QPropertyAnimation;
 class QGraphicsOpacityEffect;
+class QEvent;
 
 #define MARGIN 50
 
@@ -39,6 +40,7 @@ public:
     void setPixmap(const QPixmap &pixmap);
     NCoverWidgetPopup(QWidget *parent = 0);
     void resize(const QSize &size);
+    void hide();
 
 private slots:
     void on_animation_finished();

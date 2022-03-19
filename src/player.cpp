@@ -18,6 +18,7 @@
 #include "aboutDialog.h"
 #include "action.h"
 #include "common.h"
+#include "coverWidget.h"
 #include "i18nLoader.h"
 #include "logDialog.h"
 #include "mainWindow.h"
@@ -30,6 +31,7 @@
 #include "preferencesDialog.h"
 #include "scriptEngine.h"
 #include "settings.h"
+#include "tagEditorDialog.h"
 #include "trackInfoReader.h"
 #include "trackInfoWidget.h"
 #include "utils.h"
@@ -75,6 +77,8 @@ NPlayer::NPlayer()
                                                  NPluginLoader::getPlugin(N::TagReader)),
                                              this);
 
+    m_coverReader = dynamic_cast<NCoverReaderInterface *>(NPluginLoader::getPlugin(N::CoverReader));
+
     m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
         NPluginLoader::getPlugin(N::PlaybackEngine));
     Q_ASSERT(m_playbackEngine);
@@ -103,7 +107,7 @@ NPlayer::NPlayer()
     m_logDialog = new NLogDialog(m_mainWindow);
     m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
     m_volumeSlider = m_mainWindow->findChild<NVolumeSlider *>("volumeSlider");
-    m_coverWidget = m_mainWindow->findChild<QWidget *>("coverWidget");
+    m_coverWidget = m_mainWindow->findChild<NCoverWidget *>("coverWidget");
 
     m_playlistWidget = m_mainWindow->findChild<NPlaylistWidget *>("playlistWidget");
     if (QAbstractButton *repeatButton = m_mainWindow->findChild<QAbstractButton *>(
@@ -421,8 +425,6 @@ void NPlayer::connectSignals()
 {
     connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), this,
             SLOT(on_playbackEngine_mediaChanged(const QString &)));
-    connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_waveformSlider,
-            SLOT(setMedia(const QString &)));
     connect(m_playbackEngine, SIGNAL(stateChanged(N::PlaybackState)), this,
             SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));
     connect(m_playbackEngine, SIGNAL(aboutToFinish()), m_playlistWidget, SLOT(currentFinished()),
@@ -439,11 +441,6 @@ void NPlayer::connectSignals()
 
     connect(m_preferencesDialog, SIGNAL(settingsChanged()), this,
             SLOT(on_preferencesDialog_settingsChanged()));
-
-    if (m_coverWidget) {
-        connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), m_coverWidget,
-                SLOT(setSource(const QString &)));
-    }
 
     if (QAbstractButton *playButton = m_mainWindow->findChild<QAbstractButton *>("playButton")) {
         connect(playButton, SIGNAL(clicked()), this, SLOT(on_playButton_clicked()));
@@ -492,13 +489,15 @@ void NPlayer::connectSignals()
                 SLOT(setChecked(bool)));
     }
 
-    connect(m_playlistWidget, SIGNAL(setMedia(const QString &)), m_playbackEngine,
+    connect(m_playlistWidget, SIGNAL(mediaChanged(const QString &)), m_playbackEngine,
             SLOT(setMedia(const QString &)));
     connect(m_playlistWidget, SIGNAL(currentActivated()), m_playbackEngine, SLOT(play()));
     connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), m_shufflePlaylistAction,
             SLOT(setChecked(bool)));
     connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), m_repeatPlaylistAction,
             SLOT(setChecked(bool)));
+    connect(m_playlistWidget, SIGNAL(tagEditorRequested(const QString &)), this,
+            SLOT(on_playlist_tagEditorRequested(const QString &)));
 
     connect(m_waveformSlider, SIGNAL(filesDropped(const QList<NPlaylistDataItem> &)),
             m_playlistWidget, SLOT(playItems(const QList<NPlaylistDataItem> &)));
@@ -840,10 +839,56 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
         m_trackInfoReader->setSource(file);
         title = m_trackInfoReader->toString(format);
     }
-
     m_mainWindow->setTitle(title);
     m_systemTray->setToolTip(title);
+
+    m_waveformSlider->setMedia(file);
     m_trackInfoWidget->updateStaticTags(file);
+
+    if (m_coverReader) {
+        m_coverReader->setSource(file);
+        QList<QImage> images = m_coverReader->getImages();
+
+        QImage image;
+        if (!images.isEmpty()) {
+            image = images.first();
+        } else {
+            QFileInfo fileInfo(file);
+            QDir dir = fileInfo.absoluteDir();
+            QStringList images = dir.entryList(QStringList() << "*.jpg"
+                                                             << "*.jpeg"
+                                                             << "*.png",
+                                               QDir::Files);
+
+            // search for image which file name starts same as source file
+            QString baseName = fileInfo.completeBaseName();
+            QString imageFile;
+            foreach (QString image, images) {
+                if (baseName.startsWith(QFileInfo(image).completeBaseName())) {
+                    imageFile = dir.absolutePath() + "/" + image;
+                    break;
+                }
+            }
+
+            // search for cover.* or folder.* or front.*
+            if (imageFile.isEmpty()) {
+                QStringList matchedImages = images.filter(
+                    QRegExp("^(cover|folder|front)\\..*$", Qt::CaseInsensitive));
+                if (!matchedImages.isEmpty()) {
+                    imageFile = dir.absolutePath() + "/" + matchedImages.first();
+                }
+            }
+            if (!imageFile.isEmpty()) {
+                image = QImage(imageFile);
+            }
+        }
+
+        if (image.isNull()) {
+            m_coverWidget->hide();
+        } else {
+            m_coverWidget->setPixmap(QPixmap::fromImage(image));
+        }
+    }
 }
 
 void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
@@ -907,6 +952,12 @@ void NPlayer::on_playlistAction_triggered()
     } else if (action == m_nextFileByDateDesc) {
         m_settings->setValue("LoadNextSort", (int)(QDir::Time));
     }
+}
+
+void NPlayer::on_playlist_tagEditorRequested(const QString &path)
+{
+    NTagEditorDialog tagEditor(path, m_mainWindow);
+    tagEditor.exec();
 }
 
 void NPlayer::on_jumpAction_triggered()
