@@ -129,7 +129,7 @@ NTagReaderGstreamer::~NTagReaderGstreamer()
     }
 }
 
-QString NTagReaderGstreamer::getTag(char ch) const
+QString NTagReaderGstreamer::getTag(QChar ch) const
 {
     if (!m_isValid) {
         return "";
@@ -137,7 +137,7 @@ QString NTagReaderGstreamer::getTag(char ch) const
 
     gchar *gstr = NULL;
     QString res;
-    switch (ch) {
+    switch (ch.unicode()) {
         case 'a': { // artist
             if (gst_tag_list_get_string(m_taglist, GST_TAG_ARTIST, &gstr)) {
                 res = gCharToUnicode(gstr);

@@ -35,6 +35,8 @@ NSettings::NSettings(QObject *parent)
     Q_ASSERT_X(!m_instance, "NSettings", "NSettings instance already exists.");
     m_instance = this;
 
+    setIniCodec("UTF-8");
+
     QString version = value("SettingsVersion").toString();
     if (version.isEmpty() || version < MIN_VERSION) {
         foreach (QString key, allKeys())
@@ -69,7 +71,7 @@ NSettings::NSettings(QObject *parent)
 
     initValue("PlaylistTrackInfo", "%F{ (%d)}");
     initValue("WindowTitleTrackInfo",
-              "{\"%a - %t\" - |\"%F\" - }" + QCoreApplication::applicationName() + " %v");
+              "{\"%a - %t\" — |\"%F\" — }" + QCoreApplication::applicationName() + " %v");
     initValue("EncodingTrackInfo", "UTF-8");
     initValue("TooltipTrackInfo", "%C");
     initValue("TooltipOffset", QStringList() << QString::number(0) << QString::number(0));

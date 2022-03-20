@@ -90,13 +90,13 @@ NTagReaderTaglib::~NTagReaderTaglib()
     }
 }
 
-QString NTagReaderTaglib::getTag(char ch) const
+QString NTagReaderTaglib::getTag(QChar ch) const
 {
     if (!m_isValid) {
         return "";
     }
 
-    switch (ch) {
+    switch (ch.unicode()) {
         case 'a': // artist
             return m_codec->toUnicode(NTaglib::_tagRef->tag()->artist().toCString(m_isUtf8));
         case 't': // title

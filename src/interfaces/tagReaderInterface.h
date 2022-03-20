@@ -33,7 +33,7 @@ public:
 
     virtual void setSource(const QString &file) = 0;
     virtual void setEncoding(const QString &encoding) { Q_UNUSED(encoding); }
-    virtual QString getTag(char ch) const = 0;
+    virtual QString getTag(QChar ch) const = 0;
 };
 
 Q_DECLARE_INTERFACE(NTagReaderInterface, TAGREADER_INTERFACE)

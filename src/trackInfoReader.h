@@ -41,7 +41,7 @@ public:
     void setSource(const QString &file);
     void updatePlaybackPosition(int seconds);
     QString toString(const QString &format) const;
-    QString getInfo(char ch) const;
+    QString getInfo(QChar ch) const;
     static QString formatTime(int durationSec);
 };
 

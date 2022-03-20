@@ -65,9 +65,9 @@ QString NTrackInfoReader::toString(const QString &format) const
     return parseFormat(format, cur, false, ok);
 }
 
-QString NTrackInfoReader::getInfo(char ch) const
+QString NTrackInfoReader::getInfo(QChar ch) const
 {
-    switch (ch) {
+    switch (ch.unicode()) {
         case 'f': // file name without extension
             return m_fileInfo.baseName();
         case 'F': // file name
@@ -117,7 +117,7 @@ QString NTrackInfoReader::parseFormat(const QString &format, int &cur, bool skip
     QString res;
     int len = format.size();
     while (cur < len) {
-        char ch = format.at(cur).unicode();
+        QChar ch = format.at(cur);
         if (skip && ch != '{') {
             while (ch != '|' && ch != '}' && cur < len) {
                 ++cur;
@@ -127,7 +127,7 @@ QString NTrackInfoReader::parseFormat(const QString &format, int &cur, bool skip
                 }
             }
         }
-        switch (ch) {
+        switch (ch.unicode()) {
             case '\\': { // escaped
                 ++cur;
                 res += format.at(cur);
@@ -135,7 +135,7 @@ QString NTrackInfoReader::parseFormat(const QString &format, int &cur, bool skip
             }
             case '%': {
                 ++cur;
-                ch = format.at(cur).unicode();
+                ch = format.at(cur);
                 QString str = getInfo(ch);
                 if (str.isEmpty()) { // failed
                     res = "";

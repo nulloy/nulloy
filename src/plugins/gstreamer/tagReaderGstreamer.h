@@ -49,7 +49,7 @@ public:
 
     void setSource(const QString &file);
     void setEncoding(const QString &encoding);
-    QString getTag(char ch) const;
+    QString getTag(QChar ch) const;
 };
 
 #endif
