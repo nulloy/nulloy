@@ -199,27 +199,20 @@ void NPlayer::createActions()
     m_nextAction->setStatusTip(tr("Play next track in playlist"));
     m_nextAction->setCustomizable(true);
 
-    m_preferencesAction = new NAction(QIcon::fromTheme("preferences-desktop",
-                                                       style()->standardIcon(
-                                                           QStyle::SP_MessageBoxInformation)),
-                                      tr("Preferences..."), this);
+    m_preferencesAction = new NAction(QIcon::fromTheme("configure"), tr("Preferences..."), this);
     m_preferencesAction->setShortcut(QKeySequence("Ctrl+P"));
 
-    m_exitAction = new NAction(QIcon::fromTheme("exit", style()->standardIcon(
-                                                            QStyle::SP_DialogCloseButton)),
-                               tr("Exit"), this);
+    m_exitAction = new NAction(QIcon::fromTheme("exit"), tr("Exit"), this);
     m_exitAction->setShortcut(QKeySequence("Ctrl+Q"));
 
-    m_addFilesAction = new NAction(style()->standardIcon(QStyle::SP_DialogOpenButton),
-                                   tr("Add Files") + "...", this);
+    m_addFilesAction = new NAction(QIcon::fromTheme("add"), tr("Add Files..."), this);
     m_addFilesAction->setShortcut(QKeySequence("Ctrl+O"));
 
-    m_addDirAction = new NAction(style()->standardIcon(QStyle::SP_FileDialogNewFolder),
-                                 tr("Add Directory") + "...", this);
+    m_addDirAction = new NAction(QIcon::fromTheme("folder-add"), tr("Add Directory..."), this);
     m_addDirAction->setShortcut(QKeySequence("Ctrl+Shift+O"));
 
-    m_savePlaylistAction = new NAction(style()->standardIcon(QStyle::SP_DialogSaveButton),
-                                       tr("Save Playlist") + "...", this);
+    m_savePlaylistAction = new NAction(QIcon::fromTheme("document-save"), tr("Save Playlist..."),
+                                       this);
     m_savePlaylistAction->setShortcut(QKeySequence("Ctrl+S"));
 
     m_showCoverAction = new NAction(tr("Show Cover Art"), this);
@@ -230,9 +223,7 @@ void NPlayer::createActions()
     m_showPlaybackControlsAction->setCheckable(true);
     m_showPlaybackControlsAction->setObjectName("ShowPlaybackControls");
 
-    m_aboutAction = new NAction(QIcon::fromTheme("help-about", style()->standardIcon(
-                                                                   QStyle::SP_MessageBoxQuestion)),
-                                tr("About"), this);
+    m_aboutAction = new NAction(QIcon::fromTheme("help"), tr("About"), this);
 
     m_playingOnTopAction = new NAction(tr("On Top During Playback"), this);
     m_playingOnTopAction->setCheckable(true);

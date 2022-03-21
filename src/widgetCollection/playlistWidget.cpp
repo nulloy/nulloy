@@ -56,26 +56,22 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 
     QShortcut *revealShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Return), this);
     connect(revealShortcut, SIGNAL(activated()), this, SLOT(on_revealAction_triggered()));
-    QAction *revealAction = new QAction(QIcon::fromTheme("fileopen", style()->standardIcon(
-                                                                         QStyle::SP_DirOpenIcon)),
+    QAction *revealAction = new QAction(QIcon::fromTheme("fileopen"),
                                         tr("Reveal in File Manager..."), this);
     revealAction->setShortcut(revealShortcut->key());
     connect(revealAction, SIGNAL(triggered()), this, SLOT(on_revealAction_triggered()));
 
     QShortcut *removeShortcut = new QShortcut(QKeySequence(QKeySequence::Delete), this);
     connect(removeShortcut, SIGNAL(activated()), this, SLOT(on_removeAction_triggered()));
-    QAction *removeAction = new QAction(QIcon::fromTheme("edit-clear",
-                                                         style()->standardIcon(
-                                                             QStyle::SP_DialogResetButton)),
-                                        tr("Remove From Playlist"), this);
+    QAction *removeAction = new QAction(QIcon::fromTheme("remove"), tr("Remove From Playlist"),
+                                        this);
     removeAction->setShortcut(removeShortcut->key());
     connect(removeAction, SIGNAL(triggered()), this, SLOT(on_removeAction_triggered()));
 
     QShortcut *trashShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Delete), this);
     connect(trashShortcut, SIGNAL(activated()), this, SLOT(on_trashAction_triggered()));
-    QAction *trashAction = new QAction(QIcon::fromTheme("trashcan_empty",
-                                                        style()->standardIcon(QStyle::SP_TrashIcon)),
-                                       tr("Move To Trash"), this);
+    QAction *trashAction = new QAction(QIcon::fromTheme("trashcan_empty"), tr("Move To Trash"),
+                                       this);
     trashAction->setShortcut(trashShortcut->key());
     connect(trashAction, SIGNAL(triggered()), this, SLOT(on_trashAction_triggered()));
 
