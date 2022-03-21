@@ -380,7 +380,7 @@ padding: 5px;</string>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <layout class="QHBoxLayout" name="customTrashLayout">
              <item>
               <widget class="QCheckBox" name="customTrashCheckBox">
                <property name="text">
@@ -820,7 +820,7 @@ padding: 5px;</string>
             <x>0</x>
             <y>0</y>
             <width>678</width>
-            <height>436</height>
+            <height>486</height>
            </rect>
           </property>
          </widget>

@@ -90,7 +90,9 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 #endif
 
 #if defined Q_OS_WIN || defined Q_OS_MAC
-    ui.customTrashContainer->hide();
+    for (int index = 0; index < ui.customTrashLayout->count(); ++index) {
+        ui.customTrashLayout->itemAt(index)->widget()->hide();
+    }
 #endif
 
 #if defined Q_OS_MAC
