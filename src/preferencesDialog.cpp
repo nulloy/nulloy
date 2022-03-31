@@ -90,9 +90,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 #endif
 
 #if defined Q_OS_WIN || defined Q_OS_MAC
-    for (int index = 0; index < ui.customTrashLayout->count(); ++index) {
-        ui.customTrashLayout->itemAt(index)->widget()->hide();
-    }
+    ui.customFileManagerContainer->hide();
 #endif
 
 #if defined Q_OS_MAC
@@ -100,6 +98,19 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 #else
     ui.quitOnCloseContainer->hide();
 #endif
+
+    QRegularExpression re("Container$");
+    for (QWidget *widget : ui.generalTab->findChildren<QWidget *>(re)) {
+        if (widget->objectName() == "fileFiltersContainer") {
+            continue;
+        }
+        int height = 27;
+#if defined Q_OS_MAC
+        height = 35;
+#endif
+        widget->setMinimumHeight(height);
+        widget->setMaximumHeight(height);
+    }
 
     QVBoxLayout *scrollLayout = new QVBoxLayout;
     ui.pluginsScrollArea->widget()->setLayout(scrollLayout);
@@ -121,13 +132,13 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
         ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.pluginsTab));
     }
 
-    ui.pluginsRestartLabel->setText("⚠ " + ui.pluginsRestartLabel->text());
+    ui.pluginsRestartLabel->setText(ui.pluginsRestartLabel->text());
     ui.pluginsRestartLabel->setVisible(false);
 
-    ui.languageRestartLabel->setText("⚠ " + ui.languageRestartLabel->text());
+    ui.languageRestartLabel->setText(ui.languageRestartLabel->text());
     ui.languageRestartLabel->setVisible(false);
 
-    ui.skinRestartLabel->setText("⚠ " + ui.skinRestartLabel->text());
+    ui.skinRestartLabel->setText(ui.skinRestartLabel->text());
     ui.skinRestartLabel->setVisible(false);
     connect(ui.skinComboBox, SIGNAL(activated(int)), ui.skinRestartLabel, SLOT(show()));
 
@@ -148,6 +159,8 @@ void NPreferencesDialog::showEvent(QShowEvent *event)
 {
     loadSettings();
     QDialog::showEvent(event);
+
+    resize(ui.generalScrollAreaContents->sizeHint() + QSize(200, 0));
 }
 
 #ifndef _N_NO_UPDATE_CHECK_
