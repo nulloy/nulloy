@@ -38,8 +38,12 @@ private:
     QTimer *m_timer;
     qreal m_oldVolume;
     qreal m_oldPosition;
+    qreal m_oldTime;
+    QElapsedTimer m_positionTimer;
     N::PlaybackState m_oldState;
     QString m_currentMedia;
+
+    qreal interpolatePosition();
 
 public:
     NPlaybackEngineVlc(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
