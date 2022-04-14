@@ -76,15 +76,28 @@ build_pass:CONFIG(static, static|shared) {
 system(cp $$SRC_DIR/icons/icon.svg $$TMP_DIR/)
 system(cp $$SRC_DIR/icons/icons.qrc $$TMP_DIR/)
 RESOURCES += $$TMP_DIR/icons.qrc
-MAGICK_CMD = convert
-win32:!unix_mingw:MAGICK_CMD = magick convert
+CONVERT_CMD = convert
+COMPOSITE_CMD = composite
+win32:!unix_mingw {
+    CONVERT_CMD = magick convert
+    COMPOSITE_CMD = magick composite
+}
 
 ico.depends = $$SRC_DIR/icons/icon.svg
 ico.target = $$TMP_DIR/icon.ico
-ico.commands = $$MAGICK_CMD $$ico.depends -define icon:auto-resize $$ico.target
+ico.commands = $$CONVERT_CMD $$ico.depends -define icon:auto-resize $$ico.target
 PRE_TARGETDEPS += $$ico.target
 QMAKE_EXTRA_TARGETS += ico
 system($$ico.commands)
+
+win32 {
+    file_ico.depends = $$SRC_DIR/icons/file.svg $$SRC_DIR/icons/icon.svg
+    file_ico.target = $$TMP_DIR/file.ico
+    file_ico.commands = $$COMPOSITE_CMD \\( $$SRC_DIR/icons/icon.svg -resize 50% -gravity center \\) $$SRC_DIR/icons/file.svg -define icon:auto-resize $$file_ico.target
+    PRE_TARGETDEPS += $$file_ico.target
+    QMAKE_EXTRA_TARGETS += file_ico
+    system($$file_ico.commands)
+}
 
 system(cp $$SRC_DIR/icons/icon.rc $$TMP_DIR/)
 win32:RC_FILE = $$TMP_DIR/icon.rc
@@ -93,12 +106,11 @@ mac {
     system($$QMAKE_MKDIR $$TMP_DIR/icon.iconset)
     SIZES = 16 32 128 256
     for(size, SIZES) {
-        system($$MAGICK_CMD $$SRC_DIR/icons/icon.svg -density 72 -resize $${size}x$${size} -units PixelsPerInch $$TMP_DIR/icon.iconset/icon_$${size}x$${size}.png)
+        system($$CONVERT_CMD $$SRC_DIR/icons/icon.svg -density 72 -resize $${size}x$${size} -units PixelsPerInch $$TMP_DIR/icon.iconset/icon_$${size}x$${size}.png)
     }
     system(iconutil -c icns -o $$TMP_DIR/icon.icns $$TMP_DIR/icon.iconset)
     ICON = $$TMP_DIR/icon.icns
 }
-
 
 unix:!mac {
     # qmake "PREFIX=/usr"
