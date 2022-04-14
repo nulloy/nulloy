@@ -956,8 +956,7 @@ void NPlayer::on_playlistAction_triggered()
 
 void NPlayer::on_playlist_tagEditorRequested(const QString &path)
 {
-    NTagEditorDialog tagEditor(path, m_mainWindow);
-    tagEditor.exec();
+    NTagEditorDialog(path, m_mainWindow);
 }
 
 void NPlayer::on_jumpAction_triggered()

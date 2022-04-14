@@ -274,6 +274,11 @@ NTagReaderTaglib::QMapToTMap(const QMap<QString, QStringList> &qmap) const
 
 QMap<QString, QStringList> NTagReaderTaglib::getTags() const
 {
+    if (!m_isValid) { // workaround to relay the error
+        QMap<QString, QStringList> tags;
+        tags["Error"] = QStringList() << "Invalid";
+        return tags;
+    }
     return TMapToQMap(NTaglib::_tagRef->file()->properties());
 }
 

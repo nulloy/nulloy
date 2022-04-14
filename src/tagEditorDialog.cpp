@@ -34,17 +34,34 @@ NTagEditorDialog::NTagEditorDialog(const QString &file, QWidget *parent) : QDial
 {
     ui.setupUi(this);
 
+    m_file = file;
+    m_tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
+
+    QString settingsEncoding = NSettings::instance()->value("EncodingTrackInfo").toString();
+    m_tagReader->setEncoding(settingsEncoding);
+    m_tagReader->setSource(m_file);
+
+    QMap<QString, QStringList> tags = m_tagReader->getTags();
+    if (!tags.isEmpty()) {
+        if (tags.value("Error").join("") == "Invalid") {
+            QMessageBox msgBox(QMessageBox::Information, tr("Unsupported File"),
+                               "This file format does not support tags." +
+                                   QString("%1").arg(" ", 20, ' '),
+                               QMessageBox::Close, parent);
+            msgBox.exec();
+            reject();
+            return;
+        }
+    }
+
     connect(ui.buttonBox->button(QDialogButtonBox::Save), SIGNAL(clicked()), this,
             SLOT(onSaveClicked()));
 
-    m_file = file;
-    m_tagReader = dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
     m_coverReader = dynamic_cast<NCoverReaderInterface *>(NPluginLoader::getPlugin(N::CoverReader));
     m_encodingUtf8Index = -1;
     m_hasChanges = false;
 
     ui.tabWidget->setCornerWidget(ui.encodingFrame);
-    QString settingsEncoding = NSettings::instance()->value("EncodingTrackInfo").toString();
     int i = 0;
     foreach (int mib, QTextCodec::availableMibs()) {
         QString codecName = QTextCodec::codecForMib(mib)->name();
@@ -95,7 +112,7 @@ NTagEditorDialog::NTagEditorDialog(const QString &file, QWidget *parent) : QDial
         setReadOnlyMode(ui.encodingComboBox->currentIndex() != m_encodingUtf8Index);
     });
 
-    show();
+    exec();
 }
 
 void NTagEditorDialog::setReadOnlyMode(bool readOnly)
@@ -135,7 +152,6 @@ void NTagEditorDialog::readTags()
     m_hasChanges = false;
     QString encoding = ui.encodingComboBox->itemText(ui.encodingComboBox->currentIndex());
     m_tagReader->setEncoding(encoding);
-    m_tagReader->setSource(m_file);
 
     QLayout *oldFormLayout = ui.rawTagsScrollArea->widget()->layout();
     if (oldFormLayout) {
