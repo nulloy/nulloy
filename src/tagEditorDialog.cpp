@@ -89,7 +89,6 @@ NTagEditorDialog::NTagEditorDialog(const QString &file, QWidget *parent) : QDial
     on_encodingComboBox_activated(-1);
 
     setWindowTitle("\"" + QFileInfo(file).fileName() + "\" — " + tr("Tag Editor"));
-    resize(800, 400);
 
     m_coverReader->setSource(m_file);
     QList<QImage> images = m_coverReader->getImages();
@@ -163,6 +162,7 @@ void NTagEditorDialog::readTags()
     QRegularExpression widgetNameRegex("Tag");
     QMap<QString, QStringList> tags = m_tagReader->getTags();
     QFormLayout *rawTagsFormLayout = new QFormLayout;
+    rawTagsFormLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
     QMetaEnum enumerator = ENUMERATOR(N, Tag);
     for (int index = 1; index < enumerator.keyCount(); ++index) { // skip UnknownTag
         QString enumKey = enumerator.key(index);
