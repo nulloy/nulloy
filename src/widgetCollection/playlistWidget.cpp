@@ -35,6 +35,10 @@
 #include "trash.h"
 #include "utils.h"
 
+#ifdef Q_OS_WIN
+#include "winIcon.h"
+#endif
+
 NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 {
     m_fileDropBorderColor = QColor(Qt::transparent);
@@ -49,6 +53,12 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
         NPluginLoader::getPlugin(N::PlaybackEngine));
     Q_ASSERT(m_playbackEngine);
 
+    QList<QIcon> winIcons;
+#ifdef Q_OS_WIN
+    winIcons = NWinIcon::getIcons(QProcessEnvironment::systemEnvironment().value("SystemRoot") +
+                                  "/system32/imageres.dll");
+#endif
+
     connect(this, SIGNAL(itemActivated(QListWidgetItem *)), this,
             SLOT(on_itemActivated(QListWidgetItem *)));
     setItemDelegate(new NPlaylistWidgetItemDelegate(this));
@@ -56,7 +66,7 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 
     QShortcut *revealShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Return), this);
     connect(revealShortcut, SIGNAL(activated()), this, SLOT(on_revealAction_triggered()));
-    QAction *revealAction = new QAction(QIcon::fromTheme("fileopen"),
+    QAction *revealAction = new QAction(QIcon::fromTheme("fileopen", winIcons.value(13)),
                                         tr("Reveal in File Manager..."), this);
     revealAction->setShortcut(revealShortcut->key());
     connect(revealAction, SIGNAL(triggered()), this, SLOT(on_revealAction_triggered()));
@@ -70,8 +80,8 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 
     QShortcut *trashShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Delete), this);
     connect(trashShortcut, SIGNAL(activated()), this, SLOT(on_trashAction_triggered()));
-    QAction *trashAction = new QAction(QIcon::fromTheme("trashcan_empty"), tr("Move To Trash"),
-                                       this);
+    QAction *trashAction = new QAction(QIcon::fromTheme("trashcan_empty", winIcons.value(49)),
+                                       tr("Move To Trash"), this);
     trashAction->setShortcut(trashShortcut->key());
     connect(trashAction, SIGNAL(triggered()), this, SLOT(on_trashAction_triggered()));
 
@@ -84,7 +94,8 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
             ->isWriteSupported()) {
         QShortcut *tagEditorShortcut = new QShortcut(QKeySequence(Qt::Key_F4), this);
         connect(tagEditorShortcut, SIGNAL(activated()), this, SLOT(on_tagEditorAction_triggered()));
-        QAction *tagEditorAction = new QAction(QIcon::fromTheme("edit"), tr("Tag Editor"), this);
+        QAction *tagEditorAction = new QAction(QIcon::fromTheme("edit", winIcons.value(289)),
+                                               tr("Tag Editor"), this);
         tagEditorAction->setShortcut(tagEditorShortcut->key());
         connect(tagEditorAction, SIGNAL(triggered()), this, SLOT(on_tagEditorAction_triggered()));
         m_contextMenu->addAction(tagEditorAction);

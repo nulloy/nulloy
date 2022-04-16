@@ -45,6 +45,7 @@
 
 #ifdef Q_OS_WIN
 #include "w7TaskBar.h"
+#include "winIcon.h"
 #endif
 
 #ifdef Q_OS_MAC
@@ -203,20 +204,29 @@ void NPlayer::createActions()
     m_nextAction->setStatusTip(tr("Play next track in playlist"));
     m_nextAction->setCustomizable(true);
 
-    m_preferencesAction = new NAction(QIcon::fromTheme("configure"), tr("Preferences..."), this);
+    QList<QIcon> winIcons;
+#ifdef Q_OS_WIN
+    winIcons = NWinIcon::getIcons(QProcessEnvironment::systemEnvironment().value("SystemRoot") +
+                                  "/system32/imageres.dll");
+#endif
+
+    m_preferencesAction = new NAction(QIcon::fromTheme("configure", winIcons.value(109)),
+                                      tr("Preferences..."), this);
     m_preferencesAction->setShortcut(QKeySequence("Ctrl+P"));
 
-    m_exitAction = new NAction(QIcon::fromTheme("exit"), tr("Exit"), this);
+    m_exitAction = new NAction(QIcon::fromTheme("exit", winIcons.value(259)), tr("Exit"), this);
     m_exitAction->setShortcut(QKeySequence("Ctrl+Q"));
 
-    m_addFilesAction = new NAction(QIcon::fromTheme("add"), tr("Add Files..."), this);
+    m_addFilesAction = new NAction(QIcon::fromTheme("add", winIcons.value(171)), tr("Add Files..."),
+                                   this);
     m_addFilesAction->setShortcut(QKeySequence("Ctrl+O"));
 
-    m_addDirAction = new NAction(QIcon::fromTheme("folder-add"), tr("Add Directory..."), this);
+    m_addDirAction = new NAction(QIcon::fromTheme("folder-add", winIcons.value(3)),
+                                 tr("Add Directory..."), this);
     m_addDirAction->setShortcut(QKeySequence("Ctrl+Shift+O"));
 
-    m_savePlaylistAction = new NAction(QIcon::fromTheme("document-save"), tr("Save Playlist..."),
-                                       this);
+    m_savePlaylistAction = new NAction(QIcon::fromTheme("document-save", winIcons.value(175)),
+                                       tr("Save Playlist..."), this);
     m_savePlaylistAction->setShortcut(QKeySequence("Ctrl+S"));
 
     m_showCoverAction = new NAction(tr("Show Cover Art"), this);
@@ -227,7 +237,7 @@ void NPlayer::createActions()
     m_showPlaybackControlsAction->setCheckable(true);
     m_showPlaybackControlsAction->setObjectName("ShowPlaybackControls");
 
-    m_aboutAction = new NAction(QIcon::fromTheme("help"), tr("About"), this);
+    m_aboutAction = new NAction(QIcon::fromTheme("help", winIcons.value(76)), tr("About"), this);
 
     m_playingOnTopAction = new NAction(tr("On Top During Playback"), this);
     m_playingOnTopAction->setCheckable(true);
