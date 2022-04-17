@@ -91,6 +91,7 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
 
 #if defined Q_OS_WIN || defined Q_OS_MAC
     ui.customFileManagerContainer->hide();
+    ui.customTrashContainer->hide();
 #endif
 
 #if defined Q_OS_MAC
