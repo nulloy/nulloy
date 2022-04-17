@@ -10,6 +10,12 @@
     <height>450</height>
    </rect>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QScrollArea,
+#rawTagsScrollAreaContents {
+	background: transparent;
+}</string>
+  </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
   </property>
