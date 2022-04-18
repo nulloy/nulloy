@@ -1,3 +1,11 @@
+* 0.9.5, Mon Apr 18 2022
+- Tag editor
+- Windows installer
+- Windows: native icons in context menu
+- Windows: preferences dialog native look and feel
+- Notify about new version once
+- Other minor bug fixes
+
 * 0.9.3, Wed Mar 9 2022
 - %M for BPM (beats per minute) tag
 - %N for directory name tag
