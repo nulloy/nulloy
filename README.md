@@ -1,10 +1,10 @@
-# ![Icon](http://nulloy.com/files/github-icon.png) Nulloy Music Player
+# Nulloy Music Player
 
 ![Screenshot](http://nulloy.com/files/screen.png)
 
 More screenshots: https://nulloy.com/screenshots/
 
-# Build Instructions
+## Build Instructions
 
 <details>
 <summary>Windows</summary>
