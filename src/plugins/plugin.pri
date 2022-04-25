@@ -1,23 +1,22 @@
 TEMPLATE = lib
 CONFIG += plugin
 
-HEADERS += ../../common.h
-SOURCES += ../../common.cpp ../abstractWaveformBuilder.cpp ../../waveformPeaks.cpp
+INCLUDEPATH += $$SRC_DIR $$SRC_DIR/interfaces $$SRC_DIR/plugins
 
-unix:DESTDIR = ../../../plugins
-win32:DESTDIR = ../../../Plugins
+HEADERS += common.h
+SOURCES += $$SRC_DIR/common.cpp $$SRC_DIR/plugins/abstractWaveformBuilder.cpp $$SRC_DIR/waveformPeaks.cpp
 
-OBJECTS_DIR = $$TMP_DIR
-MOC_DIR = $$TMP_DIR
+win32:DESTDIR = $$PROJECT_DIR/Plugins
 
-INCLUDEPATH += .. ../.. ../../interfaces
-DEPENDPATH += ../..
-
-unix {
-    mac {
-        target.path = ../../../$${APP_NAME}.app/Contents/MacOS/plugins
-    } else {
-        target.path = $$PREFIX/$$LIBDIR/$$APP_NAME/plugins
-    }
+unix:!mac {
+    DESTDIR = $$PROJECT_DIR/plugins
+    target.path = $$PREFIX/$$LIBDIR/$$APP_NAME/plugins
     INSTALLS += target
+}
+
+mac {
+    xcode_override.name = "CONFIGURATION_BUILD_DIR"
+    xcode_override.value = $$TMP_DIR/$${APP_NAME}.app/Contents/MacOS/plugins
+    QMAKE_MAC_XCODE_SETTINGS += xcode_override
+    DESTDIR = $$PROJECT_DIR/$${APP_NAME}.app/Contents/MacOS/plugins
 }

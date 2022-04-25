@@ -91,7 +91,7 @@ xcode-select --install
 
 First install either MacPorts or HomeBrew.
 
-#### MacPorts
+### MacPorts
 
 After installing MacPorts:
 
@@ -100,9 +100,14 @@ sudo port install pkgconfig qt5 qt5-qtscript qt5-qttools gstreamer1 gstreamer1-g
 export PATH=/opt/local/libexec/qt5/bin:$PATH
 # install extra GStreamer plugins for more audio formats
 sudo port install gstreamer1-gst-plugins-good gstreamer1-gst-plugins-bad gstreamer1-gst-plugins-ugly
+
+cd nulloy.git
+./configure
+make
+open nulloy.app
 ```
 
-#### HomeBrew
+### HomeBrew
 
 After installing HomeBrew:
 
@@ -111,17 +116,24 @@ brew install pkgconfig qt5 gstreamer gst-plugins-base taglib imagemagick librsvg
 export PATH=/usr/local/opt/qt/bin:$PATH
 # install extra GStreamer plugins for more audio formats
 brew install gst-plugins-good gst-plugins-bad gst-plugins-ugly
-```
 
-### Build & Run Nulloy
-
-```sh
 cd nulloy.git
 ./configure
 make
-make install
-./nulloy.app/Contents/MacOS/nulloy
+open nulloy.app
 ```
+
+### Xcode
+
+Generate Xcode project file:
+
+```sh
+cd nulloy.git
+./configure --xcode
+open nulloy.xcodeproj
+```
+Build `widget_collection`, `plugin_taglib` and `plugin_gstreamer` targets. It may take several attempts to build, but it should succeed eventually.
+Build and run `nulloy` target.
 </details>
 
 <details>

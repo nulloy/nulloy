@@ -1,7 +1,8 @@
+TARGET = plugin_gstreamer
 unix:TARGET = plugin_gstreamer
 win32:TARGET = PluginGStreamer
 
-include(../plugin.pri)
+include($$SRC_DIR/plugins/plugin.pri)
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gstreamer-1.0

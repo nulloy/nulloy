@@ -94,6 +94,19 @@ goto end
 set QMAKE_CACHE=.qmake.cache
 echo. > %QMAKE_CACHE%
 
+set PROJECT_DIR=%cd%
+echo PROJECT_DIR = %PROJECT_DIR%>> %QMAKE_CACHE%
+
+echo SRC_DIR = %PROJECT_DIR%/src>> %QMAKE_CACHE%
+
+set TMP_DIR=%PROJECT_DIR%\tmp
+echo TMP_DIR = %TMP_DIR%>> %QMAKE_CACHE%
+echo OBJECTS_DIR = %TMP_DIR%>> %QMAKE_CACHE%
+echo MOC_DIR = %TMP_DIR%>> %QMAKE_CACHE%
+echo RCC_DIR = %TMP_DIR%>> %QMAKE_CACHE%
+echo UI_DIR = %TMP_DIR%>> %QMAKE_CACHE%
+mkdir %TMP_DIR%
+
 if "%BUILD_GSTREAMER%" == "yes"           echo CONFIG += gstreamer>> %QMAKE_CACHE%
 if "%BUILD_GSTREAMER_TAGREADER%" == "yes" echo CONFIG += gstreamer-tagreader>> %QMAKE_CACHE%
 if "%BUILD_VLC%" == "yes"                 echo CONFIG += vlc>> %QMAKE_CACHE%
@@ -120,7 +133,7 @@ echo.
 echo Running qmake...
 %QMAKE%
 
-echo Nulloy has been configured. Now run `make'.
+echo Nulloy has been configured. Now run 'make'.
 
 :end
 

@@ -10,17 +10,10 @@ FORMS += $$SRC_DIR/*.ui
 
 CONFIG += app_bundle
 
-isEmpty(TMP_DIR):TMP_DIR = ../.tmp
-system($$QMAKE_MKDIR $$TMP_DIR)
-OBJECTS_DIR = $$TMP_DIR
-MOC_DIR     = $$TMP_DIR
-RCC_DIR     = $$TMP_DIR
-UI_DIR      = $$TMP_DIR
-
 include($$SRC_DIR/func.pri)
-include(../3rdParty/qxt-696423b-patched/qxtglobalshortcut.pri)
-include(../3rdParty/qtsingleapplication-8fd81b2/src/qtsingleapplication.pri)
-include(../3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
+include($$PROJECT_DIR/3rdParty/qxt-696423b-patched/qxtglobalshortcut.pri)
+include($$PROJECT_DIR/3rdParty/qtsingleapplication-8fd81b2/src/qtsingleapplication.pri)
+include($$PROJECT_DIR/3rdParty/qtiocompressor-2.3.1/src/qtiocompressor.pri)
 include($$SRC_DIR/i18n/i18n.pri)
 include($$SRC_DIR/platform/trash.pri)
 win32:include($$SRC_DIR/platform/w7TaskBar.pri)
@@ -128,3 +121,8 @@ unix:!mac {
     INSTALLS += desktop
 }
 
+mac {
+    xcode_override.name = "CONFIGURATION_BUILD_DIR"
+    xcode_override.value = $$TMP_DIR
+    QMAKE_MAC_XCODE_SETTINGS += xcode_override
+}

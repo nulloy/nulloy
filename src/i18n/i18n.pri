@@ -4,7 +4,10 @@ isEmpty(LRELEASE):LRELEASE = lrelease
 QMS_SRC_DIR = $$SRC_DIR/i18n
 qms.depends = $$QMS_SRC_DIR/*.ts
 
-QMS_DEST_DIR = $$SRC_DIR/../i18n
+unix:QMS_DEST_DIR = $$PROJECT_DIR/i18n
+mac:QMS_DEST_DIR = $$PROJECT_DIR/$${APP_NAME}.app/Contents/MacOS/i18n
+win32:QMS_DEST_DIR = $$PROJECT_DIR/i18n
+
 system($$QMAKE_MKDIR $$fixSlashes($$QMS_DEST_DIR))
 qms.target = $$QMS_DEST_DIR/*.qm
 
@@ -17,13 +20,9 @@ system($$qms.commands)
 
 
 # install
-unix {
+unix:!mac {
     translations.files = ../i18n/*
-    mac {
-        translations.path = ../$${APP_NAME}.app/Contents/MacOS/i18n
-    } else {
-        translations.path = $$PREFIX/share/$$APP_NAME/i18n
-    }
+    translations.path = $$PREFIX/share/$$APP_NAME/i18n
     INSTALLS += translations
 }
 

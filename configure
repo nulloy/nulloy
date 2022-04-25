@@ -7,6 +7,7 @@ LIBDIR=lib
 DEBUG=no
 APP_NAME=nulloy
 
+XCODE=no
 FORCE_VERSION=no
 BUILD_GSTREAMER=yes
 BUILD_GSTREAMER_TAGREADER=no
@@ -23,13 +24,14 @@ echo_err() {
 echo_help() {
     echo "Usage:  $BASENAME [options]"
     echo '    --no-gstreamer              do not build GStreamer plugin'
+    echo '    --xcode                     generate Xcode project (macOS only)'
     echo '    --gstreamer-tagreader       include TagReader in GStreamer plugin'
     echo '    --vlc                       build VLC plugin'
     echo '    --no-taglib                 do not build TagLib plugin'
     echo '    --no-skins                  disable skins support'
     echo '    --force-version VERSION     overrides version.pri'
     echo '    --no-update-check           disable online check functionality'
-    echo '    --prefix PREFIX             installation prefix (default: /usr, ignored on Mac)'
+    echo '    --prefix PREFIX             installation prefix (default: /usr, ignored on macOS)'
     echo '    --libdir LIBDIR             library directory under prefix (default: lib)'
     echo '    --debug                     build in debug mode'
     echo '    --tests                     build unit tests'
@@ -50,6 +52,8 @@ while test $# -gt 0; do
                 PREFIX=$(readlink -m "$1")
             fi
             ;;
+        --xcode)
+            XCODE=yes ;;
         --debug)
             DEBUG=yes ;;
         --force-version)
@@ -82,6 +86,20 @@ done
 
 QMAKE_CACHE="$CWD"/.qmake.cache
 echo -n > $QMAKE_CACHE
+
+cd "$(dirname "$0")"
+PROJECT_DIR=$(pwd)
+echo "PROJECT_DIR = $PROJECT_DIR" >> $QMAKE_CACHE
+
+echo "SRC_DIR = $PROJECT_DIR/src" >> $QMAKE_CACHE
+
+TMP_DIR="$PROJECT_DIR/tmp"
+echo "TMP_DIR = $TMP_DIR" >> $QMAKE_CACHE
+echo "OBJECTS_DIR = $TMP_DIR" >> $QMAKE_CACHE
+echo "MOC_DIR = $TMP_DIR" >> $QMAKE_CACHE
+echo "RCC_DIR = $TMP_DIR" >> $QMAKE_CACHE
+echo "UI_DIR = $TMP_DIR" >> $QMAKE_CACHE
+mkdir -p "$TMP_DIR"
 
 check_executable() {
     VARNAME="$1"
@@ -153,6 +171,11 @@ if $QMAKE -query "QMAKE_XSPEC" | grep -i win; then
     echo "CONFIG += unix_mingw" >> $QMAKE_CACHE
     APP_NAME=Nulloy
 fi
+
+if [[ $XCODE == "yes" ]]; then
+    QMAKE_EXTRA_OPTIONS+=' -spec macx-xcode -recursive'
+fi
+
 echo "APP_NAME = $APP_NAME" >> $QMAKE_CACHE
 
 echo
@@ -178,4 +201,9 @@ if ! $QMAKE $QMAKE_EXTRA_OPTIONS; then
     exit 1
 fi
 
-echo "Nulloy has been configured. Now run \`make'."
+if [[ $XCODE == "yes" ]]; then
+    echo "Xcode project has been generated."
+else
+    echo "Nulloy has been configured. Now run 'make'."
+fi
+

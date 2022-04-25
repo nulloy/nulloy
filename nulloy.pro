@@ -2,40 +2,41 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 isEmpty(N_CONFIG_SUCCESS) {
-    error(Please run `configure\')
+    unix:error("Please run './configure'")
+    win32:error("Please run 'configure.bat'")
 }
 
 # qmake -config no-skins
 !no-skins {
-    widgets.subdir = src/widgetCollection
+    widgets.subdir = $$SRC_DIR/widgetCollection
     SUBDIRS += widgets
 }
 
 # qmake -config gstreamer
 gstreamer {
-    gstreamer.file = src/plugins/gstreamer/pluginGstreamer.pro
+    gstreamer.subdir = $$SRC_DIR/plugins/pluginGstreamer
     SUBDIRS += gstreamer
 }
 
 # qmake -config vlc
 vlc {
-    vlc.file = src/plugins/vlc/pluginVlc.pro
+    vlc.subdir = $$SRC_DIR/plugins/pluginVlc
     SUBDIRS += vlc
 }
 
 # qmake -config taglib
 taglib {
-    taglib.file = src/plugins/taglib/pluginTaglib.pro
+    taglib.subdir = $$SRC_DIR/plugins/pluginTaglib
     SUBDIRS += taglib
 }
 
 # qmake -config plugins-all
 plugins-all {
-    plugins.subdir = src/plugins
+    plugins.subdir = $$SRC_DIR/plugins
     SUBDIRS += plugins
 }
 
-SUBDIRS += src
+SUBDIRS += $$SRC_DIR
 
 tests {
     SUBDIRS += tests
