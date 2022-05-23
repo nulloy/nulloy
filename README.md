@@ -122,6 +122,10 @@ cd nulloy.git
 make
 open nulloy.app
 ```
+  
+#### Gentoo
+  
+  Use this [work-in-progress ebuild](https://github.com/gentoo/gentoo/pull/23767)
 
 ### Xcode
 
