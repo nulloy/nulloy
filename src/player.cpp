@@ -855,49 +855,51 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
     m_waveformSlider->setMedia(file);
     m_trackInfoWidget->updateStaticTags(file);
 
+    QImage image;
     if (m_coverReader) {
         m_coverReader->setSource(file);
         QList<QImage> images = m_coverReader->getImages();
 
-        QImage image;
         if (!images.isEmpty()) {
             image = images.first();
-        } else {
-            QFileInfo fileInfo(file);
-            QDir dir = fileInfo.absoluteDir();
-            QStringList images = dir.entryList(QStringList() << "*.jpg"
-                                                             << "*.jpeg"
-                                                             << "*.png",
-                                               QDir::Files);
+        }
+    }
 
-            // search for image which file name starts same as source file
-            QString baseName = fileInfo.completeBaseName();
-            QString imageFile;
-            foreach (QString image, images) {
-                if (baseName.startsWith(QFileInfo(image).completeBaseName())) {
-                    imageFile = dir.absolutePath() + "/" + image;
-                    break;
-                }
-            }
+    if (image.isNull()) {
+        QFileInfo fileInfo(file);
+        QDir dir = fileInfo.absoluteDir();
+        QStringList images = dir.entryList(QStringList() << "*.jpg"
+                                                         << "*.jpeg"
+                                                         << "*.png",
+                                           QDir::Files);
 
-            // search for cover.* or folder.* or front.*
-            if (imageFile.isEmpty()) {
-                QStringList matchedImages = images.filter(
-                    QRegExp("^(cover|folder|front)\\..*$", Qt::CaseInsensitive));
-                if (!matchedImages.isEmpty()) {
-                    imageFile = dir.absolutePath() + "/" + matchedImages.first();
-                }
-            }
-            if (!imageFile.isEmpty()) {
-                image = QImage(imageFile);
+        // search for image which file name starts same as source file:
+        QString baseName = fileInfo.completeBaseName();
+        QString imageFile;
+        foreach (QString image, images) {
+            if (baseName.startsWith(QFileInfo(image).completeBaseName())) {
+                imageFile = dir.absolutePath() + "/" + image;
+                break;
             }
         }
 
-        if (image.isNull()) {
-            m_coverWidget->hide();
-        } else {
-            m_coverWidget->setPixmap(QPixmap::fromImage(image));
+        // search for cover.* or folder.* or front.*:
+        if (imageFile.isEmpty()) {
+            QStringList matchedImages = images.filter(
+                QRegExp("^(cover|folder|front)\\..*$", Qt::CaseInsensitive));
+            if (!matchedImages.isEmpty()) {
+                imageFile = dir.absolutePath() + "/" + matchedImages.first();
+            }
         }
+        if (!imageFile.isEmpty()) {
+            image = QImage(imageFile);
+        }
+    }
+
+    if (image.isNull()) {
+        m_coverWidget->hide();
+    } else {
+        m_coverWidget->setPixmap(QPixmap::fromImage(image));
     }
 }
 
