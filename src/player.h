@@ -101,6 +101,9 @@ private:
     NAction *m_speedIncreaseAction;
     NAction *m_speedDecreaseAction;
     NAction *m_speedResetAction;
+    NAction *m_pitchIncreaseAction;
+    NAction *m_pitchDecreaseAction;
+    NAction *m_pitchResetAction;
     void createActions();
     void createContextMenu();
     void createGlobalMenu();
@@ -133,6 +136,9 @@ private slots:
     void on_speedIncreaseAction_triggered();
     void on_speedDecreaseAction_triggered();
     void on_speedResetAction_triggered();
+    void on_pitchIncreaseAction_triggered();
+    void on_pitchDecreaseAction_triggered();
+    void on_pitchResetAction_triggered();
 
     void on_mainWindow_closed();
     void on_mainWindow_scrolled(int delta);

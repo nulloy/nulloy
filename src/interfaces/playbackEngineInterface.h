@@ -34,6 +34,7 @@ public:
     Q_INVOKABLE virtual qreal position() const = 0;
     Q_INVOKABLE virtual qint64 durationMsec() const = 0;
     Q_INVOKABLE virtual qreal speed() const { return 1.0; }
+    Q_INVOKABLE virtual qreal pitch() const { return 1.0; }
 
     static QString interfaceString() { return PLAYBACK_INTERFACE; }
 
@@ -43,6 +44,7 @@ public slots:
     Q_INVOKABLE virtual void setPosition(qreal pos) = 0;
     Q_INVOKABLE virtual void jump(qint64 msec) { Q_UNUSED(msec); }
     Q_INVOKABLE virtual void setSpeed(qreal speed) { Q_UNUSED(speed); }
+    Q_INVOKABLE virtual void setPitch(qreal pitch) { Q_UNUSED(pitch); }
 
     Q_INVOKABLE virtual void play() = 0;
     Q_INVOKABLE virtual void stop() = 0;

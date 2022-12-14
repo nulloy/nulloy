@@ -85,12 +85,24 @@ void NPlaybackEngineGStreamer::init()
             emit failed();
         }
 
+        m_pitchElement = gst_element_factory_make("pitch", NULL);
+        if (!m_pitchElement) {
+            emit message(N::Critical, "Playback Engine", "Failed to create pitch element");
+            emit failed();
+        }
+
         GstElement *sink = gst_element_factory_make("autoaudiosink", NULL);
         GstElement *bin = gst_bin_new(NULL);
-        gst_bin_add_many(GST_BIN(bin), scaletempo, sink, NULL);
-        gst_element_link_many(scaletempo, sink, NULL);
+        gst_bin_add_many(GST_BIN(bin), m_pitchElement, scaletempo, sink, NULL);
+        gst_element_link_many(m_pitchElement, scaletempo, sink, NULL);
 
-        GstPad *pad = gst_element_get_static_pad(scaletempo, "sink");
+        GstPad *pad;
+
+        pad = gst_element_get_static_pad(scaletempo, "sink");
+        gst_element_add_pad(bin, gst_ghost_pad_new("sink", pad));
+        gst_object_unref(pad);
+
+        pad = gst_element_get_static_pad(m_pitchElement, "sink");
         gst_element_add_pad(bin, gst_ghost_pad_new("sink", pad));
         gst_object_unref(pad);
 
@@ -109,6 +121,7 @@ void NPlaybackEngineGStreamer::init()
 
     m_speed = 1.0;
     m_speedPostponed = false;
+    m_pitch = 1.0;
     m_oldVolume = -1;
     m_oldPosition = -1;
     m_posponedPosition = -1;
@@ -179,6 +192,17 @@ void NPlaybackEngineGStreamer::setSpeed(qreal speed)
 {
     m_speed = speed;
     m_speedPostponed = true;
+}
+
+qreal NPlaybackEngineGStreamer::pitch() const
+{
+    return m_pitch;
+}
+
+void NPlaybackEngineGStreamer::setPitch(qreal pitch)
+{
+    m_pitch = pitch;
+    g_object_set(m_pitchElement, "pitch", m_pitch, NULL);
 }
 
 void NPlaybackEngineGStreamer::setVolume(qreal volume)

@@ -31,10 +31,12 @@ class NPlaybackEngineGStreamer : public NPlaybackEngineInterface, public NPlugin
 
 private:
     GstElement *m_playbin;
+    GstElement *m_pitchElement;
 
     QTimer *m_timer;
     qreal m_speed;
     bool m_speedPostponed;
+    qreal m_pitch;
     qreal m_oldVolume;
     qreal m_oldPosition;
     N::PlaybackState m_oldState;
@@ -61,6 +63,7 @@ public:
     Q_INVOKABLE qreal position() const;
     Q_INVOKABLE qint64 durationMsec() const;
     Q_INVOKABLE qreal speed() const;
+    Q_INVOKABLE qreal pitch() const;
 
     void _emitAboutToFinish();
     void _crossfadingPrepare();
@@ -72,6 +75,7 @@ public slots:
     Q_INVOKABLE void setPosition(qreal pos);
     Q_INVOKABLE void jump(qint64 msec);
     Q_INVOKABLE void setSpeed(qreal speed);
+    Q_INVOKABLE void setPitch(qreal speed);
 
     Q_INVOKABLE void play();
     Q_INVOKABLE void stop();

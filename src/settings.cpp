@@ -66,6 +66,11 @@ NSettings::NSettings(QObject *parent)
     initValue("Shortcuts/SpeedResetAction", "Backspace");
     initValue("SpeedStep", 0.01);
 
+    initValue("Shortcuts/PitchIncreaseAction", "}");
+    initValue("Shortcuts/PitchDecreaseAction", "{");
+    initValue("Shortcuts/PitchResetAction", "Shift+Backspace");
+    initValue("PitchStep", 0.01);
+
     {
         QStringList fullScreenKeys;
         foreach (QKeySequence seq, QKeySequence::keyBindings(QKeySequence::FullScreen)) {

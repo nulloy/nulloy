@@ -332,7 +332,24 @@ void NPlayer::createActions()
     m_speedResetAction->setObjectName("SpeedResetAction");
     m_speedResetAction->setStatusTip("Reset playback speed to 1.0");
     m_speedResetAction->setCustomizable(true);
-    // <<speed actions
+    // << speed actions
+
+    // pitch actions >>
+    m_pitchIncreaseAction = new NAction(tr("Pitch Increase"), this);
+    m_pitchIncreaseAction->setObjectName("PitchIncreaseAction");
+    m_pitchIncreaseAction->setStatusTip("Increase playback pitch");
+    m_pitchIncreaseAction->setCustomizable(true);
+
+    m_pitchDecreaseAction = new NAction(tr("Pitch Decrease"), this);
+    m_pitchDecreaseAction->setObjectName("PitchDecreaseAction");
+    m_pitchDecreaseAction->setStatusTip("Decrease playback pitch");
+    m_pitchDecreaseAction->setCustomizable(true);
+
+    m_pitchResetAction = new NAction(tr("Pitch Reset"), this);
+    m_pitchResetAction->setObjectName("PitchResetAction");
+    m_pitchResetAction->setStatusTip("Reset pitch to 1.0");
+    m_pitchResetAction->setCustomizable(true);
+    // << pitch actions
 
     // keyboard shortcuts
     m_settings->initShortcuts(this);
@@ -577,6 +594,12 @@ void NPlayer::connectSignals()
     connect(m_speedDecreaseAction, SIGNAL(triggered()), this,
             SLOT(on_speedDecreaseAction_triggered()));
     connect(m_speedResetAction, SIGNAL(triggered()), this, SLOT(on_speedResetAction_triggered()));
+
+    connect(m_pitchIncreaseAction, SIGNAL(triggered()), this,
+            SLOT(on_pitchIncreaseAction_triggered()));
+    connect(m_pitchDecreaseAction, SIGNAL(triggered()), this,
+            SLOT(on_pitchDecreaseAction_triggered()));
+    connect(m_pitchResetAction, SIGNAL(triggered()), this, SLOT(on_pitchResetAction_triggered()));
 
     connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this,
             SLOT(on_contextMenu_requested(QPoint)));
@@ -1027,6 +1050,29 @@ void NPlayer::on_speedResetAction_triggered()
     qreal newSpeed = 1.0;
     m_playbackEngine->setSpeed(newSpeed);
     showToolTip(QString(tr("Speed: %1")).arg(newSpeed));
+}
+
+void NPlayer::on_pitchIncreaseAction_triggered()
+{
+    qreal newPitch = qMax(0.01, m_playbackEngine->pitch() +
+                                    NSettings::instance()->value("PitchStep").toDouble());
+    m_playbackEngine->setPitch(newPitch);
+    showToolTip(QString(tr("Pitch: %1")).arg(newPitch));
+}
+
+void NPlayer::on_pitchDecreaseAction_triggered()
+{
+    qreal newPitch = qMax(0.01, m_playbackEngine->pitch() -
+                                    NSettings::instance()->value("PitchStep").toDouble());
+    m_playbackEngine->setPitch(newPitch);
+    showToolTip(QString(tr("Pitch: %1")).arg(newPitch));
+}
+
+void NPlayer::on_pitchResetAction_triggered()
+{
+    qreal newPitch = 1.0;
+    m_playbackEngine->setPitch(newPitch);
+    showToolTip(QString(tr("Pitch: %1")).arg(newPitch));
 }
 
 void NPlayer::on_showCoverAction_toggled(bool checked)
