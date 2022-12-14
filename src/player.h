@@ -98,12 +98,9 @@ private:
     NAction *m_nextFileByNameDescAction;
     NAction *m_nextFileByDateAscd;
     NAction *m_nextFileByDateDesc;
-    NAction *m_jump1FwAction;
-    NAction *m_jump1BwAction;
-    NAction *m_jump2FwAction;
-    NAction *m_jump2BwAction;
-    NAction *m_jump3FwAction;
-    NAction *m_jump3BwAction;
+    NAction *m_speedIncreaseAction;
+    NAction *m_speedDecreaseAction;
+    NAction *m_speedResetAction;
     void createActions();
     void createContextMenu();
     void createGlobalMenu();
@@ -133,12 +130,16 @@ private slots:
     void on_playlistAction_triggered();
     void on_playlist_tagEditorRequested(const QString &path);
     void on_jumpAction_triggered();
+    void on_speedIncreaseAction_triggered();
+    void on_speedDecreaseAction_triggered();
+    void on_speedResetAction_triggered();
 
     void on_mainWindow_closed();
     void on_mainWindow_scrolled(int delta);
     void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
     void on_trayClickTimer_timeout();
     void trayIconCountClicks(int clicks);
+    void on_contextMenu_requested(QPoint pos);
 
 #ifndef _N_NO_UPDATE_CHECK_
 private:
@@ -156,7 +157,7 @@ public slots:
     void showOpenFileDialog();
     void showOpenDirDialog();
     void showSavePlaylistDialog();
-    void showContextMenu(QPoint pos);
+    void showToolTip(const QString &text);
     void readMessage(const QString &str);
     void loadDefaultPlaylist();
     void saveDefaultPlaylist();

@@ -59,6 +59,7 @@
 #include <QMessageBox>
 #include <QMetaObject>
 #include <QResizeEvent>
+#include <QToolTip>
 
 #ifndef _N_NO_UPDATE_CHECK_
 #include <QNetworkAccessManager>
@@ -119,6 +120,8 @@ NPlayer::NPlayer()
 
     m_trackInfoWidget = new NTrackInfoWidget();
     m_trackInfoWidget->setTrackInfoReader(m_trackInfoReader);
+    connect(m_trackInfoWidget, SIGNAL(showToolTip(const QString &)), this,
+            SLOT(showToolTip(const QString &)));
     QVBoxLayout *trackInfoLayout = new QVBoxLayout;
     trackInfoLayout->setContentsMargins(0, 0, 0, 0);
     trackInfoLayout->addWidget(m_trackInfoWidget);
@@ -313,6 +316,23 @@ void NPlayer::createActions()
         jumpBwAction->setCustomizable(true);
     }
     // << jump actions
+
+    // speed actions >>
+    m_speedIncreaseAction = new NAction(tr("Speed Increase"), this);
+    m_speedIncreaseAction->setObjectName("SpeedIncreaseAction");
+    m_speedIncreaseAction->setStatusTip("Increase playback speed");
+    m_speedIncreaseAction->setCustomizable(true);
+
+    m_speedDecreaseAction = new NAction(tr("Speed Decrease"), this);
+    m_speedDecreaseAction->setObjectName("SpeedDecreaseAction");
+    m_speedDecreaseAction->setStatusTip("Decrease playback speed");
+    m_speedDecreaseAction->setCustomizable(true);
+
+    m_speedResetAction = new NAction(tr("Speed Reset"), this);
+    m_speedResetAction->setObjectName("SpeedResetAction");
+    m_speedResetAction->setStatusTip("Reset playback speed to 1.0");
+    m_speedResetAction->setCustomizable(true);
+    // <<speed actions
 
     // keyboard shortcuts
     m_settings->initShortcuts(this);
@@ -552,8 +572,14 @@ void NPlayer::connectSignals()
         }
     }
 
+    connect(m_speedIncreaseAction, SIGNAL(triggered()), this,
+            SLOT(on_speedIncreaseAction_triggered()));
+    connect(m_speedDecreaseAction, SIGNAL(triggered()), this,
+            SLOT(on_speedDecreaseAction_triggered()));
+    connect(m_speedResetAction, SIGNAL(triggered()), this, SLOT(on_speedResetAction_triggered()));
+
     connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this,
-            SLOT(showContextMenu(QPoint)));
+            SLOT(on_contextMenu_requested(QPoint)));
     connect(m_systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,
             SLOT(on_trayIcon_activated(QSystemTrayIcon::ActivationReason)));
     connect(m_trayClickTimer, SIGNAL(timeout()), this, SLOT(on_trayClickTimer_timeout()));
@@ -980,6 +1006,29 @@ void NPlayer::on_jumpAction_triggered()
                            NSettings::instance()->value(regex.cap(1)).toDouble() * 1000);
 }
 
+void NPlayer::on_speedIncreaseAction_triggered()
+{
+    qreal newSpeed = qMax(0.01, m_playbackEngine->speed() +
+                                    NSettings::instance()->value("SpeedStep").toDouble());
+    m_playbackEngine->setSpeed(newSpeed);
+    showToolTip(QString(tr("Speed: %1")).arg(newSpeed));
+}
+
+void NPlayer::on_speedDecreaseAction_triggered()
+{
+    qreal newSpeed = qMax(0.01, m_playbackEngine->speed() -
+                                    NSettings::instance()->value("SpeedStep").toDouble());
+    m_playbackEngine->setSpeed(newSpeed);
+    showToolTip(QString(tr("Speed: %1")).arg(newSpeed));
+}
+
+void NPlayer::on_speedResetAction_triggered()
+{
+    qreal newSpeed = 1.0;
+    m_playbackEngine->setSpeed(newSpeed);
+    showToolTip(QString(tr("Speed: %1")).arg(newSpeed));
+}
+
 void NPlayer::on_showCoverAction_toggled(bool checked)
 {
     m_settings->setValue("ShowCoverArt", checked);
@@ -1090,8 +1139,21 @@ void NPlayer::showSavePlaylistDialog()
     }
 }
 
-void NPlayer::showContextMenu(QPoint pos)
+void NPlayer::on_contextMenu_requested(QPoint pos)
 {
     // (1, 1) offset to avoid accidental item activation
     m_contextMenu->exec(m_mainWindow->mapToGlobal(pos) + QPoint(1, 1));
+}
+
+void NPlayer::showToolTip(const QString &text)
+{
+    if (text.isEmpty()) {
+        QToolTip::hideText();
+        return;
+    }
+
+    QStringList offsetList = NSettings::instance()->value("TooltipOffset").toStringList();
+    QToolTip::showText(mapToGlobal(QCursor::pos() +
+                                   QPoint(offsetList.at(0).toInt(), offsetList.at(1).toInt())),
+                       text);
 }

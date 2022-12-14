@@ -61,6 +61,11 @@ NSettings::NSettings(QObject *parent)
     initValue("Jump2", 30);
     initValue("Jump3", 180);
 
+    initValue("Shortcuts/SpeedIncreaseAction", "]");
+    initValue("Shortcuts/SpeedDecreaseAction", "[");
+    initValue("Shortcuts/SpeedResetAction", "Backspace");
+    initValue("SpeedStep", 0.01);
+
     {
         QStringList fullScreenKeys;
         foreach (QKeySequence seq, QKeySequence::keyBindings(QKeySequence::FullScreen)) {

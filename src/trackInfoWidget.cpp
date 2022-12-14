@@ -19,7 +19,6 @@
 #include <QLayout>
 #include <QMouseEvent>
 #include <QPropertyAnimation>
-#include <QToolTip>
 
 #include "label.h"
 #include "pluginLoader.h"
@@ -143,7 +142,7 @@ void NTrackInfoWidget::resizeEvent(QResizeEvent *event)
 bool NTrackInfoWidget::event(QEvent *event)
 {
     if (event->type() == QEvent::ToolTip) {
-        QToolTip::hideText();
+        emit showToolTip("");
     }
 
     return QFrame::event(event);
@@ -151,7 +150,37 @@ bool NTrackInfoWidget::event(QEvent *event)
 
 void NTrackInfoWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    showToolTip(event->x(), event->y());
+    if (!rect().contains(event->pos()) || m_tooltipFormat.isEmpty()) {
+        emit showToolTip("");
+        return;
+    }
+
+    QString text = m_tooltipFormat;
+    if (m_tooltipFormat.isEmpty()) {
+        return;
+    }
+
+    QString seconds = m_trackInfoReader->getInfo('D');
+    if (seconds.isEmpty()) {
+        return;
+    }
+
+    float mouse_pos = (float)event->x() / width();
+    int seconds_at_mouse_pos = seconds.toInt() * mouse_pos;
+    // time position under mouse pointer:
+    text.replace("%C", NTrackInfoReader::formatTime(seconds_at_mouse_pos));
+
+    int seconds_elapsed = m_msec / 1000;
+    int seconds_delta = seconds_at_mouse_pos - seconds_elapsed;
+    QString delta_formatted = NTrackInfoReader::formatTime(qAbs(seconds_delta));
+    // time offset under mouse pointer:
+    text.replace("%o", QString("%1%2").arg(seconds_delta < 0 ? "-" : "+").arg(delta_formatted));
+
+    if (text.isEmpty()) {
+        return;
+    }
+
+    emit showToolTip(text);
 }
 
 void NTrackInfoWidget::updateStaticTags(const QString &file)
@@ -208,42 +237,4 @@ void NTrackInfoWidget::tick(qint64 msec)
         label->setText(text);
         label->setVisible(!text.isEmpty());
     }
-}
-
-void NTrackInfoWidget::showToolTip(int x, int y)
-{
-    if (!rect().contains(QPoint(x, y)) || m_tooltipFormat.isEmpty()) {
-        QToolTip::hideText();
-        return;
-    }
-
-    QString text = m_tooltipFormat;
-    if (m_tooltipFormat.isEmpty()) {
-        return;
-    }
-
-    QString seconds = m_trackInfoReader->getInfo('D');
-    if (seconds.isEmpty()) {
-        return;
-    }
-
-    float mouse_pos = (float)x / width();
-    int seconds_at_mouse_pos = seconds.toInt() * mouse_pos;
-    // time position under mouse pointer:
-    text.replace("%C", NTrackInfoReader::formatTime(seconds_at_mouse_pos));
-
-    int seconds_elapsed = m_msec / 1000;
-    int seconds_delta = seconds_at_mouse_pos - seconds_elapsed;
-    QString delta_formatted = NTrackInfoReader::formatTime(qAbs(seconds_delta));
-    // time offset under mouse pointer:
-    text.replace("%o", QString("%1%2").arg(seconds_delta < 0 ? "-" : "+").arg(delta_formatted));
-
-    if (text.isEmpty()) {
-        return;
-    }
-
-    QStringList offsetList = NSettings::instance()->value("TooltipOffset").toStringList();
-    QToolTip::showText(mapToGlobal(QPoint(x, y) +
-                                   QPoint(offsetList.at(0).toInt(), offsetList.at(1).toInt())),
-                       text);
 }

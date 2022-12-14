@@ -56,8 +56,8 @@ public slots:
     void loadSettings();
     void tick(qint64 msec);
 
-private slots:
-    void showToolTip(int x, int y);
+signals:
+    void showToolTip(const QString &text);
 };
 
 #endif

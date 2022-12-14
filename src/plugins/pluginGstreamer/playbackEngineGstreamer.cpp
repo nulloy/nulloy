@@ -75,9 +75,27 @@ void NPlaybackEngineGStreamer::init()
             g_error_free(err);
         }
     }
-
     m_playbin = gst_element_factory_make("playbin", NULL);
     g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
+
+    {
+        GstElement *scaletempo = gst_element_factory_make("scaletempo", NULL);
+        if (!scaletempo) {
+            emit message(N::Critical, "Playback Engine", "Failed to create scaletempo element");
+            emit failed();
+        }
+
+        GstElement *sink = gst_element_factory_make("autoaudiosink", NULL);
+        GstElement *bin = gst_bin_new(NULL);
+        gst_bin_add_many(GST_BIN(bin), scaletempo, sink, NULL);
+        gst_element_link_many(scaletempo, sink, NULL);
+
+        GstPad *pad = gst_element_get_static_pad(scaletempo, "sink");
+        gst_element_add_pad(bin, gst_ghost_pad_new("sink", pad));
+        gst_object_unref(pad);
+
+        g_object_set(m_playbin, "audio-sink", bin, NULL);
+    }
 
 #ifdef _TESTS_
     GstElement *sink = gst_element_factory_make("fakesink", NULL);
@@ -89,6 +107,8 @@ void NPlaybackEngineGStreamer::init()
     g_object_set(m_playbin, "video-sink", sink, NULL);
 #endif
 
+    m_speed = 1.0;
+    m_speedPostponed = false;
     m_oldVolume = -1;
     m_oldPosition = -1;
     m_posponedPosition = -1;
@@ -141,9 +161,24 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file)
 
     emit mediaChanged(m_currentMedia);
 
+    if (m_speed != 1.0) {
+        m_speedPostponed = true;
+    }
+
     if (vol != -1) {
         setVolume(vol);
     }
+}
+
+qreal NPlaybackEngineGStreamer::speed() const
+{
+    return m_speed;
+}
+
+void NPlaybackEngineGStreamer::setSpeed(qreal speed)
+{
+    m_speed = speed;
+    m_speedPostponed = true;
 }
 
 void NPlaybackEngineGStreamer::setVolume(qreal volume)
@@ -165,9 +200,11 @@ void NPlaybackEngineGStreamer::setPosition(qreal pos)
     }
 
     if (m_durationNsec > 0) {
-        gst_element_seek_simple(m_playbin, GST_FORMAT_TIME,
-                                GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
-                                pos * m_durationNsec);
+        gst_element_seek(m_playbin, m_speed, GST_FORMAT_TIME,
+                         GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE),
+                         GST_SEEK_TYPE_SET, pos * m_durationNsec, GST_SEEK_TYPE_NONE,
+                         GST_CLOCK_TIME_NONE);
+        m_speedPostponed = false;
     } else {
         m_posponedPosition = pos;
     }
@@ -182,8 +219,10 @@ void NPlaybackEngineGStreamer::jump(qint64 msec)
     gint64 posNsec = qBound((gint64)0,
                             (gint64)qRound64(position() * m_durationNsec + msec * NSEC_IN_MSEC),
                             m_durationNsec);
-    gst_element_seek_simple(m_playbin, GST_FORMAT_TIME,
-                            GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT), posNsec);
+    gst_element_seek(m_playbin, m_speed, GST_FORMAT_TIME,
+                     GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE), GST_SEEK_TYPE_SET,
+                     posNsec, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
+    m_speedPostponed = false;
 }
 
 qreal NPlaybackEngineGStreamer::position() const
@@ -313,6 +352,14 @@ void NPlaybackEngineGStreamer::checkStatus()
             gboolean res = gst_element_query_position(m_playbin, GST_FORMAT_TIME, &gstPos);
             if (!res) {
                 gstPos = 0;
+            } else {
+                if (m_speedPostponed && !m_crossfading) {
+                    gst_element_seek(m_playbin, m_speed, GST_FORMAT_TIME,
+                                     GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE),
+                                     GST_SEEK_TYPE_SET, gstPos, GST_SEEK_TYPE_NONE,
+                                     GST_CLOCK_TIME_NONE);
+                    m_speedPostponed = false;
+                }
             }
             pos = (qreal)gstPos / m_durationNsec;
         }
