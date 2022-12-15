@@ -1034,7 +1034,7 @@ void NPlayer::on_speedIncreaseAction_triggered()
     qreal newSpeed = qMax(0.01, m_playbackEngine->speed() +
                                     NSettings::instance()->value("SpeedStep").toDouble());
     m_playbackEngine->setSpeed(newSpeed);
-    showToolTip(QString(tr("Speed: %1")).arg(newSpeed));
+    showToolTip(QString(tr("Speed: %1")).arg(m_playbackEngine->speed()));
 }
 
 void NPlayer::on_speedDecreaseAction_triggered()
@@ -1042,14 +1042,14 @@ void NPlayer::on_speedDecreaseAction_triggered()
     qreal newSpeed = qMax(0.01, m_playbackEngine->speed() -
                                     NSettings::instance()->value("SpeedStep").toDouble());
     m_playbackEngine->setSpeed(newSpeed);
-    showToolTip(QString(tr("Speed: %1")).arg(newSpeed));
+    showToolTip(QString(tr("Speed: %1")).arg(m_playbackEngine->speed()));
 }
 
 void NPlayer::on_speedResetAction_triggered()
 {
     qreal newSpeed = 1.0;
     m_playbackEngine->setSpeed(newSpeed);
-    showToolTip(QString(tr("Speed: %1")).arg(newSpeed));
+    showToolTip(QString(tr("Speed: %1")).arg(m_playbackEngine->speed()));
 }
 
 void NPlayer::on_pitchIncreaseAction_triggered()
@@ -1057,7 +1057,7 @@ void NPlayer::on_pitchIncreaseAction_triggered()
     qreal newPitch = qMax(0.01, m_playbackEngine->pitch() +
                                     NSettings::instance()->value("PitchStep").toDouble());
     m_playbackEngine->setPitch(newPitch);
-    showToolTip(QString(tr("Pitch: %1")).arg(newPitch));
+    showToolTip(QString(tr("Pitch: %1")).arg(m_playbackEngine->pitch()));
 }
 
 void NPlayer::on_pitchDecreaseAction_triggered()
@@ -1065,14 +1065,14 @@ void NPlayer::on_pitchDecreaseAction_triggered()
     qreal newPitch = qMax(0.01, m_playbackEngine->pitch() -
                                     NSettings::instance()->value("PitchStep").toDouble());
     m_playbackEngine->setPitch(newPitch);
-    showToolTip(QString(tr("Pitch: %1")).arg(newPitch));
+    showToolTip(QString(tr("Pitch: %1")).arg(m_playbackEngine->pitch()));
 }
 
 void NPlayer::on_pitchResetAction_triggered()
 {
     qreal newPitch = 1.0;
     m_playbackEngine->setPitch(newPitch);
-    showToolTip(QString(tr("Pitch: %1")).arg(newPitch));
+    showToolTip(QString(tr("Pitch: %1")).arg(m_playbackEngine->pitch()));
 }
 
 void NPlayer::on_showCoverAction_toggled(bool checked)

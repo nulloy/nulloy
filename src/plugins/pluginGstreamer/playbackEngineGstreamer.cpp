@@ -78,31 +78,17 @@ void NPlaybackEngineGStreamer::init()
     m_playbin = gst_element_factory_make("playbin", NULL);
     g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
 
-    {
-        GstElement *scaletempo = gst_element_factory_make("scaletempo", NULL);
-        if (!scaletempo) {
-            emit message(N::Critical, "Playback Engine", "Failed to create scaletempo element");
-            emit failed();
-        }
-
-        m_pitchElement = gst_element_factory_make("pitch", NULL);
-        if (!m_pitchElement) {
-            emit message(N::Critical, "Playback Engine", "Failed to create pitch element");
-            emit failed();
-        }
-
+    m_pitchElement = gst_element_factory_make("pitch", NULL);
+    if (!m_pitchElement) {
+        emit message(N::Critical, "Playback Engine", "Failed to create pitch element");
+        emit failed();
+    } else {
         GstElement *sink = gst_element_factory_make("autoaudiosink", NULL);
         GstElement *bin = gst_bin_new(NULL);
-        gst_bin_add_many(GST_BIN(bin), m_pitchElement, scaletempo, sink, NULL);
-        gst_element_link_many(m_pitchElement, scaletempo, sink, NULL);
+        gst_bin_add_many(GST_BIN(bin), m_pitchElement, sink, NULL);
+        gst_element_link_many(m_pitchElement, sink, NULL);
 
-        GstPad *pad;
-
-        pad = gst_element_get_static_pad(scaletempo, "sink");
-        gst_element_add_pad(bin, gst_ghost_pad_new("sink", pad));
-        gst_object_unref(pad);
-
-        pad = gst_element_get_static_pad(m_pitchElement, "sink");
+        GstPad *pad = gst_element_get_static_pad(m_pitchElement, "sink");
         gst_element_add_pad(bin, gst_ghost_pad_new("sink", pad));
         gst_object_unref(pad);
 
@@ -201,6 +187,9 @@ qreal NPlaybackEngineGStreamer::pitch() const
 
 void NPlaybackEngineGStreamer::setPitch(qreal pitch)
 {
+    if (!m_pitchElement) {
+        return;
+    }
     m_pitch = pitch;
     g_object_set(m_pitchElement, "pitch", m_pitch, NULL);
 }
@@ -396,7 +385,7 @@ void NPlaybackEngineGStreamer::checkStatus()
             emit positionChanged(m_crossfading ? 0 : m_oldPosition);
         }
 
-        emit tick(m_crossfading ? 0 : gstPos / NSEC_IN_MSEC);
+        emit tick(m_crossfading ? 0 : gstPos / NSEC_IN_MSEC * m_speed);
     }
 
     qreal vol = volume();
