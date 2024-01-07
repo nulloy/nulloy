@@ -111,7 +111,7 @@ unix:!mac {
     target.path = $$PREFIX/bin
     INSTALLS += target
 
-    icon.extra = cp $$SRC_DIR/icons/icon.svg $$TMP_DIR/$${APP_NAME}.svg
+    system(cp $$SRC_DIR/icons/icon.svg $$TMP_DIR/$${APP_NAME}.svg)
     icon.files = $$TMP_DIR/$${APP_NAME}.svg
     icon.path = $$PREFIX/share/icons/hicolor/scalable/apps
     INSTALLS += icon
