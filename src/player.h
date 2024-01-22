@@ -145,7 +145,6 @@ private slots:
     void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
     void on_trayClickTimer_timeout();
     void trayIconCountClicks(int clicks);
-    void on_contextMenu_requested(QPoint pos);
 
 #ifndef _N_NO_UPDATE_CHECK_
 private:
@@ -164,6 +163,7 @@ public slots:
     void showOpenDirDialog();
     void showSavePlaylistDialog();
     void showToolTip(const QString &text);
+    void showContextMenu(const QPoint &pos);
     void readMessage(const QString &str);
     void loadDefaultPlaylist();
     void saveDefaultPlaylist();

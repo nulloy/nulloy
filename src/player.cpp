@@ -601,8 +601,8 @@ void NPlayer::connectSignals()
             SLOT(on_pitchDecreaseAction_triggered()));
     connect(m_pitchResetAction, SIGNAL(triggered()), this, SLOT(on_pitchResetAction_triggered()));
 
-    connect(m_mainWindow, SIGNAL(customContextMenuRequested(QPoint)), this,
-            SLOT(on_contextMenu_requested(QPoint)));
+    connect(m_mainWindow, SIGNAL(customContextMenuRequested(const QPoint &)), this,
+            SLOT(showContextMenu(const QPoint &)));
     connect(m_systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,
             SLOT(on_trayIcon_activated(QSystemTrayIcon::ActivationReason)));
     connect(m_trayClickTimer, SIGNAL(timeout()), this, SLOT(on_trayClickTimer_timeout()));
@@ -1185,7 +1185,7 @@ void NPlayer::showSavePlaylistDialog()
     }
 }
 
-void NPlayer::on_contextMenu_requested(QPoint pos)
+void NPlayer::showContextMenu(const QPoint &pos)
 {
     // (1, 1) offset to avoid accidental item activation
     m_contextMenu->exec(m_mainWindow->mapToGlobal(pos) + QPoint(1, 1));
