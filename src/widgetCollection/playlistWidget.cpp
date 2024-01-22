@@ -316,20 +316,28 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
 #endif
     } else {
         QString path = fileInfo.canonicalFilePath();
+        QStringList args;
 #if defined Q_OS_WIN
-        res = QProcess::execute("explorer.exe",
-                                QStringList{"/n", ",", "/select", ",", path.replace('/', '\\')});
+        cmd = "explorer.exe";
+        args = QStringList{"/n", ",", "/select", ",", path.replace('/', '\\')}
 #elif defined Q_OS_LINUX
-        res = QProcess::execute("xdg-open",
-                                QStringList{fileInfo.canonicalPath().replace("'", "'\\''")});
+        cmd = "xdg-open";
+        args = QStringList{fileInfo.canonicalPath().replace("'", "'\\''")};
 #elif defined Q_OS_MAC
-        res = QProcess::execute("open", QStringList{"-R", path.replace("'", "'\\''")});
+        cmd = "open";
+        args = QStringList{"-R", path.replace("'", "'\\''")};
 #endif
+        res = QProcess::execute(cmd, args);
+        cmd += " " + args.join(' ');
     }
 
 #ifndef Q_OS_WIN
     if (res != 0) {
-        *error = QString(QObject::tr("Command failed with exit code <b>%1</b>.")).arg(res);
+        *error =
+            QString(QObject::tr("File manager command failed with exit code <b>%1</b>:")).arg(res) +
+            QString("<br><br><span style=\"font-family: 'Lucida Console', Monaco, "
+                    "monospace\">%1</span>")
+                .arg(cmd);
         return false;
     }
 #endif
