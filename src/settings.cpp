@@ -44,7 +44,7 @@ NSettings::NSettings(QObject *parent)
         setValue("SettingsVersion", MIN_VERSION);
     }
 
-    initValue("Shortcuts/RevealInFileManagerAction", "Ctrl+Enter");
+    initValue("Shortcuts/RevealInFileManagerAction", "Ctrl+Return");
     initValue("Shortcuts/RemoveFromPlaylistAction", "Delete");
     initValue("Shortcuts/MoveToTrashAction", "Ctrl+Delete");
     initValue("Shortcuts/TagEditorAction", "F4");
