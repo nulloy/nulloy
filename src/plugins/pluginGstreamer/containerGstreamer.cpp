@@ -15,6 +15,7 @@
 
 #include "containerGstreamer.h"
 
+#include "common.h"
 #include "playbackEngineGstreamer.h"
 #include "waveformBuilderGstreamer.h"
 #ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
@@ -23,10 +24,7 @@
 
 NContainerGstreamer::NContainerGstreamer(QObject *parent) : QObject(parent)
 {
-#ifdef Q_OS_WIN
-    _putenv(QString("GST_REGISTRY=NUL").toUtf8());
-    _putenv(QString("GST_REGISTRY_UPDATE=no").toUtf8());
-#endif
+    qputenv("GST_REGISTRY", QString("%1/gstreamer-1.0.registry.bin").arg(NCore::rcDir()).toUtf8());
 
     m_plugins << new NPlaybackEngineGStreamer()
 #ifdef _N_GSTREAMER_TAGREADER_PLUGIN_
