@@ -18,7 +18,7 @@
 
 #include <QAction>
 
-#include "qxtglobalshortcut.h"
+class QxtGlobalShortcut;
 
 class NAction : public QAction
 {

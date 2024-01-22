@@ -353,7 +353,6 @@ void NPlayer::createActions()
 
     // keyboard shortcuts
     m_settings->initShortcuts(this);
-    m_settings->loadShortcuts();
     foreach (NAction *action, findChildren<NAction *>()) {
         if (!action->shortcuts().isEmpty()) {
             m_mainWindow->addAction(action);

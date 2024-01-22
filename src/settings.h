@@ -38,7 +38,6 @@ public:
 
     void initShortcuts(QObject *instance);
     void saveShortcuts();
-    void loadShortcuts();
     QList<NAction *> shortcuts() const;
 
     Q_INVOKABLE QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;

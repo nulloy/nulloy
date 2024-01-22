@@ -25,6 +25,7 @@
 #include <QShortcut>
 #include <QUrl>
 
+#include "action.h"
 #include "playbackEngineInterface.h"
 #include "playlistDataItem.h"
 #include "playlistStorage.h"
@@ -64,25 +65,28 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     setItemDelegate(new NPlaylistWidgetItemDelegate(this));
     m_currentItem = NULL;
 
-    QShortcut *revealShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Return), this);
-    connect(revealShortcut, SIGNAL(activated()), this, SLOT(on_revealAction_triggered()));
-    QAction *revealAction = new QAction(QIcon::fromTheme("fileopen", winIcons.value(13)),
+    NAction *revealAction = new NAction(QIcon::fromTheme("fileopen", winIcons.value(13)),
                                         tr("Reveal in File Manager..."), this);
-    revealAction->setShortcut(revealShortcut->key());
+    revealAction->setObjectName("RevealInFileManagerAction");
+    revealAction->setStatusTip(tr("Open file manager for selected file"));
+    revealAction->setCustomizable(true);
+    this->addAction(revealAction);
     connect(revealAction, SIGNAL(triggered()), this, SLOT(on_revealAction_triggered()));
 
-    QShortcut *removeShortcut = new QShortcut(QKeySequence(QKeySequence::Delete), this);
-    connect(removeShortcut, SIGNAL(activated()), this, SLOT(on_removeAction_triggered()));
-    QAction *removeAction = new QAction(QIcon::fromTheme("remove"), tr("Remove From Playlist"),
+    NAction *removeAction = new NAction(QIcon::fromTheme("remove"), tr("Remove From Playlist"),
                                         this);
-    removeAction->setShortcut(removeShortcut->key());
+    removeAction->setObjectName("RemoveFromPlaylistAction");
+    removeAction->setStatusTip(tr("Remove selected files from playlist"));
+    removeAction->setCustomizable(true);
+    this->addAction(removeAction);
     connect(removeAction, SIGNAL(triggered()), this, SLOT(on_removeAction_triggered()));
 
-    QShortcut *trashShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Delete), this);
-    connect(trashShortcut, SIGNAL(activated()), this, SLOT(on_trashAction_triggered()));
-    QAction *trashAction = new QAction(QIcon::fromTheme("trashcan_empty", winIcons.value(49)),
+    NAction *trashAction = new NAction(QIcon::fromTheme("trashcan_empty", winIcons.value(49)),
                                        tr("Move To Trash"), this);
-    trashAction->setShortcut(trashShortcut->key());
+    trashAction->setObjectName("MoveToTrashAction");
+    trashAction->setStatusTip(tr("Move selected files to trash bin"));
+    trashAction->setCustomizable(true);
+    this->addAction(trashAction);
     connect(trashAction, SIGNAL(triggered()), this, SLOT(on_trashAction_triggered()));
 
     m_contextMenu = new QMenu(this);
@@ -92,11 +96,12 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 
     if (dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader))
             ->isWriteSupported()) {
-        QShortcut *tagEditorShortcut = new QShortcut(QKeySequence(Qt::Key_F4), this);
-        connect(tagEditorShortcut, SIGNAL(activated()), this, SLOT(on_tagEditorAction_triggered()));
-        QAction *tagEditorAction = new QAction(QIcon::fromTheme("edit", winIcons.value(289)),
+        NAction *tagEditorAction = new NAction(QIcon::fromTheme("edit", winIcons.value(289)),
                                                tr("Tag Editor"), this);
-        tagEditorAction->setShortcut(tagEditorShortcut->key());
+        tagEditorAction->setObjectName("TagEditorAction");
+        tagEditorAction->setStatusTip(tr("Open tag editor for selected file"));
+        tagEditorAction->setCustomizable(true);
+        this->addAction(tagEditorAction);
         connect(tagEditorAction, SIGNAL(triggered()), this, SLOT(on_tagEditorAction_triggered()));
         m_contextMenu->addAction(tagEditorAction);
     }
@@ -120,6 +125,8 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     connect(m_processVisibleItemsTimer, SIGNAL(timeout()), this, SLOT(processVisibleItems()));
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this,
             SLOT(startProcessVisibleItemsTimer()));
+
+    NSettings::instance()->initShortcuts(this);
 }
 
 void NPlaylistWidget::setTrackInfoReader(NTrackInfoReader *reader)

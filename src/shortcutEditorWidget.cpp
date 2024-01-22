@@ -51,7 +51,8 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
     for (int i = 0; i < m_actionList.size(); ++i) {
         NAction *action = m_actionList.at(i);
 
-        QTableWidgetItem *nameItem = new QTableWidgetItem(action->text());
+        // also removes "..." at the end of shortcut text, if present:
+        QTableWidgetItem *nameItem = new QTableWidgetItem(action->text().replace("...", ""));
         nameItem->setFlags(nameItem->flags() ^ Qt::ItemIsEditable ^ Qt::ItemIsSelectable);
         nameItem->setData(Qt::UserRole, action->objectName());
         setItem(i, Name, nameItem);

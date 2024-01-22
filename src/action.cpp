@@ -14,6 +14,7 @@
 *********************************************************************/
 
 #include "action.h"
+#include "qxtglobalshortcut.h"
 
 void NAction::init()
 {
