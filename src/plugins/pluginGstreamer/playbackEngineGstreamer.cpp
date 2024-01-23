@@ -78,10 +78,12 @@ void NPlaybackEngineGStreamer::init()
     m_playbin = gst_element_factory_make("playbin", NULL);
     g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
 
-    m_pitchElement = gst_element_factory_make("pitch", NULL);
+    // FIXME: https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/-/issues/1798
+    //m_pitchElement = gst_element_factory_make("pitch", NULL);
+    m_pitchElement = NULL;
     if (!m_pitchElement) {
-        emit message(N::Critical, "Playback Engine", "Failed to create pitch element");
-        emit failed();
+        //emit message(N::Critical, "Playback Engine", "Failed to create pitch element");
+        //emit failed();
     } else {
         GstElement *sink = gst_element_factory_make("autoaudiosink", NULL);
         GstElement *bin = gst_bin_new(NULL);
