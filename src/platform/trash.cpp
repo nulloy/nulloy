@@ -27,16 +27,17 @@ QStringList NTrash::moveToTrash(QStringList files)
     foreach (QString file, files) {
         QString error;
         if (_trash(file, &error) != 0) {
-            QMessageBox box(QMessageBox::Warning, "Trash Error", "",
+            QMessageBox box(QMessageBox::Warning, QObject::tr("Trash Error"), "",
                             QMessageBox::Yes | QMessageBox::Cancel, NULL);
             box.setDefaultButton(QMessageBox::Cancel);
-            box.setText("Couldn't to move to Trash <b>" + QFileInfo(file).fileName() + "</b>." +
-                        (error.isEmpty() ? "" : " <br>" + error));
-            box.setInformativeText("Do you want to delete permanently?");
+            box.setText(
+                QObject::tr("Couldn't to move to Trash <b>%1</b>.").arg(QFileInfo(file).fileName()) +
+                (error.isEmpty() ? "" : " <br>" + error));
+            box.setInformativeText(QObject::tr("Do you want to delete permanently?"));
             if (box.exec() == QMessageBox::Yes) {
                 if (!QFile::remove(file)) {
-                    QMessageBox::critical(NULL, "File Delete Error",
-                                          "Failed to delete <b>" + file + "</b>.");
+                    QMessageBox::critical(NULL, QObject::tr("File Delete Error"),
+                                          QObject::tr("Failed to delete <b>%1</b>.").arg(file));
                     break;
                 }
             } else {

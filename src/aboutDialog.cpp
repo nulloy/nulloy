@@ -55,7 +55,7 @@ NAboutDialog::NAboutDialog(QWidget *parent) : QDialog(parent)
         "</span>";
     // clang-format on
 
-    setWindowTitle(QObject::tr("About ") + QCoreApplication::applicationName());
+    setWindowTitle(tr("About ") + QCoreApplication::applicationName());
     setMaximumSize(0, 0);
 
     QVBoxLayout *layout = new QVBoxLayout;

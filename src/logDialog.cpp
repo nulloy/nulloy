@@ -39,7 +39,7 @@ NLogDialog::NLogDialog(QWidget *parent) : QDialog(parent)
     QHBoxLayout *hLayout = new QHBoxLayout;
     layout->addLayout(hLayout);
 
-    m_checkBox = new QCheckBox("Don't show this dialog anymore");
+    m_checkBox = new QCheckBox(tr("Don't show this dialog anymore"));
     hLayout->addWidget(m_checkBox);
 
     hLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum));

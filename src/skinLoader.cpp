@@ -155,7 +155,7 @@ void NSkinLoader::_init()
             }
         }
         if (skinContainer.absoluteFilePath().startsWith(QString() + ":" + _skinsDirName)) {
-            id.insert(id.lastIndexOf('/'), " (Built-in)");
+            id.insert(id.lastIndexOf('/'), QObject::tr(" (Built-in)"));
         }
         _identifiers.insert(i, id);
     }

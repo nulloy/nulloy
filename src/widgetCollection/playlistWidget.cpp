@@ -259,8 +259,7 @@ void NPlaylistWidget::on_revealAction_triggered()
 {
     QString error;
     if (!revealInFileManager(selectedItems().first()->data(N::PathRole).toString(), &error)) {
-        QMessageBox::warning(this, QObject::tr("Reveal in File Manager Error"), error,
-                             QMessageBox::Close);
+        QMessageBox::warning(this, tr("Reveal in File Manager Error"), error, QMessageBox::Close);
     }
 }
 
@@ -277,8 +276,7 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
     QFileInfo fileInfo(file);
 
     if (!fileInfo.exists()) {
-        *error =
-            QString(QObject::tr("File doesn't exist: <b>%1</b>")).arg(QFileInfo(file).fileName());
+        *error = tr("File doesn't exist: <b>%1</b>").arg(QFileInfo(file).fileName());
         return false;
     }
 
@@ -289,7 +287,7 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
     if (customFileManager) {
         cmd = NSettings::instance()->value("CustomFileManagerCommand").toString();
         if (cmd.isEmpty()) {
-            *error = QString(QObject::tr("Custom File Manager is enabled but not configured."));
+            *error = tr("Custom File Manager is enabled but not configured.");
             return false;
         }
         QString filePath = file;
@@ -333,11 +331,10 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
 
 #ifndef Q_OS_WIN
     if (res != 0) {
-        *error =
-            QString(QObject::tr("File manager command failed with exit code <b>%1</b>:")).arg(res) +
-            QString("<br><br><span style=\"font-family: 'Lucida Console', Monaco, "
-                    "monospace\">%1</span>")
-                .arg(cmd);
+        *error = tr("File manager command failed with exit code <b>%1</b>:").arg(res) +
+                 QString("<br><br><span style=\"font-family: 'Lucida Console', Monaco, "
+                         "monospace\">%1</span>")
+                     .arg(cmd);
         return false;
     }
 #endif

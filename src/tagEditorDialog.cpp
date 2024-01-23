@@ -45,7 +45,7 @@ NTagEditorDialog::NTagEditorDialog(const QString &file, QWidget *parent) : QDial
     if (!tags.isEmpty()) {
         if (tags.value("Error").join("") == "Invalid") {
             QMessageBox msgBox(QMessageBox::Information, tr("Unsupported File"),
-                               "This file format does not support tags." +
+                               tr("This file format does not support tags.") +
                                    QString("%1").arg(" ", 20, ' '),
                                QMessageBox::Close, parent);
             msgBox.exec();
@@ -223,8 +223,8 @@ void NTagEditorDialog::readTags()
                     standardTagPlainTextEdit->setTextCursor(cursor);
                 });
             } else {
-                QMessageBox::critical(NULL, "Match error", "No widget for tag: " + enumKey,
-                                      QMessageBox::Close);
+                QMessageBox::critical(NULL, tr("Match error"),
+                                      tr("No widget for tag: %1").arg(enumKey), QMessageBox::Close);
             }
 
             label = "";
@@ -285,11 +285,11 @@ bool NTagEditorDialog::writeTags()
     if (!unsaved.isEmpty()) {
         if (unsaved.value("Error").join("") == "Write") {
             QMessageBox msgBox(QMessageBox::Critical, tr("Write Fail"),
-                               "Write operation did not succeed.", QMessageBox::Close, this);
+                               tr("Write operation did not succeed."), QMessageBox::Close, this);
             msgBox.exec();
         } else {
             QMessageBox msgBox(QMessageBox::Warning, tr("Save Fail"),
-                               "Saving aborted. Failed tags: " + unsaved.keys().join(", "),
+                               tr("Saving aborted. Failed tags: %1").arg(unsaved.keys().join(", ")),
                                QMessageBox::Close, this);
             msgBox.exec();
         }

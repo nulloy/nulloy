@@ -305,14 +305,14 @@ void NPlayer::createActions()
     for (int i = 1; i <= 3; ++i) {
         QString num = QString::number(i);
 
-        NAction *jumpFwAction = new NAction(QString(tr("Jump Forward #%1")).arg(num), this);
+        NAction *jumpFwAction = new NAction(tr("Jump Forward #%1").arg(num), this);
         jumpFwAction->setObjectName(QString("Jump%1ForwardAction").arg(num));
-        jumpFwAction->setStatusTip(QString(tr("Make a jump forward #%1")).arg(num));
+        jumpFwAction->setStatusTip(tr("Make a jump forward #%1").arg(num));
         jumpFwAction->setCustomizable(true);
 
-        NAction *jumpBwAction = new NAction(QString(tr("Jump Backwards #%1")).arg(num), this);
+        NAction *jumpBwAction = new NAction(tr("Jump Backwards #%1").arg(num), this);
         jumpBwAction->setObjectName(QString("Jump%1BackwardsAction").arg(num));
-        jumpBwAction->setStatusTip(QString(tr("Make a jump backwards #%1")).arg(num));
+        jumpBwAction->setStatusTip(tr("Make a jump backwards #%1").arg(num));
         jumpBwAction->setCustomizable(true);
     }
     // << jump actions
@@ -320,34 +320,34 @@ void NPlayer::createActions()
     // speed actions >>
     m_speedIncreaseAction = new NAction(tr("Speed Increase"), this);
     m_speedIncreaseAction->setObjectName("SpeedIncreaseAction");
-    m_speedIncreaseAction->setStatusTip("Increase playback speed");
+    m_speedIncreaseAction->setStatusTip(tr("Increase playback speed"));
     m_speedIncreaseAction->setCustomizable(true);
 
     m_speedDecreaseAction = new NAction(tr("Speed Decrease"), this);
     m_speedDecreaseAction->setObjectName("SpeedDecreaseAction");
-    m_speedDecreaseAction->setStatusTip("Decrease playback speed");
+    m_speedDecreaseAction->setStatusTip(tr("Decrease playback speed"));
     m_speedDecreaseAction->setCustomizable(true);
 
     m_speedResetAction = new NAction(tr("Speed Reset"), this);
     m_speedResetAction->setObjectName("SpeedResetAction");
-    m_speedResetAction->setStatusTip("Reset playback speed to 1.0");
+    m_speedResetAction->setStatusTip(tr("Reset playback speed to 1.0"));
     m_speedResetAction->setCustomizable(true);
     // << speed actions
 
     // pitch actions >>
     m_pitchIncreaseAction = new NAction(tr("Pitch Increase"), this);
     m_pitchIncreaseAction->setObjectName("PitchIncreaseAction");
-    m_pitchIncreaseAction->setStatusTip("Increase playback pitch");
+    m_pitchIncreaseAction->setStatusTip(tr("Increase playback pitch"));
     m_pitchIncreaseAction->setCustomizable(true);
 
     m_pitchDecreaseAction = new NAction(tr("Pitch Decrease"), this);
     m_pitchDecreaseAction->setObjectName("PitchDecreaseAction");
-    m_pitchDecreaseAction->setStatusTip("Decrease playback pitch");
+    m_pitchDecreaseAction->setStatusTip(tr("Decrease playback pitch"));
     m_pitchDecreaseAction->setCustomizable(true);
 
     m_pitchResetAction = new NAction(tr("Pitch Reset"), this);
     m_pitchResetAction->setObjectName("PitchResetAction");
-    m_pitchResetAction->setStatusTip("Reset pitch to 1.0");
+    m_pitchResetAction->setStatusTip(tr("Reset pitch to 1.0"));
     m_pitchResetAction->setCustomizable(true);
     // << pitch actions
 
@@ -1033,7 +1033,7 @@ void NPlayer::on_speedIncreaseAction_triggered()
     qreal newSpeed = qMax(0.01, m_playbackEngine->speed() +
                                     NSettings::instance()->value("SpeedStep").toDouble());
     m_playbackEngine->setSpeed(newSpeed);
-    showToolTip(QString(tr("Speed: %1")).arg(m_playbackEngine->speed()));
+    showToolTip(tr("Speed: %1").arg(m_playbackEngine->speed()));
 }
 
 void NPlayer::on_speedDecreaseAction_triggered()
@@ -1041,14 +1041,14 @@ void NPlayer::on_speedDecreaseAction_triggered()
     qreal newSpeed = qMax(0.01, m_playbackEngine->speed() -
                                     NSettings::instance()->value("SpeedStep").toDouble());
     m_playbackEngine->setSpeed(newSpeed);
-    showToolTip(QString(tr("Speed: %1")).arg(m_playbackEngine->speed()));
+    showToolTip(tr("Speed: %1").arg(m_playbackEngine->speed()));
 }
 
 void NPlayer::on_speedResetAction_triggered()
 {
     qreal newSpeed = 1.0;
     m_playbackEngine->setSpeed(newSpeed);
-    showToolTip(QString(tr("Speed: %1")).arg(m_playbackEngine->speed()));
+    showToolTip(tr("Speed: %1").arg(m_playbackEngine->speed()));
 }
 
 void NPlayer::on_pitchIncreaseAction_triggered()
@@ -1056,7 +1056,7 @@ void NPlayer::on_pitchIncreaseAction_triggered()
     qreal newPitch = qMax(0.01, m_playbackEngine->pitch() +
                                     NSettings::instance()->value("PitchStep").toDouble());
     m_playbackEngine->setPitch(newPitch);
-    showToolTip(QString(tr("Pitch: %1")).arg(m_playbackEngine->pitch()));
+    showToolTip(tr("Pitch: %1").arg(m_playbackEngine->pitch()));
 }
 
 void NPlayer::on_pitchDecreaseAction_triggered()
@@ -1064,14 +1064,14 @@ void NPlayer::on_pitchDecreaseAction_triggered()
     qreal newPitch = qMax(0.01, m_playbackEngine->pitch() -
                                     NSettings::instance()->value("PitchStep").toDouble());
     m_playbackEngine->setPitch(newPitch);
-    showToolTip(QString(tr("Pitch: %1")).arg(m_playbackEngine->pitch()));
+    showToolTip(tr("Pitch: %1").arg(m_playbackEngine->pitch()));
 }
 
 void NPlayer::on_pitchResetAction_triggered()
 {
     qreal newPitch = 1.0;
     m_playbackEngine->setPitch(newPitch);
-    showToolTip(QString(tr("Pitch: %1")).arg(m_playbackEngine->pitch()));
+    showToolTip(tr("Pitch: %1").arg(m_playbackEngine->pitch()));
 }
 
 void NPlayer::on_showCoverAction_toggled(bool checked)

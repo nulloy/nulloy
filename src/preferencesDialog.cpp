@@ -173,7 +173,7 @@ void NPreferencesDialog::setVersionLabel(QString text)
 void NPreferencesDialog::on_versionCheckButton_clicked()
 {
     NSettings::instance()->remove("UpdateIgnore");
-    ui.versionLabel->setText("Checking...");
+    ui.versionLabel->setText(tr("Checking..."));
     emit versionRequested();
 }
 #endif
@@ -181,7 +181,7 @@ void NPreferencesDialog::on_versionCheckButton_clicked()
 void NPreferencesDialog::on_fileManagerHelpButton_clicked()
 {
     QDialog *dialog = new QDialog(this);
-    dialog->setWindowTitle("File Manager Configuration");
+    dialog->setWindowTitle(tr("File Manager Configuration"));
 
     QVBoxLayout *layout = new QVBoxLayout;
     dialog->setLayout(layout);
@@ -222,7 +222,7 @@ void NPreferencesDialog::on_customTrashHelpButton_clicked()
 {
 #if !defined Q_OS_WIN && !defined Q_OS_MAC
     QDialog *dialog = new QDialog(this);
-    dialog->setWindowTitle("Trash Command Configuration");
+    dialog->setWindowTitle(tr("Trash Command Configuration"));
 
     QVBoxLayout *layout = new QVBoxLayout;
     dialog->setLayout(layout);
@@ -263,7 +263,7 @@ void NPreferencesDialog::on_customTrashHelpButton_clicked()
 void NPreferencesDialog::on_titleFormatHelpButton_clicked()
 {
     QDialog *dialog = new QDialog(this);
-    dialog->setWindowTitle("Title Formats");
+    dialog->setWindowTitle(tr("Title Formats"));
 
     QVBoxLayout *layout = new QVBoxLayout;
     dialog->setLayout(layout);
@@ -633,9 +633,9 @@ void NPreferencesDialog::saveSettings()
 
     // systray check >>
     if (ui.trayIconCheckBox->isChecked() && !QSystemTrayIcon::isSystemTrayAvailable()) {
-        QMessageBox::warning(this, "Systray Error",
-                             QObject::tr("System Tray (Notification Area) is "
-                                         "not available on your system."));
+        QMessageBox::warning(this, tr("Systray Error"),
+                             tr("System Tray (Notification Area) is "
+                                "not available on your system."));
     }
     // << systray check
 }
