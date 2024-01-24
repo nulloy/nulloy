@@ -21,6 +21,9 @@
 #include "common.h"
 
 #define NSEC_IN_MSEC 1000000
+#define SHORT_TICK_THRESHOLD_MSEC 5000 // 5 seconds
+#define SHORT_TICK_MSEC 20
+#define LONG_TICK_MSEC 100
 
 static void _on_about_to_finish(GstElement *playbin, gpointer userData)
 {
@@ -260,7 +263,7 @@ void NPlaybackEngineGStreamer::play()
     gst_element_get_state(m_playbin, &gstState, NULL, 0);
     if (gstState != GST_STATE_PLAYING) {
         gst_element_set_state(m_playbin, GST_STATE_PLAYING);
-        m_timer->start(100);
+        m_timer->start(LONG_TICK_MSEC);
     } else {
         pause();
     }
@@ -350,6 +353,9 @@ void NPlaybackEngineGStreamer::checkStatus()
         gboolean res = gst_element_query_duration(m_playbin, GST_FORMAT_TIME, &m_durationNsec);
         if (!res) {
             m_durationNsec = 0;
+        }
+        if (m_durationNsec > 0 && m_durationNsec / NSEC_IN_MSEC <= SHORT_TICK_THRESHOLD_MSEC) {
+            m_timer->setInterval(SHORT_TICK_MSEC);
         }
     }
 
