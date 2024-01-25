@@ -39,7 +39,7 @@
 
 #playlistWidget {
 	color: #D4D4D4;
-	qproperty-current_text_color: #FFFFFF;
+	qproperty-active_text_color: #FFFFFF;
 	qproperty-failed_text_color: #565659;
 	background: #252526;
 	padding: 5;

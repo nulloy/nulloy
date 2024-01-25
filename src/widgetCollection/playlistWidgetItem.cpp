@@ -110,8 +110,8 @@ void NPlaylistWidgetItemDelegate::paint(QPainter *painter, const QStyleOptionVie
     QStyleOptionViewItem opt = option;
     const NPlaylistWidget *playlistWidget = qobject_cast<const NPlaylistWidget *>(opt.widget);
 
-    if (index == playlistWidget->currentIndex()) { // if currently playing item
-        QColor color = playlistWidget->currentTextColor();
+    if (index == playlistWidget->activeIndex()) { // if currently playing item
+        QColor color = playlistWidget->activeTextColor();
         if (color.isValid()) {
             opt.palette.setColor(QPalette::HighlightedText, color);
             opt.palette.setColor(QPalette::Text, color);

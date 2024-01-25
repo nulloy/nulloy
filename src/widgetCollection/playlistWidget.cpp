@@ -45,7 +45,7 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     m_fileDropBorderColor = QColor(Qt::transparent);
     m_fileDropBackground = QBrush(Qt::NoBrush);
     m_failedTextColor = QColor(Qt::red);
-    m_currentTextColor = QColor(Qt::black);
+    m_activeTextColor = QColor(Qt::black);
     m_fileDropRadius = 0;
 
     m_trackInfoReader = NULL;
@@ -63,7 +63,7 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     connect(this, SIGNAL(itemActivated(QListWidgetItem *)), this,
             SLOT(on_itemActivated(QListWidgetItem *)));
     setItemDelegate(new NPlaylistWidgetItemDelegate(this));
-    m_currentItem = NULL;
+    m_activeItem = NULL;
 
     NAction *revealAction = new NAction(QIcon::fromTheme("fileopen", winIcons.value(13)),
                                         tr("Reveal in File Manager..."), this);
@@ -113,7 +113,7 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 
     m_repeatMode = NSettings::instance()->value("Repeat").toBool();
     m_shuffleMode = false;
-    m_currentShuffledIndex = 0;
+    m_activeShuffledIndex = 0;
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setDefaultDropAction(Qt::MoveAction);
@@ -200,7 +200,7 @@ void NPlaylistWidget::on_trashAction_triggered()
 void NPlaylistWidget::on_removeAction_triggered()
 {
     int firstSelectedRow = count() - 1; // set to last row
-    bool currentWithinRemoved = false;
+    bool activeWithinRemoved = false;
     foreach (QListWidgetItem *item, selectedItems()) {
         int rowToDelete = row(item);
         if (firstSelectedRow > rowToDelete) {
@@ -209,14 +209,14 @@ void NPlaylistWidget::on_removeAction_triggered()
         NPlaylistWidgetItem *itemToDelete = reinterpret_cast<NPlaylistWidgetItem *>(
             takeItem(rowToDelete));
 
-        if (m_currentItem == itemToDelete) {
-            currentWithinRemoved = true;
-            resetCurrentItem();
+        if (m_activeItem == itemToDelete) {
+            activeWithinRemoved = true;
+            resetActiveItem();
         }
 
-        if (m_currentShuffledIndex >= 0 &&
-            itemToDelete == m_shuffledItems.at(m_currentShuffledIndex)) {
-            --m_currentShuffledIndex;
+        if (m_activeShuffledIndex >= 0 &&
+            itemToDelete == m_shuffledItems.at(m_activeShuffledIndex)) {
+            --m_activeShuffledIndex;
         }
         m_shuffledItems.removeAll(itemToDelete);
 
@@ -232,7 +232,7 @@ void NPlaylistWidget::on_removeAction_triggered()
 
     int newCurrentRow = firstSelectedRow;
     if (firstSelectedRow >= newCount) { // last row was within removed
-        if (currentWithinRemoved && NSettings::instance()->value("LoopPlaylist").toBool()) {
+        if (activeWithinRemoved && NSettings::instance()->value("LoopPlaylist").toBool()) {
             newCurrentRow = 0;
         } else {
             newCurrentRow = newCount - 1;
@@ -240,11 +240,11 @@ void NPlaylistWidget::on_removeAction_triggered()
     }
     NPlaylistWidgetItem *newCurrentItem = item(newCurrentRow);
 
-    if (currentWithinRemoved) {
+    if (activeWithinRemoved) {
         if (m_playbackEngine->state() != N::PlaybackStopped) {
             activateItem(newCurrentItem);
         } else {
-            setCurrentItem(newCurrentItem); // doesn't set keyboard focus
+            setActiveItem(newCurrentItem); // doesn't set keyboard focus
         }
     }
     // sets keyboard focus
@@ -351,9 +351,9 @@ void NPlaylistWidget::updateTrackIndexes()
 
 NPlaylistWidget::~NPlaylistWidget() {}
 
-void NPlaylistWidget::resetCurrentItem()
+void NPlaylistWidget::resetActiveItem()
 {
-    m_currentItem = NULL;
+    m_activeItem = NULL;
     emit mediaChanged("");
 }
 
@@ -375,18 +375,18 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFo
     item->setData(N::TitleFormatRole, titleFormat);
 }
 
-void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
+void NPlaylistWidget::setActiveItem(NPlaylistWidgetItem *item)
 {
-    if (m_currentItem) {
-        QFont f = m_currentItem->font();
+    if (m_activeItem) {
+        QFont f = m_activeItem->font();
         f.setBold(false);
-        m_currentItem->setFont(f);
-        m_currentItem->setData(N::PositionRole, m_playbackEngine->position());
-        m_currentItem->setData(N::CountRole, m_currentItem->data(N::CountRole).toInt() + 1);
+        m_activeItem->setFont(f);
+        m_activeItem->setData(N::PositionRole, m_playbackEngine->position());
+        m_activeItem->setData(N::CountRole, m_activeItem->data(N::CountRole).toInt() + 1);
     }
 
     if (!item) {
-        resetCurrentItem();
+        resetActiveItem();
         return;
     }
 
@@ -400,62 +400,62 @@ void NPlaylistWidget::setCurrentItem(NPlaylistWidgetItem *item)
     item->setFont(f);
 
     scrollToItem(item);
-    m_currentItem = item;
+    m_activeItem = item;
     update();
 
     QString file = item->data(N::PathRole).toString();
     emit mediaChanged(file);
 }
 
-void NPlaylistWidget::currentFailed()
+void NPlaylistWidget::activeFailed()
 {
-    m_currentItem->setData(N::FailedRole, true);
+    m_activeItem->setData(N::FailedRole, true);
 }
 
-int NPlaylistWidget::currentRow() const
+int NPlaylistWidget::activeRow() const
 {
-    if (m_currentItem) {
-        return row(m_currentItem);
+    if (m_activeItem) {
+        return row(m_activeItem);
     } else {
         return -1;
     }
 }
 
-bool NPlaylistWidget::hasCurrent() const
+bool NPlaylistWidget::hasActive() const
 {
-    return currentRow() != -1;
+    return activeRow() != -1;
 }
 
-QModelIndex NPlaylistWidget::currentIndex() const
+QModelIndex NPlaylistWidget::activeIndex() const
 {
-    if (m_currentItem) {
-        return indexFromItem(m_currentItem);
+    if (m_activeItem) {
+        return indexFromItem(m_activeItem);
     } else {
         return QModelIndex();
     }
 }
 
-QString NPlaylistWidget::currentTitle() const
+QString NPlaylistWidget::activeTitle() const
 {
-    if (m_currentItem) {
-        return m_currentItem->text();
+    if (m_activeItem) {
+        return m_activeItem->text();
     } else {
         return "";
     }
 }
 
-void NPlaylistWidget::setCurrentRow(int row)
+void NPlaylistWidget::setActiveRow(int row)
 {
     if (row < 0) {
         return;
     }
 
     if (row < count()) {
-        setCurrentItem(item(row));
+        setActiveItem(item(row));
     }
 }
 
-void NPlaylistWidget::playRow(int row)
+void NPlaylistWidget::activateRow(int row)
 {
     if (row > -1) {
         activateItem(item(row));
@@ -467,17 +467,17 @@ void NPlaylistWidget::activateItem(NPlaylistWidgetItem *item)
     if (count() > 0) {
         emit itemActivated(item);
     } else {
-        resetCurrentItem();
+        resetActiveItem();
     }
 }
 
 void NPlaylistWidget::on_itemActivated(QListWidgetItem *item)
 {
-    setCurrentItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
+    setActiveItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
     emit currentActivated();
 
     if (m_shuffleMode) {
-        m_currentShuffledIndex = m_shuffledItems.indexOf(m_currentItem);
+        m_activeShuffledIndex = m_shuffledItems.indexOf(m_activeItem);
     }
 }
 
@@ -499,7 +499,7 @@ void NPlaylistWidget::setFiles(const QStringList &files)
 {
     clear();
     m_shuffledItems.clear();
-    m_currentItem = NULL;
+    m_activeItem = NULL;
     foreach (QString path, files)
         addItem(new NPlaylistWidgetItem(QFileInfo(path)));
     processVisibleItems();
@@ -509,7 +509,7 @@ void NPlaylistWidget::setItems(const QList<NPlaylistDataItem> &dataItems)
 {
     clear();
     m_shuffledItems.clear();
-    m_currentItem = NULL;
+    m_activeItem = NULL;
     foreach (NPlaylistDataItem dataItem, dataItems)
         addItem(new NPlaylistWidgetItem(dataItem));
     updateTrackIndexes();
@@ -520,7 +520,7 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
 {
     clear();
     m_shuffledItems.clear();
-    m_currentItem = NULL;
+    m_activeItem = NULL;
 
     QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readM3u(file);
 
@@ -538,39 +538,27 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
     return true;
 }
 
-void NPlaylistWidget::playFiles(const QStringList &files)
-{
-    setFiles(files);
-    playRow(0);
-}
-
-void NPlaylistWidget::playItems(const QList<NPlaylistDataItem> &dataItems)
-{
-    setItems(dataItems);
-    playRow(0);
-}
-
-void NPlaylistWidget::playNextItem()
+void NPlaylistWidget::activateNextItem()
 {
     if (count() == 0) {
         return;
     }
 
     if (m_shuffleMode) {
-        m_currentShuffledIndex++;
-        if (m_currentShuffledIndex >= m_shuffledItems.count()) {
-            m_currentShuffledIndex = 0;
+        m_activeShuffledIndex++;
+        if (m_activeShuffledIndex >= m_shuffledItems.count()) {
+            m_activeShuffledIndex = 0;
         }
-        NPlaylistWidgetItem *nextItem = m_shuffledItems.at(m_currentShuffledIndex);
+        NPlaylistWidgetItem *nextItem = m_shuffledItems.at(m_activeShuffledIndex);
         activateItem(nextItem);
     } else {
         NPlaylistWidgetItem *nextItem = NULL;
 
-        if (currentRow() == count() - 1 &&
+        if (activeRow() == count() - 1 &&
             NSettings::instance()->value("LoadNext").toBool()) { // last row
             QDir::SortFlag flag =
                 (QDir::SortFlag)NSettings::instance()->value("LoadNextSort").toInt();
-            QString file = m_currentItem->data(N::PathRole).toString();
+            QString file = m_activeItem->data(N::PathRole).toString();
             QString path = QFileInfo(file).path();
             QStringList entryList = QDir(path).entryList(
                 NSettings::instance()->value("FileFilters").toString().split(' '),
@@ -579,10 +567,10 @@ void NPlaylistWidget::playNextItem()
             if (index != -1 && entryList.size() > index + 1) {
                 nextItem = new NPlaylistWidgetItem(QFileInfo(path + "/" + entryList.at(index + 1)));
                 addItem(nextItem);
-                activateItem(item(currentRow() + 1));
+                activateItem(item(activeRow() + 1));
             }
         } else {
-            nextItem = item(currentRow() + 1, NSettings::instance()->value("LoopPlaylist").toBool());
+            nextItem = item(activeRow() + 1, NSettings::instance()->value("LoopPlaylist").toBool());
         }
 
         if (nextItem) {
@@ -591,25 +579,25 @@ void NPlaylistWidget::playNextItem()
     }
 }
 
-void NPlaylistWidget::currentFinished()
+void NPlaylistWidget::activeFinished()
 {
     if (m_repeatMode) {
-        activateItem(m_currentItem);
+        activateItem(m_activeItem);
     } else {
-        playNextItem();
+        activateNextItem();
     }
 }
 
-void NPlaylistWidget::playPrevItem()
+void NPlaylistWidget::activatePrevItem()
 {
     if (m_shuffleMode) {
-        m_currentShuffledIndex--;
-        if (m_currentShuffledIndex < 0) {
-            m_currentShuffledIndex = m_shuffledItems.count() - 1;
+        m_activeShuffledIndex--;
+        if (m_activeShuffledIndex < 0) {
+            m_activeShuffledIndex = m_shuffledItems.count() - 1;
         }
-        activateItem(m_shuffledItems.at(m_currentShuffledIndex));
+        activateItem(m_shuffledItems.at(m_activeShuffledIndex));
     } else {
-        NPlaylistWidgetItem *prevItem = item(currentRow() - 1,
+        NPlaylistWidgetItem *prevItem = item(activeRow() - 1,
                                              NSettings::instance()->value("LoopPlaylist").toBool());
         if (prevItem) {
             activateItem(prevItem);
@@ -650,11 +638,11 @@ void NPlaylistWidget::setShuffleMode(bool enable)
         m_shuffledItems.swap(i, qrand() % (i + 1));
     }
 
-    // move current item to the beginning
-    if (m_currentItem) {
-        m_shuffledItems.swap(m_shuffledItems.indexOf(m_currentItem), 0);
+    // move active item to the beginning
+    if (m_activeItem) {
+        m_shuffledItems.swap(m_shuffledItems.indexOf(m_activeItem), 0);
     }
-    m_currentShuffledIndex = 0;
+    m_activeShuffledIndex = 0;
 }
 
 bool NPlaylistWidget::repeatMode() const
@@ -765,7 +753,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
     }
 
     if (wasEmpty) {
-        playRow(0);
+        activateRow(0);
     }
 
     m_itemDrag = NULL;
@@ -881,14 +869,14 @@ void NPlaylistWidget::dragLeaveEvent(QDragLeaveEvent *event)
 // << DRAG & DROP
 
 // STYLESHEET PROPERTIES >>
-void NPlaylistWidget::setCurrentTextColor(QColor color)
+void NPlaylistWidget::setActiveTextColor(QColor color)
 {
-    m_currentTextColor = color;
+    m_activeTextColor = color;
 }
 
-QColor NPlaylistWidget::currentTextColor() const
+QColor NPlaylistWidget::activeTextColor() const
 {
-    return m_currentTextColor;
+    return m_activeTextColor;
 }
 
 void NPlaylistWidget::setFailedTextColor(QColor color)

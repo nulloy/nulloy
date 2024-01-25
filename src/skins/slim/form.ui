@@ -61,7 +61,7 @@ NTrackInfoWidget #MiddleCenter {
 	background: #242b2f;
 	border: 1px solid #13181c;
 	color: #b6c0c6;
-	qproperty-current_text_color: #e9f2f7;
+	qproperty-active_text_color: #e9f2f7;
 	qproperty-failed_text_color: #555961;
 	qproperty-file_drop_border_color: #E0A500;
 	qproperty-file_drop_background: rgba(224, 165, 0, 50);

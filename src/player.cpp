@@ -473,12 +473,12 @@ void NPlayer::connectSignals()
             SLOT(on_playbackEngine_mediaChanged(const QString &)));
     connect(m_playbackEngine, SIGNAL(stateChanged(N::PlaybackState)), this,
             SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));
-    connect(m_playbackEngine, SIGNAL(aboutToFinish()), m_playlistWidget, SLOT(currentFinished()),
+    connect(m_playbackEngine, SIGNAL(aboutToFinish()), m_playlistWidget, SLOT(activeFinished()),
             Qt::BlockingQueuedConnection);
     connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), m_waveformSlider,
             SLOT(setValue(qreal)));
     connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
-    connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(currentFinished()));
+    connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(activeFinished()));
     connect(m_playbackEngine, SIGNAL(failed()), this, SLOT(on_playbackEngine_failed()));
     connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
             m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
@@ -497,11 +497,11 @@ void NPlayer::connectSignals()
     }
 
     if (QAbstractButton *prevButton = m_mainWindow->findChild<QAbstractButton *>("prevButton")) {
-        connect(prevButton, SIGNAL(clicked()), m_playlistWidget, SLOT(playPrevItem()));
+        connect(prevButton, SIGNAL(clicked()), m_playlistWidget, SLOT(activatePrevItem()));
     }
 
     if (QAbstractButton *nextButton = m_mainWindow->findChild<QAbstractButton *>("nextButton")) {
-        connect(nextButton, SIGNAL(clicked()), m_playlistWidget, SLOT(playNextItem()));
+        connect(nextButton, SIGNAL(clicked()), m_playlistWidget, SLOT(activateNextItem()));
     }
 
     if (QAbstractButton *closeButton = m_mainWindow->findChild<QAbstractButton *>("closeButton")) {
@@ -545,16 +545,19 @@ void NPlayer::connectSignals()
     connect(m_playlistWidget, SIGNAL(tagEditorRequested(const QString &)), this,
             SLOT(on_playlist_tagEditorRequested(const QString &)));
 
-    connect(m_waveformSlider, SIGNAL(filesDropped(const QList<NPlaylistDataItem> &)),
-            m_playlistWidget, SLOT(playItems(const QList<NPlaylistDataItem> &)));
+    connect(m_waveformSlider, &NWaveformSlider::filesDropped,
+            [this](const QList<NPlaylistDataItem> &dataItems) {
+                m_playlistWidget->setItems(dataItems);
+                m_playlistWidget->activateRow(0);
+            });
     connect(m_waveformSlider, SIGNAL(sliderMoved(qreal)), m_playbackEngine,
             SLOT(setPosition(qreal)));
 
     connect(m_showHideAction, SIGNAL(triggered()), this, SLOT(toggleWindowVisibility()));
     connect(m_playAction, SIGNAL(triggered()), m_playbackEngine, SLOT(play()));
     connect(m_stopAction, SIGNAL(triggered()), m_playbackEngine, SLOT(stop()));
-    connect(m_prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playPrevItem()));
-    connect(m_nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playNextItem()));
+    connect(m_prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activatePrevItem()));
+    connect(m_nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(activateNextItem()));
     connect(m_preferencesAction, SIGNAL(triggered()), m_preferencesDialog, SLOT(exec()));
     connect(m_exitAction, SIGNAL(triggered()), this, SLOT(quit()));
     connect(m_addFilesAction, SIGNAL(triggered()), this, SLOT(showOpenFileDialog()));
@@ -618,7 +621,8 @@ bool NPlayer::eventFilter(QObject *obj, QEvent *event)
         QFileOpenEvent *fileEvent = static_cast<QFileOpenEvent *>(event);
 
         if (!fileEvent->file().isEmpty()) {
-            m_playlistWidget->playFiles(QStringList() << fileEvent->file());
+            m_playlistWidget->setFiles(QStringList() << fileEvent->file());
+            m_playlistWidget->activateRow(0);
         }
 
         return false;
@@ -648,10 +652,10 @@ void NPlayer::readMessage(const QString &str)
 
     foreach (QString arg, options) {
         if (arg == "--next") {
-            m_playlistWidget->playNextItem();
+            m_playlistWidget->activateNextItem();
             return;
         } else if (arg == "--prev") {
-            m_playlistWidget->playPrevItem();
+            m_playlistWidget->activatePrevItem();
             return;
         } else if (arg == "--stop") {
             m_playbackEngine->stop();
@@ -668,11 +672,12 @@ void NPlayer::readMessage(const QString &str)
             m_playlistWidget->addFiles(files);
             if (m_playbackEngine->state() == N::PlaybackStopped ||
                 NSettings::instance()->value("PlayEnqueued").toBool()) {
-                m_playlistWidget->playRow(lastRow);
+                m_playlistWidget->activateRow(lastRow);
                 m_playbackEngine->setPosition(0); // overrides setPosition() in loadDefaultPlaylist()
             }
         } else {
-            m_playlistWidget->playFiles(files);
+            m_playlistWidget->setFiles(files);
+            m_playlistWidget->activateRow(0);
         }
 
         // re-shuffle
@@ -697,13 +702,13 @@ void NPlayer::loadDefaultPlaylist()
         }
 
         if (pos > 0 && pos < 1) {
-            m_playlistWidget->playRow(row);
+            m_playlistWidget->activateRow(row);
             m_playbackEngine->setPosition(pos); // postponed till file duration is available
             if (m_settings->value("StartPaused").toBool()) {
                 m_playbackEngine->pause();
             }
         } else {
-            m_playlistWidget->setCurrentRow(row);
+            m_playlistWidget->setActiveRow(row);
         }
     }
 
@@ -724,7 +729,7 @@ void NPlayer::saveDefaultPlaylist()
 {
     writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u);
 
-    int row = m_playlistWidget->currentRow();
+    int row = m_playlistWidget->activeRow();
     qreal pos = m_playbackEngine->position();
     m_settings->setValue("PlaylistRow", QStringList()
                                             << QString::number(row) << QString::number(pos));
@@ -1084,9 +1089,9 @@ void NPlayer::on_showCoverAction_toggled(bool checked)
 
 void NPlayer::on_playButton_clicked()
 {
-    if (!m_playlistWidget->hasCurrent()) {
+    if (!m_playlistWidget->hasActive()) {
         if (m_playlistWidget->count() > 0) {
-            m_playlistWidget->playRow(0);
+            m_playlistWidget->activateRow(0);
         } else {
             showOpenFileDialog();
         }
@@ -1097,7 +1102,7 @@ void NPlayer::on_playButton_clicked()
 
 void NPlayer::on_playbackEngine_failed()
 {
-    m_playlistWidget->currentFailed();
+    m_playlistWidget->activeFailed();
 }
 
 void NPlayer::showAboutMessageBox()
@@ -1126,7 +1131,7 @@ void NPlayer::showOpenFileDialog()
     bool isEmpty = (m_playlistWidget->count() == 0);
     m_playlistWidget->addFiles(files);
     if (isEmpty) {
-        m_playlistWidget->playRow(0);
+        m_playlistWidget->activateRow(0);
     }
 }
 
@@ -1153,7 +1158,7 @@ void NPlayer::showOpenDirDialog()
     bool isEmpty = (m_playlistWidget->count() == 0);
     m_playlistWidget->addItems(NUtils::dirListRecursive(dir));
     if (isEmpty) {
-        m_playlistWidget->playRow(0);
+        m_playlistWidget->activateRow(0);
     }
 }
 
