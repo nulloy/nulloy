@@ -105,7 +105,7 @@ private slots:
 
         // removing all stops playback
         {
-            QSignalSpy spy(&widget, SIGNAL(setMedia(const QString &)));
+            QSignalSpy spy(&widget, SIGNAL(mediaChanged(const QString &)));
 
             QTest::keyClick(&widget, Qt::Key_A, Qt::ControlModifier, DELAY);
             QTest::keyClick(&widget, Qt::Key_Delete, 0, DELAY);
@@ -125,7 +125,7 @@ private slots:
         playbackEngine->stop();
 
         NPlaylistWidget widget;
-        QSignalSpy spy(&widget, SIGNAL(setMedia(const QString &)));
+        QSignalSpy spy(&widget, SIGNAL(mediaChanged(const QString &)));
         int count = 0;
         int row = 0;
 
@@ -134,7 +134,7 @@ private slots:
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
         connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
                 this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
-        connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine,
+        connect(&widget, SIGNAL(mediaChanged(const QString &)), playbackEngine,
                 SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 
@@ -161,7 +161,7 @@ private slots:
         playbackEngine->stop();
 
         NPlaylistWidget widget;
-        QSignalSpy spy(&widget, SIGNAL(setMedia(const QString &)));
+        QSignalSpy spy(&widget, SIGNAL(mediaChanged(const QString &)));
         int count = 0;
         int row = 0;
 
@@ -170,7 +170,7 @@ private slots:
         connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(currentFinished()));
         connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
                 this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
-        connect(&widget, SIGNAL(setMedia(const QString &)), playbackEngine,
+        connect(&widget, SIGNAL(mediaChanged(const QString &)), playbackEngine,
                 SLOT(setMedia(const QString &)));
         connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
 

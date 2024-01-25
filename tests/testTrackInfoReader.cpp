@@ -24,7 +24,7 @@ class NTagReaderMock : public NTagReaderInterface
     Q_OBJECT
 
 public:
-    QMap<char, QString> tags;
+    QMap<QChar, QString> tags;
 
     NTagReaderMock(QObject *parent = 0) : NTagReaderInterface(parent)
     {
@@ -42,7 +42,7 @@ public:
         tags['H'] = "<H>";
     }
 
-    QString getTag(char ch) const
+    QString getTag(QChar ch) const override
     {
         if (tags.contains(ch)) {
             return tags[ch];
@@ -51,7 +51,7 @@ public:
         }
     }
 
-    void setSource(const QString &) {}
+    void setSource(const QString &) override {}
 };
 
 class TrackInfoReaderTest : public QObject
