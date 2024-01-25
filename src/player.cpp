@@ -544,6 +544,8 @@ void NPlayer::connectSignals()
             SLOT(setChecked(bool)));
     connect(m_playlistWidget, SIGNAL(tagEditorRequested(const QString &)), this,
             SLOT(on_playlist_tagEditorRequested(const QString &)));
+    connect(m_playlistWidget, SIGNAL(addMoreRequested()), this,
+            SLOT(on_playlist_addMoreRequested()));
 
     connect(m_waveformSlider, &NWaveformSlider::filesDropped,
             [this](const QList<NPlaylistDataItem> &dataItems) {
@@ -1022,6 +1024,24 @@ void NPlayer::on_playlistAction_triggered()
 void NPlayer::on_playlist_tagEditorRequested(const QString &path)
 {
     NTagEditorDialog(path, m_mainWindow);
+}
+
+void NPlayer::on_playlist_addMoreRequested()
+{
+    if (!NSettings::instance()->value("LoadNext").toBool()) {
+        return;
+    }
+    QDir::SortFlag flag = (QDir::SortFlag)NSettings::instance()->value("LoadNextSort").toInt();
+    QString file = m_playlistWidget->activeItem()->data(N::PathRole).toString();
+    QString path = QFileInfo(file).path();
+    QStringList entryList =
+        QDir(path).entryList(NSettings::instance()->value("FileFilters").toString().split(' '),
+                             QDir::Files | QDir::NoDotAndDotDot, flag);
+    int index = entryList.indexOf(QFileInfo(file).fileName());
+    if (index != -1 && entryList.size() > index + 1) {
+        m_playlistWidget->addItem(
+            new NPlaylistWidgetItem(QFileInfo(path + "/" + entryList.at(index + 1))));
+    }
 }
 
 void NPlayer::on_jumpAction_triggered()

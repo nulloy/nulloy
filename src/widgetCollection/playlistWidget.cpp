@@ -16,14 +16,11 @@
 #include "playlistWidget.h"
 
 #include <QContextMenuEvent>
-#include <QDir>
 #include <QDrag>
-#include <QFileInfo>
 #include <QMenu>
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QShortcut>
-#include <QUrl>
 
 #include "action.h"
 #include "playbackEngineInterface.h"
@@ -421,6 +418,11 @@ int NPlaylistWidget::activeRow() const
     }
 }
 
+NPlaylistWidgetItem *NPlaylistWidget::activeItem() const
+{
+    return m_activeItem;
+}
+
 bool NPlaylistWidget::hasActive() const
 {
     return activeRow() != -1;
@@ -540,42 +542,24 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
 
 void NPlaylistWidget::activateNextItem()
 {
-    if (count() == 0) {
-        return;
-    }
+    NPlaylistWidgetItem *item = NULL;
 
     if (m_shuffleMode) {
         m_activeShuffledIndex++;
         if (m_activeShuffledIndex >= m_shuffledItems.count()) {
             m_activeShuffledIndex = 0;
         }
-        NPlaylistWidgetItem *nextItem = m_shuffledItems.at(m_activeShuffledIndex);
-        activateItem(nextItem);
+        item = m_shuffledItems.at(m_activeShuffledIndex);
     } else {
-        NPlaylistWidgetItem *nextItem = NULL;
-
-        if (activeRow() == count() - 1 &&
-            NSettings::instance()->value("LoadNext").toBool()) { // last row
-            QDir::SortFlag flag =
-                (QDir::SortFlag)NSettings::instance()->value("LoadNextSort").toInt();
-            QString file = m_activeItem->data(N::PathRole).toString();
-            QString path = QFileInfo(file).path();
-            QStringList entryList = QDir(path).entryList(
-                NSettings::instance()->value("FileFilters").toString().split(' '),
-                QDir::Files | QDir::NoDotAndDotDot, flag);
-            int index = entryList.indexOf(QFileInfo(file).fileName());
-            if (index != -1 && entryList.size() > index + 1) {
-                nextItem = new NPlaylistWidgetItem(QFileInfo(path + "/" + entryList.at(index + 1)));
-                addItem(nextItem);
-                activateItem(item(activeRow() + 1));
-            }
-        } else {
-            nextItem = item(activeRow() + 1, NSettings::instance()->value("LoopPlaylist").toBool());
+        item = nextItem();
+        if (!item) {
+            emit addMoreRequested();
+            item = nextItem();
         }
+    }
 
-        if (nextItem) {
-            activateItem(nextItem);
-        }
+    if (item) {
+        activateItem(item);
     }
 }
 
@@ -679,6 +663,15 @@ NPlaylistWidgetItem *NPlaylistWidget::item(int row, bool loop) const
     }
 
     return reinterpret_cast<NPlaylistWidgetItem *>(QListWidget::item(resultRow));
+}
+
+NPlaylistWidgetItem *NPlaylistWidget::nextItem() const
+{
+    if (count() == 0 || activeRow() == count() - 1) {
+        return NULL;
+    }
+
+    return item(activeRow() + 1, NSettings::instance()->value("LoopPlaylist").toBool());
 }
 
 void NPlaylistWidget::paintEvent(QPaintEvent *e)

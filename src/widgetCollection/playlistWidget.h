@@ -81,9 +81,11 @@ public:
     ~NPlaylistWidget();
 
     NPlaylistWidgetItem *item(int row, bool loop = false) const;
+    NPlaylistWidgetItem *nextItem() const;
 
     void setTrackInfoReader(NTrackInfoReader *reader);
 
+    NPlaylistWidgetItem *activeItem() const;
     int activeRow() const;
     void setActiveRow(int row);
     Q_INVOKABLE bool hasActive() const;
@@ -116,6 +118,7 @@ signals:
     void currentActivated();
     void mediaChanged(const QString &file);
     void tagEditorRequested(const QString &file);
+    void addMoreRequested();
 
     void shuffleModeChanged(bool enable);
     void repeatModeChanged(bool enable);

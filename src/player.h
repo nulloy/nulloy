@@ -132,6 +132,7 @@ private slots:
     void on_playbackEngine_failed();
     void on_playlistAction_triggered();
     void on_playlist_tagEditorRequested(const QString &path);
+    void on_playlist_addMoreRequested();
     void on_jumpAction_triggered();
     void on_speedIncreaseAction_triggered();
     void on_speedDecreaseAction_triggered();
