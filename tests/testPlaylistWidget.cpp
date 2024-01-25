@@ -27,6 +27,9 @@ class TestPlaylistWidget : public QObject
 {
     Q_OBJECT
 
+    NPlaylistWidget *m_playlistWidget{};
+    NPlaybackEngineInterface *m_playbackEngine{};
+
 private slots:
     void initTestCase() { NPluginLoader::init(); }
 
@@ -34,82 +37,102 @@ private slots:
     {
         NSettings::instance()->clear();
         delete NSettings::instance();
+
+        m_playlistWidget = new NPlaylistWidget;
+
+        m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
+            NPluginLoader::getPlugin(N::PlaybackEngine));
+        Q_ASSERT(m_playbackEngine);
+
+        connect(m_playbackEngine, SIGNAL(aboutToFinish()), m_playlistWidget, SLOT(activeFinished()),
+                Qt::BlockingQueuedConnection);
+        connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(activeFinished()));
+        connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
+                this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
+        connect(m_playlistWidget, SIGNAL(mediaChanged(const QString &)), m_playbackEngine,
+                SLOT(setMedia(const QString &)));
+        connect(m_playlistWidget, SIGNAL(currentActivated()), m_playbackEngine, SLOT(play()));
+    }
+
+    void cleanup()
+    {
+        delete m_playlistWidget;
+        m_playlistWidget = nullptr;
+        m_playbackEngine = nullptr;
     }
 
     void testPlaylistRemoval()
     {
-        NPlaylistWidget widget;
-
-        widget.show();
+        m_playlistWidget->show();
         QDir::setCurrent("tests");
-        widget.setPlaylist("playlist.m3u");
-        QCOMPARE(widget.count(), 10);
+        m_playlistWidget->setPlaylist("playlist.m3u");
+        QCOMPARE(m_playlistWidget->count(), 10);
 
         // when deleting last, jumps to the "new" last
         NSettings::instance()->setValue("LoopPlaylist", false);
-        widget.activateRow(widget.count() - 1); // last row
-        QCOMPARE(widget.activeRow(), widget.count() - 1);
-        reinterpret_cast<QListWidget *>(&widget)->setCurrentRow(widget.count() - 1);
-        QTest::keyClick(&widget, Qt::Key_Delete, 0, DELAY);
-        QCOMPARE(widget.count(), 9);
-        QCOMPARE(widget.activeRow(), widget.count() - 1);
+        m_playlistWidget->activateRow(m_playlistWidget->count() - 1); // last row
+        QCOMPARE(m_playlistWidget->activeRow(), m_playlistWidget->count() - 1);
+        m_playlistWidget->setCurrentRow(m_playlistWidget->count() - 1);
+        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+        QCOMPARE(m_playlistWidget->count(), 9);
+        QCOMPARE(m_playlistWidget->activeRow(), m_playlistWidget->count() - 1);
 
         // when deleting last + looping enabled, jumps to the first
         NSettings::instance()->setValue("LoopPlaylist", true);
-        widget.activateRow(widget.count() - 1); // last row
-        QCOMPARE(widget.activeRow(), widget.count() - 1);
-        reinterpret_cast<QListWidget *>(&widget)->setCurrentRow(widget.count() - 1);
-        QTest::keyClick(&widget, Qt::Key_Delete, 0, DELAY);
-        QCOMPARE(widget.count(), 8);
-        QCOMPARE(widget.activeRow(), 0);
+        m_playlistWidget->activateRow(m_playlistWidget->count() - 1); // last row
+        QCOMPARE(m_playlistWidget->activeRow(), m_playlistWidget->count() - 1);
+        m_playlistWidget->setCurrentRow(m_playlistWidget->count() - 1);
+        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+        QCOMPARE(m_playlistWidget->count(), 8);
+        QCOMPARE(m_playlistWidget->activeRow(), 0);
 
         // when deleting the first, jumps to the "new" first
-        reinterpret_cast<QListWidget *>(&widget)->setCurrentRow(0);
-        QTest::keyClick(&widget, Qt::Key_Delete, 0, DELAY);
-        QCOMPARE(widget.count(), 7);
-        QCOMPARE(widget.activeRow(), 0);
+        m_playlistWidget->setCurrentRow(0);
+        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+        QCOMPARE(m_playlistWidget->count(), 7);
+        QCOMPARE(m_playlistWidget->activeRow(), 0);
 
         // deleting neighbour rows doesn't change the playing item
         {
-            widget.activateRow(2); // 3rd
-            NPlaylistWidgetItem *item = widget.item(widget.activeRow());
+            m_playlistWidget->activateRow(2); // 3rd
+            NPlaylistWidgetItem *item = m_playlistWidget->activeItem();
             // go 2nd
-            reinterpret_cast<QListWidget *>(&widget)->setCurrentRow(1);
+            m_playlistWidget->setCurrentRow(1);
             // select 2nd and 4th
-            QTest::keyClick(&widget, Qt::Key_Down, Qt::ControlModifier, DELAY);
-            QTest::keyClick(&widget, Qt::Key_Down, Qt::ControlModifier, DELAY);
-            QTest::keyClick(&widget, Qt::Key_Space, Qt::ControlModifier, DELAY);
-            QCOMPARE(widget.selectedItems().count(), 2);
+            QTest::keyClick(m_playlistWidget, Qt::Key_Down, Qt::ControlModifier, DELAY);
+            QTest::keyClick(m_playlistWidget, Qt::Key_Down, Qt::ControlModifier, DELAY);
+            QTest::keyClick(m_playlistWidget, Qt::Key_Space, Qt::ControlModifier, DELAY);
+            QCOMPARE(m_playlistWidget->selectedItems().count(), 2);
             // delete
-            QTest::keyClick(&widget, Qt::Key_Delete, 0, DELAY);
-            QCOMPARE(widget.count(), 5);
-            QCOMPARE(widget.activeRow(), 1);
-            QCOMPARE(item, widget.item(widget.activeRow()));
-            QCOMPARE(widget.selectedItems().count(), 1);
-            QCOMPARE(reinterpret_cast<QListWidget *>(&widget)->currentRow(), 1); // keyboard focus
+            QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+            QCOMPARE(m_playlistWidget->count(), 5);
+            QCOMPARE(m_playlistWidget->activeRow(), 1);
+            QCOMPARE(item, m_playlistWidget->activeItem());
+            QCOMPARE(m_playlistWidget->selectedItems().count(), 1);
+            QCOMPARE(m_playlistWidget->currentRow(), 1); // keyboard focus
         }
 
         // when deleting the current, focus remains + focused becomes new current
         {
-            int focused = reinterpret_cast<QListWidget *>(&widget)->currentRow();
-            int current = widget.activeRow();
+            int focused = m_playlistWidget->currentRow();
+            int current = m_playlistWidget->activeRow();
             QCOMPARE(focused, current);
-            QTest::keyClick(&widget, Qt::Key_Delete, 0, DELAY);
-            int newFocused = reinterpret_cast<QListWidget *>(&widget)->currentRow();
-            int newCurrent = widget.activeRow();
+            QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+            int newFocused = m_playlistWidget->currentRow();
+            int newCurrent = m_playlistWidget->activeRow();
             QCOMPARE(focused, newFocused);
             QCOMPARE(current, newCurrent);
             QCOMPARE(newFocused, newCurrent);
-            QCOMPARE(widget.count(), 4);
+            QCOMPARE(m_playlistWidget->count(), 4);
         }
 
         // removing all stops playback
         {
-            QSignalSpy spy(&widget, SIGNAL(mediaChanged(const QString &)));
+            QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::mediaChanged);
 
-            QTest::keyClick(&widget, Qt::Key_A, Qt::ControlModifier, DELAY);
-            QTest::keyClick(&widget, Qt::Key_Delete, 0, DELAY);
-            QCOMPARE(widget.count(), 0);
+            QTest::keyClick(m_playlistWidget, Qt::Key_A, Qt::ControlModifier, DELAY);
+            QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+            QCOMPARE(m_playlistWidget->count(), 0);
 
             QCOMPARE(spy.count(), 1);
             QList<QVariant> arguments = spy.takeFirst();
@@ -119,87 +142,61 @@ private slots:
 
     void testAutoPlay()
     {
-        NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
-            NPluginLoader::getPlugin(N::PlaybackEngine));
-        Q_ASSERT(playbackEngine);
-        playbackEngine->stop();
+        m_playbackEngine->stop();
 
-        NPlaylistWidget widget;
-        QSignalSpy spy(&widget, SIGNAL(mediaChanged(const QString &)));
+        QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::mediaChanged);
         int count = 0;
         int row = 0;
 
-        connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(activeFinished()),
-                Qt::BlockingQueuedConnection);
-        connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(activeFinished()));
-        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
-                this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
-        connect(&widget, SIGNAL(mediaChanged(const QString &)), playbackEngine,
-                SLOT(setMedia(const QString &)));
-        connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
-
-        widget.show();
+        m_playlistWidget->show();
         QDir::setCurrent("tests");
-        widget.setPlaylist("playlist.m3u");
+        m_playlistWidget->setPlaylist("playlist.m3u");
 
-        widget.activateRow(row);
+        m_playlistWidget->activateRow(row);
         ++count;
         QCOMPARE(spy.count(), count);
-        playbackEngine->setPosition(0.8);
+        m_playbackEngine->setPosition(0.8);
         QTest::qWait(500);
         ++row;
         ++count;
-        QCOMPARE(widget.activeRow(), row);
+        QCOMPARE(m_playlistWidget->activeRow(), row);
         QCOMPARE(spy.count(), count);
     }
 
     void testRepeat()
     {
-        NPlaybackEngineInterface *playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
-            NPluginLoader::getPlugin(N::PlaybackEngine));
-        Q_ASSERT(playbackEngine);
-        playbackEngine->stop();
+        m_playbackEngine->stop();
 
-        NPlaylistWidget widget;
-        QSignalSpy spy(&widget, SIGNAL(mediaChanged(const QString &)));
+        QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::mediaChanged);
         int count = 0;
         int row = 0;
 
-        connect(playbackEngine, SIGNAL(aboutToFinish()), &widget, SLOT(activeFinished()),
-                Qt::BlockingQueuedConnection);
-        connect(playbackEngine, SIGNAL(finished()), &widget, SLOT(activeFinished()));
-        connect(playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
-                this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
-        connect(&widget, SIGNAL(mediaChanged(const QString &)), playbackEngine,
-                SLOT(setMedia(const QString &)));
-        connect(&widget, SIGNAL(currentActivated()), playbackEngine, SLOT(play()));
-
-        widget.setRepeatMode(true);
-        widget.show();
+        m_playlistWidget->setRepeatMode(true);
+        m_playlistWidget->show();
         QDir::setCurrent("tests");
-        widget.setPlaylist("playlist.m3u");
+        m_playlistWidget->setPlaylist("playlist.m3u");
 
-        widget.activateRow(row);
+        m_playlistWidget->activateRow(row);
         ++count;
         QCOMPARE(spy.count(), count);
-        playbackEngine->setPosition(0.8);
+        m_playbackEngine->setPosition(0.8);
         QTest::qWait(500);
         ++count;
         QCOMPARE(spy.count(), count);
-        QCOMPARE(widget.activeRow(), row);
+        QCOMPARE(m_playlistWidget->activeRow(), row);
 
-        QTest::keyClick(&widget, Qt::Key_A, Qt::ControlModifier, DELAY);
-        QTest::keyClick(&widget, Qt::Key_Space, Qt::ControlModifier, DELAY);
-        QTest::keyClick(&widget, Qt::Key_Delete, 0, DELAY);
-        QCOMPARE(widget.count(), 1);
-        QCOMPARE(widget.activeRow(), row);
+        QTest::keyClick(m_playlistWidget, Qt::Key_A, Qt::ControlModifier, DELAY);
+        QTest::keyClick(m_playlistWidget, Qt::Key_Space, Qt::ControlModifier, DELAY);
+        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+        QCOMPARE(m_playlistWidget->count(), 1);
+        QCOMPARE(m_playlistWidget->activeRow(), row);
         QCOMPARE(spy.count(), count);
 
-        playbackEngine->setPosition(0.8);
+        m_playbackEngine->setPosition(0.8);
         QTest::qWait(500);
         ++count;
         QCOMPARE(spy.count(), count);
-        QCOMPARE(widget.activeRow(), row);
+        QCOMPARE(m_playlistWidget->activeRow(), row);
     }
 
     void message(N::MessageIcon, const QString &, const QString &msg)
