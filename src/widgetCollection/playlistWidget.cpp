@@ -57,8 +57,10 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
                                   "/system32/imageres.dll");
 #endif
 
-    connect(this, SIGNAL(itemActivated(QListWidgetItem *)), this,
-            SLOT(on_itemActivated(QListWidgetItem *)));
+    connect(this, &QListWidget::itemActivated, [this](QListWidgetItem *item) {
+        activateItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
+    });
+
     setItemDelegate(new NPlaylistWidgetItemDelegate(this));
     m_activeItem = NULL;
 
@@ -208,7 +210,7 @@ void NPlaylistWidget::on_removeAction_triggered()
 
         if (m_activeItem == itemToDelete) {
             activeWithinRemoved = true;
-            resetActiveItem();
+            m_activeItem = NULL;
         }
 
         if (m_activeShuffledIndex >= 0 &&
@@ -224,6 +226,7 @@ void NPlaylistWidget::on_removeAction_triggered()
     int newCount = count();
 
     if (newCount == 0) {
+        activateItem(NULL);
         return;
     }
 
@@ -237,12 +240,8 @@ void NPlaylistWidget::on_removeAction_triggered()
     }
     NPlaylistWidgetItem *newCurrentItem = item(newCurrentRow);
 
-    if (activeWithinRemoved) {
-        if (m_playbackEngine->state() != N::PlaybackStopped) {
-            activateItem(newCurrentItem);
-        } else {
-            setActiveItem(newCurrentItem); // doesn't set keyboard focus
-        }
+    if (activeWithinRemoved && m_playbackEngine->state() != N::PlaybackStopped) {
+        activateItem(newCurrentItem);
     }
     // sets keyboard focus
     if (newCurrentItem) {
@@ -351,7 +350,7 @@ NPlaylistWidget::~NPlaylistWidget() {}
 void NPlaylistWidget::resetActiveItem()
 {
     m_activeItem = NULL;
-    emit mediaChanged("");
+    emit itemActivated(NULL);
 }
 
 void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force)
@@ -372,7 +371,7 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFo
     item->setData(N::TitleFormatRole, titleFormat);
 }
 
-void NPlaylistWidget::setActiveItem(NPlaylistWidgetItem *item)
+void NPlaylistWidget::activateItem(NPlaylistWidgetItem *item)
 {
     if (m_activeItem) {
         QFont f = m_activeItem->font();
@@ -400,8 +399,21 @@ void NPlaylistWidget::setActiveItem(NPlaylistWidgetItem *item)
     m_activeItem = item;
     update();
 
-    QString file = item->data(N::PathRole).toString();
-    emit mediaChanged(file);
+    if (m_shuffleMode) {
+        m_activeShuffledIndex = m_shuffledItems.indexOf(m_activeItem);
+    }
+
+    emit itemActivated(item);
+}
+
+void NPlaylistWidget::activateRow(int row)
+{
+    if (row < 0 || row >= count()) {
+        resetActiveItem();
+        return;
+    }
+
+    activateItem(item(row));
 }
 
 void NPlaylistWidget::activeFailed()
@@ -434,52 +446,6 @@ QModelIndex NPlaylistWidget::activeIndex() const
         return indexFromItem(m_activeItem);
     } else {
         return QModelIndex();
-    }
-}
-
-QString NPlaylistWidget::activeTitle() const
-{
-    if (m_activeItem) {
-        return m_activeItem->text();
-    } else {
-        return "";
-    }
-}
-
-void NPlaylistWidget::setActiveRow(int row)
-{
-    if (row < 0) {
-        return;
-    }
-
-    if (row < count()) {
-        setActiveItem(item(row));
-    }
-}
-
-void NPlaylistWidget::activateRow(int row)
-{
-    if (row > -1) {
-        activateItem(item(row));
-    }
-}
-
-void NPlaylistWidget::activateItem(NPlaylistWidgetItem *item)
-{
-    if (count() > 0) {
-        emit itemActivated(item);
-    } else {
-        resetActiveItem();
-    }
-}
-
-void NPlaylistWidget::on_itemActivated(QListWidgetItem *item)
-{
-    setActiveItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
-    emit currentActivated();
-
-    if (m_shuffleMode) {
-        m_activeShuffledIndex = m_shuffledItems.indexOf(m_activeItem);
     }
 }
 

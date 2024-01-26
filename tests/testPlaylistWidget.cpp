@@ -18,10 +18,12 @@
 
 #include "playbackEngineInterface.h"
 #include "playlistWidget.h"
+#include "playlistWidgetItem.h"
 #include "pluginLoader.h"
 #include "settings.h"
 
 #define DELAY 50
+Q_DECLARE_METATYPE(NPlaylistWidgetItem *);
 
 class TestPlaylistWidget : public QObject
 {
@@ -31,7 +33,11 @@ class TestPlaylistWidget : public QObject
     NPlaybackEngineInterface *m_playbackEngine{};
 
 private slots:
-    void initTestCase() { NPluginLoader::init(); }
+    void initTestCase()
+    {
+        qRegisterMetaType<NPlaylistWidgetItem *>();
+        NPluginLoader::init();
+    }
 
     void init()
     {
@@ -49,9 +55,16 @@ private slots:
         connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(activeFinished()));
         connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
                 this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
-        connect(m_playlistWidget, SIGNAL(mediaChanged(const QString &)), m_playbackEngine,
-                SLOT(setMedia(const QString &)));
-        connect(m_playlistWidget, SIGNAL(currentActivated()), m_playbackEngine, SLOT(play()));
+        connect(m_playlistWidget, &NPlaylistWidget::itemActivated,
+                [this](NPlaylistWidgetItem *item) {
+                    if (item) {
+                        m_playbackEngine->setMedia(item->data(N::PathRole).toString());
+                        m_playbackEngine->play();
+                        QTest::qWait(100); // give playback engine time to start playback
+                    } else {
+                        m_playbackEngine->setMedia("");
+                    }
+                });
     }
 
     void cleanup()
@@ -128,7 +141,7 @@ private slots:
 
         // removing all stops playback
         {
-            QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::mediaChanged);
+            QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::itemActivated);
 
             QTest::keyClick(m_playlistWidget, Qt::Key_A, Qt::ControlModifier, DELAY);
             QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
@@ -144,7 +157,7 @@ private slots:
     {
         m_playbackEngine->stop();
 
-        QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::mediaChanged);
+        QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::itemActivated);
         int count = 0;
         int row = 0;
 
@@ -167,7 +180,7 @@ private slots:
     {
         m_playbackEngine->stop();
 
-        QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::mediaChanged);
+        QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::itemActivated);
         int count = 0;
         int row = 0;
 

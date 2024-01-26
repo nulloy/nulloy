@@ -535,9 +535,15 @@ void NPlayer::connectSignals()
                 SLOT(setChecked(bool)));
     }
 
-    connect(m_playlistWidget, SIGNAL(mediaChanged(const QString &)), m_playbackEngine,
-            SLOT(setMedia(const QString &)));
-    connect(m_playlistWidget, SIGNAL(currentActivated()), m_playbackEngine, SLOT(play()));
+    connect(m_playlistWidget, &NPlaylistWidget::itemActivated, [this](NPlaylistWidgetItem *item) {
+        if (item) {
+            m_playbackEngine->setMedia(item->data(N::PathRole).toString());
+            m_playbackEngine->play();
+        } else {
+            m_playbackEngine->setMedia("");
+        }
+    });
+
     connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), m_shufflePlaylistAction,
             SLOT(setChecked(bool)));
     connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), m_repeatPlaylistAction,
@@ -710,7 +716,7 @@ void NPlayer::loadDefaultPlaylist()
                 m_playbackEngine->pause();
             }
         } else {
-            m_playlistWidget->setActiveRow(row);
+            m_playlistWidget->activateRow(row);
         }
     }
 

@@ -56,8 +56,6 @@ private:
     void paintEvent(QPaintEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
     void resizeEvent(QResizeEvent *event);
-    void setActiveItem(NPlaylistWidgetItem *item);
-    void activateItem(NPlaylistWidgetItem *item);
     void formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force = false);
     void resetActiveItem();
     bool revealInFileManager(const QString &file, QString *error) const;
@@ -69,7 +67,6 @@ protected slots:
     void rowsInserted(const QModelIndex &parent, int start, int end);
 
 private slots:
-    void on_itemActivated(QListWidgetItem *item);
     void on_trashAction_triggered();
     void on_removeAction_triggered();
     void on_revealAction_triggered();
@@ -82,23 +79,21 @@ public:
 
     NPlaylistWidgetItem *item(int row, bool loop = false) const;
     NPlaylistWidgetItem *nextItem() const;
-
-    void setTrackInfoReader(NTrackInfoReader *reader);
-
     NPlaylistWidgetItem *activeItem() const;
     int activeRow() const;
-    void setActiveRow(int row);
     Q_INVOKABLE bool hasActive() const;
     QModelIndex activeIndex() const;
-    QString activeTitle() const;
 
     Q_INVOKABLE bool shuffleMode() const;
     Q_INVOKABLE bool repeatMode() const;
 
+    void setTrackInfoReader(NTrackInfoReader *reader);
+
 public slots:
+    void activateRow(int row);
+    void activateItem(NPlaylistWidgetItem *item);
     void activateNextItem();
     void activatePrevItem();
-    void activateRow(int row);
 
     void addFiles(const QStringList &files);
     void addItems(const QList<NPlaylistDataItem> &dataItems);
@@ -115,8 +110,7 @@ public slots:
     void setRepeatMode(bool enable);
 
 signals:
-    void currentActivated();
-    void mediaChanged(const QString &file);
+    void itemActivated(NPlaylistWidgetItem *item);
     void tagEditorRequested(const QString &file);
     void addMoreRequested();
 
