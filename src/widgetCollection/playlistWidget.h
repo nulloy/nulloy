@@ -36,20 +36,20 @@ class NPlaylistWidget : public QListWidget
 {
     Q_OBJECT
     Q_PROPERTY(QColor failed_text_color READ failedTextColor WRITE setFailedTextColor)
-    Q_PROPERTY(QColor active_text_color READ activeTextColor WRITE setActiveTextColor)
+    Q_PROPERTY(QColor playing_text_color READ playingTextColor WRITE setPlayingTextColor)
     Q_PROPERTY(QColor file_drop_border_color READ fileDropBorderColor WRITE setFileDropBorderColor)
     Q_PROPERTY(QBrush file_drop_background READ fileDropBackground WRITE setFileDropBackground)
     Q_PROPERTY(int file_drop_radius READ fileDropRadius WRITE setFileDropRadius)
 
 private:
-    NPlaylistWidgetItem *m_activeItem;
+    NPlaylistWidgetItem *m_playingItem;
     QMenu *m_contextMenu;
     NTrackInfoReader *m_trackInfoReader;
     NPlaybackEngineInterface *m_playbackEngine;
     QTimer *m_processVisibleItemsTimer;
 
     QList<NPlaylistWidgetItem *> m_shuffledItems;
-    int m_activeShuffledIndex;
+    int m_playingShuffledIndex;
     bool m_shuffleMode;
     bool m_repeatMode;
 
@@ -57,7 +57,7 @@ private:
     void contextMenuEvent(QContextMenuEvent *event);
     void resizeEvent(QResizeEvent *event);
     void formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force = false);
-    void resetActiveItem();
+    void resetPlayingItem();
     bool revealInFileManager(const QString &file, QString *error) const;
 
 protected:
@@ -79,10 +79,10 @@ public:
 
     NPlaylistWidgetItem *item(int row, bool loop = false) const;
     NPlaylistWidgetItem *nextItem() const;
-    NPlaylistWidgetItem *activeItem() const;
-    int activeRow() const;
-    Q_INVOKABLE bool hasActive() const;
-    QModelIndex activeIndex() const;
+    NPlaylistWidgetItem *playingItem() const;
+    int playingRow() const;
+    Q_INVOKABLE bool hasPlaying() const;
+    QModelIndex playingIndex() const;
 
     Q_INVOKABLE bool shuffleMode() const;
     Q_INVOKABLE bool repeatMode() const;
@@ -90,10 +90,10 @@ public:
     void setTrackInfoReader(NTrackInfoReader *reader);
 
 public slots:
-    void activateRow(int row);
-    void activateItem(NPlaylistWidgetItem *item);
-    void activateNextItem();
-    void activatePrevItem();
+    void playRow(int row);
+    void playItem(NPlaylistWidgetItem *item);
+    void playNextItem();
+    void playPrevItem();
 
     void addFiles(const QStringList &files);
     void addItems(const QList<NPlaylistDataItem> &dataItems);
@@ -103,14 +103,14 @@ public slots:
     void processVisibleItems();
     void updateTrackIndexes();
 
-    void activeFinished();
-    void activeFailed();
+    void playingFinished();
+    void playingFailed();
 
     void setShuffleMode(bool enable);
     void setRepeatMode(bool enable);
 
 signals:
-    void itemActivated(NPlaylistWidgetItem *item);
+    void itemPlayingStarted(NPlaylistWidgetItem *item);
     void tagEditorRequested(const QString &file);
     void addMoreRequested();
 
@@ -152,7 +152,7 @@ protected:
     // STYLESHEET PROPERTIES >>
 private:
     QColor m_failedTextColor;
-    QColor m_activeTextColor;
+    QColor m_playingTextColor;
     QColor m_fileDropBorderColor;
     QBrush m_fileDropBackground;
     int m_fileDropRadius;
@@ -161,8 +161,8 @@ public:
     QColor failedTextColor() const;
     void setFailedTextColor(QColor color);
 
-    QColor activeTextColor() const;
-    void setActiveTextColor(QColor color);
+    QColor playingTextColor() const;
+    void setPlayingTextColor(QColor color);
 
     QColor fileDropBorderColor() const;
     void setFileDropBorderColor(QColor color);

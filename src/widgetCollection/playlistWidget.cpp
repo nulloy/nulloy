@@ -42,7 +42,7 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     m_fileDropBorderColor = QColor(Qt::transparent);
     m_fileDropBackground = QBrush(Qt::NoBrush);
     m_failedTextColor = QColor(Qt::red);
-    m_activeTextColor = QColor(Qt::black);
+    m_playingTextColor = QColor(Qt::black);
     m_fileDropRadius = 0;
 
     m_trackInfoReader = NULL;
@@ -57,12 +57,13 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
                                   "/system32/imageres.dll");
 #endif
 
+    // triggered bu user input (double click or enter, depending on platform):
     connect(this, &QListWidget::itemActivated, [this](QListWidgetItem *item) {
-        activateItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
+        playItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
     });
 
     setItemDelegate(new NPlaylistWidgetItemDelegate(this));
-    m_activeItem = NULL;
+    m_playingItem = NULL;
 
     NAction *revealAction = new NAction(QIcon::fromTheme("fileopen", winIcons.value(13)),
                                         tr("Reveal in File Manager..."), this);
@@ -112,7 +113,7 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 
     m_repeatMode = NSettings::instance()->value("Repeat").toBool();
     m_shuffleMode = false;
-    m_activeShuffledIndex = 0;
+    m_playingShuffledIndex = 0;
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setDefaultDropAction(Qt::MoveAction);
@@ -199,7 +200,7 @@ void NPlaylistWidget::on_trashAction_triggered()
 void NPlaylistWidget::on_removeAction_triggered()
 {
     int firstSelectedRow = count() - 1; // set to last row
-    bool activeWithinRemoved = false;
+    bool playingItemRemoved = false;
     foreach (QListWidgetItem *item, selectedItems()) {
         int rowToDelete = row(item);
         if (firstSelectedRow > rowToDelete) {
@@ -208,14 +209,14 @@ void NPlaylistWidget::on_removeAction_triggered()
         NPlaylistWidgetItem *itemToDelete = reinterpret_cast<NPlaylistWidgetItem *>(
             takeItem(rowToDelete));
 
-        if (m_activeItem == itemToDelete) {
-            activeWithinRemoved = true;
-            m_activeItem = NULL;
+        if (m_playingItem == itemToDelete) {
+            playingItemRemoved = true;
+            m_playingItem = NULL;
         }
 
-        if (m_activeShuffledIndex >= 0 &&
-            itemToDelete == m_shuffledItems.at(m_activeShuffledIndex)) {
-            --m_activeShuffledIndex;
+        if (m_playingShuffledIndex >= 0 &&
+            itemToDelete == m_shuffledItems.at(m_playingShuffledIndex)) {
+            --m_playingShuffledIndex;
         }
         m_shuffledItems.removeAll(itemToDelete);
 
@@ -226,13 +227,13 @@ void NPlaylistWidget::on_removeAction_triggered()
     int newCount = count();
 
     if (newCount == 0) {
-        activateItem(NULL);
+        playItem(NULL);
         return;
     }
 
     int newCurrentRow = firstSelectedRow;
     if (firstSelectedRow >= newCount) { // last row was within removed
-        if (activeWithinRemoved && NSettings::instance()->value("LoopPlaylist").toBool()) {
+        if (playingItemRemoved && NSettings::instance()->value("LoopPlaylist").toBool()) {
             newCurrentRow = 0;
         } else {
             newCurrentRow = newCount - 1;
@@ -240,8 +241,8 @@ void NPlaylistWidget::on_removeAction_triggered()
     }
     NPlaylistWidgetItem *newCurrentItem = item(newCurrentRow);
 
-    if (activeWithinRemoved && m_playbackEngine->state() != N::PlaybackStopped) {
-        activateItem(newCurrentItem);
+    if (playingItemRemoved && m_playbackEngine->state() != N::PlaybackStopped) {
+        playItem(newCurrentItem);
     }
     // sets keyboard focus
     if (newCurrentItem) {
@@ -347,10 +348,10 @@ void NPlaylistWidget::updateTrackIndexes()
 
 NPlaylistWidget::~NPlaylistWidget() {}
 
-void NPlaylistWidget::resetActiveItem()
+void NPlaylistWidget::resetPlayingItem()
 {
-    m_activeItem = NULL;
-    emit itemActivated(NULL);
+    m_playingItem = NULL;
+    emit itemPlayingStarted(NULL);
 }
 
 void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force)
@@ -371,18 +372,18 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFo
     item->setData(N::TitleFormatRole, titleFormat);
 }
 
-void NPlaylistWidget::activateItem(NPlaylistWidgetItem *item)
+void NPlaylistWidget::playItem(NPlaylistWidgetItem *item)
 {
-    if (m_activeItem) {
-        QFont f = m_activeItem->font();
+    if (m_playingItem) {
+        QFont f = m_playingItem->font();
         f.setBold(false);
-        m_activeItem->setFont(f);
-        m_activeItem->setData(N::PositionRole, m_playbackEngine->position());
-        m_activeItem->setData(N::CountRole, m_activeItem->data(N::CountRole).toInt() + 1);
+        m_playingItem->setFont(f);
+        m_playingItem->setData(N::PositionRole, m_playbackEngine->position());
+        m_playingItem->setData(N::CountRole, m_playingItem->data(N::CountRole).toInt() + 1);
     }
 
     if (!item) {
-        resetActiveItem();
+        resetPlayingItem();
         return;
     }
 
@@ -396,54 +397,54 @@ void NPlaylistWidget::activateItem(NPlaylistWidgetItem *item)
     item->setFont(f);
 
     scrollToItem(item);
-    m_activeItem = item;
+    m_playingItem = item;
     update();
 
     if (m_shuffleMode) {
-        m_activeShuffledIndex = m_shuffledItems.indexOf(m_activeItem);
+        m_playingShuffledIndex = m_shuffledItems.indexOf(m_playingItem);
     }
 
-    emit itemActivated(item);
+    emit itemPlayingStarted(item);
 }
 
-void NPlaylistWidget::activateRow(int row)
+void NPlaylistWidget::playRow(int row)
 {
     if (row < 0 || row >= count()) {
-        resetActiveItem();
+        resetPlayingItem();
         return;
     }
 
-    activateItem(item(row));
+    playItem(item(row));
 }
 
-void NPlaylistWidget::activeFailed()
+void NPlaylistWidget::playingFailed()
 {
-    m_activeItem->setData(N::FailedRole, true);
+    m_playingItem->setData(N::FailedRole, true);
 }
 
-int NPlaylistWidget::activeRow() const
+int NPlaylistWidget::playingRow() const
 {
-    if (m_activeItem) {
-        return row(m_activeItem);
+    if (m_playingItem) {
+        return row(m_playingItem);
     } else {
         return -1;
     }
 }
 
-NPlaylistWidgetItem *NPlaylistWidget::activeItem() const
+NPlaylistWidgetItem *NPlaylistWidget::playingItem() const
 {
-    return m_activeItem;
+    return m_playingItem;
 }
 
-bool NPlaylistWidget::hasActive() const
+bool NPlaylistWidget::hasPlaying() const
 {
-    return activeRow() != -1;
+    return playingRow() != -1;
 }
 
-QModelIndex NPlaylistWidget::activeIndex() const
+QModelIndex NPlaylistWidget::playingIndex() const
 {
-    if (m_activeItem) {
-        return indexFromItem(m_activeItem);
+    if (m_playingItem) {
+        return indexFromItem(m_playingItem);
     } else {
         return QModelIndex();
     }
@@ -467,7 +468,7 @@ void NPlaylistWidget::setFiles(const QStringList &files)
 {
     clear();
     m_shuffledItems.clear();
-    m_activeItem = NULL;
+    m_playingItem = NULL;
     foreach (QString path, files)
         addItem(new NPlaylistWidgetItem(QFileInfo(path)));
     processVisibleItems();
@@ -477,7 +478,7 @@ void NPlaylistWidget::setItems(const QList<NPlaylistDataItem> &dataItems)
 {
     clear();
     m_shuffledItems.clear();
-    m_activeItem = NULL;
+    m_playingItem = NULL;
     foreach (NPlaylistDataItem dataItem, dataItems)
         addItem(new NPlaylistWidgetItem(dataItem));
     updateTrackIndexes();
@@ -488,7 +489,7 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
 {
     clear();
     m_shuffledItems.clear();
-    m_activeItem = NULL;
+    m_playingItem = NULL;
 
     QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readM3u(file);
 
@@ -506,16 +507,16 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
     return true;
 }
 
-void NPlaylistWidget::activateNextItem()
+void NPlaylistWidget::playNextItem()
 {
     NPlaylistWidgetItem *item = NULL;
 
     if (m_shuffleMode) {
-        m_activeShuffledIndex++;
-        if (m_activeShuffledIndex >= m_shuffledItems.count()) {
-            m_activeShuffledIndex = 0;
+        m_playingShuffledIndex++;
+        if (m_playingShuffledIndex >= m_shuffledItems.count()) {
+            m_playingShuffledIndex = 0;
         }
-        item = m_shuffledItems.at(m_activeShuffledIndex);
+        item = m_shuffledItems.at(m_playingShuffledIndex);
     } else {
         item = nextItem();
         if (!item) {
@@ -525,32 +526,32 @@ void NPlaylistWidget::activateNextItem()
     }
 
     if (item) {
-        activateItem(item);
+        playItem(item);
     }
 }
 
-void NPlaylistWidget::activeFinished()
+void NPlaylistWidget::playingFinished()
 {
     if (m_repeatMode) {
-        activateItem(m_activeItem);
+        playItem(m_playingItem);
     } else {
-        activateNextItem();
+        playNextItem();
     }
 }
 
-void NPlaylistWidget::activatePrevItem()
+void NPlaylistWidget::playPrevItem()
 {
     if (m_shuffleMode) {
-        m_activeShuffledIndex--;
-        if (m_activeShuffledIndex < 0) {
-            m_activeShuffledIndex = m_shuffledItems.count() - 1;
+        m_playingShuffledIndex--;
+        if (m_playingShuffledIndex < 0) {
+            m_playingShuffledIndex = m_shuffledItems.count() - 1;
         }
-        activateItem(m_shuffledItems.at(m_activeShuffledIndex));
+        playItem(m_shuffledItems.at(m_playingShuffledIndex));
     } else {
-        NPlaylistWidgetItem *prevItem = item(activeRow() - 1,
+        NPlaylistWidgetItem *prevItem = item(playingRow() - 1,
                                              NSettings::instance()->value("LoopPlaylist").toBool());
         if (prevItem) {
-            activateItem(prevItem);
+            playItem(prevItem);
         }
     }
 }
@@ -588,11 +589,11 @@ void NPlaylistWidget::setShuffleMode(bool enable)
         m_shuffledItems.swap(i, qrand() % (i + 1));
     }
 
-    // move active item to the beginning
-    if (m_activeItem) {
-        m_shuffledItems.swap(m_shuffledItems.indexOf(m_activeItem), 0);
+    // move playing item to the beginning
+    if (m_playingItem) {
+        m_shuffledItems.swap(m_shuffledItems.indexOf(m_playingItem), 0);
     }
-    m_activeShuffledIndex = 0;
+    m_playingShuffledIndex = 0;
 }
 
 bool NPlaylistWidget::repeatMode() const
@@ -633,11 +634,11 @@ NPlaylistWidgetItem *NPlaylistWidget::item(int row, bool loop) const
 
 NPlaylistWidgetItem *NPlaylistWidget::nextItem() const
 {
-    if (count() == 0 || activeRow() == count() - 1) {
+    if (count() == 0 || playingRow() == count() - 1) {
         return NULL;
     }
 
-    return item(activeRow() + 1, NSettings::instance()->value("LoopPlaylist").toBool());
+    return item(playingRow() + 1, NSettings::instance()->value("LoopPlaylist").toBool());
 }
 
 void NPlaylistWidget::paintEvent(QPaintEvent *e)
@@ -712,7 +713,7 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
     }
 
     if (wasEmpty) {
-        activateRow(0);
+        playRow(0);
     }
 
     m_itemDrag = NULL;
@@ -828,14 +829,14 @@ void NPlaylistWidget::dragLeaveEvent(QDragLeaveEvent *event)
 // << DRAG & DROP
 
 // STYLESHEET PROPERTIES >>
-void NPlaylistWidget::setActiveTextColor(QColor color)
+void NPlaylistWidget::setPlayingTextColor(QColor color)
 {
-    m_activeTextColor = color;
+    m_playingTextColor = color;
 }
 
-QColor NPlaylistWidget::activeTextColor() const
+QColor NPlaylistWidget::playingTextColor() const
 {
-    return m_activeTextColor;
+    return m_playingTextColor;
 }
 
 void NPlaylistWidget::setFailedTextColor(QColor color)
