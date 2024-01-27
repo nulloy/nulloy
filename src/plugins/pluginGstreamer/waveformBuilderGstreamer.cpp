@@ -180,8 +180,10 @@ void NWaveformBuilderGstreamer::update()
         switch (GST_MESSAGE_TYPE(msg)) {
             case GST_MESSAGE_EOS:
                 m_peaks.complete();
+#if defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
                 qDebug() << "WaveformBuilder ::"
                          << "completed" << m_peaks.size();
+#endif
                 stop();
                 break;
             case GST_MESSAGE_ERROR: {
