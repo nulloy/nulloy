@@ -21,33 +21,29 @@
 #include "common.h"
 
 #define NSEC_IN_MSEC 1000000
-#define SHORT_TICK_THRESHOLD_MSEC 5000 // 5 seconds
+#define CROSSFADING_MIN_DURATION_MSEC 1000 // 1 second
+#define SHORT_TICK_THRESHOLD_MSEC 30000    // 30 seconds
 #define SHORT_TICK_MSEC 20
 #define LONG_TICK_MSEC 100
+#define STATE_CHANGE_DEBOUNCE_MSEC 50
 
 static void _on_about_to_finish(GstElement *playbin, gpointer userData)
 {
     NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
-
-    gchar *uri_before;
-    g_object_get(playbin, "uri", &uri_before, NULL);
-
-    obj->_crossfadingPrepare();
-    obj->_emitAboutToFinish();
-
-    gchar *uri_after =
-        g_filename_to_uri(QFileInfo(obj->currentMedia()).absoluteFilePath().toUtf8().constData(),
-                          NULL, NULL);
-
-    if (g_strcmp0(uri_before, uri_after) == 0) { // uri hasn't changed
-        obj->_crossfadingCancel();
+    if ((obj->durationMsec() < CROSSFADING_MIN_DURATION_MSEC) || obj->_nextMediaRequestBlocked()) {
+        return;
     }
-
-    g_free(uri_before);
-    g_free(uri_after);
+    obj->_emitNextMediaRequest();
 }
 
-N::PlaybackState NPlaybackEngineGStreamer::fromGstState(GstState state)
+static gboolean _bus_callback(GstBus *bus, GstMessage *msg, gpointer userData)
+{
+    NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
+    obj->_processGstMessage(msg);
+    return TRUE;
+}
+
+N::PlaybackState NPlaybackEngineGStreamer::fromGstState(GstState state) const
 {
     switch (state) {
         case GST_STATE_PAUSED:
@@ -71,15 +67,20 @@ void NPlaybackEngineGStreamer::init()
     NCore::cArgs(&argc, &argv);
     gst_init(&argc, (char ***)&argv);
     if (!gst_init_check(&argc, (char ***)&argv, &err)) {
-        emit message(N::Critical, QFileInfo(m_currentMedia).absoluteFilePath(),
-                     err ? QString::fromUtf8(err->message) : "unknown error");
+        emit message(N::Critical, tr("Playback error"),
+                     err ? QString::fromUtf8(err->message) : tr("Unknown error"));
         emit failed();
         if (err) {
             g_error_free(err);
         }
     }
-    m_playbin = gst_element_factory_make("playbin", NULL);
+    m_playbin = gst_element_factory_make("playbin3", NULL);
     g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
+    gst_element_add_property_notify_watch(m_playbin, "volume", TRUE);
+
+    GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
+    gst_bus_add_watch(bus, _bus_callback, this);
+    gst_object_unref(bus);
 
     // FIXME: https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/-/issues/1798
     //m_pitchElement = gst_element_factory_make("pitch", NULL);
@@ -113,16 +114,25 @@ void NPlaybackEngineGStreamer::init()
     m_speed = 1.0;
     m_speedPostponed = false;
     m_pitch = 1.0;
-    m_oldVolume = -1;
-    m_oldPosition = -1;
-    m_posponedPosition = -1;
-    m_oldState = N::PlaybackStopped;
+    m_volume = -1.0;
+    m_position = 0.0;
+    m_posponedPosition = -1.0;
     m_currentMedia = "";
-    m_durationNsec = 0;
+    m_currentContext = 0;
+    m_bkpMedia = "";
+    m_bkpContext = 0;
+    m_durationNsec = GST_CLOCK_TIME_NONE;
     m_crossfading = false;
+    m_nextMediaRequestBlock = false;
 
-    m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(checkStatus()));
+    m_checkStatusTimer = new QTimer(this);
+    connect(m_checkStatusTimer, SIGNAL(timeout()), this, SLOT(checkStatus()));
+
+    m_emitStateTimer = new QTimer(this);
+    m_emitStateTimer->setSingleShot(true);
+    m_emitStateTimer->setInterval(STATE_CHANGE_DEBOUNCE_MSEC);
+    connect(m_emitStateTimer, &QTimer::timeout,
+            [this]() { emit stateChanged(fromGstState(m_gstState)); });
 
     m_init = true;
 }
@@ -137,41 +147,62 @@ NPlaybackEngineGStreamer::~NPlaybackEngineGStreamer()
     gst_object_unref(m_playbin);
 }
 
-void NPlaybackEngineGStreamer::setMedia(const QString &file)
+bool NPlaybackEngineGStreamer::gstSetFile(const QString &file, int context, bool prepareNext)
 {
-    qreal vol = m_oldVolume;
-
-    if (!m_crossfading || file.isEmpty()) {
-        stop();
-    }
-
     if (file.isEmpty()) {
-        emit mediaChanged(m_currentMedia = "");
-        return;
+        fail();
+        return false;
     }
 
     if (!QFile(file).exists()) {
+        emit message(N::Warning, file, tr("No such file or directory"));
         fail();
-        emit message(N::Warning, file, "No such file or directory");
-        return;
+        return false;
     }
 
+    GError *err = NULL;
     gchar *uri = g_filename_to_uri(QFileInfo(file).absoluteFilePath().toUtf8().constData(), NULL,
-                                   NULL);
+                                   &err);
     if (uri) {
         m_currentMedia = file;
+        m_currentContext = context;
+        g_object_set(m_playbin, "instant-uri", !prepareNext, NULL);
+        g_object_set(m_playbin, "uri", uri, NULL);
+        g_free(uri);
+    } else {
+        emit message(N::Critical, file, err ? QString::fromUtf8(err->message) : tr("Invalid path"));
+        fail();
+        if (err) {
+            g_error_free(err);
+        }
+        fail();
+        return false;
     }
-    g_object_set(m_playbin, "uri", uri, NULL);
+    return true;
+}
 
-    emit mediaChanged(m_currentMedia);
+void NPlaybackEngineGStreamer::setMedia(const QString &file, int context)
+{
+    m_crossfading = false;
+    m_position = 0.0;
+    m_nextMediaRequestBlock = true;
 
-    if (m_speed != 1.0) {
-        m_speedPostponed = true;
+    gst_element_set_state(m_playbin, GST_STATE_NULL);
+    if (!gstSetFile(file, context, false)) {
+        return;
     }
+    gst_element_set_state(m_playbin, GST_STATE_PLAYING);
+}
 
-    if (vol != -1) {
-        setVolume(vol);
+void NPlaybackEngineGStreamer::nextMediaRespond(const QString &file, int context)
+{
+    if (!m_crossfading) {
+        return;
     }
+    m_bkpMedia = m_currentMedia;
+    m_bkpContext = m_currentContext;
+
+    gstSetFile(file, context, true);
 }
 
 qreal NPlaybackEngineGStreamer::speed() const
@@ -206,26 +237,25 @@ void NPlaybackEngineGStreamer::setVolume(qreal volume)
 
 qreal NPlaybackEngineGStreamer::volume() const
 {
-    gdouble volume;
-    g_object_get(m_playbin, "volume", &volume, NULL);
-    return (qreal)volume;
+    return m_volume;
 }
 
 void NPlaybackEngineGStreamer::setPosition(qreal pos)
 {
-    if (!hasMedia() || pos < 0 || pos > 1) {
+    if (!hasMedia() || pos < 0.0 || pos > 1.0) {
         return;
     }
 
-    if (m_durationNsec > 0) {
-        gst_element_seek(m_playbin, m_speed, GST_FORMAT_TIME,
-                         GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE),
-                         GST_SEEK_TYPE_SET, pos * m_durationNsec, GST_SEEK_TYPE_NONE,
-                         GST_CLOCK_TIME_NONE);
-        m_speedPostponed = false;
-    } else {
-        m_posponedPosition = pos;
+    if (m_crossfading) {
+        // abort cross-fading:
+        gst_element_set_state(m_playbin, GST_STATE_NULL);
+        if (!gstSetFile(m_bkpMedia, m_bkpContext, false)) {
+            fail();
+            return;
+        }
+        gst_element_set_state(m_playbin, GST_STATE_PLAYING);
     }
+    m_posponedPosition = pos;
 }
 
 void NPlaybackEngineGStreamer::jump(qint64 msec)
@@ -234,18 +264,21 @@ void NPlaybackEngineGStreamer::jump(qint64 msec)
         return;
     }
 
-    gint64 posNsec = qBound((gint64)0,
-                            (gint64)qRound64(position() * m_durationNsec + msec * NSEC_IN_MSEC),
-                            m_durationNsec);
-    gst_element_seek(m_playbin, m_speed, GST_FORMAT_TIME,
-                     GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE), GST_SEEK_TYPE_SET,
-                     posNsec, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
-    m_speedPostponed = false;
+    if (m_crossfading) {
+        // abort cross-fading:
+        gst_element_set_state(m_playbin, GST_STATE_NULL);
+        if (!gstSetFile(m_bkpMedia, m_bkpContext, false)) {
+            fail();
+            return;
+        }
+        gst_element_set_state(m_playbin, GST_STATE_PLAYING);
+    }
+    m_posponedPosition = m_position + ((qreal)msec * NSEC_IN_MSEC) / m_durationNsec;
 }
 
 qreal NPlaybackEngineGStreamer::position() const
 {
-    return m_crossfading ? 0 : m_oldPosition;
+    return m_position;
 }
 
 qint64 NPlaybackEngineGStreamer::durationMsec() const
@@ -255,18 +288,12 @@ qint64 NPlaybackEngineGStreamer::durationMsec() const
 
 void NPlaybackEngineGStreamer::play()
 {
-    if (!hasMedia() || m_crossfading) {
+    if (!hasMedia()) {
         return;
     }
 
-    GstState gstState;
-    gst_element_get_state(m_playbin, &gstState, NULL, 0);
-    if (gstState != GST_STATE_PLAYING) {
-        gst_element_set_state(m_playbin, GST_STATE_PLAYING);
-        m_timer->start(LONG_TICK_MSEC);
-    } else {
-        pause();
-    }
+    gst_element_set_state(m_playbin, GST_STATE_PLAYING);
+    m_checkStatusTimer->start(LONG_TICK_MSEC);
 }
 
 void NPlaybackEngineGStreamer::pause()
@@ -277,19 +304,22 @@ void NPlaybackEngineGStreamer::pause()
 
     gst_element_set_state(m_playbin, GST_STATE_PAUSED);
 
-    m_timer->stop();
+    m_checkStatusTimer->stop();
     checkStatus();
 }
 
 void NPlaybackEngineGStreamer::stop()
 {
-    if (!hasMedia()) {
-        return;
-    }
-
     m_crossfading = false;
+    m_nextMediaRequestBlock = true;
     gst_element_set_state(m_playbin, GST_STATE_NULL);
     m_durationNsec = 0;
+    m_position = 0.0;
+
+    emit stateChanged(N::PlaybackStopped);
+    emit positionChanged(m_position);
+
+    m_checkStatusTimer->stop();
 }
 
 bool NPlaybackEngineGStreamer::hasMedia() const
@@ -302,134 +332,128 @@ QString NPlaybackEngineGStreamer::currentMedia() const
     return m_currentMedia;
 }
 
+N::PlaybackState NPlaybackEngineGStreamer::state() const
+{
+    return fromGstState(m_gstState);
+}
+
+void NPlaybackEngineGStreamer::_processGstMessage(GstMessage *msg)
+{
+    //qDebug() << "message type:" << GST_MESSAGE_TYPE_NAME(msg);
+    switch (GST_MESSAGE_TYPE(msg)) {
+        case GST_MESSAGE_EOS: {
+            stop();
+            emit finished();
+            break;
+        }
+        case GST_MESSAGE_ERROR: {
+            gchar *debug;
+            GError *err = NULL;
+            gst_message_parse_error(msg, &err, &debug);
+            g_free(debug);
+
+            emit message(N::Critical, QFileInfo(m_currentMedia).absoluteFilePath(),
+                         err ? QString::fromUtf8(err->message) : tr("Unknown error"));
+            fail();
+            if (err) {
+                g_error_free(err);
+            }
+            break;
+        }
+        case GST_MESSAGE_DURATION_CHANGED: {
+            m_durationNsec = GST_CLOCK_TIME_NONE;
+            break;
+        }
+        case GST_MESSAGE_STREAM_START: {
+            m_crossfading = false;
+            m_nextMediaRequestBlock = false;
+            if (m_speed != 1.0) {
+                m_speedPostponed = true;
+            }
+            m_durationNsec = GST_CLOCK_TIME_NONE;
+            emit mediaChanged(m_currentMedia, m_currentContext);
+            break;
+        }
+        case GST_MESSAGE_PROPERTY_NOTIFY: {
+            const gchar *name;
+            const GValue *value;
+            gst_message_parse_property_notify(msg, NULL, &name, &value);
+            if (QString(name) == "volume") {
+                m_volume = g_value_get_double(value);
+                emit volumeChanged(m_volume);
+            }
+            break;
+        }
+        case GST_MESSAGE_STATE_CHANGED: {
+            if (GST_MESSAGE_SRC(msg) == GST_OBJECT(m_playbin)) {
+                GstState newState, oldState, pendingState;
+                gst_message_parse_state_changed(msg, &oldState, &newState, &pendingState);
+                //qDebug() << "state changed old:" << gst_element_state_get_name(oldState)
+                //         << " new:" << gst_element_state_get_name(newState)
+                //         << " pending:" << gst_element_state_get_name(pendingState);
+                if (newState != m_gstState) {
+                    m_gstState = newState;
+                    m_emitStateTimer->start();
+                }
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 void NPlaybackEngineGStreamer::checkStatus()
 {
-    GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
-    GstMessage *msg;
-    while ((msg = gst_bus_pop_filtered(bus, GstMessageType(GST_MESSAGE_EOS | GST_MESSAGE_ERROR))) !=
-           NULL) {
-        switch (GST_MESSAGE_TYPE(msg)) {
-            case GST_MESSAGE_EOS: {
-                stop();
-                emit finished();
-                emit stateChanged(m_oldState = N::PlaybackStopped);
-                break;
-            }
-            case GST_MESSAGE_ERROR: {
-                gchar *debug;
-                GError *err = NULL;
-                gst_message_parse_error(msg, &err, &debug);
-                g_free(debug);
-
-                emit message(N::Critical, QFileInfo(m_currentMedia).absoluteFilePath(),
-                             err ? QString::fromUtf8(err->message) : "unknown error");
-                fail();
-
-                if (err) {
-                    g_error_free(err);
-                }
-                break;
-            }
-            default:
-                break;
-        }
-        gst_message_unref(msg);
-    }
-    gst_object_unref(bus);
-
-    GstState gstState;
-    if (gst_element_get_state(m_playbin, &gstState, NULL, 0) != GST_STATE_CHANGE_SUCCESS) {
-        return;
+    if (!GST_CLOCK_TIME_IS_VALID(m_durationNsec)) {
+        gst_element_query_duration(m_playbin, GST_FORMAT_TIME, &m_durationNsec);
     }
 
-    N::PlaybackState state = fromGstState(gstState);
-    if (m_oldState != state) {
-        emit stateChanged(m_oldState = state);
-    }
-
-    if (state == N::PlaybackPlaying || state == N::PlaybackPaused) {
-        // duration may change for some reason
-        // TODO use DURATION_CHANGED in gstreamer1.0
-        gboolean res = gst_element_query_duration(m_playbin, GST_FORMAT_TIME, &m_durationNsec);
-        if (!res) {
-            m_durationNsec = 0;
-        }
-        if (m_durationNsec > 0 && m_durationNsec / NSEC_IN_MSEC <= SHORT_TICK_THRESHOLD_MSEC) {
-            m_timer->setInterval(SHORT_TICK_MSEC);
-        }
-    }
-
-    if (m_posponedPosition >= 0 && m_durationNsec > 0) {
-        setPosition(m_posponedPosition);
-        m_posponedPosition = -1;
-        emit positionChanged(m_posponedPosition);
-    } else {
-        qreal pos;
+    if (GST_CLOCK_TIME_IS_VALID(m_durationNsec)) {
         gint64 gstPos = 0;
-
-        if (!hasMedia() || m_durationNsec <= 0) {
-            pos = -1;
-        } else {
-            gboolean res = gst_element_query_position(m_playbin, GST_FORMAT_TIME, &gstPos);
-            if (!res) {
-                gstPos = 0;
-            } else {
-                if (m_speedPostponed && !m_crossfading) {
-                    gst_element_seek(m_playbin, m_speed, GST_FORMAT_TIME,
-                                     GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE),
-                                     GST_SEEK_TYPE_SET, gstPos, GST_SEEK_TYPE_NONE,
-                                     GST_CLOCK_TIME_NONE);
-                    m_speedPostponed = false;
-                }
+        if (gst_element_query_position(m_playbin, GST_FORMAT_TIME, &gstPos)) {
+            m_position = (qreal)gstPos / m_durationNsec;
+            if (m_posponedPosition < 0.0) {
+                emit positionChanged(m_position);
             }
-            pos = (qreal)gstPos / m_durationNsec;
+            emit tick(gstPos / NSEC_IN_MSEC * m_speed);
         }
 
-        if (m_oldPosition != pos) {
-            if (m_oldPosition > pos) {
-                m_crossfading = false;
+        if (m_posponedPosition >= 0.0 || m_speedPostponed) {
+            if (m_posponedPosition >= 0.0) {
+                gstPos = m_posponedPosition * m_durationNsec;
             }
-            m_oldPosition = pos;
-            emit positionChanged(m_crossfading ? 0 : m_oldPosition);
+            gst_element_seek(m_playbin, m_speed, GST_FORMAT_TIME,
+                             GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE),
+                             GST_SEEK_TYPE_SET, gstPos, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
+            m_posponedPosition = -1.0;
+            m_speedPostponed = false;
         }
 
-        emit tick(m_crossfading ? 0 : gstPos / NSEC_IN_MSEC * m_speed);
-    }
-
-    qreal vol = volume();
-    if (qAbs(m_oldVolume - vol) > 0.0001) {
-        m_oldVolume = vol;
-        emit volumeChanged(vol);
-    }
-
-    if (state == N::PlaybackStopped) {
-        m_timer->stop();
+        if (m_durationNsec / NSEC_IN_MSEC <= SHORT_TICK_THRESHOLD_MSEC) {
+            m_checkStatusTimer->setInterval(SHORT_TICK_MSEC);
+        }
     }
 }
 
 void NPlaybackEngineGStreamer::fail()
 {
-    if (!m_crossfading) { // avoid thread deadlock
-        stop();
-    } else {
-        m_crossfading = false;
-    }
-    emit mediaChanged(m_currentMedia = "");
+    stop();
+
+    m_currentMedia = "";
+    m_currentContext = 0;
+    emit mediaChanged(m_currentMedia, m_currentContext);
+
     emit failed();
-    emit stateChanged(m_oldState = N::PlaybackStopped);
 }
 
-void NPlaybackEngineGStreamer::_emitAboutToFinish()
-{
-    emit aboutToFinish();
-}
-
-void NPlaybackEngineGStreamer::_crossfadingPrepare()
+void NPlaybackEngineGStreamer::_emitNextMediaRequest()
 {
     m_crossfading = true;
+    emit nextMediaRequested();
 }
 
-void NPlaybackEngineGStreamer::_crossfadingCancel()
+bool NPlaybackEngineGStreamer::_nextMediaRequestBlocked()
 {
-    m_crossfading = false;
+    return m_nextMediaRequestBlock;
 }

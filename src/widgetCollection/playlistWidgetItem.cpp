@@ -64,6 +64,8 @@ QVariant NPlaylistWidgetItem::data(int role) const
                 QListWidgetItem::data(Qt::DisplayRole)
                     .toString()
                     .replace("%i", QString::number(data(N::TrackIndexRole).toInt() + 1)));
+        case (N::IdRole):
+            return m_data.id;
         default:
             return QListWidgetItem::data(role);
     }
@@ -92,6 +94,9 @@ void NPlaylistWidgetItem::setData(int role, const QVariant &value)
             break;
         case (N::TrackIndexRole):
             m_data.trackIndex = value.toInt();
+            break;
+        case (N::IdRole):
+            m_data.id = value.toInt();
             break;
         default:
             QListWidgetItem::setData(role, value);

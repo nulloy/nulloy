@@ -22,7 +22,11 @@
 #include "pluginLoader.h"
 #include "settings.h"
 
-#define DELAY 50
+#define INPUT_DELAY_MSEC 50
+#define PLAY_WAIT_MSEC 100
+#define CROSSFADING_POS 0.99 // 100 msec till the end (samples are 10 seconds)
+#define PLAYNEXT_WAIT_MSEC 300
+
 Q_DECLARE_METATYPE(NPlaylistWidgetItem *);
 
 class TestPlaylistWidget : public QObject
@@ -50,21 +54,8 @@ private slots:
             NPluginLoader::getPlugin(N::PlaybackEngine));
         Q_ASSERT(m_playbackEngine);
 
-        connect(m_playbackEngine, SIGNAL(aboutToFinish()), m_playlistWidget,
-                SLOT(playingFinished()), Qt::BlockingQueuedConnection);
-        connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(playingFinished()));
         connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
                 this, SLOT(message(N::MessageIcon, const QString &, const QString &)));
-        connect(m_playlistWidget, &NPlaylistWidget::itemPlayingStarted,
-                [this](NPlaylistWidgetItem *item) {
-                    if (item) {
-                        m_playbackEngine->setMedia(item->data(N::PathRole).toString());
-                        m_playbackEngine->play();
-                        QTest::qWait(100); // give playback engine time to start playback
-                    } else {
-                        m_playbackEngine->setMedia("");
-                    }
-                });
     }
 
     void cleanup()
@@ -84,40 +75,49 @@ private slots:
         // when deleting last, jumps to the "new" last
         NSettings::instance()->setValue("LoopPlaylist", false);
         m_playlistWidget->playRow(m_playlistWidget->count() - 1); // last row
+        QTest::qWait(PLAY_WAIT_MSEC);
         QCOMPARE(m_playlistWidget->playingRow(), m_playlistWidget->count() - 1);
         m_playlistWidget->setCurrentRow(m_playlistWidget->count() - 1);
-        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+        // delete selected:
+        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, Qt::NoModifier, INPUT_DELAY_MSEC);
         QCOMPARE(m_playlistWidget->count(), 9);
         QCOMPARE(m_playlistWidget->playingRow(), m_playlistWidget->count() - 1);
 
         // when deleting last + looping enabled, jumps to the first
         NSettings::instance()->setValue("LoopPlaylist", true);
         m_playlistWidget->playRow(m_playlistWidget->count() - 1); // last row
+        QTest::qWait(PLAY_WAIT_MSEC);
         QCOMPARE(m_playlistWidget->playingRow(), m_playlistWidget->count() - 1);
         m_playlistWidget->setCurrentRow(m_playlistWidget->count() - 1);
-        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+        // delete selected:
+        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, Qt::NoModifier, INPUT_DELAY_MSEC);
         QCOMPARE(m_playlistWidget->count(), 8);
         QCOMPARE(m_playlistWidget->playingRow(), 0);
 
         // when deleting the first, jumps to the "new" first
         m_playlistWidget->setCurrentRow(0);
-        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+        // delete selected:
+        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, Qt::NoModifier, INPUT_DELAY_MSEC);
         QCOMPARE(m_playlistWidget->count(), 7);
         QCOMPARE(m_playlistWidget->playingRow(), 0);
 
         // deleting neighbour rows doesn't change the playing item
         {
             m_playlistWidget->playRow(2); // 3rd
+            QTest::qWait(PLAY_WAIT_MSEC);
             NPlaylistWidgetItem *item = m_playlistWidget->playingItem();
             // go 2nd
             m_playlistWidget->setCurrentRow(1);
-            // select 2nd and 4th
-            QTest::keyClick(m_playlistWidget, Qt::Key_Down, Qt::ControlModifier, DELAY);
-            QTest::keyClick(m_playlistWidget, Qt::Key_Down, Qt::ControlModifier, DELAY);
-            QTest::keyClick(m_playlistWidget, Qt::Key_Space, Qt::ControlModifier, DELAY);
+            // select 2nd and 4th:
+            // go down and keep old selection:
+            QTest::keyClick(m_playlistWidget, Qt::Key_Down, Qt::ControlModifier, INPUT_DELAY_MSEC);
+            // go down and keep old selection:
+            QTest::keyClick(m_playlistWidget, Qt::Key_Down, Qt::ControlModifier, INPUT_DELAY_MSEC);
+            // select current:
+            QTest::keyClick(m_playlistWidget, Qt::Key_Space, Qt::ControlModifier, INPUT_DELAY_MSEC);
             QCOMPARE(m_playlistWidget->selectedItems().count(), 2);
-            // delete
-            QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+            // delete selected:
+            QTest::keyClick(m_playlistWidget, Qt::Key_Delete, Qt::NoModifier, INPUT_DELAY_MSEC);
             QCOMPARE(m_playlistWidget->count(), 5);
             QCOMPARE(m_playlistWidget->playingRow(), 1);
             QCOMPARE(item, m_playlistWidget->playingItem());
@@ -130,7 +130,8 @@ private slots:
             int focused = m_playlistWidget->currentRow();
             int current = m_playlistWidget->playingRow();
             QCOMPARE(focused, current);
-            QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+            // delete selected:
+            QTest::keyClick(m_playlistWidget, Qt::Key_Delete, Qt::NoModifier, INPUT_DELAY_MSEC);
             int newFocused = m_playlistWidget->currentRow();
             int newCurrent = m_playlistWidget->playingRow();
             QCOMPARE(focused, newFocused);
@@ -141,10 +142,11 @@ private slots:
 
         // removing all stops playback
         {
-            QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::itemPlayingStarted);
-
-            QTest::keyClick(m_playlistWidget, Qt::Key_A, Qt::ControlModifier, DELAY);
-            QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+            QSignalSpy spy(m_playbackEngine, SIGNAL(mediaChanged(const QString &, int)));
+            // select all:
+            QTest::keyClick(m_playlistWidget, Qt::Key_A, Qt::ControlModifier, INPUT_DELAY_MSEC);
+            // delete selected:
+            QTest::keyClick(m_playlistWidget, Qt::Key_Delete, Qt::NoModifier, INPUT_DELAY_MSEC);
             QCOMPARE(m_playlistWidget->count(), 0);
 
             QCOMPARE(spy.count(), 1);
@@ -157,7 +159,7 @@ private slots:
     {
         m_playbackEngine->stop();
 
-        QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::itemPlayingStarted);
+        QSignalSpy spy(m_playbackEngine, SIGNAL(mediaChanged(const QString &, int)));
         int count = 0;
         int row = 0;
 
@@ -166,10 +168,11 @@ private slots:
         m_playlistWidget->setPlaylist("playlist.m3u");
 
         m_playlistWidget->playRow(row);
+        QTest::qWait(PLAY_WAIT_MSEC);
         ++count;
         QCOMPARE(spy.count(), count);
-        m_playbackEngine->setPosition(0.8);
-        QTest::qWait(500);
+        m_playbackEngine->setPosition(CROSSFADING_POS);
+        QTest::qWait(PLAYNEXT_WAIT_MSEC);
         ++row;
         ++count;
         QCOMPARE(m_playlistWidget->playingRow(), row);
@@ -180,7 +183,7 @@ private slots:
     {
         m_playbackEngine->stop();
 
-        QSignalSpy spy(m_playlistWidget, &NPlaylistWidget::itemPlayingStarted);
+        QSignalSpy spy(m_playbackEngine, SIGNAL(mediaChanged(const QString &, int)));
         int count = 0;
         int row = 0;
 
@@ -190,23 +193,27 @@ private slots:
         m_playlistWidget->setPlaylist("playlist.m3u");
 
         m_playlistWidget->playRow(row);
+        QTest::qWait(PLAY_WAIT_MSEC);
         ++count;
         QCOMPARE(spy.count(), count);
-        m_playbackEngine->setPosition(0.8);
-        QTest::qWait(500);
+        m_playbackEngine->setPosition(CROSSFADING_POS);
+        QTest::qWait(PLAYNEXT_WAIT_MSEC);
         ++count;
         QCOMPARE(spy.count(), count);
         QCOMPARE(m_playlistWidget->playingRow(), row);
 
-        QTest::keyClick(m_playlistWidget, Qt::Key_A, Qt::ControlModifier, DELAY);
-        QTest::keyClick(m_playlistWidget, Qt::Key_Space, Qt::ControlModifier, DELAY);
-        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, 0, DELAY);
+        // select all:
+        QTest::keyClick(m_playlistWidget, Qt::Key_A, Qt::ControlModifier, INPUT_DELAY_MSEC);
+        // unselect current:
+        QTest::keyClick(m_playlistWidget, Qt::Key_Space, Qt::ControlModifier, INPUT_DELAY_MSEC);
+        // delete selected:
+        QTest::keyClick(m_playlistWidget, Qt::Key_Delete, Qt::NoModifier, INPUT_DELAY_MSEC);
         QCOMPARE(m_playlistWidget->count(), 1);
         QCOMPARE(m_playlistWidget->playingRow(), row);
         QCOMPARE(spy.count(), count);
 
-        m_playbackEngine->setPosition(0.8);
-        QTest::qWait(500);
+        m_playbackEngine->setPosition(CROSSFADING_POS);
+        QTest::qWait(PLAYNEXT_WAIT_MSEC);
         ++count;
         QCOMPARE(spy.count(), count);
         QCOMPARE(m_playlistWidget->playingRow(), row);

@@ -33,19 +33,26 @@ private:
     GstElement *m_playbin;
     GstElement *m_pitchElement;
 
-    QTimer *m_timer;
+    QTimer *m_checkStatusTimer;
+    QTimer *m_emitStateTimer;
     qreal m_speed;
     bool m_speedPostponed;
     qreal m_pitch;
-    qreal m_oldVolume;
-    qreal m_oldPosition;
-    N::PlaybackState m_oldState;
+    qreal m_volume;
+    qreal m_position;
+    GstState m_gstState;
     qreal m_posponedPosition;
-    QString m_currentMedia;
     gint64 m_durationNsec;
     bool m_crossfading;
+    bool m_nextMediaRequestBlock;
 
-    N::PlaybackState fromGstState(GstState state);
+    QString m_currentMedia;
+    int m_currentContext;
+    QString m_bkpMedia;
+    int m_bkpContext;
+
+    N::PlaybackState fromGstState(GstState state) const;
+    bool gstSetFile(const QString &file, int context, bool prepareNext);
     void fail();
 
 public:
@@ -57,7 +64,7 @@ public:
 
     Q_INVOKABLE bool hasMedia() const;
     Q_INVOKABLE QString currentMedia() const;
-    Q_INVOKABLE N::PlaybackState state() const { return m_oldState; }
+    Q_INVOKABLE N::PlaybackState state() const;
 
     Q_INVOKABLE qreal volume() const;
     Q_INVOKABLE qreal position() const;
@@ -65,12 +72,13 @@ public:
     Q_INVOKABLE qreal speed() const;
     Q_INVOKABLE qreal pitch() const;
 
-    void _emitAboutToFinish();
-    void _crossfadingPrepare();
-    void _crossfadingCancel();
+    void _emitNextMediaRequest();
+    void _processGstMessage(GstMessage *msg);
+    bool _nextMediaRequestBlocked();
 
 public slots:
-    Q_INVOKABLE void setMedia(const QString &file);
+    Q_INVOKABLE void setMedia(const QString &file, int context);
+    Q_INVOKABLE void nextMediaRespond(const QString &file, int context);
     Q_INVOKABLE void setVolume(qreal volume);
     Q_INVOKABLE void setPosition(qreal pos);
     Q_INVOKABLE void jump(qint64 msec);
@@ -88,9 +96,9 @@ signals:
     void positionChanged(qreal pos);
     void volumeChanged(qreal volume);
     void message(N::MessageIcon icon, const QString &file, const QString &msg);
-    void mediaChanged(const QString &file);
+    void mediaChanged(const QString &file, int context);
     void finished();
-    void aboutToFinish();
+    void nextMediaRequested();
     void failed();
     void stateChanged(N::PlaybackState state);
     void tick(qint64 msec);

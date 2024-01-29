@@ -18,6 +18,8 @@
 
 #include <QString>
 
+static unsigned int id_counter = 1000; // IDs below 1000 are reserved, 0 means invalid ID
+
 struct NPlaylistDataItem
 {
     QString title;
@@ -28,10 +30,11 @@ struct NPlaylistDataItem
     float playbackPosition;
     QString titleFormat;
     int trackIndex;
+    unsigned int id;
 
     NPlaylistDataItem(const QString &file = "")
         : path(file), duration(-1), failed(false), playbackCount(0), playbackPosition(0.0),
-          trackIndex(0){};
+          trackIndex(0), id(id_counter++){};
 };
 
 #endif

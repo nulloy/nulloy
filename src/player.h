@@ -123,13 +123,12 @@ private slots:
     void saveSettings();
 
     void on_preferencesDialog_settingsChanged();
-    void on_playbackEngine_mediaChanged(const QString &path);
+    void on_playbackEngine_mediaChanged(const QString &path, int);
     void on_playbackEngine_stateChanged(N::PlaybackState state);
     void on_alwaysOnTopAction_toggled(bool checked);
     void on_whilePlayingOnTopAction_toggled(bool checked);
     void on_showCoverAction_toggled(bool checked);
     void on_playButton_clicked();
-    void on_playbackEngine_failed();
     void on_playlistAction_triggered();
     void on_playlist_tagEditorRequested(const QString &path);
     void on_playlist_addMoreRequested();

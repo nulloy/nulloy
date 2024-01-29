@@ -43,6 +43,7 @@ class NPlaylistWidget : public QListWidget
 
 private:
     NPlaylistWidgetItem *m_playingItem;
+    QMap<int, NPlaylistWidgetItem *> m_itemMap;
     QMenu *m_contextMenu;
     NTrackInfoReader *m_trackInfoReader;
     NPlaybackEngineInterface *m_playbackEngine;
@@ -57,6 +58,8 @@ private:
     void contextMenuEvent(QContextMenuEvent *event);
     void resizeEvent(QResizeEvent *event);
     void formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force = false);
+    NPlaylistWidgetItem *nextItem(NPlaylistWidgetItem *) const;
+    NPlaylistWidgetItem *prevItem(NPlaylistWidgetItem *item) const;
     void resetPlayingItem();
     bool revealInFileManager(const QString &file, QString *error) const;
 
@@ -73,12 +76,17 @@ private slots:
     void on_tagEditorAction_triggered();
     void startProcessVisibleItemsTimer();
 
+    void on_playbackEngine_mediaChanged(const QString &file, int id);
+    void on_playbackEngine_prepareNextMediaRequested();
+    void on_playbackEngine_finished();
+    void on_playbackEngine_failed();
+
 public:
     NPlaylistWidget(QWidget *parent = 0);
     ~NPlaylistWidget();
 
-    NPlaylistWidgetItem *item(int row, bool loop = false) const;
-    NPlaylistWidgetItem *nextItem() const;
+    void addItem(NPlaylistWidgetItem *item);
+    NPlaylistWidgetItem *item(int row) const;
     NPlaylistWidgetItem *playingItem() const;
     int playingRow() const;
     Q_INVOKABLE bool hasPlaying() const;
@@ -103,14 +111,10 @@ public slots:
     void processVisibleItems();
     void updateTrackIndexes();
 
-    void playingFinished();
-    void playingFailed();
-
     void setShuffleMode(bool enable);
     void setRepeatMode(bool enable);
 
 signals:
-    void itemPlayingStarted(NPlaylistWidgetItem *item);
     void tagEditorRequested(const QString &file);
     void addMoreRequested();
 

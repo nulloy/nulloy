@@ -161,10 +161,9 @@ void NPlaybackEngineVlc::play()
         return;
     }
 
-    if (!libvlc_media_player_is_playing(m_mediaPlayer))
+    if (!libvlc_media_player_is_playing(m_mediaPlayer)) {
         libvlc_media_player_play(m_mediaPlayer);
-    else
-        pause();
+    }
 }
 
 void NPlaybackEngineVlc::pause()

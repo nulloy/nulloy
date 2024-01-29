@@ -469,17 +469,13 @@ void NPlayer::createTrayIcon()
 
 void NPlayer::connectSignals()
 {
-    connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &)), this,
-            SLOT(on_playbackEngine_mediaChanged(const QString &)));
+    connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &, int)), this,
+            SLOT(on_playbackEngine_mediaChanged(const QString &, int)));
     connect(m_playbackEngine, SIGNAL(stateChanged(N::PlaybackState)), this,
             SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));
-    connect(m_playbackEngine, SIGNAL(aboutToFinish()), m_playlistWidget, SLOT(playingFinished()),
-            Qt::BlockingQueuedConnection);
     connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), m_waveformSlider,
             SLOT(setValue(qreal)));
     connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
-    connect(m_playbackEngine, SIGNAL(finished()), m_playlistWidget, SLOT(playingFinished()));
-    connect(m_playbackEngine, SIGNAL(failed()), this, SLOT(on_playbackEngine_failed()));
     connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
             m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
 
@@ -535,16 +531,6 @@ void NPlayer::connectSignals()
                 SLOT(setChecked(bool)));
     }
 
-    connect(m_playlistWidget, &NPlaylistWidget::itemPlayingStarted,
-            [this](NPlaylistWidgetItem *item) {
-                if (item) {
-                    m_playbackEngine->setMedia(item->data(N::PathRole).toString());
-                    m_playbackEngine->play();
-                } else {
-                    m_playbackEngine->setMedia("");
-                }
-            });
-
     connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), m_shufflePlaylistAction,
             SLOT(setChecked(bool)));
     connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), m_repeatPlaylistAction,
@@ -563,7 +549,13 @@ void NPlayer::connectSignals()
             SLOT(setPosition(qreal)));
 
     connect(m_showHideAction, SIGNAL(triggered()), this, SLOT(toggleWindowVisibility()));
-    connect(m_playAction, SIGNAL(triggered()), m_playbackEngine, SLOT(play()));
+    connect(m_playAction, &NAction::triggered, [this]() {
+        if (m_playbackEngine->state() != N::PlaybackPlaying) {
+            m_playbackEngine->play();
+        } else {
+            m_playbackEngine->pause();
+        }
+    });
     connect(m_stopAction, SIGNAL(triggered()), m_playbackEngine, SLOT(stop()));
     connect(m_prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playPrevItem()));
     connect(m_nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playNextItem()));
@@ -903,7 +895,7 @@ void NPlayer::quit()
     QCoreApplication::quit();
 }
 
-void NPlayer::on_playbackEngine_mediaChanged(const QString &file)
+void NPlayer::on_playbackEngine_mediaChanged(const QString &file, int)
 {
     QString title;
     QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
@@ -1123,13 +1115,12 @@ void NPlayer::on_playButton_clicked()
             showOpenFileDialog();
         }
     } else {
-        m_playbackEngine->play(); // toggle play/pause
+        if (m_playbackEngine->state() == N::PlaybackPlaying) {
+            m_playbackEngine->pause();
+        } else {
+            m_playbackEngine->play();
+        }
     }
-}
-
-void NPlayer::on_playbackEngine_failed()
-{
-    m_playlistWidget->playingFailed();
 }
 
 void NPlayer::showAboutMessageBox()

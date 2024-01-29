@@ -18,7 +18,7 @@
 
 #include "global.h"
 
-#define PLAYBACK_INTERFACE "Nulloy/NPlaybackEngineInterface/0.8"
+#define PLAYBACK_INTERFACE "Nulloy/NPlaybackEngineInterface/0.9"
 
 class NPlaybackEngineInterface : public QObject
 {
@@ -39,7 +39,12 @@ public:
     static QString interfaceString() { return PLAYBACK_INTERFACE; }
 
 public slots:
-    Q_INVOKABLE virtual void setMedia(const QString &file) = 0;
+    Q_INVOKABLE virtual void setMedia(const QString &file, int context) = 0;
+    Q_INVOKABLE virtual void nextMediaRespond(const QString &file, int context)
+    {
+        Q_UNUSED(file);
+        Q_UNUSED(context);
+    };
     Q_INVOKABLE virtual void setVolume(qreal volume) = 0;
     Q_INVOKABLE virtual void setPosition(qreal pos) = 0;
     Q_INVOKABLE virtual void jump(qint64 msec) { Q_UNUSED(msec); }
@@ -54,7 +59,8 @@ signals:
     virtual void positionChanged(qreal pos) = 0;
     virtual void volumeChanged(qreal vol) = 0;
     virtual void message(N::MessageIcon icon, const QString &title, const QString &msg) = 0;
-    virtual void mediaChanged(const QString &file) = 0;
+    virtual void mediaChanged(const QString &file, int context) = 0;
+    virtual void nextMediaRequested() = 0;
     virtual void finished() = 0;
     virtual void failed() = 0;
     virtual void stateChanged(N::PlaybackState state) = 0;
