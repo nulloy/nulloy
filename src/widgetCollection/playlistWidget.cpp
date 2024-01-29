@@ -322,7 +322,7 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
         QStringList args;
 #if defined Q_OS_WIN
         cmd = "explorer.exe";
-        args = QStringList{"/n", ",", "/select", ",", path.replace('/', '\\')}
+        args = QStringList{"/n", ",", "/select", ",", path.replace('/', '\\')};
 #elif defined Q_OS_LINUX
         cmd = "xdg-open";
         args = QStringList{fileInfo.canonicalPath().replace("'", "'\\''")};
