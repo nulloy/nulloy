@@ -166,8 +166,19 @@ bool NPlaybackEngineGStreamer::gstSetFile(const QString &file, int context, bool
     if (uri) {
         m_currentMedia = file;
         m_currentContext = context;
+#if GST_VERSION_MINOR < 22
+        if (!prepareNext) {
+            gst_element_set_state(m_playbin, GST_STATE_NULL);
+        }
+#else
         g_object_set(m_playbin, "instant-uri", !prepareNext, NULL);
+#endif
         g_object_set(m_playbin, "uri", uri, NULL);
+#if GST_VERSION_MINOR < 22
+        if (!prepareNext) {
+            gst_element_set_state(m_playbin, GST_STATE_PLAYING);
+        }
+#endif
         g_free(uri);
     } else {
         emit message(N::Critical, file, err ? QString::fromUtf8(err->message) : tr("Invalid path"));
