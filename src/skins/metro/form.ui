@@ -157,7 +157,6 @@
 }
 #playButton {
 	qproperty-icon: url(play.png);
-	padding-left: 2px;
 }
 #nextButton {
 	qproperty-icon: url(next.png);
