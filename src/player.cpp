@@ -335,6 +335,7 @@ void NPlayer::createActions()
     // << speed actions
 
     // pitch actions >>
+    /*
     m_pitchIncreaseAction = new NAction(tr("Pitch Increase"), this);
     m_pitchIncreaseAction->setObjectName("PitchIncreaseAction");
     m_pitchIncreaseAction->setStatusTip(tr("Increase playback pitch"));
@@ -349,6 +350,7 @@ void NPlayer::createActions()
     m_pitchResetAction->setObjectName("PitchResetAction");
     m_pitchResetAction->setStatusTip(tr("Reset pitch to 1.0"));
     m_pitchResetAction->setCustomizable(true);
+    */
     // << pitch actions
 
     // keyboard shortcuts
@@ -598,11 +600,13 @@ void NPlayer::connectSignals()
             SLOT(on_speedDecreaseAction_triggered()));
     connect(m_speedResetAction, SIGNAL(triggered()), this, SLOT(on_speedResetAction_triggered()));
 
+    /*
     connect(m_pitchIncreaseAction, SIGNAL(triggered()), this,
             SLOT(on_pitchIncreaseAction_triggered()));
     connect(m_pitchDecreaseAction, SIGNAL(triggered()), this,
             SLOT(on_pitchDecreaseAction_triggered()));
     connect(m_pitchResetAction, SIGNAL(triggered()), this, SLOT(on_pitchResetAction_triggered()));
+    */
 
     connect(m_mainWindow, SIGNAL(customContextMenuRequested(const QPoint &)), this,
             SLOT(showContextMenu(const QPoint &)));

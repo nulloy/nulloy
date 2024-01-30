@@ -1191,13 +1191,13 @@ padding: 5px;</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="8" colspan="2">
+         <!--item row="0" column="8" colspan="2">
           <widget class="QLabel" name="pitchLabel">
            <property name="text">
             <string>Pitch:</string>
            </property>
           </widget>
-         </item>
+         </item-->
          <item row="1" column="1">
           <widget class="QLabel" name="jump1Label">
            <property name="text">
@@ -1235,7 +1235,7 @@ padding: 5px;</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="9">
+         <!--item row="1" column="9">
           <widget class="QLabel" name="pitchStepLabel">
            <property name="text">
             <string>Increment step</string>
@@ -1254,7 +1254,7 @@ padding: 5px;</string>
             <double>0.010000000000000</double>
            </property>
           </widget>
-         </item>
+         </item-->
          <item row="2" column="0">
           <spacer name="horizontalSpacer_8">
            <property name="orientation">

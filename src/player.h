@@ -101,9 +101,11 @@ private:
     NAction *m_speedIncreaseAction;
     NAction *m_speedDecreaseAction;
     NAction *m_speedResetAction;
+    /*
     NAction *m_pitchIncreaseAction;
     NAction *m_pitchDecreaseAction;
     NAction *m_pitchResetAction;
+    */
     void createActions();
     void createContextMenu();
     void createGlobalMenu();
