@@ -121,6 +121,9 @@ signals:
     void shuffleModeChanged(bool enable);
     void repeatModeChanged(bool enable);
 
+    void itemsChanged();
+    void playingItemChanged();
+
     // DRAG & DROP >>
 public:
     enum DragStart

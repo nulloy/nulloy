@@ -117,6 +117,9 @@ NPlayer::NPlayer()
         repeatButton->setChecked(m_playlistWidget->repeatMode());
     }
     m_playlistWidget->setTrackInfoReader(m_trackInfoReader);
+    if (NSettings::instance()->value("RestorePlaylist").toBool()) {
+        loadDefaultPlaylist();
+    }
 
     m_trackInfoWidget = new NTrackInfoWidget();
     m_trackInfoWidget->setTrackInfoReader(m_trackInfoReader);
@@ -159,6 +162,10 @@ NPlayer::NPlayer()
     QCoreApplication::sendEvent(m_mainWindow, &e);
 
     skinProgram.property("afterShow").call(skinProgram);
+
+    m_settingsSaveTimer = new QTimer(this);
+    connect(m_settingsSaveTimer, &QTimer::timeout, [this]() { saveSettings(); });
+    m_settingsSaveTimer->start(5000); // 5 seconds
 }
 
 NPlayer::~NPlayer()
@@ -542,6 +549,13 @@ void NPlayer::connectSignals()
     connect(m_playlistWidget, SIGNAL(addMoreRequested()), this,
             SLOT(on_playlist_addMoreRequested()));
 
+    connect(m_playlistWidget, &NPlaylistWidget::itemsChanged,
+            [this]() { writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u); });
+    connect(m_playlistWidget, &NPlaylistWidget::playingItemChanged, [this]() {
+        writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u);
+        savePlaybackState();
+    });
+
     connect(m_waveformSlider, &NWaveformSlider::filesDropped,
             [this](const QList<NPlaylistDataItem> &dataItems) {
                 m_playlistWidget->setItems(dataItems);
@@ -730,16 +744,6 @@ void NPlayer::writePlaylist(const QString &file, N::M3uExtention ext)
     NPlaylistStorage::writeM3u(file, dataItemsList, ext);
 }
 
-void NPlayer::saveDefaultPlaylist()
-{
-    writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u);
-
-    int row = m_playlistWidget->playingRow();
-    qreal pos = m_playbackEngine->position();
-    m_settings->setValue("PlaylistRow", QStringList()
-                                            << QString::number(row) << QString::number(pos));
-}
-
 void NPlayer::loadSettings()
 {
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
@@ -782,6 +786,16 @@ void NPlayer::loadSettings()
 void NPlayer::saveSettings()
 {
     m_settings->setValue("Volume", QString::number(m_playbackEngine->volume()));
+    m_mainWindow->saveSettings();
+    savePlaybackState();
+}
+
+void NPlayer::savePlaybackState()
+{
+    int row = m_playlistWidget->playingRow();
+    qreal pos = m_playbackEngine->position();
+    m_settings->setValue("PlaylistRow", QStringList()
+                                            << QString::number(row) << QString::number(pos));
 }
 
 void NPlayer::on_preferencesDialog_settingsChanged()
@@ -893,8 +907,6 @@ void NPlayer::trayIconCountClicks(int clicks)
 
 void NPlayer::quit()
 {
-    m_mainWindow->saveSettings();
-    saveDefaultPlaylist();
     saveSettings();
     QCoreApplication::quit();
 }

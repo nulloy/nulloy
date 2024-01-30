@@ -174,10 +174,6 @@ int main(int argc, char *argv[])
                      SLOT(readMessage(const QString &)));
     QObject::connect(&instance, SIGNAL(aboutToQuit()), &p, SLOT(quit()));
 
-    if (NSettings::instance()->value("RestorePlaylist").toBool()) {
-        p.loadDefaultPlaylist();
-    }
-
     // manually read the message
     if (!msg.isEmpty()) {
         p.readMessage(msg);

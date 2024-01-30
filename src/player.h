@@ -69,6 +69,7 @@ private:
     NLogDialog *m_logDialog;
     QSystemTrayIcon *m_systemTray;
     QTimer *m_trayClickTimer;
+    QTimer *m_settingsSaveTimer;
     bool m_trayIconDoubleClickCheck;
 
     bool eventFilter(QObject *obj, QEvent *event);
@@ -113,17 +114,18 @@ private:
 
     void connectSignals();
 
+    void loadDefaultPlaylist();
+    void loadSettings();
+    void saveSettings();
+    void savePlaybackState();
+
 public:
     NPlayer();
     ~NPlayer();
-
     NMainWindow *mainWindow();
     NPlaybackEngineInterface *playbackEngine();
 
 private slots:
-    void loadSettings();
-    void saveSettings();
-
     void on_preferencesDialog_settingsChanged();
     void on_playbackEngine_mediaChanged(const QString &path, int);
     void on_playbackEngine_stateChanged(N::PlaybackState state);
@@ -167,8 +169,6 @@ public slots:
     void showToolTip(const QString &text);
     void showContextMenu(const QPoint &pos);
     void readMessage(const QString &str);
-    void loadDefaultPlaylist();
-    void saveDefaultPlaylist();
 };
 
 #endif

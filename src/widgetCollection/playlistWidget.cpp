@@ -352,6 +352,7 @@ void NPlaylistWidget::updateTrackIndexes()
     for (int i = 0; i < count(); ++i) {
         item(i)->setData(N::TrackIndexRole, i);
     }
+    emit itemsChanged();
 }
 
 NPlaylistWidget::~NPlaylistWidget() {}
@@ -401,6 +402,7 @@ void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
         item = m_itemMap[id];
     }
     if (!item) {
+        emit playingItemChanged();
         return;
     }
 
@@ -415,6 +417,7 @@ void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
 
     scrollToItem(item);
     m_playingItem = item;
+    emit playingItemChanged();
     update();
 
     if (m_shuffleMode) {
@@ -452,6 +455,7 @@ void NPlaylistWidget::on_playbackEngine_failed()
         return;
     }
     m_playingItem->setData(N::FailedRole, true);
+    emit playingItemChanged();
 }
 
 void NPlaylistWidget::playItem(NPlaylistWidgetItem *item)
