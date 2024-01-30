@@ -74,7 +74,7 @@ void NPlaybackEngineGStreamer::init()
             g_error_free(err);
         }
     }
-    m_playbin = gst_element_factory_make("playbin3", NULL);
+    m_playbin = gst_element_factory_make("playbin", NULL);
     g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
     gst_element_add_property_notify_watch(m_playbin, "volume", TRUE);
 
@@ -166,19 +166,13 @@ bool NPlaybackEngineGStreamer::gstSetFile(const QString &file, int context, bool
     if (uri) {
         m_currentMedia = file;
         m_currentContext = context;
-#if GST_VERSION_MINOR < 22
         if (!prepareNext) {
             gst_element_set_state(m_playbin, GST_STATE_NULL);
         }
-#else
-        g_object_set(m_playbin, "instant-uri", !prepareNext, NULL);
-#endif
         g_object_set(m_playbin, "uri", uri, NULL);
-#if GST_VERSION_MINOR < 22
         if (!prepareNext) {
             gst_element_set_state(m_playbin, GST_STATE_PLAYING);
         }
-#endif
         g_free(uri);
     } else {
         emit message(N::Critical, file, err ? QString::fromUtf8(err->message) : tr("Invalid path"));
@@ -198,11 +192,9 @@ void NPlaybackEngineGStreamer::setMedia(const QString &file, int context)
     m_position = 0.0;
     m_nextMediaRequestBlock = true;
 
-    gst_element_set_state(m_playbin, GST_STATE_NULL);
     if (!gstSetFile(file, context, false)) {
         return;
     }
-    gst_element_set_state(m_playbin, GST_STATE_PLAYING);
 }
 
 void NPlaybackEngineGStreamer::nextMediaRespond(const QString &file, int context)
@@ -259,12 +251,10 @@ void NPlaybackEngineGStreamer::setPosition(qreal pos)
 
     if (m_crossfading) {
         // abort cross-fading:
-        gst_element_set_state(m_playbin, GST_STATE_NULL);
         if (!gstSetFile(m_bkpMedia, m_bkpContext, false)) {
             fail();
             return;
         }
-        gst_element_set_state(m_playbin, GST_STATE_PLAYING);
     }
     m_posponedPosition = pos;
 }
@@ -277,12 +267,10 @@ void NPlaybackEngineGStreamer::jump(qint64 msec)
 
     if (m_crossfading) {
         // abort cross-fading:
-        gst_element_set_state(m_playbin, GST_STATE_NULL);
         if (!gstSetFile(m_bkpMedia, m_bkpContext, false)) {
             fail();
             return;
         }
-        gst_element_set_state(m_playbin, GST_STATE_PLAYING);
     }
     m_posponedPosition = m_position + ((qreal)msec * NSEC_IN_MSEC) / m_durationNsec;
 }
@@ -435,7 +423,8 @@ void NPlaybackEngineGStreamer::checkStatus()
                 gstPos = m_posponedPosition * m_durationNsec;
             }
             gst_element_seek(m_playbin, m_speed, GST_FORMAT_TIME,
-                             GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE),
+                             GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT |
+                                          GST_SEEK_FLAG_SNAP_NEAREST),
                              GST_SEEK_TYPE_SET, gstPos, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
             m_posponedPosition = -1.0;
             m_speedPostponed = false;
