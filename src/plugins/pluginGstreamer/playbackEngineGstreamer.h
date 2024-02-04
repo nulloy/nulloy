@@ -35,6 +35,7 @@ private:
 
     QTimer *m_checkStatusTimer;
     QTimer *m_emitStateTimer;
+    QTimer *m_gstBusPopTimer;
     qreal m_speed;
     bool m_speedPostponed;
     qreal m_pitch;
@@ -53,6 +54,7 @@ private:
 
     N::PlaybackState fromGstState(GstState state) const;
     bool gstSetFile(const QString &file, int context, bool prepareNext);
+    void processGstMessage(GstMessage *msg);
     void fail();
 
 public:
@@ -73,7 +75,6 @@ public:
     Q_INVOKABLE qreal pitch() const;
 
     void _emitNextMediaRequest();
-    void _processGstMessage(GstMessage *msg);
     bool _nextMediaRequestBlocked();
 
 public slots:

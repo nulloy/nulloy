@@ -26,6 +26,7 @@
 #define SHORT_TICK_MSEC 20
 #define LONG_TICK_MSEC 100
 #define STATE_CHANGE_DEBOUNCE_MSEC 50
+#define GST_BUS_POP_MSEC 50
 
 static void _on_about_to_finish(GstElement *playbin, gpointer userData)
 {
@@ -34,13 +35,6 @@ static void _on_about_to_finish(GstElement *playbin, gpointer userData)
         return;
     }
     obj->_emitNextMediaRequest();
-}
-
-static gboolean _bus_callback(GstBus *bus, GstMessage *msg, gpointer userData)
-{
-    NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
-    obj->_processGstMessage(msg);
-    return TRUE;
 }
 
 N::PlaybackState NPlaybackEngineGStreamer::fromGstState(GstState state) const
@@ -77,10 +71,6 @@ void NPlaybackEngineGStreamer::init()
     m_playbin = gst_element_factory_make("playbin", NULL);
     g_signal_connect(m_playbin, "about-to-finish", G_CALLBACK(_on_about_to_finish), this);
     gst_element_add_property_notify_watch(m_playbin, "volume", TRUE);
-
-    GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
-    gst_bus_add_watch(bus, _bus_callback, this);
-    gst_object_unref(bus);
 
     // FIXME: https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/-/issues/1798
     //m_pitchElement = gst_element_factory_make("pitch", NULL);
@@ -133,6 +123,16 @@ void NPlaybackEngineGStreamer::init()
     m_emitStateTimer->setInterval(STATE_CHANGE_DEBOUNCE_MSEC);
     connect(m_emitStateTimer, &QTimer::timeout,
             [this]() { emit stateChanged(fromGstState(m_gstState)); });
+
+    m_gstBusPopTimer = new QTimer(this);
+    m_gstBusPopTimer->setInterval(GST_BUS_POP_MSEC);
+    connect(m_gstBusPopTimer, &QTimer::timeout, [this]() {
+        GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_playbin));
+        GstMessage *msg;
+        while ((msg = gst_bus_pop(bus)) != NULL) {
+            processGstMessage(msg);
+        }
+    });
 
     m_init = true;
 }
@@ -291,6 +291,7 @@ void NPlaybackEngineGStreamer::play()
         return;
     }
 
+    m_gstBusPopTimer->start();
     gst_element_set_state(m_playbin, GST_STATE_PLAYING);
     m_checkStatusTimer->start(LONG_TICK_MSEC);
 }
@@ -304,6 +305,7 @@ void NPlaybackEngineGStreamer::pause()
     gst_element_set_state(m_playbin, GST_STATE_PAUSED);
 
     m_checkStatusTimer->stop();
+    m_gstBusPopTimer->stop();
     checkStatus();
 }
 
@@ -319,6 +321,7 @@ void NPlaybackEngineGStreamer::stop()
     emit positionChanged(m_position);
 
     m_checkStatusTimer->stop();
+    m_gstBusPopTimer->stop();
 }
 
 bool NPlaybackEngineGStreamer::hasMedia() const
@@ -336,7 +339,7 @@ N::PlaybackState NPlaybackEngineGStreamer::state() const
     return fromGstState(m_gstState);
 }
 
-void NPlaybackEngineGStreamer::_processGstMessage(GstMessage *msg)
+void NPlaybackEngineGStreamer::processGstMessage(GstMessage *msg)
 {
     //qDebug() << "message type:" << GST_MESSAGE_TYPE_NAME(msg);
     switch (GST_MESSAGE_TYPE(msg)) {
