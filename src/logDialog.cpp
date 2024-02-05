@@ -97,7 +97,7 @@ void NLogDialog::showMessage(N::MessageIcon icon, const QString &title, const QS
     activateWindow();
 }
 
-void NLogDialog::closeEvent(QCloseEvent *event)
+void NLogDialog::hideEvent(QHideEvent *event)
 {
     Q_UNUSED(event);
 

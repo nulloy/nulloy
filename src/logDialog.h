@@ -35,7 +35,7 @@ private:
     QString m_oldTitle;
     QString m_text;
 
-    void closeEvent(QCloseEvent *event);
+    void hideEvent(QHideEvent *event);
 
 public:
     NLogDialog(QWidget *parent = 0);
