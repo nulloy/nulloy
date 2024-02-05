@@ -343,8 +343,8 @@ void NPlaybackEngineGStreamer::processGstMessage(GstMessage *msg)
     //qDebug() << "message type:" << GST_MESSAGE_TYPE_NAME(msg);
     switch (GST_MESSAGE_TYPE(msg)) {
         case GST_MESSAGE_EOS: {
-            emit mediaFinished(m_currentMedia, m_currentContext);
             stop();
+            emit mediaFinished(m_currentMedia, m_currentContext);
             break;
         }
         case GST_MESSAGE_ERROR: {
