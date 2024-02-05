@@ -129,6 +129,7 @@ public:
 private slots:
     void on_preferencesDialog_settingsChanged();
     void on_playbackEngine_mediaChanged(const QString &path, int);
+    void on_playbackEngine_mediaFailed(const QString &, int);
     void on_playbackEngine_stateChanged(N::PlaybackState state);
     void on_alwaysOnTopAction_toggled(bool checked);
     void on_whilePlayingOnTopAction_toggled(bool checked);

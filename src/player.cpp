@@ -488,6 +488,8 @@ void NPlayer::connectSignals()
 {
     connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &, int)), this,
             SLOT(on_playbackEngine_mediaChanged(const QString &, int)));
+    connect(m_playbackEngine, SIGNAL(mediaFailed(const QString &, int)), this,
+            SLOT(on_playbackEngine_mediaFailed(const QString &, int)));
     connect(m_playbackEngine, SIGNAL(stateChanged(N::PlaybackState)), this,
             SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));
     connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), m_waveformSlider,
@@ -983,6 +985,11 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file, int)
     } else {
         m_coverWidget->setPixmap(QPixmap::fromImage(image));
     }
+}
+
+void NPlayer::on_playbackEngine_mediaFailed(const QString &, int)
+{
+    on_playbackEngine_mediaChanged("", 0);
 }
 
 void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
