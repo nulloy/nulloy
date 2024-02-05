@@ -291,8 +291,8 @@ void NPlaybackEngineGStreamer::play()
     }
 
     m_gstBusPopTimer->start();
-    gst_element_set_state(m_playbin, GST_STATE_PLAYING);
     m_checkStatusTimer->start(LONG_TICK_MSEC);
+    gst_element_set_state(m_playbin, GST_STATE_PLAYING);
 }
 
 void NPlaybackEngineGStreamer::pause()
