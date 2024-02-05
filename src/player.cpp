@@ -279,6 +279,12 @@ void NPlayer::createActions()
     m_loopPlaylistAction->setCheckable(true);
     m_loopPlaylistAction->setObjectName("LoopPlaylistAction");
 
+    m_scrollToItemPlaylistAction = new NAction(tr("Scroll to playing item"), this);
+    m_scrollToItemPlaylistAction->setCheckable(true);
+    m_scrollToItemPlaylistAction->setStatusTip(
+        tr("Automatically scroll playlist to currently playing item"));
+    m_scrollToItemPlaylistAction->setObjectName("ScrollToItemPlaylistAction");
+
     m_nextFileEnableAction = new NAction(tr("Load next file in directory when finished"), this);
     m_nextFileEnableAction->setCheckable(true);
     m_nextFileEnableAction->setObjectName("NextFileEnableAction");
@@ -398,6 +404,7 @@ void NPlayer::createContextMenu()
     m_playlistSubMenu->addAction(m_shufflePlaylistAction);
     m_playlistSubMenu->addAction(m_repeatPlaylistAction);
     m_playlistSubMenu->addAction(m_loopPlaylistAction);
+    m_playlistSubMenu->addAction(m_scrollToItemPlaylistAction);
     m_playlistSubMenu->addAction(m_nextFileEnableAction);
     m_playlistSubMenu->addAction(m_nextFileByNameAscdAction);
     m_playlistSubMenu->addAction(m_nextFileByNameDescAction);
@@ -441,6 +448,7 @@ void NPlayer::createGlobalMenu()
     playlistSubMenu->addAction(m_shufflePlaylistAction);
     playlistSubMenu->addAction(m_repeatPlaylistAction);
     playlistSubMenu->addAction(m_loopPlaylistAction);
+    playlistSubMenu->addAction(m_scrollToItemPlaylistAction);
     playlistSubMenu->addAction(m_nextFileEnableAction);
     playlistSubMenu->addAction(m_nextFileByNameAscdAction);
     playlistSubMenu->addAction(m_nextFileByNameDescAction);
@@ -593,7 +601,10 @@ void NPlayer::connectSignals()
             SLOT(setShuffleMode(bool)));
     connect(m_repeatPlaylistAction, SIGNAL(triggered(bool)), m_playlistWidget,
             SLOT(setRepeatMode(bool)));
-    connect(m_loopPlaylistAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
+    connect(m_loopPlaylistAction, SIGNAL(triggered(bool)), this,
+            SLOT(on_playlistAction_triggered()));
+    connect(m_scrollToItemPlaylistAction, SIGNAL(triggered(bool)), this,
+            SLOT(on_playlistAction_triggered()));
     connect(m_nextFileEnableAction, SIGNAL(triggered()), this, SLOT(on_playlistAction_triggered()));
     connect(m_nextFileByNameAscdAction, SIGNAL(triggered()), this,
             SLOT(on_playlistAction_triggered()));
@@ -765,6 +776,7 @@ void NPlayer::loadSettings()
     m_alwaysOnTopAction->setChecked(m_settings->value("AlwaysOnTop").toBool());
     m_playingOnTopAction->setChecked(m_settings->value("WhilePlayingOnTop").toBool());
     m_loopPlaylistAction->setChecked(m_settings->value("LoopPlaylist").toBool());
+    m_scrollToItemPlaylistAction->setChecked(m_settings->value("ScrollToItem").toBool());
     m_nextFileEnableAction->setChecked(m_settings->value("LoadNext").toBool());
 
     QDir::SortFlag flag = (QDir::SortFlag)m_settings->value("LoadNextSort").toInt();
@@ -1023,6 +1035,8 @@ void NPlayer::on_playlistAction_triggered()
     NAction *action = reinterpret_cast<NAction *>(QObject::sender());
     if (action == m_loopPlaylistAction) {
         m_settings->setValue("LoopPlaylist", action->isChecked());
+    } else if (action == m_scrollToItemPlaylistAction) {
+        m_settings->setValue("ScrollToItem", action->isChecked());
     } else if (action == m_nextFileEnableAction) {
         m_settings->setValue("LoadNext", action->isChecked());
     } else if (action == m_nextFileByNameAscdAction) {

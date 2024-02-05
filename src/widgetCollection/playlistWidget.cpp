@@ -414,7 +414,9 @@ void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
     f.setBold(true);
     item->setFont(f);
 
-    scrollToItem(item);
+    if (NSettings::instance()->value("ScrollToItem").toBool()) {
+        scrollToItem(item);
+    }
     m_playingItem = item;
     emit playingItemChanged();
     update();

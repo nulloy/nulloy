@@ -94,6 +94,7 @@ private:
     NAction *m_shufflePlaylistAction;
     NAction *m_repeatPlaylistAction;
     NAction *m_loopPlaylistAction;
+    NAction *m_scrollToItemPlaylistAction;
     NAction *m_nextFileEnableAction;
     NAction *m_nextFileByNameAscdAction;
     NAction *m_nextFileByNameDescAction;

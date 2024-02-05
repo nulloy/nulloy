@@ -108,6 +108,7 @@ NSettings::NSettings(QObject *parent)
     initValue("DisplayLogDialog", true);
     initValue("DisplayTagEditorConfirmDialog", true);
     initValue("LastDirectory", QStandardPaths::standardLocations(QStandardPaths::MusicLocation));
+    initValue("ScrollToItem", true);
     initValue("LoopPlaylist", false);
     initValue("LoadNext", false);
     initValue("ShowCoverArt", true);
