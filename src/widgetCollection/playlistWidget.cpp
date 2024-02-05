@@ -62,8 +62,10 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     connect(this, &QListWidget::itemActivated, [this](QListWidgetItem *item) {
         playItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
     });
-    connect(m_playbackEngine, SIGNAL(finished()), this, SLOT(on_playbackEngine_finished()));
-    connect(m_playbackEngine, SIGNAL(failed()), this, SLOT(on_playbackEngine_failed()));
+    connect(m_playbackEngine, SIGNAL(mediaFinished(const QString &, int)), this,
+            SLOT(on_playbackEngine_mediaFinished(const QString &, int)));
+    connect(m_playbackEngine, SIGNAL(mediaFailed(const QString &, int)), this,
+            SLOT(on_playbackEngine_mediaFailed(const QString &, int)));
     connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &, int)), this,
             SLOT(on_playbackEngine_mediaChanged(const QString &, int)));
     connect(m_playbackEngine, SIGNAL(nextMediaRequested()), this,
@@ -397,15 +399,12 @@ void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
 
     resetPlayingItem();
 
-    NPlaylistWidgetItem *item{};
-    if (m_itemMap.contains(id)) {
-        item = m_itemMap[id];
-    }
-    if (!item) {
+    if (!m_itemMap.contains(id)) {
         emit playingItemChanged();
         return;
     }
 
+    NPlaylistWidgetItem *item = m_itemMap[id];
     item->setData(N::FailedRole, false); // reset failed role
     formatItemTitle(item, NSettings::instance()->value("PlaylistTrackInfo").toString(),
                     true); // with force
@@ -440,21 +439,28 @@ void NPlaylistWidget::on_playbackEngine_prepareNextMediaRequested()
                                        item->data(N::IdRole).toInt());
 }
 
-void NPlaylistWidget::on_playbackEngine_finished()
+void NPlaylistWidget::on_playbackEngine_mediaFinished(const QString &, int id)
 {
+    if (!m_itemMap.contains(id)) {
+        return;
+    }
+
+    NPlaylistWidgetItem *item = m_itemMap[id];
     if (m_repeatMode) {
-        playItem(m_playingItem);
+        playItem(item);
     } else {
-        playNextItem();
+        playItem(nextItem(item));
     }
 }
 
-void NPlaylistWidget::on_playbackEngine_failed()
+void NPlaylistWidget::on_playbackEngine_mediaFailed(const QString &file, int id)
 {
-    if (!m_playingItem) {
+    if (!m_itemMap.contains(id)) {
         return;
     }
-    m_playingItem->setData(N::FailedRole, true);
+
+    NPlaylistWidgetItem *item = m_itemMap[id];
+    item->setData(N::FailedRole, true);
     emit playingItemChanged();
 }
 

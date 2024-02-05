@@ -64,7 +64,6 @@ void NPlaybackEngineGStreamer::init()
     if (!gst_init_check(&argc, (char ***)&argv, &err)) {
         emit message(N::Critical, tr("Playback error"),
                      err ? QString::fromUtf8(err->message) : tr("Unknown error"));
-        emit failed();
         if (err) {
             g_error_free(err);
         }
@@ -78,7 +77,6 @@ void NPlaybackEngineGStreamer::init()
     m_pitchElement = NULL;
     if (!m_pitchElement) {
         //emit message(N::Critical, "Playback Engine", "Failed to create pitch element");
-        //emit failed();
     } else {
         GstElement *sink = gst_element_factory_make("autoaudiosink", NULL);
         GstElement *bin = gst_bin_new(NULL);
@@ -345,8 +343,8 @@ void NPlaybackEngineGStreamer::processGstMessage(GstMessage *msg)
     //qDebug() << "message type:" << GST_MESSAGE_TYPE_NAME(msg);
     switch (GST_MESSAGE_TYPE(msg)) {
         case GST_MESSAGE_EOS: {
+            emit mediaFinished(m_currentMedia, m_currentContext);
             stop();
-            emit finished();
             break;
         }
         case GST_MESSAGE_ERROR: {
@@ -460,11 +458,10 @@ void NPlaybackEngineGStreamer::fail()
 {
     stop();
 
+    emit mediaFailed(m_currentMedia, m_currentContext);
+
     m_currentMedia = "";
     m_currentContext = 0;
-    emit mediaChanged(m_currentMedia, m_currentContext);
-
-    emit failed();
 }
 
 void NPlaybackEngineGStreamer::_emitNextMediaRequest()

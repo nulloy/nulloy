@@ -61,8 +61,8 @@ signals:
     virtual void message(N::MessageIcon icon, const QString &title, const QString &msg) = 0;
     virtual void mediaChanged(const QString &file, int context) = 0;
     virtual void nextMediaRequested() = 0;
-    virtual void finished() = 0;
-    virtual void failed() = 0;
+    virtual void mediaFinished(const QString &file, int context) = 0;
+    virtual void mediaFailed(const QString &file, int context) = 0;
     virtual void stateChanged(N::PlaybackState state) = 0;
     virtual void tick(qint64 msec) = 0;
 };

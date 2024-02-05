@@ -78,8 +78,8 @@ private slots:
 
     void on_playbackEngine_mediaChanged(const QString &file, int id);
     void on_playbackEngine_prepareNextMediaRequested();
-    void on_playbackEngine_finished();
-    void on_playbackEngine_failed();
+    void on_playbackEngine_mediaFinished(const QString &file, int id);
+    void on_playbackEngine_mediaFailed(const QString &file, int id);
 
 public:
     NPlaylistWidget(QWidget *parent = 0);

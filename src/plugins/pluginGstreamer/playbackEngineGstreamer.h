@@ -98,9 +98,9 @@ signals:
     void volumeChanged(qreal volume);
     void message(N::MessageIcon icon, const QString &file, const QString &msg);
     void mediaChanged(const QString &file, int context);
-    void finished();
+    void mediaFinished(const QString &file, int context);
     void nextMediaRequested();
-    void failed();
+    void mediaFailed(const QString &file, int context);
     void stateChanged(N::PlaybackState state);
     void tick(qint64 msec);
 };
