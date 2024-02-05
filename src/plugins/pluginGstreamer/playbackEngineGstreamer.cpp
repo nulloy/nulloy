@@ -17,6 +17,7 @@
 
 #include <QTimer>
 #include <QtGlobal>
+#include <gst/pbutils/missing-plugins.h>
 
 #include "common.h"
 
@@ -359,6 +360,22 @@ void NPlaybackEngineGStreamer::processGstMessage(GstMessage *msg)
             fail();
             if (err) {
                 g_error_free(err);
+            }
+            break;
+        }
+        case GST_MESSAGE_ELEMENT: {
+            if (gst_is_missing_plugin_message(msg)) {
+                QString str = tr("Missing GStreamer plugin:<br/>");
+                gchar *detail = gst_missing_plugin_message_get_installer_detail(msg);
+                if (detail) {
+                    QStringList fields = QString::fromUtf8(detail).split('|').mid(3);
+                    str += QString::fromUtf8(detail).split('|').mid(3).join("<br/>");
+                    g_free(detail);
+                } else {
+                    str += tr("Unknown plugin");
+                }
+                emit message(N::Critical, QFileInfo(m_currentMedia).absoluteFilePath(), str);
+                fail();
             }
             break;
         }
