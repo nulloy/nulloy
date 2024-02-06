@@ -25,6 +25,7 @@ struct NPlaylistDataItem
     QString title;
     QString path;
     int duration;
+    bool playing;
     bool failed;
     int playbackCount;
     float playbackPosition;
@@ -33,8 +34,8 @@ struct NPlaylistDataItem
     unsigned int id;
 
     NPlaylistDataItem(const QString &file = "")
-        : path(file), duration(-1), failed(false), playbackCount(0), playbackPosition(0.0),
-          trackIndex(0), id(id_counter++){};
+        : path(file), duration(-1), playing(false), failed(false), playbackCount(0),
+          playbackPosition(0.0), trackIndex(0), id(id_counter++){};
 };
 
 #endif

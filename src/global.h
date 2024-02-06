@@ -85,7 +85,8 @@ public:
 
     enum PlaylistRole
     {
-        FailedRole = Qt::UserRole + 1,
+        PlayingRole = Qt::UserRole + 1,
+        FailedRole,
         PathRole,
         DurationRole,
         CountRole,

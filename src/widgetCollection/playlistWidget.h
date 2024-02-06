@@ -90,7 +90,6 @@ public:
     NPlaylistWidgetItem *playingItem() const;
     int playingRow() const;
     Q_INVOKABLE bool hasPlaying() const;
-    QModelIndex playingIndex() const;
 
     Q_INVOKABLE bool shuffleMode() const;
     Q_INVOKABLE bool repeatMode() const;

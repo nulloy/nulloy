@@ -362,9 +362,7 @@ NPlaylistWidget::~NPlaylistWidget() {}
 void NPlaylistWidget::resetPlayingItem()
 {
     if (m_playingItem) {
-        QFont f = m_playingItem->font();
-        f.setBold(false);
-        m_playingItem->setFont(f);
+        m_playingItem->setData(N::PlayingRole, false);
     }
     m_playingItem = NULL;
 }
@@ -390,9 +388,7 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFo
 void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
 {
     if (m_playingItem) {
-        QFont f = m_playingItem->font();
-        f.setBold(false);
-        m_playingItem->setFont(f);
+        m_playingItem->setData(N::PlayingRole, false);
         m_playingItem->setData(N::PositionRole, m_playbackEngine->position());
         m_playingItem->setData(N::CountRole, m_playingItem->data(N::CountRole).toInt() + 1);
     }
@@ -405,14 +401,10 @@ void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
     }
 
     NPlaylistWidgetItem *item = m_itemMap[id];
+    item->setData(N::PlayingRole, true);
     item->setData(N::FailedRole, false); // reset failed role
     formatItemTitle(item, NSettings::instance()->value("PlaylistTrackInfo").toString(),
                     true); // with force
-
-    // setting currently playing font to bold, colors set in delegate
-    QFont f = item->font();
-    f.setBold(true);
-    item->setFont(f);
 
     if (NSettings::instance()->value("ScrollToItem").toBool()) {
         scrollToItem(item);
@@ -461,9 +453,18 @@ void NPlaylistWidget::on_playbackEngine_mediaFailed(const QString &file, int id)
         return;
     }
 
+    resetPlayingItem();
+
     NPlaylistWidgetItem *item = m_itemMap[id];
+    item->setData(N::PlayingRole, true);
     item->setData(N::FailedRole, true);
+
+    if (NSettings::instance()->value("ScrollToItem").toBool()) {
+        scrollToItem(item);
+    }
+    m_playingItem = item;
     emit playingItemChanged();
+    update();
 }
 
 void NPlaylistWidget::playItem(NPlaylistWidgetItem *item)
@@ -504,15 +505,6 @@ NPlaylistWidgetItem *NPlaylistWidget::playingItem() const
 bool NPlaylistWidget::hasPlaying() const
 {
     return playingRow() != -1;
-}
-
-QModelIndex NPlaylistWidget::playingIndex() const
-{
-    if (m_playingItem) {
-        return indexFromItem(m_playingItem);
-    } else {
-        return QModelIndex();
-    }
 }
 
 void NPlaylistWidget::addItem(NPlaylistWidgetItem *item)

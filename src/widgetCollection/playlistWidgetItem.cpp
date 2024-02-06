@@ -45,6 +45,8 @@ void NPlaylistWidgetItem::setText(const QString &text)
 QVariant NPlaylistWidgetItem::data(int role) const
 {
     switch (role) {
+        case (N::PlayingRole):
+            return m_data.playing;
         case (N::FailedRole):
             return m_data.failed;
         case (N::PathRole):
@@ -64,8 +66,14 @@ QVariant NPlaylistWidgetItem::data(int role) const
                 QListWidgetItem::data(Qt::DisplayRole)
                     .toString()
                     .replace("%i", QString::number(data(N::TrackIndexRole).toInt() + 1)));
+        case (Qt::FontRole): {
+            QFont font = qvariant_cast<QFont>(QListWidgetItem::data(Qt::FontRole));
+            font.setBold(m_data.playing);
+            return font;
+        }
         case (N::IdRole):
             return m_data.id;
+
         default:
             return QListWidgetItem::data(role);
     }
@@ -74,6 +82,9 @@ QVariant NPlaylistWidgetItem::data(int role) const
 void NPlaylistWidgetItem::setData(int role, const QVariant &value)
 {
     switch (role) {
+        case (N::PlayingRole):
+            m_data.playing = value.toBool();
+            break;
         case (N::FailedRole):
             m_data.failed = value.toBool();
             break;
@@ -115,19 +126,21 @@ void NPlaylistWidgetItemDelegate::paint(QPainter *painter, const QStyleOptionVie
     QStyleOptionViewItem opt = option;
     const NPlaylistWidget *playlistWidget = qobject_cast<const NPlaylistWidget *>(opt.widget);
 
-    if (index == playlistWidget->playingIndex()) { // if currently playing item
-        QColor color = playlistWidget->playingTextColor();
-        if (color.isValid()) {
-            opt.palette.setColor(QPalette::HighlightedText, color);
-            opt.palette.setColor(QPalette::Text, color);
-        }
-    } else if (index.data(N::FailedRole).toBool()) { // else if a failed one
+    if (index.data(N::FailedRole).toBool()) { // FailedRole has higher priority than PlayingRole
         QColor color = playlistWidget->failedTextColor();
         if (color.isValid()) {
             opt.palette.setColor(QPalette::HighlightedText, color);
             opt.palette.setColor(QPalette::Text, color);
         }
+    } else if (index.data(N::PlayingRole).toBool()) {
+        QColor color = playlistWidget->playingTextColor();
+        if (color.isValid()) {
+            opt.palette.setColor(QPalette::HighlightedText, color);
+            opt.palette.setColor(QPalette::Text, color);
+        }
     }
+
+    // bold font set via Qt::FontRole
 
     QStyledItemDelegate::paint(painter, opt, index);
 }
