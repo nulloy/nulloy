@@ -37,10 +37,9 @@ function Main()
         Ui.mainWindow.windowFlags = (Ui.mainWindow.windowFlags | Qt.WindowMinMaxButtonsHint) ^ Qt.Dialog;
 
         if (Q_WS == "mac") {
-            Ui.mainWindow.styleSheet = "";
             Ui.mainWindow.setAttribute(Qt.WA_MacBrushedMetal, true);
+            Ui.mainWindow.styleSheet += " #playlistWidget QScrollBar { margin-bottom: 0; }";
 
-            Ui.playlistWidget.styleSheet = Ui.playlistWidget.styleSheet + "#playlistWidget QScrollBar { margin-bottom: 0; }";
             Ui.playlistWidget.setAttribute(Qt.WA_MacShowFocusRect, false);
 
             Ui.splitTop.layout().setContentsMargins(10, 7, 10, 0);

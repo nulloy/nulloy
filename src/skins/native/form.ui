@@ -10,6 +10,52 @@
     <height>370</height>
    </rect>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#waveformSlider {
+	qproperty-radius: 3;
+	qproperty-background: #3F4F61;
+	qproperty-wave_background: #4E9A06;
+	qproperty-wave_border_color: #8AE234;
+	qproperty-progress_playing_background: #0080FF;
+	qproperty-progress_paused_background: #CE8419;
+	qproperty-playing_composition: Overlay;
+	qproperty-paused_composition: Overlay;
+	qproperty-file_drop_border_color: rgba(97, 148, 215, 100);
+	qproperty-file_drop_background: rgba(97, 148, 215, 100);
+}
+
+NTrackInfoWidget {
+	margin: 2;
+}
+NTrackInfoWidget QLabel {
+	color: #FFFFFF;
+	background: rgba(0, 0, 0, 180);
+	border-radius: 3;
+	padding: 0 3;
+	max-height: 14px;
+	font-size: 11px;
+	font-weight: bold;
+}
+NTrackInfoWidget #MiddleCenter {
+	padding-bottom: 2;
+	font-size: 13px;
+}
+
+#coverWidget {
+	background: transparent;
+}
+
+#playlistWidget {
+	qproperty-playing_text_color: palette(HighlightedText);
+	qproperty-failed_text_color: palette(dark);
+	qproperty-file_drop_border_color: rgba(97, 148, 215, 100);
+	qproperty-file_drop_background: rgba(97, 148, 215, 100);
+}
+
+#playlistWidget QScrollBar {
+	margin-bottom: 18;
+}</string>
+  </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
   </property>
@@ -61,11 +107,6 @@
              <height>60</height>
             </size>
            </property>
-           <property name="styleSheet">
-            <string notr="true">#coverWidget {
-	background: transparent;
-}</string>
-           </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
            </property>
@@ -76,37 +117,6 @@
          </item>
          <item>
           <widget class="NWaveformSlider" name="waveformSlider" native="true">
-           <property name="styleSheet">
-            <string notr="true">#waveformSlider {
-	qproperty-radius: 3;
-	qproperty-background: #3F4F61;
-	qproperty-wave_background: #4E9A06;
-	qproperty-wave_border_color: #8AE234;
-	qproperty-progress_playing_background: #0080FF;
-	qproperty-progress_paused_background: #CE8419;
-	qproperty-playing_composition: Overlay;
-	qproperty-paused_composition: Overlay;
-	qproperty-file_drop_border_color: rgba(97, 148, 215, 100);
-	qproperty-file_drop_background: rgba(97, 148, 215, 100);
-}
-
-NTrackInfoWidget {
-	margin: 2;
-}
-NTrackInfoWidget QLabel {
-	color: #FFFFFF;
-	background: argb(0, 0, 0, 180);
-	border-radius: 3;
-	padding: 0 3;
-	max-height: 14px;
-	font-size: 11px;
-	font-weight: bold;
-}
-NTrackInfoWidget #MiddleCenter {
-	padding-bottom: 2;
-	font-size: 13px;
-}</string>
-           </property>
           </widget>
          </item>
         </layout>
@@ -449,18 +459,6 @@ NTrackInfoWidget #MiddleCenter {
          </property>
          <property name="acceptDrops">
           <bool>true</bool>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">#playlistWidget {
-	qproperty-playing_text_color: palette(HighlightedText);
-	qproperty-failed_text_color: palette(dark);
-	qproperty-file_drop_border_color: rgba(97, 148, 215, 100);
-	qproperty-file_drop_background: rgba(97, 148, 215, 100);
-}
-
-#playlistWidget QScrollBar {
-	margin-bottom: 18;
-}</string>
          </property>
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>

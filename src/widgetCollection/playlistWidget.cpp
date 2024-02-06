@@ -397,6 +397,7 @@ void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
 
     if (!m_itemMap.contains(id)) {
         emit playingItemChanged();
+        QListWidget::viewport()->update();
         return;
     }
 
@@ -411,7 +412,7 @@ void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
     }
     m_playingItem = item;
     emit playingItemChanged();
-    update();
+    QListWidget::viewport()->update();
 
     if (m_shuffleMode) {
         m_playingShuffledIndex = m_shuffledItems.indexOf(m_playingItem);
@@ -464,7 +465,7 @@ void NPlaylistWidget::on_playbackEngine_mediaFailed(const QString &file, int id)
     }
     m_playingItem = item;
     emit playingItemChanged();
-    update();
+    QListWidget::viewport()->update();
 }
 
 void NPlaylistWidget::playItem(NPlaylistWidgetItem *item)
