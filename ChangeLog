@@ -1,3 +1,11 @@
+* 0.9.7, Wed Feb 7 2024
+- Playback speed control
+- Automatically saving settings and playlist in case of a crash
+- More customizable keyboard shortcuts (Open Tag Editor, Move to Trash, etc)
+- Packaging .AppImage for Linux
+- New "Scroll to item" playlist option
+- Many other minor bug fixes and improvements
+
 * 0.9.5, Mon Apr 18 2022
 - Tag editor
 - Windows installer
