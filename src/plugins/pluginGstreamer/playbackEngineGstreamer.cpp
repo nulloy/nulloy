@@ -302,6 +302,10 @@ void NPlaybackEngineGStreamer::pause()
 
     m_checkStatusTimer->stop();
     m_gstBusPopTimer->stop();
+
+    m_gstState = GST_STATE_PAUSED;
+    emit stateChanged(fromGstState(m_gstState));
+
     checkStatus();
 }
 

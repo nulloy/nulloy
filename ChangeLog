@@ -1,3 +1,6 @@
+* 0.9.7.1, Wed Feb 7 2024
+- Paused state lock fix
+
 * 0.9.7, Wed Feb 7 2024
 - Playback speed control
 - Automatically saving settings and playlist in case of a crash
