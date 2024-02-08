@@ -21,6 +21,7 @@
 #include <QString>
 
 #include "tagLibFileRef.h"
+#include <attachedpictureframe.h>
 
 void NCoverReaderTaglib::init()
 {
@@ -85,7 +86,7 @@ QList<QImage> NCoverReaderTaglib::fromApe(TagLib::APE::Tag *tag) const
         }
 
         TagLib::String fileName = map[key].toString();
-        TagLib::ByteVector item = map[key].value();
+        TagLib::ByteVector item = map[key].binaryData();
         images << fromTagBytes(item.mid(fileName.size() + 1));
     }
 
@@ -144,11 +145,11 @@ QList<QImage> NCoverReaderTaglib::fromMp4(TagLib::MP4::Tag *tag) const
 {
     QList<QImage> images;
     TagLib::String str = "covr";
-    if (!tag->itemListMap().contains(str)) {
+    if (!tag->itemMap().contains(str)) {
         return images;
     }
 
-    TagLib::MP4::CoverArtList coverList = tag->itemListMap()[str].toCoverArtList();
+    TagLib::MP4::CoverArtList coverList = tag->itemMap()[str].toCoverArtList();
     for (auto coverArt : coverList) {
         images << fromTagBytes(coverArt.data());
     }

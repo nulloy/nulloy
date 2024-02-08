@@ -126,13 +126,13 @@ QString NTagReaderTaglib::getTag(QChar ch) const
             if (auto *prop = dynamic_cast<TagLib::APE::Properties *>(ap)) {
                 return QString::number(prop->bitsPerSample());
             } else if (auto *prop = dynamic_cast<TagLib::FLAC::Properties *>(ap)) {
-                return QString::number(prop->sampleWidth());
+                return QString::number(prop->bitsPerSample());
             } else if (auto *prop = dynamic_cast<TagLib::MP4::Properties *>(ap)) {
                 return QString::number(prop->bitsPerSample());
             } else if (auto *prop = dynamic_cast<TagLib::RIFF::AIFF::Properties *>(ap)) {
-                return QString::number(prop->sampleWidth());
+                return QString::number(prop->bitsPerSample());
             } else if (auto *prop = dynamic_cast<TagLib::RIFF::WAV::Properties *>(ap)) {
-                return QString::number(prop->sampleWidth());
+                return QString::number(prop->bitsPerSample());
             } else if (auto *prop = dynamic_cast<TagLib::TrueAudio::Properties *>(ap)) {
                 return QString::number(prop->bitsPerSample());
             } else if (auto *prop = dynamic_cast<TagLib::WavPack::Properties *>(ap)) {
