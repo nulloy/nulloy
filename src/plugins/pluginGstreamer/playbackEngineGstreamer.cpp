@@ -105,6 +105,7 @@ void NPlaybackEngineGStreamer::init()
     m_pitch = 1.0;
     m_volume = -1.0;
     m_position = 0.0;
+    m_gstState = GST_STATE_NULL;
     m_posponedPosition = -1.0;
     m_currentMedia = "";
     m_currentContext = 0;
