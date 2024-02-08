@@ -234,8 +234,9 @@ void NPlaylistWidget::on_removeAction_triggered()
     }
     viewport()->update();
 
-    int newCount = count();
+    updateTrackIndexes();
 
+    int newCount = count();
     if (newCount == 0) {
         playItem(NULL);
         return;
@@ -258,8 +259,6 @@ void NPlaylistWidget::on_removeAction_triggered()
     if (newCurrentItem) {
         QListWidget::setCurrentItem(newCurrentItem);
     }
-
-    updateTrackIndexes();
 }
 
 void NPlaylistWidget::on_revealAction_triggered()
