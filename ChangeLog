@@ -29,6 +29,7 @@
 - Other minor bug fixes
 
 * 0.9, Thu Feb 24 2022
+- Upgraded to Qt 5
 - HiDPI support
 - Hide playback controls option
 - Linux: support for tiling window managers
