@@ -137,7 +137,6 @@ NPlayer::NPlayer()
 
     createActions();
     loadSettings();
-    connectSignals();
 
 #ifdef Q_OS_WIN
     NW7TaskBar::instance()->setWindow(m_mainWindow);
@@ -163,6 +162,8 @@ NPlayer::NPlayer()
     if (NSettings::instance()->value("RestorePlaylist").toBool()) {
         loadDefaultPlaylist();
     }
+
+    connectSignals();
 
     m_settingsSaveTimer = new QTimer(this);
     connect(m_settingsSaveTimer, &QTimer::timeout, [this]() { saveSettings(); });
@@ -562,10 +563,8 @@ void NPlayer::connectSignals()
 
     connect(m_playlistWidget, &NPlaylistWidget::itemsChanged,
             [this]() { writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u); });
-    connect(m_playlistWidget, &NPlaylistWidget::playingItemChanged, [this]() {
-        writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u);
-        savePlaybackState();
-    });
+    connect(m_playlistWidget, &NPlaylistWidget::playingItemChanged,
+            [this]() { savePlaybackState(); });
 
     connect(m_waveformSlider, &NWaveformSlider::filesDropped,
             [this](const QList<NPlaylistDataItem> &dataItems) {
