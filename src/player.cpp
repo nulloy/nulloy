@@ -795,6 +795,7 @@ void NPlayer::loadSettings()
     }
 
     m_playbackEngine->setVolume(m_settings->value("Volume").toFloat());
+    m_volumeSlider->setValue(m_settings->value("Volume").toFloat());
 }
 
 void NPlayer::saveSettings()
