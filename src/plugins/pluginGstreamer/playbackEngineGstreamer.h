@@ -41,8 +41,8 @@ private:
     qreal m_pitch;
     qreal m_volume;
     qreal m_position;
+    bool m_positionPostponed;
     GstState m_gstState;
-    qreal m_posponedPosition;
     gint64 m_durationNsec;
     bool m_crossfading;
     bool m_nextMediaRequestBlock;

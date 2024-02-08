@@ -86,10 +86,10 @@ public:
     ~NPlaylistWidget();
 
     void addItem(NPlaylistWidgetItem *item);
-    NPlaylistWidgetItem *item(int row) const;
+    NPlaylistWidgetItem *itemAtRow(int row) const;
     NPlaylistWidgetItem *playingItem() const;
     int playingRow() const;
-    Q_INVOKABLE bool hasPlaying() const;
+    Q_INVOKABLE bool hasPlayingItem() const;
 
     Q_INVOKABLE bool shuffleMode() const;
     Q_INVOKABLE bool repeatMode() const;
@@ -101,6 +101,8 @@ public slots:
     void playItem(NPlaylistWidgetItem *item);
     void playNextItem();
     void playPrevItem();
+
+    void setPlayingItem(NPlaylistWidgetItem *item); // does not start playback
 
     void addFiles(const QStringList &files);
     void addItems(const QList<NPlaylistDataItem> &dataItems);

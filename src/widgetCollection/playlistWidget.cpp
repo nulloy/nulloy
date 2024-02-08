@@ -169,7 +169,7 @@ void NPlaylistWidget::processVisibleItems()
     maxRow = qMin(maxRow + totalRows, count() - 1);
     QString titleFormat = NSettings::instance()->value("PlaylistTrackInfo").toString();
     for (int i = minRow; i <= maxRow; ++i) {
-        formatItemTitle(reinterpret_cast<NPlaylistWidgetItem *>(item(i)), titleFormat);
+        formatItemTitle(reinterpret_cast<NPlaylistWidgetItem *>(itemAtRow(i)), titleFormat);
     }
 }
 
@@ -249,7 +249,7 @@ void NPlaylistWidget::on_removeAction_triggered()
             newCurrentRow = newCount - 1;
         }
     }
-    NPlaylistWidgetItem *newCurrentItem = item(newCurrentRow);
+    NPlaylistWidgetItem *newCurrentItem = itemAtRow(newCurrentRow);
 
     if (playingItemRemoved && m_playbackEngine->state() != N::PlaybackStopped) {
         playItem(newCurrentItem);
@@ -352,7 +352,7 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
 void NPlaylistWidget::updateTrackIndexes()
 {
     for (int i = 0; i < count(); ++i) {
-        item(i)->setData(N::TrackIndexRole, i);
+        itemAtRow(i)->setData(N::TrackIndexRole, i);
     }
     emit itemsChanged();
 }
@@ -385,7 +385,22 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFo
     item->setData(N::TitleFormatRole, titleFormat);
 }
 
-void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
+void NPlaylistWidget::setPlayingItem(NPlaylistWidgetItem *item)
+{
+    item->setData(N::PlayingRole, true);
+    item->setData(N::FailedRole, false); // reset failed role
+    formatItemTitle(item, NSettings::instance()->value("PlaylistTrackInfo").toString(),
+                    true); // with force
+
+    if (NSettings::instance()->value("ScrollToItem").toBool()) {
+        scrollToItem(item);
+    }
+    m_playingItem = item;
+    emit playingItemChanged();
+    QListWidget::viewport()->update();
+}
+
+void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &file, int id)
 {
     if (m_playingItem) {
         m_playingItem->setData(N::PlayingRole, false);
@@ -402,17 +417,7 @@ void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &, int id)
     }
 
     NPlaylistWidgetItem *item = m_itemMap[id];
-    item->setData(N::PlayingRole, true);
-    item->setData(N::FailedRole, false); // reset failed role
-    formatItemTitle(item, NSettings::instance()->value("PlaylistTrackInfo").toString(),
-                    true); // with force
-
-    if (NSettings::instance()->value("ScrollToItem").toBool()) {
-        scrollToItem(item);
-    }
-    m_playingItem = item;
-    emit playingItemChanged();
-    QListWidget::viewport()->update();
+    setPlayingItem(item);
 
     if (m_shuffleMode) {
         m_playingShuffledIndex = m_shuffledItems.indexOf(m_playingItem);
@@ -486,7 +491,7 @@ void NPlaylistWidget::playRow(int row)
         return;
     }
 
-    playItem(item(row));
+    playItem(itemAtRow(row));
 }
 
 int NPlaylistWidget::playingRow() const
@@ -503,7 +508,7 @@ NPlaylistWidgetItem *NPlaylistWidget::playingItem() const
     return m_playingItem;
 }
 
-bool NPlaylistWidget::hasPlaying() const
+bool NPlaylistWidget::hasPlayingItem() const
 {
     return playingRow() != -1;
 }
@@ -616,7 +621,7 @@ void NPlaylistWidget::playPrevItem()
 void NPlaylistWidget::rowsInserted(const QModelIndex &parent, int start, int end)
 {
     for (int i = start; i < end + 1; ++i) {
-        m_shuffledItems.append(item(i));
+        m_shuffledItems.append(itemAtRow(i));
     }
     if (m_shuffleMode) {
         setShuffleMode(true);
@@ -667,7 +672,7 @@ void NPlaylistWidget::setRepeatMode(bool enable)
     NSettings::instance()->setValue("Repeat", enable);
 }
 
-NPlaylistWidgetItem *NPlaylistWidget::item(int row) const
+NPlaylistWidgetItem *NPlaylistWidget::itemAtRow(int row) const
 {
     if (count() == 0) {
         return NULL;
@@ -691,7 +696,7 @@ NPlaylistWidgetItem *NPlaylistWidget::nextItem(NPlaylistWidgetItem *item) const
         nextRow = 0;
     }
 
-    return NPlaylistWidget::item(nextRow);
+    return NPlaylistWidget::itemAtRow(nextRow);
 }
 
 NPlaylistWidgetItem *NPlaylistWidget::prevItem(NPlaylistWidgetItem *item) const
@@ -705,7 +710,7 @@ NPlaylistWidgetItem *NPlaylistWidget::prevItem(NPlaylistWidgetItem *item) const
         prevRow = count() - 1;
     }
 
-    return NPlaylistWidget::item(prevRow);
+    return NPlaylistWidget::itemAtRow(prevRow);
 }
 
 void NPlaylistWidget::paintEvent(QPaintEvent *e)

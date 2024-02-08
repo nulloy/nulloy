@@ -117,9 +117,6 @@ NPlayer::NPlayer()
         repeatButton->setChecked(m_playlistWidget->repeatMode());
     }
     m_playlistWidget->setTrackInfoReader(m_trackInfoReader);
-    if (NSettings::instance()->value("RestorePlaylist").toBool()) {
-        loadDefaultPlaylist();
-    }
 
     m_trackInfoWidget = new NTrackInfoWidget();
     m_trackInfoWidget->setTrackInfoReader(m_trackInfoReader);
@@ -162,6 +159,10 @@ NPlayer::NPlayer()
     QCoreApplication::sendEvent(m_mainWindow, &e);
 
     skinProgram.property("afterShow").call(skinProgram);
+
+    if (NSettings::instance()->value("RestorePlaylist").toBool()) {
+        loadDefaultPlaylist();
+    }
 
     m_settingsSaveTimer = new QTimer(this);
     connect(m_settingsSaveTimer, &QTimer::timeout, [this]() { saveSettings(); });
@@ -733,14 +734,23 @@ void NPlayer::loadDefaultPlaylist()
             return;
         }
 
-        if (pos > 0 && pos < 1) {
+        if (!m_settings->value("StartPaused").toBool()) {
             m_playlistWidget->playRow(row);
-            m_playbackEngine->setPosition(pos); // postponed till file duration is available
-            if (m_settings->value("StartPaused").toBool()) {
-                m_playbackEngine->pause();
-            }
-        } else {
-            m_playlistWidget->playRow(row);
+            m_playbackEngine->setPosition(pos);
+        } else { // do the work that would have been done upon m_playbackEngine::mediaChanged()
+            NPlaylistWidgetItem *item = m_playlistWidget->itemAtRow(row);
+            m_playlistWidget->setPlayingItem(item);
+
+            QString file = item->data(N::PathRole).toString();
+            int id = item->data(N::IdRole).toInt();
+
+            m_playbackEngine->setMedia(file, id);
+            m_playbackEngine->setPosition(pos);
+
+            m_waveformSlider->setMedia(file);
+            m_waveformSlider->setValue(pos);
+            m_waveformSlider->setPausedState(true);
+            m_trackInfoWidget->updateStaticTags(file);
         }
     }
 
@@ -751,7 +761,7 @@ void NPlayer::writePlaylist(const QString &file, N::M3uExtention ext)
 {
     QList<NPlaylistDataItem> dataItemsList;
     for (int i = 0; i < m_playlistWidget->count(); ++i) {
-        NPlaylistDataItem dataItem = m_playlistWidget->item(i)->dataItem();
+        NPlaylistDataItem dataItem = m_playlistWidget->itemAtRow(i)->dataItem();
         dataItemsList << dataItem;
     }
     NPlaylistStorage::writeM3u(file, dataItemsList, ext);
@@ -1146,7 +1156,7 @@ void NPlayer::on_showCoverAction_toggled(bool checked)
 
 void NPlayer::on_playButton_clicked()
 {
-    if (!m_playlistWidget->hasPlaying()) {
+    if (!m_playlistWidget->hasPlayingItem()) {
         if (m_playlistWidget->count() > 0) {
             m_playlistWidget->playRow(0);
         } else {

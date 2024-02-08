@@ -29,7 +29,7 @@
 #define STATE_CHANGE_DEBOUNCE_MSEC 50
 #define GST_BUS_POP_MSEC 50
 
-static void _on_about_to_finish(GstElement *playbin, gpointer userData)
+static void _on_about_to_finish(GstElement *, gpointer userData)
 {
     NPlaybackEngineGStreamer *obj = reinterpret_cast<NPlaybackEngineGStreamer *>(userData);
     if ((obj->durationMsec() < CROSSFADING_MIN_DURATION_MSEC) || obj->_nextMediaRequestBlocked()) {
@@ -106,7 +106,7 @@ void NPlaybackEngineGStreamer::init()
     m_volume = -1.0;
     m_position = 0.0;
     m_gstState = GST_STATE_NULL;
-    m_posponedPosition = -1.0;
+    m_positionPostponed = false;
     m_currentMedia = "";
     m_currentContext = 0;
     m_bkpMedia = "";
@@ -253,7 +253,8 @@ void NPlaybackEngineGStreamer::setPosition(qreal pos)
             return;
         }
     }
-    m_posponedPosition = pos;
+    m_position = pos;
+    m_positionPostponed = true;
 }
 
 void NPlaybackEngineGStreamer::jump(qint64 msec)
@@ -269,7 +270,7 @@ void NPlaybackEngineGStreamer::jump(qint64 msec)
             return;
         }
     }
-    m_posponedPosition = m_position + ((qreal)msec * NSEC_IN_MSEC) / m_durationNsec;
+    m_position += ((qreal)msec * NSEC_IN_MSEC) / m_durationNsec;
 }
 
 qreal NPlaybackEngineGStreamer::position() const
@@ -431,22 +432,22 @@ void NPlaybackEngineGStreamer::checkStatus()
     if (GST_CLOCK_TIME_IS_VALID(m_durationNsec)) {
         gint64 gstPos = 0;
         if (gst_element_query_position(m_playbin, GST_FORMAT_TIME, &gstPos)) {
-            m_position = (qreal)gstPos / m_durationNsec;
-            if (m_posponedPosition < 0.0) {
+            if (!m_positionPostponed) {
+                m_position = (qreal)gstPos / m_durationNsec;
                 emit positionChanged(m_position);
             }
             emit tick(gstPos / NSEC_IN_MSEC * m_speed);
         }
 
-        if (m_posponedPosition >= 0.0 || m_speedPostponed) {
-            if (m_posponedPosition >= 0.0) {
-                gstPos = m_posponedPosition * m_durationNsec;
+        if (m_positionPostponed || m_speedPostponed) {
+            if (m_positionPostponed) {
+                gstPos = m_position * m_durationNsec;
             }
             gst_element_seek(m_playbin, m_speed, GST_FORMAT_TIME,
                              GstSeekFlags(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT |
                                           GST_SEEK_FLAG_SNAP_NEAREST),
                              GST_SEEK_TYPE_SET, gstPos, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
-            m_posponedPosition = -1.0;
+            m_positionPostponed = false;
             m_speedPostponed = false;
         }
 
