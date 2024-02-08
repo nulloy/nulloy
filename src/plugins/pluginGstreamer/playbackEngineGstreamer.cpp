@@ -232,7 +232,8 @@ void NPlaybackEngineGStreamer::setPitch(qreal pitch)
 
 void NPlaybackEngineGStreamer::setVolume(qreal volume)
 {
-    g_object_set(m_playbin, "volume", qBound(0.0, volume, 1.0), NULL);
+    m_volume = qBound(0.0, volume, 1.0);
+    g_object_set(m_playbin, "volume", m_volume, NULL);
 }
 
 qreal NPlaybackEngineGStreamer::volume() const
@@ -399,8 +400,11 @@ void NPlaybackEngineGStreamer::processGstMessage(GstMessage *msg)
             const GValue *value;
             gst_message_parse_property_notify(msg, NULL, &name, &value);
             if (QString(name) == "volume") {
-                m_volume = g_value_get_double(value);
-                emit volumeChanged(m_volume);
+                gdouble gstVolume = g_value_get_double(value);
+                if (gstVolume != m_volume) {
+                    m_volume = gstVolume;
+                    emit volumeChanged(m_volume);
+                }
             }
             break;
         }
