@@ -32,7 +32,7 @@ public:
     ~NContainerVlc();
     QList<NPlugin *> plugins() const;
     QString name() const { return "VLC"; }
-    QString version() const { return "0.8"; }
+    QString version() const { return "0.9"; }
 };
 
 #endif

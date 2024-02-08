@@ -57,13 +57,15 @@ void NPlaybackEngineVlc::init()
               << "--no-xlib";
 
     m_vlcInstance = libvlc_new(argVector.size(), &argVector[0]);
-    m_mediaPlayer = libvlc_media_player_new(m_vlcInstance);
-    m_eventManager = libvlc_media_player_event_manager(m_mediaPlayer);
-    libvlc_event_attach(m_eventManager, libvlc_MediaPlayerEndReached, _eventHandler, this);
+    m_vlcMediaPlayer = libvlc_media_player_new(m_vlcInstance);
+    m_vlcEventManager = libvlc_media_player_event_manager(m_vlcMediaPlayer);
+    libvlc_event_attach(m_vlcEventManager, libvlc_MediaPlayerEndReached, _eventHandler, this);
 
-    m_oldVolume = -1;
-    m_oldPosition = -1;
-    m_oldState = N::PlaybackStopped;
+    m_volume = -1;
+    m_position = -1;
+    m_vlcState = libvlc_NothingSpecial;
+    m_currentMedia = "";
+    m_currentContext = 0;
 
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(checkStatus()));
@@ -79,11 +81,11 @@ NPlaybackEngineVlc::~NPlaybackEngineVlc()
     }
 
     stop();
-    libvlc_media_player_release(m_mediaPlayer);
+    libvlc_media_player_release(m_vlcMediaPlayer);
     libvlc_release(m_vlcInstance);
 }
 
-void NPlaybackEngineVlc::setMedia(const QString &file)
+void NPlaybackEngineVlc::setMedia(const QString &file, int context)
 {
     stop();
 
@@ -91,32 +93,36 @@ void NPlaybackEngineVlc::setMedia(const QString &file)
         return;
     }
 
+    m_currentMedia = file;
+    m_currentContext = context;
+
     if (!QFile(file).exists()) {
         emit message(N::Warning, file, "No such file or directory");
-        emit mediaChanged("");
-        emit failed();
+        emit mediaFailed(m_currentMedia, m_currentContext);
         return;
     }
 
-    libvlc_media_t *media = libvlc_media_player_get_media(m_mediaPlayer);
-    if (media)
+    libvlc_media_t *media = libvlc_media_player_get_media(m_vlcMediaPlayer);
+    if (media) {
         libvlc_media_release(media);
+    }
 
     libvlc_media_t *mediaDescriptor = libvlc_media_new_path(m_vlcInstance, file.toUtf8());
-    if (mediaDescriptor)
-        libvlc_media_player_set_media(m_mediaPlayer, mediaDescriptor);
+    if (mediaDescriptor) {
+        libvlc_media_player_set_media(m_vlcMediaPlayer, mediaDescriptor);
+    }
 
-    emit mediaChanged(file);
+    emit mediaChanged(m_currentMedia, m_currentContext);
 }
 
 void NPlaybackEngineVlc::setVolume(qreal volume)
 {
-    libvlc_audio_set_volume(m_mediaPlayer, qRound(qBound(0.0, volume, 1.0) * 100 / 2));
+    libvlc_audio_set_volume(m_vlcMediaPlayer, qRound(qBound(0.0, volume, 1.0) * 100 / 2));
 }
 
 qreal NPlaybackEngineVlc::volume() const
 {
-    return libvlc_audio_get_volume(m_mediaPlayer) / (qreal)100 * 2;
+    return libvlc_audio_get_volume(m_vlcMediaPlayer) / (qreal)100 * 2;
 }
 
 void NPlaybackEngineVlc::setPosition(qreal pos)
@@ -125,7 +131,7 @@ void NPlaybackEngineVlc::setPosition(qreal pos)
         return;
     }
 
-    libvlc_media_player_set_position(m_mediaPlayer, qBound(0.0, pos, 1.0));
+    libvlc_media_player_set_position(m_vlcMediaPlayer, qBound(0.0, pos, 1.0));
 }
 
 qreal NPlaybackEngineVlc::position() const
@@ -134,16 +140,18 @@ qreal NPlaybackEngineVlc::position() const
         return -1;
     }
 
-    return libvlc_media_player_get_position(m_mediaPlayer);
+    return libvlc_media_player_get_position(m_vlcMediaPlayer);
 }
 
 void NPlaybackEngineVlc::jump(qint64 msec)
 {
-    if (!hasMedia() || !libvlc_media_player_is_seekable(m_mediaPlayer))
+    if (!hasMedia() || !libvlc_media_player_is_seekable(m_vlcMediaPlayer)) {
         return;
+    }
 
-    qint64 posMsec = qBound(0LL, libvlc_media_player_get_time(m_mediaPlayer) + msec, durationMsec());
-    libvlc_media_player_set_time(m_mediaPlayer, posMsec);
+    qint64 posMsec = qBound(0LL, libvlc_media_player_get_time(m_vlcMediaPlayer) + msec,
+                            durationMsec());
+    libvlc_media_player_set_time(m_vlcMediaPlayer, posMsec);
 }
 
 qint64 NPlaybackEngineVlc::durationMsec() const
@@ -152,7 +160,7 @@ qint64 NPlaybackEngineVlc::durationMsec() const
         return -1;
     }
 
-    return libvlc_media_player_get_length(m_mediaPlayer);
+    return libvlc_media_player_get_length(m_vlcMediaPlayer);
 }
 
 void NPlaybackEngineVlc::play()
@@ -161,8 +169,8 @@ void NPlaybackEngineVlc::play()
         return;
     }
 
-    if (!libvlc_media_player_is_playing(m_mediaPlayer)) {
-        libvlc_media_player_play(m_mediaPlayer);
+    if (!libvlc_media_player_is_playing(m_vlcMediaPlayer)) {
+        libvlc_media_player_play(m_vlcMediaPlayer);
     }
 }
 
@@ -172,7 +180,7 @@ void NPlaybackEngineVlc::pause()
         return;
     }
 
-    libvlc_media_player_set_pause(m_mediaPlayer, true);
+    libvlc_media_player_set_pause(m_vlcMediaPlayer, true);
 }
 
 void NPlaybackEngineVlc::stop()
@@ -181,48 +189,53 @@ void NPlaybackEngineVlc::stop()
         return;
     }
 
-    libvlc_media_player_stop(m_mediaPlayer);
+    libvlc_media_player_stop(m_vlcMediaPlayer);
 }
 
 bool NPlaybackEngineVlc::hasMedia() const
 {
-    libvlc_media_t *media = libvlc_media_player_get_media(m_mediaPlayer);
+    libvlc_media_t *media = libvlc_media_player_get_media(m_vlcMediaPlayer);
     return (media != NULL);
 }
 
 QString NPlaybackEngineVlc::currentMedia() const
 {
-    libvlc_media_t *media = libvlc_media_player_get_media(m_mediaPlayer);
-    if (media != NULL)
+    libvlc_media_t *media = libvlc_media_player_get_media(m_vlcMediaPlayer);
+    if (media) {
         return QUrl(QUrl::fromPercentEncoding(libvlc_media_get_mrl(media))).toLocalFile();
+    }
     return QString();
+}
+
+N::PlaybackState NPlaybackEngineVlc::state() const
+{
+    return fromVlcState(m_vlcState);
 }
 
 void NPlaybackEngineVlc::checkStatus()
 {
     qreal pos = position();
-    if (m_oldPosition != pos) {
-        m_oldPosition = pos;
+    if (m_position != pos) {
+        m_position = pos;
         emit positionChanged(pos);
     }
 
     qreal vol = volume();
-    if (m_oldVolume != vol) {
-        m_oldVolume = vol;
+    if (m_volume != vol) {
+        m_volume = vol;
         emit volumeChanged(vol);
     }
 
-    libvlc_state_t vlcState = libvlc_media_player_get_state(m_mediaPlayer);
-    N::PlaybackState state = fromVlcState(vlcState);
-    if (m_oldState != state) {
-        emit stateChanged(state);
-        m_oldState = state;
+    libvlc_state_t vlcState = libvlc_media_player_get_state(m_vlcMediaPlayer);
+    if (m_vlcState != vlcState) {
+        m_vlcState = vlcState;
+        emit stateChanged(fromVlcState(m_vlcState));
     }
 
-    emit tick(libvlc_media_player_get_time(m_mediaPlayer));
+    emit tick(libvlc_media_player_get_time(m_vlcMediaPlayer));
 }
 
 void NPlaybackEngineVlc::_emitFinished()
 {
-    emit finished();
+    emit mediaFinished(m_currentMedia, m_currentContext);
 }

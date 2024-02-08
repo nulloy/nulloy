@@ -32,14 +32,15 @@ class NPlaybackEngineVlc : public NPlaybackEngineInterface, public NPlugin
 
 private:
     libvlc_instance_t *m_vlcInstance;
-    libvlc_media_player_t *m_mediaPlayer;
-    libvlc_event_manager_t *m_eventManager;
+    libvlc_media_player_t *m_vlcMediaPlayer;
+    libvlc_event_manager_t *m_vlcEventManager;
 
     QTimer *m_timer;
-    qreal m_oldVolume;
-    qreal m_oldPosition;
-    N::PlaybackState m_oldState;
+    qreal m_volume;
+    qreal m_position;
+    libvlc_state_t m_vlcState;
     QString m_currentMedia;
+    int m_currentContext;
 
 public:
     NPlaybackEngineVlc(QObject *parent = NULL) : NPlaybackEngineInterface(parent) {}
@@ -50,14 +51,14 @@ public:
 
     Q_INVOKABLE bool hasMedia() const;
     Q_INVOKABLE QString currentMedia() const;
-    Q_INVOKABLE N::PlaybackState state() const { return m_oldState; }
+    Q_INVOKABLE N::PlaybackState state() const;
 
     Q_INVOKABLE qreal volume() const;
     Q_INVOKABLE qreal position() const;
     Q_INVOKABLE qint64 durationMsec() const;
 
 public slots:
-    Q_INVOKABLE void setMedia(const QString &file);
+    Q_INVOKABLE void setMedia(const QString &file, int context);
     Q_INVOKABLE void setVolume(qreal volume);
     Q_INVOKABLE void setPosition(qreal pos);
     Q_INVOKABLE void jump(qint64 msec);
@@ -74,10 +75,10 @@ private slots:
 signals:
     void positionChanged(qreal pos);
     void volumeChanged(qreal volume);
-    void message(N::MessageIcon icon, const QString &title, const QString &msg);
-    void mediaChanged(const QString &file);
-    void finished();
-    void failed();
+    void message(N::MessageIcon icon, const QString &file, const QString &msg);
+    void mediaChanged(const QString &file, int context);
+    void mediaFinished(const QString &file, int context);
+    void mediaFailed(const QString &file, int context);
     void stateChanged(N::PlaybackState state);
     void tick(qint64 msec);
 };
