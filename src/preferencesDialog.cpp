@@ -145,6 +145,10 @@ NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
     ui.skinRestartLabel->setVisible(false);
     connect(ui.skinComboBox, SIGNAL(activated(int)), ui.skinRestartLabel, SLOT(show()));
 
+    ui.styleRestartLabel->setText(ui.styleRestartLabel->text());
+    ui.styleRestartLabel->setVisible(false);
+    connect(ui.styleComboBox, SIGNAL(activated(int)), ui.styleRestartLabel, SLOT(show()));
+
     ui.waveformTrackInfoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     int i = 0;
