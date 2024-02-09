@@ -72,6 +72,11 @@ NPlayer::NPlayer()
     qsrand((uint)QTime::currentTime().msec());
     m_settings = NSettings::instance();
 
+    QString styleName = m_settings->value("Style").toString();
+    if (!styleName.isEmpty()) {
+        QApplication::setStyle(styleName);
+    }
+
     NI18NLoader::init();
     NPluginLoader::init();
 

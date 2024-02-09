@@ -29,11 +29,13 @@
 #include "skinLoader.h"
 #endif
 
+#include <QApplication>
 #include <QGroupBox>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QSpacerItem>
+#include <QStyleFactory>
 #include <QTextBrowser>
 #include <QTextCodec>
 #include <QVBoxLayout>
@@ -526,6 +528,25 @@ void NPreferencesDialog::loadSettings()
     }
     // << translations
 
+    // styles >>
+    ui.styleComboBox->clear();
+    foreach (QString str, QStyleFactory::keys()) {
+        ui.styleComboBox->addItem(str);
+    }
+
+    if (ui.styleComboBox->count() == 1) {
+        ui.styleComboBox->setEnabled(false);
+    }
+
+    int styleIndex = ui.styleComboBox->findText(NSettings::instance()->value("Style").toString());
+    if (styleIndex != -1) {
+        ui.styleComboBox->setCurrentIndex(styleIndex);
+    }
+
+    connect(ui.styleComboBox, qOverload<int>(&QComboBox::currentIndexChanged),
+            [this](int index) { QApplication::setStyle(ui.styleComboBox->itemText(index)); });
+    // << styles
+
     // shortcuts >>
     ui.shortcutEditorWidget->init(NSettings::instance()->shortcuts());
     // << shortcuts
@@ -624,6 +645,10 @@ void NPreferencesDialog::saveSettings()
                                                     .split('-')
                                                     .first());
     // << translations
+
+    // styles >>
+    NSettings::instance()->setValue("Style", ui.styleComboBox->currentText());
+    // << styles
 
     // shortcuts >>
     ui.shortcutEditorWidget->applyShortcuts();

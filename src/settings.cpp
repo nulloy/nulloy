@@ -15,11 +15,13 @@
 
 #include "settings.h"
 
+#include <QApplication>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QStyle>
 #include <QVariant>
 
 #include "action.h"
@@ -43,6 +45,8 @@ NSettings::NSettings(QObject *parent)
             remove(key);
         setValue("SettingsVersion", MIN_VERSION);
     }
+
+    initValue("Style", QApplication::style()->objectName());
 
     initValue("Shortcuts/RevealInFileManagerAction", "Ctrl+Return");
     initValue("Shortcuts/RemoveFromPlaylistAction", "Delete");
