@@ -729,7 +729,7 @@ void NPlayer::loadDefaultPlaylist()
         int row = playlistRowValues.at(0).toInt();
         qreal pos = playlistRowValues.at(1).toFloat();
 
-        if (row > m_playlistWidget->count() - 1) {
+        if (row < 0 || row > m_playlistWidget->count() - 1) {
             return;
         }
 
