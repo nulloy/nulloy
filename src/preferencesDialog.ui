@@ -314,7 +314,7 @@ padding: 5px;</string>
 padding: 5px;</string>
                 </property>
                 <property name="text">
-                  <string>It is recommended to restart after switching style</string>
+                <string>Switching style requires restart</string>
                 </property>
                </widget>
               </item>

@@ -546,9 +546,6 @@ void NPreferencesDialog::loadSettings()
     if (styleIndex != -1) {
         ui.styleComboBox->setCurrentIndex(styleIndex);
     }
-
-    connect(ui.styleComboBox, qOverload<int>(&QComboBox::currentIndexChanged),
-            [this](int index) { QApplication::setStyle(ui.styleComboBox->itemText(index)); });
     // << styles
 
     // shortcuts >>
