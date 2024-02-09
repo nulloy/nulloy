@@ -272,6 +272,7 @@ void NPlaybackEngineGStreamer::jump(qint64 msec)
         }
     }
     m_position += ((qreal)msec * NSEC_IN_MSEC) / m_durationNsec;
+    m_positionPostponed = true;
 }
 
 qreal NPlaybackEngineGStreamer::position() const
