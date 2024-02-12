@@ -797,9 +797,10 @@ void NPlayer::loadSettings()
     }
 #endif
 
-    m_showCoverAction->setChecked(m_settings->value("ShowCoverArt").toBool());
+    bool showCoverArt = m_settings->value("ShowCoverArt").toBool();
+    m_showCoverAction->setChecked(showCoverArt);
     if (m_coverWidget) {
-        m_coverWidget->setEnabled(m_settings->value("ShowCoverArt").toBool());
+        m_coverWidget->setVisible(showCoverArt);
     }
 
     m_showPlaybackControlsAction->setChecked(m_settings->value("ShowPlaybackControls").toBool());
@@ -970,6 +971,9 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file, int)
     m_waveformSlider->setMedia(file);
     m_trackInfoWidget->updateFileLabels(file);
 
+    if (!m_settings->value("ShowCoverArt").toBool()) {
+        return;
+    }
     QImage image;
     if (m_coverReader) {
         m_coverReader->setSource(file);
@@ -1014,6 +1018,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file, int)
     if (image.isNull()) {
         m_coverWidget->hide();
     } else {
+        m_coverWidget->show();
         m_coverWidget->setPixmap(QPixmap::fromImage(image));
     }
 }
@@ -1169,7 +1174,7 @@ void NPlayer::on_showCoverAction_toggled(bool checked)
 {
     m_settings->setValue("ShowCoverArt", checked);
     if (m_coverWidget) {
-        m_coverWidget->setEnabled(checked);
+        m_coverWidget->setVisible(checked);
     }
 }
 
