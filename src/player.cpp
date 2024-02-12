@@ -567,7 +567,13 @@ void NPlayer::connectSignals()
     connect(m_playlistWidget, SIGNAL(addMoreRequested()), this,
             SLOT(on_playlist_addMoreRequested()));
     connect(m_playlistWidget, &NPlaylistWidget::durationChanged, [this](int durationSec) {
+        NPlaylistWidgetItem *item = m_playlistWidget->playingItem();
+        if (item) {
+            m_trackInfoReader->setSource(item->data(N::PathRole).toString());
+        }
+
         m_trackInfoReader->updatePlaylistDuration(durationSec);
+
         m_trackInfoWidget->updatePlaylistLabels();
 
         QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();

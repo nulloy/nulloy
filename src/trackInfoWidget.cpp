@@ -232,13 +232,16 @@ void NTrackInfoWidget::loadSettings()
     for (int i = 0; i < labels.size(); ++i) {
         NLabel *label = labels.at(i);
         QString format = NSettings::instance()->value("TrackInfo/" + label->objectName()).toString();
+
         if (format.contains("%T") || format.contains("%r")) { // elapsed or remaining playback time
             m_playbackLabelsMap[label] = format;
-        } else if (format.contains("%L")) { // playlist duration
-            m_playlistLabelsMap[label] = format;
-        } else {
-            m_fileLabelsMap[label] = format;
         }
+
+        if (format.contains("%L")) { // playlist duration
+            m_playlistLabelsMap[label] = format;
+        }
+
+        m_fileLabelsMap[label] = format;
     }
 
     m_tooltipFormat = NSettings::instance()->value("TooltipTrackInfo").toString();
