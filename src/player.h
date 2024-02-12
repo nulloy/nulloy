@@ -70,6 +70,7 @@ private:
     QSystemTrayIcon *m_systemTray;
     QTimer *m_trayClickTimer;
     QTimer *m_settingsSaveTimer;
+    QTimer *m_writeDefaultPlaylistTimer;
     bool m_trayIconDoubleClickCheck;
 
     bool eventFilter(QObject *obj, QEvent *event);

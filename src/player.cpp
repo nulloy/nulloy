@@ -173,6 +173,11 @@ NPlayer::NPlayer()
     m_settingsSaveTimer = new QTimer(this);
     connect(m_settingsSaveTimer, &QTimer::timeout, [this]() { saveSettings(); });
     m_settingsSaveTimer->start(5000); // 5 seconds
+
+    m_writeDefaultPlaylistTimer = new QTimer(this);
+    m_writeDefaultPlaylistTimer->setSingleShot(true);
+    connect(m_writeDefaultPlaylistTimer, &QTimer::timeout,
+            [this]() { writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u); });
 }
 
 NPlayer::~NPlayer()
@@ -582,8 +587,9 @@ void NPlayer::connectSignals()
             m_mainWindow->setTitle(title);
         }
     });
-    connect(m_playlistWidget, &NPlaylistWidget::itemsChanged,
-            [this]() { writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u); });
+    connect(m_playlistWidget, &NPlaylistWidget::itemsChanged, [this]() {
+        m_writeDefaultPlaylistTimer->start(100); //
+    });
     connect(m_playlistWidget, &NPlaylistWidget::playingItemChanged,
             [this]() { savePlaybackState(); });
 
