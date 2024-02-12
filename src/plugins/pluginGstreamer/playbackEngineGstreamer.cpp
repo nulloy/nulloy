@@ -153,6 +153,7 @@ bool NPlaybackEngineGStreamer::gstSetFile(const QString &file, int context, bool
         stop();
         m_currentMedia = "";
         m_currentContext = 0;
+        emit mediaChanged(m_currentMedia, m_currentContext);
         return false;
     }
 
