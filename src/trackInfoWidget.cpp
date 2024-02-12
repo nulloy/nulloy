@@ -183,7 +183,7 @@ void NTrackInfoWidget::mouseMoveEvent(QMouseEvent *event)
     emit showToolTip(text);
 }
 
-void NTrackInfoWidget::updateStaticTags(const QString &file)
+void NTrackInfoWidget::updateFileLabels(const QString &file)
 {
     if (!m_trackInfoReader) {
         return;
@@ -198,8 +198,23 @@ void NTrackInfoWidget::updateStaticTags(const QString &file)
     }
 
     QString encoding = NSettings::instance()->value("EncodingTrackInfo").toString();
-    foreach (NLabel *label, m_staticFormatsMap.keys()) {
-        QString format = m_staticFormatsMap[label];
+    foreach (NLabel *label, m_fileLabelsMap.keys()) {
+        QString format = m_fileLabelsMap[label];
+        QString text = m_trackInfoReader->toString(format);
+
+        label->setText(text);
+        label->setVisible(!text.isEmpty());
+    }
+}
+
+void NTrackInfoWidget::updatePlaylistLabels()
+{
+    if (!m_trackInfoReader) {
+        return;
+    }
+
+    foreach (NLabel *label, m_playlistLabelsMap.keys()) {
+        QString format = m_playlistLabelsMap[label];
         QString text = m_trackInfoReader->toString(format);
 
         label->setText(text);
@@ -209,30 +224,33 @@ void NTrackInfoWidget::updateStaticTags(const QString &file)
 
 void NTrackInfoWidget::loadSettings()
 {
-    m_staticFormatsMap.clear();
-    m_dynamicFormatsMap.clear();
+    m_fileLabelsMap.clear();
+    m_playbackLabelsMap.clear();
+    m_playlistLabelsMap.clear();
 
     QList<NLabel *> labels = findChildren<NLabel *>();
     for (int i = 0; i < labels.size(); ++i) {
         NLabel *label = labels.at(i);
         QString format = NSettings::instance()->value("TrackInfo/" + label->objectName()).toString();
         if (format.contains("%T") || format.contains("%r")) { // elapsed or remaining playback time
-            m_dynamicFormatsMap[label] = format;
+            m_playbackLabelsMap[label] = format;
+        } else if (format.contains("%L")) { // playlist duration
+            m_playlistLabelsMap[label] = format;
         } else {
-            m_staticFormatsMap[label] = format;
+            m_fileLabelsMap[label] = format;
         }
     }
 
     m_tooltipFormat = NSettings::instance()->value("TooltipTrackInfo").toString();
 }
 
-void NTrackInfoWidget::tick(qint64 msec)
+void NTrackInfoWidget::updatePlaybackLabels(qint64 msec)
 {
     m_msec = msec;
 
     m_trackInfoReader->updatePlaybackPosition(msec / 1000);
-    foreach (NLabel *label, m_dynamicFormatsMap.keys()) {
-        QString format = m_dynamicFormatsMap[label];
+    foreach (NLabel *label, m_playbackLabelsMap.keys()) {
+        QString format = m_playbackLabelsMap[label];
         QString text = m_trackInfoReader->toString(format);
         label->setText(text);
         label->setVisible(!text.isEmpty());

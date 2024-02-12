@@ -31,6 +31,7 @@ private:
 
     int m_durationSec;
     int m_positionSec;
+    int m_playlistDurationSec;
 
     QString parseFormat(const QString &format, int &cur, bool skip, bool &ok) const;
 
@@ -40,6 +41,7 @@ public:
 
     void setSource(const QString &file);
     void updatePlaybackPosition(int seconds);
+    void updatePlaylistDuration(int seconds);
     QString toString(const QString &format) const;
     QString getInfo(QChar ch) const;
     static QString formatTime(int durationSec);

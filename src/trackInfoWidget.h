@@ -32,8 +32,9 @@ private:
     qint64 m_msec;
     int m_heightThreshold;
     QString m_tooltipFormat;
-    QMap<NLabel *, QString> m_staticFormatsMap;
-    QMap<NLabel *, QString> m_dynamicFormatsMap;
+    QMap<NLabel *, QString> m_fileLabelsMap;
+    QMap<NLabel *, QString> m_playlistLabelsMap;
+    QMap<NLabel *, QString> m_playbackLabelsMap;
     QGraphicsOpacityEffect *m_effect;
     QPropertyAnimation *m_animation;
     QWidget *m_container;
@@ -52,9 +53,10 @@ public:
     void setTrackInfoReader(NTrackInfoReader *reader);
 
 public slots:
-    void updateStaticTags(const QString &file);
+    void updateFileLabels(const QString &file);
+    void updatePlaylistLabels();
+    void updatePlaybackLabels(qint64 msec);
     void loadSettings();
-    void tick(qint64 msec);
 
 signals:
     void showToolTip(const QString &text);

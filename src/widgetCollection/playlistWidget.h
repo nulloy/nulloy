@@ -54,6 +54,7 @@ private:
     bool m_shuffleMode;
     bool m_repeatMode;
 
+    void addItem(NPlaylistWidgetItem *item);
     void paintEvent(QPaintEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
     void resizeEvent(QResizeEvent *event);
@@ -85,7 +86,6 @@ public:
     NPlaylistWidget(QWidget *parent = 0);
     ~NPlaylistWidget();
 
-    void addItem(NPlaylistWidgetItem *item);
     NPlaylistWidgetItem *itemAtRow(int row) const;
     NPlaylistWidgetItem *playingItem() const;
     int playingRow() const;
@@ -111,6 +111,7 @@ public slots:
     bool setPlaylist(const QString &file);
     void processVisibleItems();
     void updateTrackIndexes();
+    void calculateDuration();
 
     void setShuffleMode(bool enable);
     void setRepeatMode(bool enable);
@@ -124,6 +125,7 @@ signals:
 
     void itemsChanged();
     void playingItemChanged();
+    void durationChanged(int seconds);
 
     // DRAG & DROP >>
 public:

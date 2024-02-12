@@ -293,6 +293,7 @@ void NPreferencesDialog::on_titleFormatHelpButton_clicked()
             "<li><b>%o</b> - " + tr("Time offset under cursor (Tooltip only)") + "</li>" +
             "<li><b>%d</b> - " + tr("Duration in format hh:mm:ss") + "</li>" +
             "<li><b>%D</b> - " + tr("Duration in seconds") + "</li>" +
+            "<li><b>%L</b> - " + tr("Playlist duration in format hh:mm:ss") + "</li>" +
             "<li><b>%b</b> - " + tr("Bit depth") + "</li>" +
             "<li><b>%B</b> - " + tr("Bitrate in Kbps") + "</li>" +
             "<li><b>%s</b> - " + tr("Sample rate in kHz") + "</li>" +

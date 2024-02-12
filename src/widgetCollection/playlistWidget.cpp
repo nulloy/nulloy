@@ -131,7 +131,10 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 
     m_processVisibleItemsTimer = new QTimer(this);
     m_processVisibleItemsTimer->setSingleShot(true);
-    connect(m_processVisibleItemsTimer, SIGNAL(timeout()), this, SLOT(processVisibleItems()));
+    connect(m_processVisibleItemsTimer, &QTimer::timeout, [this]() {
+        processVisibleItems();
+        calculateDuration();
+    });
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this,
             SLOT(startProcessVisibleItemsTimer()));
 
@@ -169,7 +172,13 @@ void NPlaylistWidget::processVisibleItems()
     maxRow = qMin(maxRow + totalRows, count() - 1);
     QString titleFormat = NSettings::instance()->value("PlaylistTrackInfo").toString();
     for (int i = minRow; i <= maxRow; ++i) {
-        formatItemTitle(reinterpret_cast<NPlaylistWidgetItem *>(itemAtRow(i)), titleFormat);
+        NPlaylistWidgetItem *item = itemAtRow(i);
+        formatItemTitle(item, titleFormat);
+
+        // assuming m_trackInfoReader is still set to correct file after formatItemTitle():
+        if (item->data(N::DurationRole).toInt() == -1 && m_trackInfoReader) {
+            item->setData(N::DurationRole, m_trackInfoReader->toString("%D").toInt());
+        }
     }
 }
 
@@ -235,6 +244,8 @@ void NPlaylistWidget::on_removeAction_triggered()
     viewport()->update();
 
     updateTrackIndexes();
+    calculateDuration();
+    emit itemsChanged();
 
     int newCount = count();
     if (newCount == 0) {
@@ -348,12 +359,25 @@ bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) c
     return true;
 }
 
+void NPlaylistWidget::calculateDuration()
+{
+    int secondsTotal = 0;
+    for (int i = 0; i < count(); ++i) {
+        NPlaylistWidgetItem *item = itemAtRow(i);
+        int seconds = item->data(N::DurationRole).toInt();
+        if (seconds > 0) {
+            secondsTotal += seconds;
+        }
+    }
+
+    emit durationChanged(secondsTotal);
+}
+
 void NPlaylistWidget::updateTrackIndexes()
 {
     for (int i = 0; i < count(); ++i) {
         itemAtRow(i)->setData(N::TrackIndexRole, i);
     }
-    emit itemsChanged();
 }
 
 NPlaylistWidget::~NPlaylistWidget() {}
@@ -522,14 +546,22 @@ void NPlaylistWidget::addFiles(const QStringList &files)
 {
     foreach (QString path, files)
         addItem(new NPlaylistWidgetItem(QFileInfo(path)));
+
     processVisibleItems();
+    calculateDuration();
+    updateTrackIndexes();
+    emit itemsChanged();
 }
 
 void NPlaylistWidget::addItems(const QList<NPlaylistDataItem> &dataItems)
 {
     foreach (NPlaylistDataItem dataItem, dataItems)
         addItem(new NPlaylistWidgetItem(dataItem));
+
     processVisibleItems();
+    calculateDuration();
+    updateTrackIndexes();
+    emit itemsChanged();
 }
 
 void NPlaylistWidget::setFiles(const QStringList &files)
@@ -539,7 +571,11 @@ void NPlaylistWidget::setFiles(const QStringList &files)
     m_playingItem = NULL;
     foreach (QString path, files)
         addItem(new NPlaylistWidgetItem(QFileInfo(path)));
+
     processVisibleItems();
+    calculateDuration();
+    updateTrackIndexes();
+    emit itemsChanged();
 }
 
 void NPlaylistWidget::setItems(const QList<NPlaylistDataItem> &dataItems)
@@ -547,10 +583,14 @@ void NPlaylistWidget::setItems(const QList<NPlaylistDataItem> &dataItems)
     clear();
     m_shuffledItems.clear();
     m_playingItem = NULL;
+
     foreach (NPlaylistDataItem dataItem, dataItems)
         addItem(new NPlaylistWidgetItem(dataItem));
-    updateTrackIndexes();
+
     processVisibleItems();
+    calculateDuration();
+    updateTrackIndexes();
+    emit itemsChanged();
 }
 
 bool NPlaylistWidget::setPlaylist(const QString &file)
@@ -562,6 +602,8 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
     QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readM3u(file);
 
     if (dataItemsList.isEmpty()) {
+        calculateDuration();
+        emit itemsChanged();
         return false;
     }
 
@@ -569,8 +611,10 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
         addItem(new NPlaylistWidgetItem(dataItemsList.at(i)));
     }
 
-    updateTrackIndexes();
     processVisibleItems();
+    calculateDuration();
+    updateTrackIndexes();
+    emit itemsChanged();
 
     return true;
 }
@@ -762,9 +806,10 @@ void NPlaylistWidget::paintEvent(QPaintEvent *e)
 // DRAG & DROP >>
 bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAction action)
 {
-    updateTrackIndexes();
-
     if (action == Qt::MoveAction && m_dragStart == DragStartInside) { // moving within playlist
+        updateTrackIndexes();
+        emit itemsChanged();
+
         return false;
     }
 
@@ -779,7 +824,6 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
             NPlaylistWidgetItem *item = new NPlaylistWidgetItem(dataItem);
             QListWidget::insertItem(index, item);
             m_itemMap[item->data(N::IdRole).toInt()] = item;
-            formatItemTitle(item, titleFormat);
             ++index;
         }
     }
@@ -789,6 +833,12 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
     }
 
     m_itemDrag = NULL;
+
+    processVisibleItems();
+    calculateDuration();
+    updateTrackIndexes();
+    emit itemsChanged();
+
     return true;
 }
 
@@ -840,7 +890,6 @@ void NPlaylistWidget::mouseMoveEvent(QMouseEvent *event)
                                                  Qt::MoveAction);      // blocking
     if (dropAction == Qt::MoveAction && m_dropEnd == DropEndOutside) { // dropping to file manager
         on_removeAction_triggered();
-        updateTrackIndexes();
     }
 }
 
@@ -855,6 +904,7 @@ void NPlaylistWidget::dropEvent(QDropEvent *event)
     QListWidget::dropEvent(event);
 
     updateTrackIndexes();
+    emit itemsChanged();
 
     m_fileDrop = false;
     viewport()->update();

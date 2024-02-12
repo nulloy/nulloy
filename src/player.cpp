@@ -501,7 +501,8 @@ void NPlayer::connectSignals()
             SLOT(on_playbackEngine_stateChanged(N::PlaybackState)));
     connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), m_waveformSlider,
             SLOT(setValue(qreal)));
-    connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget, SLOT(tick(qint64)));
+    connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget,
+            SLOT(updatePlaybackLabels(qint64)));
     connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
             m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
 
@@ -565,7 +566,16 @@ void NPlayer::connectSignals()
             SLOT(on_playlist_tagEditorRequested(const QString &)));
     connect(m_playlistWidget, SIGNAL(addMoreRequested()), this,
             SLOT(on_playlist_addMoreRequested()));
+    connect(m_playlistWidget, &NPlaylistWidget::durationChanged, [this](int durationSec) {
+        m_trackInfoReader->updatePlaylistDuration(durationSec);
+        m_trackInfoWidget->updatePlaylistLabels();
 
+        QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
+        if (!format.isEmpty()) {
+            QString title = m_trackInfoReader->toString(format);
+            m_mainWindow->setTitle(title);
+        }
+    });
     connect(m_playlistWidget, &NPlaylistWidget::itemsChanged,
             [this]() { writePlaylist(NCore::defaultPlaylistPath(), N::NulloyM3u); });
     connect(m_playlistWidget, &NPlaylistWidget::playingItemChanged,
@@ -754,7 +764,7 @@ void NPlayer::loadDefaultPlaylist()
             m_waveformSlider->setMedia(file);
             m_waveformSlider->setValue(pos);
             m_waveformSlider->setPausedState(true);
-            m_trackInfoWidget->updateStaticTags(file);
+            m_trackInfoWidget->updateFileLabels(file);
         }
     }
 
@@ -831,7 +841,7 @@ void NPlayer::on_preferencesDialog_settingsChanged()
 {
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
     m_trackInfoWidget->loadSettings();
-    m_trackInfoWidget->updateStaticTags(m_playbackEngine->currentMedia());
+    m_trackInfoWidget->updateFileLabels(m_playbackEngine->currentMedia());
     m_playlistWidget->processVisibleItems();
 }
 
@@ -952,7 +962,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file, int)
     m_systemTray->setToolTip(title);
 
     m_waveformSlider->setMedia(file);
-    m_trackInfoWidget->updateStaticTags(file);
+    m_trackInfoWidget->updateFileLabels(file);
 
     QImage image;
     if (m_coverReader) {
@@ -1090,8 +1100,7 @@ void NPlayer::on_playlist_addMoreRequested()
                              QDir::Files | QDir::NoDotAndDotDot, flag);
     int index = entryList.indexOf(QFileInfo(file).fileName());
     if (index != -1 && entryList.size() > index + 1) {
-        m_playlistWidget->addItem(
-            new NPlaylistWidgetItem(QFileInfo(path + "/" + entryList.at(index + 1))));
+        m_playlistWidget->addFiles(QStringList() << path + "/" + entryList.at(index + 1));
     }
 }
 

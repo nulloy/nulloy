@@ -34,6 +34,7 @@ NTrackInfoReader::NTrackInfoReader(NTagReaderInterface *tagReader, QObject *pare
     : QObject(parent)
 {
     m_durationSec = -1;
+    m_playlistDurationSec = -1;
     m_reader = tagReader;
     Q_ASSERT(m_reader);
 }
@@ -56,6 +57,11 @@ void NTrackInfoReader::setSource(const QString &file)
 void NTrackInfoReader::updatePlaybackPosition(int seconds)
 {
     m_positionSec = seconds;
+}
+
+void NTrackInfoReader::updatePlaylistDuration(int seconds)
+{
+    m_playlistDurationSec = seconds;
 }
 
 QString NTrackInfoReader::toString(const QString &format) const
@@ -104,6 +110,12 @@ QString NTrackInfoReader::getInfo(QChar ch) const
                 return "";
             }
             return formatTime(m_durationSec - m_positionSec);
+        }
+        case 'L': { // playlist duration hh:mm:ss
+            if (m_playlistDurationSec <= 0) {
+                return "";
+            }
+            return formatTime(m_playlistDurationSec);
         }
         case 'v':
             return QCoreApplication::applicationVersion();
