@@ -150,7 +150,9 @@ NPlaybackEngineGStreamer::~NPlaybackEngineGStreamer()
 bool NPlaybackEngineGStreamer::gstSetFile(const QString &file, int context, bool prepareNext)
 {
     if (file.isEmpty()) {
-        fail();
+        stop();
+        m_currentMedia = "";
+        m_currentContext = 0;
         return false;
     }
 
@@ -173,7 +175,6 @@ bool NPlaybackEngineGStreamer::gstSetFile(const QString &file, int context, bool
         g_free(uri);
     } else {
         emit message(N::Critical, file, err ? QString::fromUtf8(err->message) : tr("Invalid path"));
-        fail();
         if (err) {
             g_error_free(err);
         }
