@@ -189,7 +189,6 @@ Main.prototype.on_maximizeEnabled = function(enabled)
 
 Main.prototype.setBorderVisible = function(enabled)
 {
-    print(enabled);
     if (!enabled) {
         Ui.borderWidget.layout().setContentsMargins(0, 0, 0, 0);
     } else {

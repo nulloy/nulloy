@@ -37,6 +37,7 @@ bool NWidgetPrototype::eventFilter(QObject *obj, QEvent *event)
 
         if (mouseEvent->button() == Qt::LeftButton) {
             emit doubleClicked();
+            return true;
         }
     }
 
