@@ -777,7 +777,8 @@ bool NPlaylistWidget::dropMimeData(int index, const QMimeData *data, Qt::DropAct
     foreach (QUrl url, data->urls()) {
         foreach (NPlaylistDataItem dataItem, NUtils::dirListRecursive(url.toLocalFile())) {
             NPlaylistWidgetItem *item = new NPlaylistWidgetItem(dataItem);
-            insertItem(index, item);
+            QListWidget::insertItem(index, item);
+            m_itemMap[item->data(N::IdRole).toInt()] = item;
             formatItemTitle(item, titleFormat);
             ++index;
         }
