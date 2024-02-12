@@ -163,6 +163,7 @@ void NPlaylistWidget::startProcessVisibleItemsTimer()
 
 void NPlaylistWidget::processVisibleItems()
 {
+    bool emitItemsChanged = false;
     int minRow = row(itemAt(0, 0));
     QListWidgetItem *maxItem = itemAt(0, this->height());
     int maxRow = maxItem ? row(maxItem) : count() - 1;
@@ -172,13 +173,11 @@ void NPlaylistWidget::processVisibleItems()
     maxRow = qMin(maxRow + totalRows, count() - 1);
     QString titleFormat = NSettings::instance()->value("PlaylistTrackInfo").toString();
     for (int i = minRow; i <= maxRow; ++i) {
-        NPlaylistWidgetItem *item = itemAtRow(i);
-        formatItemTitle(item, titleFormat);
+        emitItemsChanged = refreshItemData(itemAtRow(i), titleFormat) || emitItemsChanged;
+    }
 
-        // assuming m_trackInfoReader is still set to correct file after formatItemTitle():
-        if (item->data(N::DurationRole).toInt() == -1 && m_trackInfoReader) {
-            item->setData(N::DurationRole, m_trackInfoReader->toString("%D").toInt());
-        }
+    if (emitItemsChanged) {
+        emit itemsChanged();
     }
 }
 
@@ -390,11 +389,11 @@ void NPlaylistWidget::resetPlayingItem()
     m_playingItem = NULL;
 }
 
-void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force)
+bool NPlaylistWidget::refreshItemData(NPlaylistWidgetItem *item, QString titleFormat, bool force)
 {
     if (!force && titleFormat == item->data(N::TitleFormatRole).toString() &&
-        !item->text().isEmpty()) {
-        return;
+        !item->text().isEmpty() && item->data(N::DurationRole).toInt() != -1) {
+        return false;
     }
 
     QString file = item->data(N::PathRole).toString();
@@ -402,17 +401,19 @@ void NPlaylistWidget::formatItemTitle(NPlaylistWidgetItem *item, QString titleFo
     if (m_trackInfoReader) {
         m_trackInfoReader->setSource(file);
         title = m_trackInfoReader->toString(titleFormat);
+        item->setData(N::DurationRole, m_trackInfoReader->toString("%D").toInt());
     }
 
     item->setText(title);
     item->setData(N::TitleFormatRole, titleFormat);
+    return true;
 }
 
 void NPlaylistWidget::setPlayingItem(NPlaylistWidgetItem *item)
 {
     item->setData(N::PlayingRole, true);
     item->setData(N::FailedRole, false); // reset failed role
-    formatItemTitle(item, NSettings::instance()->value("PlaylistTrackInfo").toString(),
+    refreshItemData(item, NSettings::instance()->value("PlaylistTrackInfo").toString(),
                     true); // with force
 
     if (NSettings::instance()->value("ScrollToItem").toBool()) {

@@ -58,7 +58,7 @@ private:
     void paintEvent(QPaintEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
     void resizeEvent(QResizeEvent *event);
-    void formatItemTitle(NPlaylistWidgetItem *item, QString titleFormat, bool force = false);
+    bool refreshItemData(NPlaylistWidgetItem *item, QString titleFormat, bool force = false);
     NPlaylistWidgetItem *nextItem(NPlaylistWidgetItem *) const;
     NPlaylistWidgetItem *prevItem(NPlaylistWidgetItem *item) const;
     void resetPlayingItem();
