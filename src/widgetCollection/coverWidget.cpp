@@ -64,7 +64,9 @@ void NCoverWidget::mousePressEvent(QMouseEvent *event)
 
 void NCoverWidget::fitToHeight(int height)
 {
-    QSize fixedAspect(m_pixmap.size());
-    fixedAspect.scale(m_pixmap.width(), height, Qt::KeepAspectRatio);
-    setFixedWidth(fixedAspect.width());
+    if (height == 0 || m_pixmap.height() == 0) {
+        return;
+    }
+    double scale = (double)height / m_pixmap.height();
+    setFixedWidth(m_pixmap.width() * scale);
 }
