@@ -504,17 +504,13 @@ void NPlaylistWidget::playItem(NPlaylistWidgetItem *item)
                                    item->data(N::IdRole).toInt());
         m_playbackEngine->play();
     } else {
+        resetPlayingItem();
         m_playbackEngine->setMedia("", 0);
     }
 }
 
 void NPlaylistWidget::playRow(int row)
 {
-    if (row < 0 || row >= count()) {
-        resetPlayingItem();
-        return;
-    }
-
     playItem(itemAtRow(row));
 }
 
