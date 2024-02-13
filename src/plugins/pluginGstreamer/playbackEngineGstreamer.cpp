@@ -173,6 +173,9 @@ bool NPlaybackEngineGStreamer::gstSetFile(const QString &file, int context, bool
             gst_element_set_state(m_playbin, GST_STATE_NULL);
         }
         g_object_set(m_playbin, "uri", uri, NULL);
+        if (!prepareNext) {
+            gst_element_set_state(m_playbin, GST_STATE_PLAYING);
+        }
         g_free(uri);
     } else {
         emit message(N::Critical, file, err ? QString::fromUtf8(err->message) : tr("Invalid path"));
