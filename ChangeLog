@@ -1,3 +1,8 @@
+* 0.9.8, Tue Feb 13 2024
+- %L for playlist duration
+- Qt style selector in preferences
+- Many other bug fixes
+
 * 0.9.7.1, Wed Feb 7 2024
 - Paused state lock fix
 
