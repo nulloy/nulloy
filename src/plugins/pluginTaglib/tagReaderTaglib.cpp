@@ -32,6 +32,13 @@
 TagLib::FileRef *NTaglib::_tagRef;
 QString NTaglib::_filePath;
 
+NTagReaderTaglib::NTagReaderTaglib(QObject *parent) : NTagReaderInterface(parent)
+{
+    m_isValid = false;
+    m_isUtf8 = false;
+    m_codec = nullptr;
+}
+
 void NTagReaderTaglib::init()
 {
     if (m_init) {

@@ -36,7 +36,7 @@ private:
     QTextCodec *m_codec;
 
 public:
-    NTagReaderTaglib(QObject *parent = 0) : NTagReaderInterface(parent) {}
+    NTagReaderTaglib(QObject *parent = 0);
     ~NTagReaderTaglib();
 
     void init();
