@@ -324,6 +324,7 @@ void NPlaybackEngineGStreamer::stop()
     m_durationNsec = 0;
     m_position = 0.0;
 
+    m_gstState = GST_STATE_NULL;
     emit stateChanged(N::PlaybackStopped);
     emit positionChanged(m_position);
 
