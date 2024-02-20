@@ -816,6 +816,8 @@ void NPlayer::loadSettings()
     m_loopPlaylistAction->setChecked(m_settings->value("LoopPlaylist").toBool());
     m_scrollToItemPlaylistAction->setChecked(m_settings->value("ScrollToItem").toBool());
     m_nextFileEnableAction->setChecked(m_settings->value("LoadNext").toBool());
+    m_shufflePlaylistAction->setChecked(NSettings::instance()->value("Shuffle").toBool());
+    m_repeatPlaylistAction->setChecked(NSettings::instance()->value("Repeat").toBool());
 
     QDir::SortFlag flag = (QDir::SortFlag)m_settings->value("LoadNextSort").toInt();
     if (flag == (QDir::Name)) {
