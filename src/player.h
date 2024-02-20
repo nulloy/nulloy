@@ -115,6 +115,7 @@ private:
     void createTrayIcon();
 
     void connectSignals();
+    void loadCoverArt(const QString &file);
 
     void loadDefaultPlaylist();
     void loadSettings();

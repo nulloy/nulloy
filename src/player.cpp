@@ -773,6 +773,8 @@ void NPlayer::loadDefaultPlaylist()
             m_playbackEngine->setMedia(file, id);
             m_playbackEngine->setPosition(pos);
 
+            loadCoverArt(file);
+
             m_waveformSlider->setMedia(file);
             m_waveformSlider->setValue(pos);
             m_waveformSlider->setPausedState(true);
@@ -805,9 +807,6 @@ void NPlayer::loadSettings()
 
     bool showCoverArt = m_settings->value("ShowCoverArt").toBool();
     m_showCoverAction->setChecked(showCoverArt);
-    if (m_coverWidget) {
-        m_coverWidget->setVisible(showCoverArt);
-    }
 
     m_showPlaybackControlsAction->setChecked(m_settings->value("ShowPlaybackControls").toBool());
     m_mainWindow->showPlaybackControls(m_settings->value("ShowPlaybackControls").toBool());
@@ -976,7 +975,11 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file, int)
 
     m_waveformSlider->setMedia(file);
     m_trackInfoWidget->updateFileLabels(file);
+    loadCoverArt(file);
+}
 
+void NPlayer::loadCoverArt(const QString &file)
+{
     if (!m_settings->value("ShowCoverArt").toBool()) {
         return;
     }
