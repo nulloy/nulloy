@@ -46,7 +46,7 @@ NSettings::NSettings(QObject *parent)
         setValue("SettingsVersion", MIN_VERSION);
     }
 
-    initValue("Style", QApplication::style()->objectName());
+    initValue("Style", "Fusion");
 
     initValue("Shortcuts/RevealInFileManagerAction", "Ctrl+Return");
     initValue("Shortcuts/RemoveFromPlaylistAction", "Delete");
