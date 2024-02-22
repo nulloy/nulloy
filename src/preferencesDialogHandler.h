@@ -13,38 +13,32 @@
 **
 *********************************************************************/
 
-#ifndef N_SHORTCUT_EDITOR_WIDGET_H
-#define N_SHORTCUT_EDITOR_WIDGET_H
+#ifndef N_PREFERENCES_DIALOG_HANDLER_H
+#define N_PREFERENCES_DIALOG_HANDLER_H
 
-#include <QList>
-#include <QTableWidget>
+#include "dialogHandler.h"
 
-class NAction;
-class QKeyEvent;
-class QString;
+class NPlayer;
+class NSettingsOverlay;
+class NShortcutEditorModel;
 
-class NShortcutEditorWidget : public QTableWidget
+class NPreferencesDialogHandler : public NDialogHandler
 {
     Q_OBJECT
 
-private:
-    bool m_init;
-    QList<NAction *> m_actionList;
-    static QString keyEventToString(QKeyEvent *e);
-    void keyPressEvent(QKeyEvent *e);
-    enum Columns
-    {
-        Name = 0,
-        Description = 1,
-        Shortcut = 2,
-        GlobalShortcut = 3,
-    };
-
 public:
-    NShortcutEditorWidget(QWidget *parent = 0);
-    ~NShortcutEditorWidget(void);
-    void applyShortcuts();
-    void init(const QList<NAction *> &actionList);
+    NPreferencesDialogHandler(NPlayer *player, QObject *parentWindow = nullptr);
+
+signals:
+    void settingsApplied();
+
+private slots:
+    void applySettings();
+
+private:
+    NPlayer *m_player;
+    NSettingsOverlay *m_settingsOveraly;
+    NShortcutEditorModel *m_shortcutEditorModel;
 };
 
 #endif

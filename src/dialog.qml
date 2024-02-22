@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2024 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2025 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -13,28 +13,20 @@
 **
 *********************************************************************/
 
-#ifndef N_MULTI_LINE_EDIT_H
-#define N_MULTI_LINE_EDIT_H
+import QtQuick 2.2
+import QtQuick.Dialogs 1.2
 
-#include <QPlainTextEdit>
+Dialog {
+  visible: false
+  modality: Qt.ApplicationModal
 
-class NMultiLineEdit : public QPlainTextEdit
-{
-    Q_OBJECT
-
-private:
-    void keyPressEvent(QKeyEvent *e);
-    void insertFromMimeData(const QMimeData *source);
-    void appendPlainText(const QString &text) {}
-    void insertPlainText(const QString &text) {}
-    void setPlainText(const QString &text) {}
-
-public:
-    NMultiLineEdit(QWidget *parent = 0);
-    QString text();
-
-public slots:
-    void setText(const QString &text);
-};
-
-#endif
+  signal closed
+  onVisibleChanged: {
+    if (!visible) {
+      closed();
+    } else {
+      x = NDialogHandler.parentCenterX - width / 2;
+      y = NDialogHandler.parentCenterY - height / 2;
+    }
+  }
+}

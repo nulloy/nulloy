@@ -1,0 +1,5 @@
+module src
+NDialog 1.0 dialog.qml
+NScrollView 1.0 scrollView.qml
+NScrollRedirect 1.0 scrollRedirect.qml
+NTextArea 1.0 textArea.qml

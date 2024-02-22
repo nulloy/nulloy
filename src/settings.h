@@ -43,4 +43,18 @@ signals:
     void valueChanged(const QString &key, const QVariant &value);
 };
 
+class NSettingsOverlay : public QObject
+{
+    Q_OBJECT
+
+    QMap<QString, QVariant> m_map;
+
+public:
+    explicit NSettingsOverlay(QObject *parent = nullptr);
+    void commit();
+
+    Q_INVOKABLE QVariant value(const QString &key) const;
+    Q_INVOKABLE void setValue(const QString &key, const QVariant &value);
+};
+
 #endif

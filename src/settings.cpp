@@ -187,3 +187,39 @@ void NSettings::remove(const QString &key)
     QSettings::remove(key);
     emit valueChanged(key, QString());
 }
+
+NSettingsOverlay::NSettingsOverlay(QObject *parent) : QObject(parent)
+{
+    for (const QString &key : NSettings::instance()->allKeys()) {
+        m_map[key] = NSettings::instance()->value(key);
+    }
+}
+
+QVariant NSettingsOverlay::value(const QString &key) const
+{
+    if (!m_map.contains(key)) {
+        return "";
+    }
+
+    QVariant value = m_map.value(key);
+    if (QString(value.typeName()) == "QString" &&
+        (value.toString() == "false" || value.toString() == "true")) {
+        return QVariant(value.toBool());
+    }
+
+    return value;
+}
+
+void NSettingsOverlay::setValue(const QString &key, const QVariant &value)
+{
+    m_map[key] = value;
+}
+
+void NSettingsOverlay::commit()
+{
+    QMapIterator<QString, QVariant> iter(m_map);
+    while (iter.hasNext()) {
+        iter.next();
+        NSettings::instance()->setValue(iter.key(), iter.value());
+    }
+}
