@@ -29,7 +29,7 @@
 #include "playlistWidget.h"
 #include "playlistWidgetItem.h"
 #include "pluginLoader.h"
-#include "preferencesDialog.h"
+#include "preferencesDialogHandler.h"
 #include "scriptEngine.h"
 #include "settings.h"
 #include "tagEditorDialog.h"
@@ -110,7 +110,7 @@ NPlayer::NPlayer()
 
     m_aboutDialog = NULL;
     m_logDialog = new NLogDialog(m_mainWindow);
-    m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
+    m_preferencesDialogHandler = new NPreferencesDialogHandler(m_mainWindow);
     m_volumeSlider = m_mainWindow->findChild<NVolumeSlider *>("volumeSlider");
     m_coverWidget = m_mainWindow->findChild<NCoverWidget *>("coverWidget");
 
@@ -135,7 +135,7 @@ NPlayer::NPlayer()
     m_versionDownloader = new QNetworkAccessManager(this);
     connect(m_versionDownloader, SIGNAL(finished(QNetworkReply *)), this,
             SLOT(on_versionDownloader_finished(QNetworkReply *)));
-    connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
+    connect(m_preferencesDialogHandler, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
 #endif
 
 #ifdef Q_OS_WIN
@@ -221,7 +221,7 @@ void NPlayer::connectSignals()
 
     connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
 
-    connect(m_preferencesDialog, SIGNAL(settingsChanged()), this,
+    connect(m_preferencesDialogHandler, SIGNAL(settingsApplied()), this,
             SLOT(on_preferencesDialog_settingsChanged()));
 
     if (QAbstractButton *playButton = m_mainWindow->findChild<QAbstractButton *>("playButton")) {
@@ -488,6 +488,9 @@ void NPlayer::savePlaybackState()
 void NPlayer::on_preferencesDialog_settingsChanged()
 {
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
+#ifdef Q_OS_WIN
+    NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
+#endif
     m_trackInfoWidget->loadSettings();
     m_trackInfoWidget->updateFileLabels(m_playbackEngine->currentMedia());
     m_playlistWidget->processVisibleItems();
@@ -505,12 +508,10 @@ void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
     if (!reply->error()) {
         QString versionOnline = reply->readAll().simplified();
 
+        m_preferencesDialogHandler->setVersionLabel(versionOnline);
+
         if (NSettings::instance()->value("UpdateIgnore", "").toString() == versionOnline) {
             return;
-        }
-
-        if (m_preferencesDialog->isVisible()) {
-            m_preferencesDialog->setVersionLabel(tr("Latest: ") + versionOnline);
         }
 
         if (QCoreApplication::applicationVersion() < versionOnline) {
@@ -746,7 +747,7 @@ void NPlayer::showAboutDialog()
 
 void NPlayer::showPreferencesDialog()
 {
-    m_preferencesDialog->exec();
+    m_preferencesDialogHandler->showDialog();
 }
 
 void NPlayer::showOpenFileDialog()
