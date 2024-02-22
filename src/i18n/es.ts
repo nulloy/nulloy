@@ -283,9 +283,9 @@
     </message>
 </context>
 <context>
-    <name>NPreferencesDialog</name>
+    <name>NPreferencesDialogHandler</name>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+55"/>
+        <location filename="../preferencesDialog.qml" line="+55"/>
         <source>Ok</source>
         <translation>ОK</translation>
     </message>
@@ -525,9 +525,9 @@
     </message>
 </context>
 <context>
-    <name>PreferencesDialog</name>
+    <name>preferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.ui" line="+31"/>
+        <location filename="../preferencesDialog.qml" line="+31"/>
         <source>General</source>
         <translation>General</translation>
     </message>
@@ -734,7 +734,7 @@
         <translation>Cambiar plugins requiere reiniciar</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-386"/>
+        <location filename="../preferencesDialog.qml" line="-386"/>
         <source>English</source>
         <translation>Español</translation>
     </message>
@@ -788,7 +788,7 @@
         <translation>No plugin de TagReader encontró.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+506"/>
+        <location filename="../preferencesDialog.qml" line="+506"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>Bandeja del sistema (área de notificación) no está disponible en su sistema.</translation>
     </message>

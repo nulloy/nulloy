@@ -283,9 +283,9 @@
     </message>
 </context>
 <context>
-    <name>NPreferencesDialog</name>
+    <name>NPreferencesDialogHandler</name>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+55"/>
+        <location filename="../preferencesDialog.qml" line="+55"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
@@ -525,9 +525,9 @@
     </message>
 </context>
 <context>
-    <name>PreferencesDialog</name>
+    <name>preferencesDialog</name>
     <message>
-        <location filename="../preferencesDialog.ui" line="+662"/>
+        <location filename="../preferencesDialog.qml" line="+662"/>
         <source>Top</source>
         <translation>顶部</translation>
     </message>
@@ -709,12 +709,12 @@
         <translation>一个文件实例</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="-211"/>
+        <location filename="../preferencesDialog.qml" line="-211"/>
         <source>English</source>
         <translation>中文简体</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.ui" line="+438"/>
+        <location filename="../preferencesDialog.qml" line="+438"/>
         <source>Keyboard</source>
         <translation>键盘</translation>
     </message>
@@ -813,7 +813,7 @@
         <translation>没有发现TagReader插件.</translation>
     </message>
     <message>
-        <location filename="../preferencesDialog.cpp" line="+506"/>
+        <location filename="../preferencesDialog.qml" line="+506"/>
         <source>System Tray (Notification Area) is not available on your system.</source>
         <translation>系统托盘（通知区域）是不可用在您的系统.</translation>
     </message>
