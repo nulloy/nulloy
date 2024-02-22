@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2024 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2025 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -13,21 +13,21 @@
 **
 *********************************************************************/
 
-#ifndef N_COMMON_H
-#define N_COMMON_H
+import QtQuick 2.2
+import QtQuick.Dialogs 1.2
 
-#include <QStringList>
-#include <QUrl>
+Dialog {
+  visible: false
+  modality: Qt.ApplicationModal
 
-namespace NCore
-{
-    void cArgs(int *argc, const char ***argv);
-    QString applicationBinaryName();
-    QString applicationBasenameName();
-    QString defaultPlaylistPath();
-    QString settingsPath();
-    QString rcDir();
-    QUrl qmlUrl(const QString &path);
-} // namespace NCore
-
-#endif
+  signal closed
+  onVisibleChanged: {
+    if (!visible) {
+      closed();
+    } else {
+      // FIXME: flickers:
+      x = NDialogHandler.parentCenterX - width / 2;
+      y = NDialogHandler.parentCenterY - height / 2;
+    }
+  }
+}

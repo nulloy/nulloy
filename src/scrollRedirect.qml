@@ -13,28 +13,21 @@
 **
 *********************************************************************/
 
-#ifndef N_MULTI_LINE_EDIT_H
-#define N_MULTI_LINE_EDIT_H
+import QtQuick 2.2
+import QtQuick.Controls 1.4
 
-#include <QPlainTextEdit>
-
-class NMultiLineEdit : public QPlainTextEdit
-{
-    Q_OBJECT
-
-private:
-    void keyPressEvent(QKeyEvent *e);
-    void insertFromMimeData(const QMimeData *source);
-    void appendPlainText(const QString &text) {}
-    void insertPlainText(const QString &text) {}
-    void setPlainText(const QString &text) {}
-
-public:
-    NMultiLineEdit(QWidget *parent = 0);
-    QString text();
-
-public slots:
-    void setText(const QString &text);
-};
-
-#endif
+MouseArea {
+  property ScrollView target: null
+  anchors.fill: parent
+  onPressed: {
+    mouse.accepted = false;
+  }
+  onReleased: {
+    mouse.accepted = false;
+  }
+  onWheel: {
+    const speed = 0.4;
+    const newY = target.flickableItem.contentY - wheel.angleDelta.y * speed;
+    target.flickableItem.contentY = Math.max(0, Math.min(newY, target.flickableItem.contentHeight - target.flickableItem.height));
+  }
+}

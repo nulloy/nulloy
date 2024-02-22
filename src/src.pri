@@ -1,5 +1,11 @@
 QT += script gui svg core-private
 
+QT += quick
+qml.files = $$files(*.qml) $$files(*.js) qmldir
+qml.prefix = /
+RESOURCES += qml
+contains(CONFIG, debug): CONFIG += qml_debug # run with -qmljsdebugger=port:5000
+
 INCLUDEPATH += $$SRC_DIR $$SRC_DIR/interfaces
 
 HEADERS += $$SRC_DIR/*.h

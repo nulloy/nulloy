@@ -29,7 +29,6 @@ class NWaveformSlider;
 class NCoverWidget;
 class NCoverReaderInterface;
 class NVolumeSlider;
-class NPreferencesDialog;
 class NAboutDialog;
 class NScriptEngine;
 class NSettings;
@@ -53,7 +52,6 @@ private:
     NCoverWidget *m_coverWidget;
     NCoverReaderInterface *m_coverReader;
     NWaveformSlider *m_waveformSlider;
-    NPreferencesDialog *m_preferencesDialog;
     NAboutDialog *m_aboutDialog;
     NVolumeSlider *m_volumeSlider;
     NTrackInfoReader *m_trackInfoReader;

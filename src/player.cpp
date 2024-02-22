@@ -29,7 +29,7 @@
 #include "playlistWidget.h"
 #include "playlistWidgetItem.h"
 #include "pluginLoader.h"
-#include "preferencesDialog.h"
+#include "preferencesDialogHandler.h"
 #include "scriptEngine.h"
 #include "settings.h"
 #include "tagEditorDialog.h"
@@ -69,11 +69,6 @@ NPlayer::NPlayer()
     qsrand((uint)QTime::currentTime().msec());
     m_settings = NSettings::instance();
 
-    QString styleName = m_settings->value("Style").toString();
-    if (!styleName.isEmpty()) {
-        QApplication::setStyle(styleName);
-    }
-
     NI18NLoader::init();
     NPluginLoader::init();
 
@@ -107,7 +102,6 @@ NPlayer::NPlayer()
 
     m_aboutDialog = NULL;
     m_logDialog = new NLogDialog(m_mainWindow);
-    m_preferencesDialog = new NPreferencesDialog(this, m_mainWindow);
     m_volumeSlider = m_mainWindow->findChild<NVolumeSlider *>("volumeSlider");
     m_coverWidget = m_mainWindow->findChild<NCoverWidget *>("coverWidget");
 
@@ -175,7 +169,7 @@ NPlayer::NPlayer()
     connectSignals();
 
     m_settingsSaveTimer = new QTimer(this);
-    connect(m_settingsSaveTimer, &QTimer::timeout, [this]() { saveSettings(); });
+    connect(m_settingsSaveTimer, &QTimer::timeout, this, &NPlayer::saveSettings);
     m_settingsSaveTimer->start(5000); // 5 seconds
 
     m_writeDefaultPlaylistTimer = new QTimer(this);
@@ -212,9 +206,6 @@ void NPlayer::connectSignals()
             m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
 
     connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
-
-    connect(m_preferencesDialog, &NPreferencesDialog::settingsChanged, this,
-            &NPlayer::applySettings);
 
     if (QAbstractButton *playButton = m_mainWindow->findChild<QAbstractButton *>("playButton")) {
         connect(playButton, SIGNAL(clicked()), this, SLOT(playPause()));
@@ -481,6 +472,9 @@ void NPlayer::savePlaybackState()
 void NPlayer::applySettings()
 {
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
+#ifdef Q_OS_WIN
+    NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
+#endif
     m_trackInfoWidget->loadSettings();
     m_trackInfoWidget->updateFileLabels(m_playbackEngine->currentMedia());
     m_playlistWidget->processVisibleItems();
@@ -703,7 +697,25 @@ void NPlayer::showAboutDialog()
 
 void NPlayer::showPreferencesDialog()
 {
-    m_preferencesDialog->exec();
+    NPreferencesDialogHandler *dialogHandler = new NPreferencesDialogHandler(this, m_mainWindow);
+    connect(dialogHandler, &NDialogHandler::setupContext, [&](QQmlContext *context) {
+        context->setContextProperty("NUpdateChecker", &NUpdateChecker::instance());
+    });
+
+#ifndef _N_NO_UPDATE_CHECK_
+    connect(dialogHandler, &NDialogHandler::setupRoot, [](QObject *root) {
+        root->setProperty("checkUpdate", true);
+        NUpdateChecker::instance().setCenterInWindow(root);
+    });
+    connect(dialogHandler, &NDialogHandler::closed, [this, dialogHandler]() {
+        NUpdateChecker::instance().setCenterInWindow(m_mainWindow);
+        dialogHandler->deleteLater();
+    });
+#endif
+
+    connect(dialogHandler, &NPreferencesDialogHandler::settingsApplied, this,
+            &NPlayer::applySettings);
+    dialogHandler->showDialog();
 }
 
 void NPlayer::showOpenFileDialog()

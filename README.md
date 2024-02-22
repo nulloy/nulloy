@@ -147,6 +147,8 @@ Build and run `nulloy` target.
 apt install g++ qttools5-dev qtscript5-dev qtbase5-private-dev libqt5x11extras5-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev zip libx11-dev libx11-xcb-dev libtag1-dev imagemagick librsvg2-bin libqt5svg5-dev
 # install extra GStreamer plugins for more audio formats
 apt install gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
+# qml specific:
+apt install qtdeclarative5-dev qml qml-module-qtquick-layouts qml-module-qtquick-controls qml-module-qtquick-controls2 qml-module-qtquick-dialogs
 ```
 
 #### RPM-based distro

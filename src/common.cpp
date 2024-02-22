@@ -109,3 +109,12 @@ QString NCore::rcDir()
     }
     return _rcDir;
 }
+
+QUrl NCore::qmlUrl(const QString &path)
+{
+    const QString srcPath = NCore::rcDir() + "/src/" + path; // for convenience during development
+    if (QFileInfo::exists(srcPath)) {
+        return QUrl::fromLocalFile(srcPath);
+    }
+    return QUrl("qrc:/" + path);
+}
