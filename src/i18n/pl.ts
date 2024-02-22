@@ -660,7 +660,7 @@
     </message>
     <message>
         <location line="+51"/>
-        <source>Tooltop offset:</source>
+        <source>Tooltip offset:</source>
         <translation>Podpowiedź offset:</translation>
     </message>
     <message>

@@ -660,7 +660,7 @@
     </message>
     <message>
         <location line="+51"/>
-        <source>Tooltop offset:</source>
+        <source>Tooltip offset:</source>
         <translation>Tooltip-Offset:</translation>
     </message>
     <message>

@@ -630,7 +630,7 @@
     </message>
     <message>
         <location line="+44"/>
-        <source>Tooltop offset:</source>
+        <source>Tooltip offset:</source>
         <translation>工具提示抵消:</translation>
     </message>
     <message>

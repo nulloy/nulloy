@@ -999,7 +999,7 @@ padding: 5px;</string>
               <item>
                <widget class="QLabel" name="tooltipOffsetLabel">
                 <property name="text">
-                 <string>Tooltop offset relative to mouse:</string>
+                 <string>Tooltip offset relative to mouse:</string>
                 </property>
                </widget>
               </item>
