@@ -1,3 +1,9 @@
+* 0.9.8.7, Thu Feb 22 2024
+- Cannot play after stopped fix
+- Start in paused state fix
+- Random crash on startup fix
+- Other minor bug fixes
+
 * 0.9.8, Tue Feb 13 2024
 - %L for playlist duration
 - Qt style selector in preferences
