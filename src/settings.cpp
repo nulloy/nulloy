@@ -132,7 +132,9 @@ NSettings::NSettings(QObject *parent)
 #endif
 
     initValue("CustomTrash", false);
+    initValue("CustomTrashCommand", "");
     initValue("CustomFileManager", false);
+    initValue("CustomFileManagerCommand", "");
     initValue("FileFilters", QString("*.m3u *.m3u8 \
         *.mp3 *.ogg *.mp4 *.wma \
         *.flac *.ape *.wav *.wv *.tta \
