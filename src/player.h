@@ -30,7 +30,6 @@ class NCoverWidget;
 class NCoverReaderInterface;
 class NVolumeSlider;
 class NPreferencesDialogHandler;
-class NAboutDialog;
 class NScriptEngine;
 class NSettings;
 class NTrackInfoReader;
@@ -57,7 +56,6 @@ private:
     NCoverReaderInterface *m_coverReader;
     NWaveformSlider *m_waveformSlider;
     NPreferencesDialogHandler *m_preferencesDialogHandler;
-    NAboutDialog *m_aboutDialog;
     NVolumeSlider *m_volumeSlider;
     NTrackInfoReader *m_trackInfoReader;
     NPlaybackEngineInterface *m_playbackEngine;
@@ -166,7 +164,7 @@ private slots:
 public slots:
     void quit();
     void toggleWindowVisibility();
-    void showAboutMessageBox();
+    void showAboutDialog();
     void showOpenFileDialog();
     void showOpenDirDialog();
     void showSavePlaylistDialog();
