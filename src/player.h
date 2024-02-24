@@ -29,7 +29,6 @@ class NWaveformSlider;
 class NCoverWidget;
 class NCoverReaderInterface;
 class NVolumeSlider;
-class NAboutDialog;
 class NScriptEngine;
 class NSettings;
 class NTrackInfoReader;
@@ -39,6 +38,7 @@ class NActionManager;
 class QString;
 class QTimer;
 class NTagReaderInterface;
+class NUtils;
 
 class NPlayer : public QWidget
 {
@@ -52,7 +52,6 @@ private:
     NCoverWidget *m_coverWidget;
     NCoverReaderInterface *m_coverReader;
     NWaveformSlider *m_waveformSlider;
-    NAboutDialog *m_aboutDialog;
     NVolumeSlider *m_volumeSlider;
     NTrackInfoReader *m_trackInfoReader;
     NPlaybackEngineInterface *m_playbackEngine;
@@ -64,6 +63,7 @@ private:
     QTimer *m_settingsSaveTimer;
     QTimer *m_writeDefaultPlaylistTimer;
     bool m_trayIconDoubleClickCheck;
+    NUtils *m_utils;
 
     bool eventFilter(QObject *obj, QEvent *event);
     void writePlaylist(const QString &file, N::M3uExtention ext);
