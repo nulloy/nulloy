@@ -13,25 +13,10 @@
 **
 *********************************************************************/
 
-#ifndef N_PLAYLIST_DATA_ITEM_H
-#define N_PLAYLIST_DATA_ITEM_H
+#include "playlistDataItem.h"
 
-#include <QString>
+static unsigned int id_counter = 1000; // IDs below 1000 are reserved, 0 means invalid ID
 
-struct NPlaylistDataItem
-{
-    QString title;
-    QString path;
-    int duration;
-    bool playing;
-    bool failed;
-    int playbackCount;
-    float playbackPosition;
-    QString titleFormat;
-    int trackIndex;
-    unsigned int id;
-
-    NPlaylistDataItem(const QString &file = "");
-};
-
-#endif
+NPlaylistDataItem::NPlaylistDataItem(const QString &file)
+    : path(file), duration(-1), playing(false), failed(false), playbackCount(0),
+      playbackPosition(0.0), trackIndex(0), id(id_counter++){};
