@@ -20,6 +20,7 @@
 #include "mainWindow.h"
 #include "playbackEngineInterface.h"
 #include "player.h"
+#include "playlistController.h"
 #include "playlistWidget.h"
 #include "settings.h"
 #include "tagReaderInterface.h"
@@ -132,8 +133,10 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         prevAction->setObjectName("PrevAction");
         prevAction->setStatusTip(tr("Play previous track in playlist"));
         prevAction->setCustomizable(true);
-        connect(prevAction, &NAction::triggered, player->playlistWidget(),
-                &NPlaylistWidget::playPrevItem);
+        //connect(prevAction, &NAction::triggered, player->playlistWidget(),
+        //        &NPlaylistWidget::playPrevItem);
+        connect(prevAction, &NAction::triggered, player->playlistController(),
+                &NPlaylistController::playPrevRow);
         m_trayIconMenu->addAction(prevAction);
         controlsMenu->addAction(prevAction);
     }
@@ -146,8 +149,10 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         nextAction->setObjectName("NextAction");
         nextAction->setStatusTip(tr("Play next track in playlist"));
         nextAction->setCustomizable(true);
-        connect(nextAction, &NAction::triggered, player->playlistWidget(),
-                &NPlaylistWidget::playNextItem);
+        //connect(nextAction, &NAction::triggered, player->playlistWidget(),
+        //        &NPlaylistWidget::playNextItem);
+        connect(nextAction, &NAction::triggered, player->playlistController(),
+                &NPlaylistController::playNextRow);
         m_trayIconMenu->addAction(nextAction);
         controlsMenu->addAction(nextAction);
     }
@@ -295,8 +300,10 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         shufflePlaylistAction->setObjectName("ShufflePlaylistAction");
         shufflePlaylistAction->setStatusTip(tr("Shuffle items in playlist"));
         shufflePlaylistAction->setCustomizable(true);
-        connect(shufflePlaylistAction, &NAction::triggered, player->playlistWidget(),
-                &NPlaylistWidget::shufflePlaylist);
+        //connect(shufflePlaylistAction, &NAction::triggered, player->playlistWidget(),
+        //        &NPlaylistWidget::shufflePlaylist);
+        connect(shufflePlaylistAction, &NAction::triggered, player->playlistController(),
+                &NPlaylistController::shuffleRows);
         playlistSubMenu->addAction(shufflePlaylistAction);
         controlsPlaylistSubMenu->addAction(shufflePlaylistAction);
     }
@@ -416,7 +423,8 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         revealAction->setStatusTip(tr("Open file manager for selected file"));
         revealAction->setCustomizable(true);
         connect(revealAction, &NAction::triggered, [player]() {
-            QStringList files = player->playlistWidget()->selectedFiles();
+            //QStringList files = player->playlistWidget()->selectedFiles();
+            QStringList files = player->playlistController()->selectedFiles();
             if (files.isEmpty()) {
                 return;
             }
@@ -436,8 +444,10 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         removeSelectedAction->setObjectName("RemoveFromPlaylistAction");
         removeSelectedAction->setStatusTip(tr("Remove selected files from playlist"));
         removeSelectedAction->setCustomizable(true);
-        connect(removeSelectedAction, &NAction::triggered, player->playlistWidget(),
-                &NPlaylistWidget::removeSelected);
+        //connect(removeSelectedAction, &NAction::triggered, player->playlistWidget(),
+        //        &NPlaylistWidget::removeSelected);
+        connect(removeSelectedAction, &NAction::triggered, player->playlistController(),
+                &NPlaylistController::removeSelected);
         m_playlistContextMenu->addAction(removeSelectedAction);
     }
 
@@ -449,13 +459,15 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         trashSelectedAction->setStatusTip(tr("Move selected files to trash bin"));
         trashSelectedAction->setCustomizable(true);
         connect(trashSelectedAction, &NAction::triggered, [player]() {
-            QStringList files = player->playlistWidget()->selectedFiles();
+            //QStringList files = player->playlistWidget()->selectedFiles();
+            QStringList files = player->playlistController()->selectedFiles();
             if (files.isEmpty()) {
                 return;
             }
 
             QStringList deleted = NTrash::moveToTrash(files);
-            player->playlistWidget()->removeFiles(deleted);
+            //player->playlistWidget()->removeFiles(deleted);
+            player->playlistController()->removeFiles(deleted);
         });
         m_playlistContextMenu->addAction(trashSelectedAction);
     }
@@ -467,7 +479,8 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         tagEditorAction->setStatusTip(tr("Open tag editor for selected file"));
         tagEditorAction->setCustomizable(true);
         connect(tagEditorAction, &NAction::triggered, [player]() {
-            QStringList files = player->playlistWidget()->selectedFiles();
+            //QStringList files = player->playlistWidget()->selectedFiles();
+            QStringList files = player->playlistController()->selectedFiles();
             if (files.isEmpty()) {
                 return;
             }

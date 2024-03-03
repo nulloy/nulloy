@@ -42,6 +42,8 @@ public:
     void setGlobalShortcuts(QKeySequence::StandardKey key);
     void setGlobalShortcuts(const QList<QKeySequence> &shortcuts);
 
+    Q_INVOKABLE QStringList sequences();
+
 private:
     void init();
     bool m_customizable;

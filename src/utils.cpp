@@ -54,6 +54,31 @@ QList<NPlaylistDataItem> NUtils::dirListRecursive(const QString &path)
     return _processPath(path, nameFilters);
 }
 
+NPlaylistModel::DataItem NUtils::toModelItem(const NPlaylistDataItem &dataItem)
+{
+    NPlaylistModel::DataItem modelItem;
+    modelItem.text = dataItem.title;
+    modelItem.textFormat = dataItem.titleFormat;
+    modelItem.filePath = dataItem.path;
+    modelItem.durationSec = dataItem.duration;
+    modelItem.playbackCount = dataItem.playbackCount;
+    modelItem.playbackPosition = dataItem.playbackPosition;
+    modelItem.isFailed = dataItem.failed;
+    modelItem.id = dataItem.id;
+    return modelItem;
+}
+
+QList<NPlaylistModel::DataItem> NUtils::processPathsRecursive(const QStringList &paths)
+{
+    QList<NPlaylistModel::DataItem> output;
+    for (const QString &path : paths) {
+        for (const NPlaylistDataItem &dataItem : NUtils::dirListRecursive(path)) {
+            output << toModelItem(dataItem);
+        }
+    }
+    return output;
+}
+
 QString NUtils::readFile(const QString &path)
 {
     QFile file(path);
@@ -62,4 +87,9 @@ QString NUtils::readFile(const QString &path)
     QString text = stream.readAll();
     file.close();
     return text;
+}
+
+QString NUtils::pathToUri(const QString &path)
+{
+    return QUrl::fromLocalFile(path).toString();
 }

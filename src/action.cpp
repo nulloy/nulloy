@@ -63,3 +63,12 @@ void NAction::setGlobalShortcuts(const QList<QKeySequence> &shortcuts)
         m_globalShortcuts << s;
     }
 }
+
+QStringList NAction::sequences()
+{
+    QStringList list;
+    foreach (QKeySequence seq, shortcuts()) {
+        list << seq.toString();
+    }
+    return list;
+}
