@@ -29,9 +29,9 @@ class NSettings : public QSettings
 private:
     static NSettings *m_instance;
     void initValue(const QString &key, const QVariant &defaultValue);
+    NSettings(QObject *parent = nullptr);
 
 public:
-    NSettings(QObject *parent = 0);
     ~NSettings();
     static NSettings *instance();
 

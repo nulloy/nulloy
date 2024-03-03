@@ -40,6 +40,7 @@ public:
 
 public slots:
     Q_INVOKABLE virtual void setMedia(const QString &file, int context) = 0;
+    // if responded, will emit mediaChanged() instead of mediaFinished():
     Q_INVOKABLE virtual void nextMediaRespond(const QString &file, int context)
     {
         Q_UNUSED(file);
@@ -59,9 +60,12 @@ signals:
     virtual void positionChanged(qreal pos) = 0;
     virtual void volumeChanged(qreal vol) = 0;
     virtual void message(N::MessageIcon icon, const QString &title, const QString &msg) = 0;
+    // emitted if playback started, otherwise will emit mediaFailed:
     virtual void mediaChanged(const QString &file, int context) = 0;
     virtual void nextMediaRequested() {}
+    // emitted if there is no next media supplied(not responded to nextMediaRequested, or if gapless playback not supported):
     virtual void mediaFinished(const QString &file, int context) = 0;
+    // emitted instead of mediaChanged:
     virtual void mediaFailed(const QString &file, int context) = 0;
     virtual void stateChanged(N::PlaybackState state) = 0;
     virtual void tick(qint64 msec) = 0;

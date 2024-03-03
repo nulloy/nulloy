@@ -194,6 +194,13 @@ echo "Library directory: $LIBDIR"
 
 echo "N_CONFIG_SUCCESS = yes" >> $QMAKE_CACHE
 
+# workaround for *_qmltyperegistrations.cpp:(.text+0x0): multiple definition of `qml_register_types_*()'
+rm -f src/nulloy_qmltyperegistrations.cpp
+
+# workaround for WARNING: Failure to find: *_metatypes.json
+echo '{}' > tests/testtrackinforeader_metatypes.json
+echo '{}' > tests/testplaylistwidget_metatypes.json
+
 echo
 echo "Running qmake..."
 if ! $QMAKE $QMAKE_EXTRA_OPTIONS; then

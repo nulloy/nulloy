@@ -253,9 +253,6 @@
         <source>Add Directory</source>
         <translation>添加目录</translation>
     </message>
-</context>
-<context>
-    <name>NPlaylistWidget</name>
     <message>
         <location filename="../widgetCollection/playlistWidget.cpp" line="+67"/>
         <source>Remove From Playlist</source>

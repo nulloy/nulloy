@@ -19,6 +19,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
+#include <QJSValue>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStyle>
@@ -164,13 +165,20 @@ NSettings *NSettings::instance()
 QVariant NSettings::value(const QString &key, const QVariant &defaultValue) const
 {
     QVariant value = QSettings::value(key, defaultValue);
+    if (!value.isValid()) {
+        return defaultValue;
+    }
     return value;
 }
 
 void NSettings::setValue(const QString &key, const QVariant &value)
 {
-    QSettings::setValue(key, value);
-    emit valueChanged(key, value);
+    QVariant val = value;
+    if (val.userType() == qMetaTypeId<QJSValue>()) {
+        val = val.value<QJSValue>().toVariant();
+    }
+    QSettings::setValue(key, val);
+    emit valueChanged(key, val);
 }
 
 void NSettings::initValue(const QString &key, const QVariant &defaultValue)
@@ -198,14 +206,7 @@ QVariant NSettingsOverlay::value(const QString &key) const
     if (!m_map.contains(key)) {
         return "";
     }
-
-    QVariant value = m_map.value(key);
-    if (QString(value.typeName()) == "QString" &&
-        (value.toString() == "false" || value.toString() == "true")) {
-        return QVariant(value.toBool());
-    }
-
-    return value;
+    return m_map.value(key);
 }
 
 void NSettingsOverlay::setValue(const QString &key, const QVariant &value)

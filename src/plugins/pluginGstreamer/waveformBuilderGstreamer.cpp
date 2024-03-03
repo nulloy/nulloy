@@ -118,6 +118,7 @@ void NWaveformBuilderGstreamer::stop()
 void NWaveformBuilderGstreamer::start(const QString &file)
 {
     stop();
+    reset();
 
     if (peaksFindFromCache(file)) {
         return;
@@ -145,7 +146,6 @@ void NWaveformBuilderGstreamer::start(const QString &file)
     gst_object_unref(sink);
     gst_object_unref(pad);
 
-    reset();
     QThread::start();
 
     if (!m_timer->isActive()) {

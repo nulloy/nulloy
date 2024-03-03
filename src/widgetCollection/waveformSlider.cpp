@@ -266,14 +266,13 @@ void NWaveformSlider::setValue(qreal value)
 void NWaveformSlider::setMedia(const QString &file)
 {
     init();
+    m_waveBuilder->start(file);
 
     if (file.isEmpty() || !QFile(file).exists()) {
         m_hasMedia = false;
         return;
     }
-
     m_hasMedia = true;
-    m_waveBuilder->start(file);
 }
 
 // STYLESHEET PROPERTIES >>
