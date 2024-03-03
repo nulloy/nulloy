@@ -25,8 +25,9 @@
 
 int _trash(const QString &file, QString *error);
 
-QStringList NTrash::moveToTrash(QStringList files)
+QStringList NTrash::moveToTrash(QStringList &files)
 {
+    QStringList deleted;
     foreach (QString file, files) {
         if (NSettings::instance()->value("DisplayMoveToTrashConfirmDialog").toBool()) {
             QCheckBox *checkBox = new QCheckBox(QObject::tr("Don't show this dialog anymore"));
@@ -69,8 +70,9 @@ QStringList NTrash::moveToTrash(QStringList files)
             }
         }
 
+        deleted << file;
         files.removeAt(files.indexOf(file));
     }
 
-    return files;
+    return deleted;
 }

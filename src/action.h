@@ -35,7 +35,7 @@ public:
 
     QList<QKeySequence> sequences() const;
     void setSequences(const QList<QKeySequence> &sequences);
-    QStringList shortcuts() const;
+    Q_INVOKABLE QStringList shortcuts() const;
     void setShortcuts(const QStringList &shortcuts);
 
     QList<QKeySequence> globalSequences() const;

@@ -2,4 +2,15 @@ module src
 NDialog 1.0 dialog.qml
 NScrollView 1.0 scrollView.qml
 NScrollRedirect 1.0 scrollRedirect.qml
+NWindowTitle 1.0 windowTitle.qml
 NTextArea 1.0 textArea.qml
+NResizeHandler 1.0 resizeHandler.qml
+NButton 1.0 button.qml
+NSvgButton 1.0 svgButton.qml
+NFadeOut 1.0 fadeOut.qml
+NPlaylist 1.0 playlist.qml
+NVolumeSlider 1.0 volumeSlider.qml
+NWaveformSlider 1.0 waveformSlider.qml
+NSplitter 1.0 splitter.qml
+NTrackInfoView 1.0 trackInfoView.qml
+NCoverImage 1.0 coverImage.qml

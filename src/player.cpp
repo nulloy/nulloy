@@ -19,11 +19,15 @@
 #include "actionManager.h"
 #include "common.h"
 #include "coverWidget.h"
+#include "cursorOverride.h"
 #include "i18nLoader.h"
+#include "image.h"
 #include "logDialog.h"
 #include "mainWindow.h"
 #include "playbackEngineInterface.h"
+#include "playlistController.h"
 #include "playlistDataItem.h"
+#include "playlistModel.h"
 #include "playlistStorage.h"
 #include "playlistWidget.h"
 #include "playlistWidgetItem.h"
@@ -31,7 +35,9 @@
 #include "preferencesDialogHandler.h"
 #include "scriptEngine.h"
 #include "settings.h"
+#include "svgImage.h"
 #include "tagEditorDialog.h"
+#include "trackInfoModel.h"
 #include "trackInfoReader.h"
 #include "trackInfoWidget.h"
 #ifndef _N_NO_UPDATE_CHECK_
@@ -39,8 +45,9 @@
 #endif
 #include "utils.h"
 #include "volumeSlider.h"
+#include "waveformBuilderInterface.h"
 #include "waveformSlider.h"
-
+#include "waveformView.h"
 #ifndef _N_NO_SKINS_
 #include "skinFileSystem.h"
 #include "skinLoader.h"
@@ -60,12 +67,15 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMetaObject>
+#include <QQmlApplicationEngine>
+//#include <QQuickWindow>
 #include <QResizeEvent>
 #include <QToolTip>
 
+static const qreal kLog10over20 = qLn(10) / 20;
+
 NPlayer::NPlayer()
 {
-    qsrand((uint)QTime::currentTime().msec());
     m_settings = NSettings::instance();
 
     QString styleName = m_settings->value("Style").toString();
@@ -124,6 +134,7 @@ NPlayer::NPlayer()
     trackInfoLayout->addWidget(m_trackInfoWidget);
     m_waveformSlider = m_mainWindow->findChild<NWaveformSlider *>("waveformSlider");
     m_waveformSlider->setLayout(trackInfoLayout);
+    m_trackInfoModel = new NTrackInfoModel(*m_trackInfoReader, this);
 
 #ifdef Q_OS_WIN
     NW7TaskBar::instance()->setWindow(m_mainWindow);
@@ -143,11 +154,38 @@ NPlayer::NPlayer()
                            QCoreApplication::applicationVersion());
     m_mainWindow->show();
     m_mainWindow->loadSettings();
+
+    m_qmlEngine = new QQmlApplicationEngine();
+    QQmlContext *context = m_qmlEngine->rootContext();
+    context->setContextProperty("NPlaybackEngine", m_playbackEngine);
+    context->setContextProperty("NPlayer", this);
+
+    m_playlistController = new NPlaylistController(*m_playbackEngine, *m_trackInfoReader,
+                                                   *m_settings, this);
+    auto syncToPlaylist = [&]() {
+        QList<NPlaylistDataItem> dataItems;
+        NPlaylistModel *model = m_playlistController->model();
+        for (size_t row = 0; row < model->size(); ++row) {
+            NPlaylistDataItem dataItem(model->data(row, NPlaylistModel::FilePathRole).toString());
+            dataItem.id = model->data(row, NPlaylistModel::IdRole).toInt();
+            dataItems << dataItem;
+        }
+        m_playlistWidget->setItems(dataItems);
+        ssize_t playingRow = model->playingRow();
+        if (playingRow >= 0) {
+            m_playlistWidget->setPlayingItem(m_playlistWidget->itemAtRow(playingRow));
+        }
+    };
+    connect(m_playlistController->model(), &QAbstractItemModel::rowsMoved, syncToPlaylist);
+    connect(m_playlistController->model(), &NPlaylistModel::countChanged, syncToPlaylist);
+    connect(m_playlistController, &NPlaylistController::contextMenuRequested, this,
+            &NPlayer::showPlaylistContextMenu);
+    qmlRegisterType<NPlaylistModel>("NPlaylistModel", 1, 0, "NPlaylistModel");
+    context->setContextProperty("NPlaylistController", m_playlistController);
+    context->setContextProperty("NUtils", m_utils);
+
     QResizeEvent e(m_mainWindow->size(), m_mainWindow->size());
     QCoreApplication::sendEvent(m_mainWindow, &e);
-#ifndef _N_NO_UPDATE_CHECK_
-    NUpdateChecker::instance().setParentWindow(m_mainWindow);
-#endif
 
     m_actionManager = new NActionManager(this);
     // keyboard shortcuts
@@ -164,6 +202,39 @@ NPlayer::NPlayer()
     m_trayClickTimer->setSingleShot(true);
 
     loadSettings();
+
+    context->setContextProperty("NSettings", NSettings::instance());
+    context->setContextProperty("NSkinFileSystem", NSkinFileSystem::instance());
+    context->setContextProperty("_oldMainWindow", m_mainWindow);
+    context->setContextProperty("_actionsList", QVariant::fromValue(findChildren<NAction *>()));
+    context->setContextProperty("NTrackInfoModel", m_trackInfoModel);
+    qmlRegisterType<NWaveformView>("NWaveformView", 1, 0, "NWaveformView");
+    qmlRegisterType<NSvgImage>("NSvgImage", 1, 0, "NSvgImage");
+    qmlRegisterType<NImage>("NImage", 1, 0, "NImage");
+
+    qmlRegisterSingletonType<NCursorOverride>("NCursorOverride", 1, 0, "NCursorOverride",
+                                              [](QQmlEngine *, QJSEngine *) {
+                                                  NCursorOverride *instance = new NCursorOverride();
+                                                  return instance;
+                                              });
+
+    m_qmlEngine->load(QUrl::fromLocalFile("src/mainWindow.qml"));
+
+    m_qmlMainWindow = m_qmlEngine->rootObjects().first();
+    m_qmlMainWindow->setProperty("width", m_mainWindow->width());
+    m_qmlMainWindow->setProperty("height", m_mainWindow->height());
+    m_qmlMainWindow->setProperty("x", m_mainWindow->x() + m_mainWindow->width() + 20);
+    //m_qmlMainWindow->setProperty("x", m_mainWindow->x());
+    m_qmlMainWindow->setProperty("y", m_mainWindow->y());
+    //qobject_cast<QQuickWindow *>(m_qmlMainWindow->property("window").value<QObject *>())
+    //    ->setTextRenderType(QQuickWindow::NativeTextRendering);
+    QObject::connect(m_qmlMainWindow, SIGNAL(closing(QQuickCloseEvent *)), this,
+                     SLOT(on_mainWindow_closed()));
+#ifndef _N_NO_UPDATE_CHECK_
+    NUpdateChecker::instance().setParentWindow(m_qmlMainWindow);
+#endif
+
+    m_coverImage = m_qmlEngine->rootObjects().first()->findChild<NImage *>("coverImage");
 
     skinProgram.property("afterShow").call(skinProgram);
 
@@ -207,6 +278,7 @@ void NPlayer::connectSignals()
             SLOT(setValue(qreal)));
     connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoWidget,
             SLOT(updatePlaybackLabels(qint64)));
+    connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoModel, SLOT(updatePlayback(qint64)));
     connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
             m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
 
@@ -257,17 +329,15 @@ void NPlayer::connectSignals()
         connect(shuffleButton, SIGNAL(clicked()), m_playlistWidget, SLOT(shufflePlaylist()));
     }
 
-    connect(m_playlistWidget, SIGNAL(addMoreRequested()), this,
-            SLOT(on_playlist_addMoreRequested()));
-    connect(m_playlistWidget, &NPlaylistWidget::durationChanged, [this](int durationSec) {
-        NPlaylistWidgetItem *item = m_playlistWidget->playingItem();
-        if (item) {
-            m_trackInfoReader->setSource(item->data(N::PathRole).toString());
-        }
-
-        m_trackInfoReader->updatePlaylistDuration(durationSec);
-
+    //connect(m_playlistWidget, SIGNAL(addMoreRequested()), this,
+    //        SLOT(on_playlist_addMoreRequested()));
+    connect(m_playlistController, &NPlaylistController::addMoreRequested, this,
+            &NPlayer::on_playlist_addMoreRequested);
+    //connect(m_playlistWidget, &NPlaylistWidget::durationChanged, [this](int durationSec) {
+    connect(m_playlistController->model(), &NPlaylistModel::durationChanged, [this](size_t seconds) {
+        m_trackInfoReader->updatePlaylistDuration(seconds);
         m_trackInfoWidget->updatePlaylistLabels();
+        m_trackInfoModel->updatePlaylistLabels();
 
         QString format = NSettings::instance()->value("WindowTitleTrackInfo").toString();
         if (!format.isEmpty()) {
@@ -280,7 +350,8 @@ void NPlayer::connectSignals()
     });
     connect(m_playlistWidget, &NPlaylistWidget::playingItemChanged,
             [this]() { savePlaybackState(); });
-    connect(m_playlistWidget, &NPlaylistWidget::playlistFinished, [this]() {
+    //connect(m_playlistWidget, &NPlaylistWidget::playlistFinished, [this]() {
+    connect(m_playlistController, &NPlaylistController::playlistFinished, [this]() {
         if (NSettings::instance()->value("QuitWhenFinished").toBool()) {
             QCoreApplication::quit();
         }
@@ -313,6 +384,11 @@ NPlaylistWidget *NPlayer::playlistWidget()
     return m_playlistWidget;
 }
 
+NPlaylistController *NPlayer::playlistController()
+{
+    return m_playlistController;
+}
+
 NTagReaderInterface *NPlayer::tagReader()
 {
     return dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader));
@@ -326,6 +402,18 @@ NCoverWidget *NPlayer::coverWidget()
 NSettings *NPlayer::settings()
 {
     return m_settings;
+}
+
+QString NPlayer::volumeTooltipText(qreal value) const
+{
+    if (NSettings::instance()->value("ShowDecibelsVolume").toBool()) {
+        qreal decibel = 0.67 * log(value) / kLog10over20;
+        QString decibelStr;
+        decibelStr.setNum(decibel, 'g', 2);
+        return QString("%1 %2 dB").arg(tr("Volume")).arg(decibelStr);
+    } else {
+        return QString("%1 %2\%").arg(tr("Volume")).arg(QString::number(int(value * 100)));
+    }
 }
 
 bool NPlayer::eventFilter(QObject *obj, QEvent *event)
@@ -381,48 +469,54 @@ void NPlayer::readMessage(const QString &str)
 
     if (!files.isEmpty()) {
         if (NSettings::instance()->value("EnqueueFiles").toBool()) {
-            int lastRow = m_playlistWidget->count();
-            m_playlistWidget->addFiles(files);
+            const ssize_t lastRow = m_playlistController->model()->size() - 1;
+            m_playlistController->appendFiles(files);
             if (m_playbackEngine->state() == N::PlaybackStopped ||
                 NSettings::instance()->value("PlayEnqueued").toBool()) {
-                m_playlistWidget->playRow(lastRow);
+                m_playlistController->playRow(lastRow + 1);
                 m_playbackEngine->setPosition(0); // overrides setPosition() in loadDefaultPlaylist()
             }
         } else {
-            m_playlistWidget->setFiles(files);
-            m_playlistWidget->playRow(0);
+            m_playlistController->setFiles(files);
+            m_playlistController->playRow(0);
         }
     }
 }
 
 void NPlayer::loadDefaultPlaylist()
 {
-    if (!QFileInfo(NCore::defaultPlaylistPath()).exists() ||
-        !m_playlistWidget->setPlaylist(NCore::defaultPlaylistPath())) {
+    QString defaultPlaylistPath = NCore::defaultPlaylistPath();
+    if (!QFileInfo(defaultPlaylistPath).exists()) {
         return;
     }
+
+    m_playlistController->setFiles({defaultPlaylistPath});
 
     QStringList playlistRowValues = m_settings->value("PlaylistRow").toStringList();
     if (!playlistRowValues.isEmpty()) {
         int row = playlistRowValues.at(0).toInt();
         qreal pos = playlistRowValues.at(1).toFloat();
+        NPlaylistModel *model = m_playlistController->model();
 
-        if (row < 0 || row > m_playlistWidget->count() - 1) {
+        if (row < 0 || row > model->size() - 1) {
             return;
         }
 
+        model->setData(row, NPlaylistModel::IsFocusedRole, true);
+        model->setData(row, NPlaylistModel::IsSelectedRole, true);
+
         if (!m_settings->value("StartPaused").toBool()) {
-            m_playlistWidget->playRow(row);
+            m_playlistController->playRow(row);
             m_playbackEngine->setPosition(pos);
         } else { // do the work that would have been done upon m_playbackEngine::mediaChanged()
-            NPlaylistWidgetItem *item = m_playlistWidget->itemAtRow(row);
-            m_playlistWidget->setPlayingItem(item);
+            model->setData(row, NPlaylistModel::IsPlayingtRole, true);
+            const QString file = model->data(row, NPlaylistModel::FilePathRole).toString();
+            const int id = model->data(row, NPlaylistModel::IdRole).toInt();
 
-            QString file = item->data(N::PathRole).toString();
-            int id = item->data(N::IdRole).toInt();
-
+            model->countChanged(); // to trigger syncToPlaylist
             m_playbackEngine->setMedia(file, id);
             m_playbackEngine->setPosition(pos);
+            m_playbackEngine->positionChanged(pos);
 
             loadCoverArt(file);
 
@@ -430,6 +524,7 @@ void NPlayer::loadDefaultPlaylist()
             m_waveformSlider->setValue(pos);
             m_waveformSlider->setPausedState(true);
             m_trackInfoWidget->updateFileLabels(file);
+            m_trackInfoModel->updateFileLabels(file);
         }
     }
 }
@@ -456,6 +551,7 @@ void NPlayer::loadSettings()
 
     m_playbackEngine->setVolume(m_settings->value("Volume").toFloat());
     m_volumeSlider->setValue(m_settings->value("Volume").toFloat());
+    m_playlistController->loadSettings();
 }
 
 void NPlayer::saveSettings()
@@ -468,8 +564,8 @@ void NPlayer::saveSettings()
 
 void NPlayer::savePlaybackState()
 {
-    int row = m_playlistWidget->playingRow();
-    qreal pos = m_playbackEngine->position();
+    const int row = m_playlistController->model()->playingRow();
+    const qreal pos = m_playbackEngine->position();
     m_settings->setValue("PlaylistRow", QStringList()
                                             << QString::number(row) << QString::number(pos));
 }
@@ -482,6 +578,9 @@ void NPlayer::applySettings()
 #endif
     m_trackInfoWidget->loadSettings();
     m_trackInfoWidget->updateFileLabels(m_playbackEngine->currentMedia());
+    m_trackInfoModel->loadSettings();
+    m_trackInfoModel->updateFileLabels(m_playbackEngine->currentMedia());
+    m_playlistController->loadSettings();
     m_playlistWidget->processVisibleItems();
     m_actionManager->saveSettings();
 }
@@ -550,6 +649,7 @@ void NPlayer::trayIconCountClicks(int clicks)
 
 void NPlayer::quit()
 {
+    delete m_qmlEngine;
     saveSettings();
 }
 
@@ -566,6 +666,7 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file, int)
 
     m_waveformSlider->setMedia(file);
     m_trackInfoWidget->updateFileLabels(file);
+    m_trackInfoModel->updateFileLabels(file);
     loadCoverArt(file);
 }
 
@@ -617,9 +718,16 @@ void NPlayer::loadCoverArt(const QString &file)
 
     if (image.isNull()) {
         m_coverWidget->hide();
+        if (m_coverImage) {
+            m_coverImage->setVisible(false);
+        }
     } else {
         m_coverWidget->show();
         m_coverWidget->setPixmap(QPixmap::fromImage(image));
+        if (m_coverImage) {
+            m_coverImage->setVisible(true);
+            m_coverImage->setImage(image);
+        }
     }
 }
 
@@ -695,7 +803,7 @@ void NPlayer::playPause()
 void NPlayer::showAboutDialog()
 {
     NDialogHandler *dialogHandler = new NDialogHandler(QUrl::fromLocalFile(":src/aboutDialog.qml"),
-                                                       m_mainWindow);
+                                                       m_qmlMainWindow);
     connect(dialogHandler, &NDialogHandler::beforeShown,
             [&](QQmlContext *context) { context->setContextProperty("NUtils", m_utils); });
     dialogHandler->showDialog();
@@ -703,7 +811,7 @@ void NPlayer::showAboutDialog()
 
 void NPlayer::showPreferencesDialog()
 {
-    NPreferencesDialogHandler *dialogHandler = new NPreferencesDialogHandler(this, m_mainWindow);
+    NPreferencesDialogHandler *dialogHandler = new NPreferencesDialogHandler(this, m_qmlMainWindow);
     connect(dialogHandler, &NDialogHandler::beforeShown, [&](QQmlContext *context) {
         context->setContextProperty("NUpdateChecker", &NUpdateChecker::instance());
     });

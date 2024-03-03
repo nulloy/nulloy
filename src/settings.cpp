@@ -200,14 +200,7 @@ QVariant NSettingsOverlay::value(const QString &key) const
     if (!m_map.contains(key)) {
         return "";
     }
-
-    QVariant value = m_map.value(key);
-    if (QString(value.typeName()) == "QString" &&
-        (value.toString() == "false" || value.toString() == "true")) {
-        return QVariant(value.toBool());
-    }
-
-    return value;
+    return m_map.value(key);
 }
 
 void NSettingsOverlay::setValue(const QString &key, const QVariant &value)

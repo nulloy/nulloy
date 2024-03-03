@@ -1,10 +1,10 @@
-TEMPLATE = subdirs
+TEMPLATE = app
+TARGET = tests
+QT += testlib
+SOURCES += tests.cpp
+INCLUDEPATH += $$SRC_DIR
 
-test_projects = $$files(*.pro)
-test_projects -= tests.pro
-
+test_projects = $$files(test*.pri)
 for(test_pro, test_projects) {
-    test_name = $$replace(test_pro, .pro, )
-    eval($${test_name}.file = $${test_pro})
-    SUBDIRS += $${test_name}
+    include($${test_pro})
 }

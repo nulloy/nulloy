@@ -48,14 +48,14 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     connect(this, &QListWidget::itemActivated, [this](QListWidgetItem *item) {
         playItem(reinterpret_cast<NPlaylistWidgetItem *>(item));
     });
-    connect(m_playbackEngine, SIGNAL(mediaFinished(const QString &, int)), this,
-            SLOT(on_playbackEngine_mediaFinished(const QString &, int)));
+    //connect(m_playbackEngine, SIGNAL(mediaFinished(const QString &, int)), this,
+    //        SLOT(on_playbackEngine_mediaFinished(const QString &, int)));
     connect(m_playbackEngine, SIGNAL(mediaFailed(const QString &, int)), this,
             SLOT(on_playbackEngine_mediaFailed(const QString &, int)));
     connect(m_playbackEngine, SIGNAL(mediaChanged(const QString &, int)), this,
             SLOT(on_playbackEngine_mediaChanged(const QString &, int)));
-    connect(m_playbackEngine, SIGNAL(nextMediaRequested()), this,
-            SLOT(on_playbackEngine_prepareNextMediaRequested()), Qt::BlockingQueuedConnection);
+    //connect(m_playbackEngine, SIGNAL(nextMediaRequested()), this,
+    //        SLOT(on_playbackEngine_prepareNextMediaRequested()), Qt::BlockingQueuedConnection);
 
     setItemDelegate(new NPlaylistWidgetItemDelegate(this));
     m_playingItem = NULL;

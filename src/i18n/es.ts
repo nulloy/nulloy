@@ -253,9 +253,6 @@
         <source>Window</source>
         <translation>Ventana</translation>
     </message>
-</context>
-<context>
-    <name>NPlaylistWidget</name>
     <message>
         <location filename="../widgetCollection/playlistWidget.cpp" line="+58"/>
         <source>Reveal in File Manager...</source>
