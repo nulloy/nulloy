@@ -13,22 +13,30 @@
 **
 *********************************************************************/
 
-#ifndef N_UTILS_H
-#define N_UTILS_H
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import NSvgImage 1.0
 
-#include <QObject>
-
-#include "playlistDataItem.h"
-
-class NUtils : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit NUtils(QObject *parent = nullptr);
-    static QList<NPlaylistDataItem> dirListRecursive(const QString &path);
-    Q_INVOKABLE static QString readFile(const QString &path);
-    Q_INVOKABLE QString pathToUri(const QString &path) const;
-};
-
-#endif
+Item {
+  id: item
+  property string source: ""
+  property string elementIdNormal: ""
+  property string elementIdHover: ""
+  property string elementIdPress: ""
+  signal clicked
+  Button {
+    id: button
+    anchors.fill: parent
+    anchors.centerIn: parent
+    background: Rectangle {
+      color: "transparent"
+    }
+    NSvgImage {
+      anchors.fill: parent
+      source: item.source
+      elementId: button.pressed ? elementIdPress : (button.hovered ? elementIdHover : elementIdNormal)
+    }
+    onClicked: item.clicked()
+    onDoubleClicked: item.clicked()
+  }
+}

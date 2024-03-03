@@ -13,22 +13,32 @@
 **
 *********************************************************************/
 
-#ifndef N_UTILS_H
-#define N_UTILS_H
+#ifndef N_PLAYLIST_CONTROLLER_H
+#define N_PLAYLIST_CONTROLLER_H
 
 #include <QObject>
 
-#include "playlistDataItem.h"
+class NPlaylistModel;
 
-class NUtils : public QObject
+class NPlaylistController : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit NUtils(QObject *parent = nullptr);
-    static QList<NPlaylistDataItem> dirListRecursive(const QString &path);
-    Q_INVOKABLE static QString readFile(const QString &path);
-    Q_INVOKABLE QString pathToUri(const QString &path) const;
-};
+    NPlaylistController(QObject *parent = nullptr);
 
+    Q_INVOKABLE NPlaylistModel *model() const;
+
+    Q_INVOKABLE void mousePress(int row, Qt::KeyboardModifiers modifiers);
+    Q_INVOKABLE void mouseRelease(int row, Qt::KeyboardModifiers modifiers);
+    Q_INVOKABLE void mouseEnter(int row);
+    Q_INVOKABLE void mouseExit(int row);
+    Q_INVOKABLE void mouseDoubleClick(int row);
+
+signals:
+    void rowActivated(int row);
+
+private:
+    NPlaylistModel *m_model;
+};
 #endif

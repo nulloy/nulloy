@@ -86,7 +86,7 @@ NTrackInfoWidget #MiddleCenter {
 	background: #636970;
 	min-height: 30px;
 }
-#playlistWidget QScrollBar::handle:hover {
+#playlistWidget QScrollBar::handle:hover{
 	background: #E0A500;
 }
 #playlistWidget QScrollBar::add-line,

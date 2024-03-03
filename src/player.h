@@ -25,6 +25,7 @@ class NLogDialog;
 class NMainWindow;
 class NPlaybackEngineInterface;
 class NPlaylistWidget;
+class NPlaylistController;
 class NWaveformSlider;
 class NCoverWidget;
 class NCoverReaderInterface;
@@ -34,6 +35,7 @@ class NScriptEngine;
 class NSettings;
 class NTrackInfoReader;
 class NTrackInfoWidget;
+class NTrackInfoModel;
 class QMenu;
 class NAction;
 class QString;
@@ -63,7 +65,9 @@ private:
     QMenu *m_windowSubMenu;
     QMenu *m_playlistSubMenu;
     NPlaylistWidget *m_playlistWidget;
+    NPlaylistController *m_playlistController;
     NTrackInfoWidget *m_trackInfoWidget;
+    NTrackInfoModel *m_trackInfoModel;
     NLogDialog *m_logDialog;
     QSystemTrayIcon *m_systemTray;
     QTimer *m_trayClickTimer;
@@ -125,6 +129,7 @@ public:
     ~NPlayer();
     NMainWindow *mainWindow();
     NPlaybackEngineInterface *playbackEngine();
+    Q_INVOKABLE QString volumeTooltipText(qreal value) const;
 
 private slots:
     void on_preferencesDialog_settingsChanged();

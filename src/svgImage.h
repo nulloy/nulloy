@@ -13,22 +13,24 @@
 **
 *********************************************************************/
 
-#ifndef N_UTILS_H
-#define N_UTILS_H
+#include <QPainter>
+#include <QQuickPaintedItem>
+#include <QSvgRenderer>
 
-#include <QObject>
-
-#include "playlistDataItem.h"
-
-class NUtils : public QObject
+class NSvgImage : public QQuickPaintedItem
 {
     Q_OBJECT
+    Q_PROPERTY(QString source WRITE setSource)
+    Q_PROPERTY(QString elementId WRITE setElementId)
 
 public:
-    explicit NUtils(QObject *parent = nullptr);
-    static QList<NPlaylistDataItem> dirListRecursive(const QString &path);
-    Q_INVOKABLE static QString readFile(const QString &path);
-    Q_INVOKABLE QString pathToUri(const QString &path) const;
-};
+    NSvgImage(QQuickItem *parent = nullptr);
+    void paint(QPainter *painter);
+    void setSource(const QString &source);
+    void setElementId(const QString &id);
 
-#endif
+private:
+    QString m_source;
+    QString m_elementId;
+    QSvgRenderer *m_svgRenderer;
+};
