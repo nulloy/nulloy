@@ -4,6 +4,12 @@
 
 More screenshots: https://nulloy.com/screenshots/
 
+## Install on Gentoo (Guru)
+
+https://github.com/gentoo/guru/blob/master/media-sound/nulloy/nulloy-9999.ebuild
+
+Nice minimal dark theme included.
+
 ## Build Instructions
 
 <details>
