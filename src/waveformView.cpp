@@ -23,6 +23,10 @@
 
 NWaveformView::NWaveformView(QQuickItem *parent) : QQuickPaintedItem(parent)
 {
+    m_color = Qt::black;
+    m_borderColor = Qt::gray;
+    m_borderWidth = 1;
+
     setAntialiasing(true);
 
     m_waveBuilder = dynamic_cast<NWaveformBuilderInterface *>(
@@ -35,6 +39,24 @@ NWaveformView::NWaveformView(QQuickItem *parent) : QQuickPaintedItem(parent)
     m_timer->start();
 
     init();
+}
+
+void NWaveformView::setColor(const QColor &color)
+{
+    m_color = color;
+    update();
+}
+
+void NWaveformView::setBorderColor(const QColor &color)
+{
+    m_borderColor = color;
+    update();
+}
+
+void NWaveformView::setBorderWidth(qreal width)
+{
+    m_borderWidth = width;
+    update();
 }
 
 void NWaveformView::paint(QPainter *painter)
@@ -56,8 +78,8 @@ void NWaveformView::paint(QPainter *painter)
     }
 
     pathPos.connectPath(pathNeg.toReversed());
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(QBrush(Qt::white));
+    painter->setPen(QPen(m_borderColor, m_borderWidth));
+    painter->setBrush(QBrush(m_color));
     painter->drawPath(pathPos);
 }
 

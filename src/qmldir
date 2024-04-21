@@ -14,3 +14,4 @@ NWaveformSlider 1.0 waveformSlider.qml
 NSplitter 1.0 splitter.qml
 NTrackInfoView 1.0 trackInfoView.qml
 NCoverImage 1.0 coverImage.qml
+NSizeGrip 1.0 sizeGrip.qml
