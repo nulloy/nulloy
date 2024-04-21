@@ -14,27 +14,12 @@
 *********************************************************************/
 
 import QtQuick 2.15
-import QtQuick.Controls 2.15
-import NSvgImage 1.0
+import QtQuick.Window 2.15
 
-Button {
-  id: button
-  property alias source: image.source
-  property string elementId: ""
-  property string elementIdHovered: elementId
-  property string elementIdPressed: elementId
-  property alias image: image
-
-  background: Rectangle {
-    color: "transparent"
-  }
-
-  NSvgImage {
-    id: image
-    anchors.fill: parent
-    colorOverlay: "transparent"
-    elementId: button.pressed ? button.elementIdPressed : (button.hovered ? button.elementIdHovered : button.elementId)
-  }
-
-  onDoubleClicked: button.clicked()
+MouseArea {
+  hoverEnabled: true
+  z: 1
+  acceptedButtons: Qt.LeftButton
+  cursorShape: Qt.SizeFDiagCursor
+  onPressed: Window.window.startSystemResize(Qt.RightEdge | Qt.BottomEdge)
 }

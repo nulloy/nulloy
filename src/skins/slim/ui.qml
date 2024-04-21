@@ -125,6 +125,7 @@ Rectangle {
         height: 7
         source: svgSource
         elementId: "splitter"
+        colorOverlay: "#2c3034"
       }
 
       Item {
@@ -220,6 +221,8 @@ Rectangle {
                   anchors.fill: parent
                   anchors.topMargin: 1
                   anchors.bottomMargin: 1
+
+                  waveform.borderColor: "transparent"
 
                   grooveDelegate: Rectangle {
                     width: 1
