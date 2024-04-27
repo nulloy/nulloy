@@ -106,7 +106,7 @@
 }
 
 NTrackInfoWidget QLabel {
-    background: argb(37, 37, 38, 150);
+    background: rgba(37, 37, 38, 150);
 }
 
 #waveformSlider {
