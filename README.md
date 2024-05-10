@@ -6,9 +6,16 @@ More screenshots: https://nulloy.com/screenshots/
 
 ## Install on Gentoo (Guru)
 
-https://github.com/gentoo/guru/blob/master/media-sound/nulloy/nulloy-9999.ebuild
+The ebuild is here https://github.com/gentoo/guru/blob/master/media-sound/nulloy/nulloy-9999.ebuild
 
-Nice minimal dark theme included.
+You can install it with:
+
+```
+eselect repository enable guru
+emerge -a nulloy
+```
+
+Nice minimal AMOLED black theme included.
 
 ## Build Instructions
 
