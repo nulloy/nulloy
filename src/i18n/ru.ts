@@ -147,11 +147,6 @@
         <translation>Случайный порядок</translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>Toggle playlist shuffle</source>
-        <translation>Включить случайный порядок плейлиста</translation>
-    </message>
-    <message>
         <location line="+6"/>
         <source>Toggle current item repeat</source>
         <translation>Включить повтор текущего трека</translation>

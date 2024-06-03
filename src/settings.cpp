@@ -96,9 +96,7 @@ NSettings::NSettings(QObject *parent)
     initValue("TooltipTrackInfo", "%C");
     initValue("TooltipOffset", QStringList() << QString::number(0) << QString::number(0));
 
-    initValue("Shuffle", false);
     initValue("Repeat", false);
-
     initValue("Maximized", false);
     initValue("TrayIcon", false);
     initValue("AlwaysOnTop", false);

@@ -147,11 +147,6 @@
         <translation>Shuffle</translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>Toggle playlist shuffle</source>
-        <translation>Reihenfolge zufällig an/aus</translation>
-    </message>
-    <message>
         <location line="+6"/>
         <source>Toggle current item repeat</source>
         <translation>Einzelstück wiederholen an/aus</translation>

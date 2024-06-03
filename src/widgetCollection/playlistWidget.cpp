@@ -121,8 +121,6 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     m_dropEnd = DropEndInside;
 
     m_repeatMode = NSettings::instance()->value("Repeat").toBool();
-    m_shuffleMode = false;
-    m_playingShuffledIndex = 0;
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setDefaultDropAction(Qt::MoveAction);
@@ -230,12 +228,6 @@ void NPlaylistWidget::on_removeAction_triggered()
             playingItemRemoved = true;
             m_playingItem = NULL;
         }
-
-        if (m_playingShuffledIndex >= 0 &&
-            itemToDelete == m_shuffledItems.at(m_playingShuffledIndex)) {
-            --m_playingShuffledIndex;
-        }
-        m_shuffledItems.removeAll(itemToDelete);
 
         m_itemMap.remove(itemToDelete->data(N::IdRole).toInt());
         delete itemToDelete;
@@ -442,10 +434,6 @@ void NPlaylistWidget::on_playbackEngine_mediaChanged(const QString &file, int id
 
     NPlaylistWidgetItem *item = m_itemMap[id];
     setPlayingItem(item);
-
-    if (m_shuffleMode) {
-        m_playingShuffledIndex = m_shuffledItems.indexOf(m_playingItem);
-    }
 }
 
 void NPlaylistWidget::on_playbackEngine_prepareNextMediaRequested()
@@ -564,7 +552,6 @@ void NPlaylistWidget::addItems(const QList<NPlaylistDataItem> &dataItems)
 void NPlaylistWidget::setFiles(const QStringList &files)
 {
     clear();
-    m_shuffledItems.clear();
     m_playingItem = NULL;
     foreach (QString path, files)
         addItem(new NPlaylistWidgetItem(QFileInfo(path)));
@@ -578,7 +565,6 @@ void NPlaylistWidget::setFiles(const QStringList &files)
 void NPlaylistWidget::setItems(const QList<NPlaylistDataItem> &dataItems)
 {
     clear();
-    m_shuffledItems.clear();
     m_playingItem = NULL;
 
     foreach (NPlaylistDataItem dataItem, dataItems)
@@ -593,7 +579,6 @@ void NPlaylistWidget::setItems(const QList<NPlaylistDataItem> &dataItems)
 bool NPlaylistWidget::setPlaylist(const QString &file)
 {
     clear();
-    m_shuffledItems.clear();
     m_playingItem = NULL;
 
     QList<NPlaylistDataItem> dataItemsList = NPlaylistStorage::readM3u(file);
@@ -618,20 +603,10 @@ bool NPlaylistWidget::setPlaylist(const QString &file)
 
 void NPlaylistWidget::playNextItem()
 {
-    NPlaylistWidgetItem *item = NULL;
-
-    if (m_shuffleMode) {
-        m_playingShuffledIndex++;
-        if (m_playingShuffledIndex >= m_shuffledItems.count()) {
-            m_playingShuffledIndex = 0;
-        }
-        item = m_shuffledItems.at(m_playingShuffledIndex);
-    } else {
+    NPlaylistWidgetItem *item = nextItem(m_playingItem);
+    if (!item) {
+        emit addMoreRequested();
         item = nextItem(m_playingItem);
-        if (!item) {
-            emit addMoreRequested();
-            item = nextItem(m_playingItem);
-        }
     }
 
     if (item) {
@@ -641,17 +616,7 @@ void NPlaylistWidget::playNextItem()
 
 void NPlaylistWidget::playPrevItem()
 {
-    NPlaylistWidgetItem *item = NULL;
-
-    if (m_shuffleMode) {
-        m_playingShuffledIndex--;
-        if (m_playingShuffledIndex < 0) {
-            m_playingShuffledIndex = m_shuffledItems.count() - 1;
-        }
-        item = m_shuffledItems.at(m_playingShuffledIndex);
-    } else {
-        item = prevItem(m_playingItem);
-    }
+    NPlaylistWidgetItem *item = prevItem(m_playingItem);
 
     if (item) {
         playItem(item);
@@ -660,42 +625,21 @@ void NPlaylistWidget::playPrevItem()
 
 void NPlaylistWidget::rowsInserted(const QModelIndex &parent, int start, int end)
 {
-    for (int i = start; i < end + 1; ++i) {
-        m_shuffledItems.append(itemAtRow(i));
-    }
-    if (m_shuffleMode) {
-        setShuffleMode(true);
-    }
     QListWidget::rowsInserted(parent, start, end);
 }
 
-bool NPlaylistWidget::shuffleMode() const
+void NPlaylistWidget::shufflePlaylist()
 {
-    return m_shuffleMode;
-}
-
-void NPlaylistWidget::setShuffleMode(bool enable)
-{
-    if (m_shuffleMode != enable) {
-        emit shuffleModeChanged(enable);
+    QList<QListWidgetItem *> items;
+    for (int i = 0; i < count(); ++i) {
+        items.append(takeItem(0));
     }
-    m_shuffleMode = enable;
-
-    NSettings::instance()->setValue("Shuffle", enable);
-
-    if (!enable) {
-        return;
+    for (int i = items.count() - 1; i > 0; --i) {
+        items.swap(i, qrand() % (i + 1));
     }
-
-    for (int i = count() - 1; i > 0; --i) {
-        m_shuffledItems.swap(i, qrand() % (i + 1));
+    for (int i = 0; i < items.count(); ++i) {
+        QListWidget::addItem(items[i]);
     }
-
-    // move playing item to the beginning
-    if (m_playingItem) {
-        m_shuffledItems.swap(m_shuffledItems.indexOf(m_playingItem), 0);
-    }
-    m_playingShuffledIndex = 0;
 }
 
 bool NPlaylistWidget::repeatMode() const

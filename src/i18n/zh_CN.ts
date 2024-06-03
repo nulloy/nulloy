@@ -152,11 +152,6 @@
         <translation>M3U 播放列表</translation>
     </message>
     <message>
-        <location line="-678"/>
-        <source>Toggle playlist shuffle</source>
-        <translation>切换播放列表随机播放</translation>
-    </message>
-    <message>
         <location line="-51"/>
         <source>Stop playback</source>
         <translation>停止播放</translation>

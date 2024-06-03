@@ -48,10 +48,6 @@ private:
     NTrackInfoReader *m_trackInfoReader;
     NPlaybackEngineInterface *m_playbackEngine;
     QTimer *m_processVisibleItemsTimer;
-
-    QList<NPlaylistWidgetItem *> m_shuffledItems;
-    int m_playingShuffledIndex;
-    bool m_shuffleMode;
     bool m_repeatMode;
 
     void addItem(NPlaylistWidgetItem *item);
@@ -90,8 +86,6 @@ public:
     NPlaylistWidgetItem *playingItem() const;
     int playingRow() const;
     Q_INVOKABLE bool hasPlayingItem() const;
-
-    Q_INVOKABLE bool shuffleMode() const;
     Q_INVOKABLE bool repeatMode() const;
 
     void setTrackInfoReader(NTrackInfoReader *reader);
@@ -109,18 +103,16 @@ public slots:
     void setFiles(const QStringList &files);
     void setItems(const QList<NPlaylistDataItem> &dataItems);
     bool setPlaylist(const QString &file);
+    void shufflePlaylist();
     void processVisibleItems();
     void updateTrackIndexes();
     void calculateDuration();
-
-    void setShuffleMode(bool enable);
     void setRepeatMode(bool enable);
 
 signals:
     void tagEditorRequested(const QString &file);
     void addMoreRequested();
 
-    void shuffleModeChanged(bool enable);
     void repeatModeChanged(bool enable);
 
     void itemsChanged();

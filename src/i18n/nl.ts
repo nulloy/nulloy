@@ -151,11 +151,6 @@
     </message>
     <message>
         <location line="+3"/>
-        <source>Toggle playlist shuffle</source>
-        <translation>Willekeurig afspelen aan/uit</translation>
-    </message>
-    <message>
-        <location line="+3"/>
         <source>Repeat</source>
         <translation>Herhalen</translation>
     </message>

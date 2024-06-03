@@ -276,9 +276,8 @@ void NPlayer::createActions()
 
     // playlist actions >>
     m_shufflePlaylistAction = new NAction(tr("Shuffle"), this);
-    m_shufflePlaylistAction->setCheckable(true);
     m_shufflePlaylistAction->setObjectName("ShufflePlaylistAction");
-    m_shufflePlaylistAction->setStatusTip(tr("Toggle playlist shuffle"));
+    m_shufflePlaylistAction->setStatusTip(tr("Shuffle items in playlist"));
     m_shufflePlaylistAction->setCustomizable(true);
 
     m_repeatPlaylistAction = new NAction(tr("Repeat"), this);
@@ -558,13 +557,9 @@ void NPlayer::connectSignals()
 
     if (QAbstractButton *shuffleButton = m_mainWindow->findChild<QAbstractButton *>(
             "shuffleButton")) {
-        connect(shuffleButton, SIGNAL(clicked(bool)), m_playlistWidget, SLOT(setShuffleMode(bool)));
-        connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), shuffleButton,
-                SLOT(setChecked(bool)));
+        connect(shuffleButton, SIGNAL(clicked()), m_playlistWidget, SLOT(shufflePlaylist()));
     }
 
-    connect(m_playlistWidget, SIGNAL(shuffleModeChanged(bool)), m_shufflePlaylistAction,
-            SLOT(setChecked(bool)));
     connect(m_playlistWidget, SIGNAL(repeatModeChanged(bool)), m_repeatPlaylistAction,
             SLOT(setChecked(bool)));
     connect(m_playlistWidget, SIGNAL(tagEditorRequested(const QString &)), this,
@@ -626,8 +621,7 @@ void NPlayer::connectSignals()
     connect(m_alwaysOnTopAction, SIGNAL(toggled(bool)), this,
             SLOT(on_alwaysOnTopAction_toggled(bool)));
     connect(m_fullScreenAction, SIGNAL(triggered()), m_mainWindow, SLOT(toggleFullScreen()));
-    connect(m_shufflePlaylistAction, SIGNAL(triggered(bool)), m_playlistWidget,
-            SLOT(setShuffleMode(bool)));
+    connect(m_shufflePlaylistAction, SIGNAL(triggered()), m_playlistWidget, SLOT(shufflePlaylist()));
     connect(m_repeatPlaylistAction, SIGNAL(triggered(bool)), m_playlistWidget,
             SLOT(setRepeatMode(bool)));
     connect(m_loopPlaylistAction, SIGNAL(triggered(bool)), this,
@@ -738,9 +732,6 @@ void NPlayer::readMessage(const QString &str)
             m_playlistWidget->setFiles(files);
             m_playlistWidget->playRow(0);
         }
-
-        // re-shuffle
-        m_playlistWidget->setShuffleMode(NSettings::instance()->value("Shuffle").toBool());
     }
 }
 
@@ -781,8 +772,6 @@ void NPlayer::loadDefaultPlaylist()
             m_trackInfoWidget->updateFileLabels(file);
         }
     }
-
-    m_playlistWidget->setShuffleMode(NSettings::instance()->value("Shuffle").toBool());
 }
 
 void NPlayer::writePlaylist(const QString &file, N::M3uExtention ext)
@@ -816,7 +805,6 @@ void NPlayer::loadSettings()
     m_loopPlaylistAction->setChecked(m_settings->value("LoopPlaylist").toBool());
     m_scrollToItemPlaylistAction->setChecked(m_settings->value("ScrollToItem").toBool());
     m_nextFileEnableAction->setChecked(m_settings->value("LoadNext").toBool());
-    m_shufflePlaylistAction->setChecked(NSettings::instance()->value("Shuffle").toBool());
     m_repeatPlaylistAction->setChecked(NSettings::instance()->value("Repeat").toBool());
 
     QDir::SortFlag flag = (QDir::SortFlag)m_settings->value("LoadNextSort").toInt();

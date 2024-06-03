@@ -147,11 +147,6 @@
         <translation>Losuj</translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>Toggle playlist shuffle</source>
-        <translation>Przełącz losowe playlisty</translation>
-    </message>
-    <message>
         <location line="+6"/>
         <source>Toggle current item repeat</source>
         <translation>Przełącz powtarzanie pozycji</translation>

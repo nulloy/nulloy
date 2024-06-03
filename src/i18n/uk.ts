@@ -147,11 +147,6 @@
         <translation>Змішати</translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>Toggle playlist shuffle</source>
-        <translation>Перетасувати чергу відтворення в плейлисті</translation>
-    </message>
-    <message>
         <location line="+6"/>
         <source>Toggle current item repeat</source>
         <translation>Повторювати поточний трек</translation>

@@ -147,11 +147,6 @@
         <translation>Maišyti</translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>Toggle playlist shuffle</source>
-        <translation>Perjungti grojaraščio maišymą</translation>
-    </message>
-    <message>
         <location line="+6"/>
         <source>Toggle current item repeat</source>
         <translation>Perjungti esamo elemento kartojimą</translation>
