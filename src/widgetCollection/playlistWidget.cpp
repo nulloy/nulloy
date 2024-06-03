@@ -634,12 +634,16 @@ void NPlaylistWidget::shufflePlaylist()
     for (int i = 0; i < count(); ++i) {
         items.append(takeItem(0));
     }
+    qsrand(QDateTime::currentMSecsSinceEpoch() % UINT_MAX);
     for (int i = items.count() - 1; i > 0; --i) {
         items.swap(i, qrand() % (i + 1));
     }
     for (int i = 0; i < items.count(); ++i) {
         QListWidget::addItem(items[i]);
     }
+    processVisibleItems();
+    updateTrackIndexes();
+    emit itemsChanged();
 }
 
 bool NPlaylistWidget::repeatMode() const
