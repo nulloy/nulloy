@@ -45,7 +45,7 @@ qreal NSlider::valueAtPos(int pos)
 
 void NSlider::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->buttons() & Qt::LeftButton) {
         emit sliderPressed();
         int pos = (orientation() == Qt::Horizontal) ? event->x() : event->y();
         qreal val = valueAtPos(pos);
@@ -58,7 +58,7 @@ void NSlider::mousePressEvent(QMouseEvent *event)
 
 void NSlider::mouseMoveEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->buttons() & Qt::LeftButton) {
         int pos = (orientation() == Qt::Horizontal) ? event->x() : event->y();
         qreal val = valueAtPos(pos);
         setValue(val);

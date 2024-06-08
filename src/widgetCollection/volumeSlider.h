@@ -26,9 +26,9 @@ public:
     NVolumeSlider(QWidget *parent);
 
 private:
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void wheelEvent(QWheelEvent *e);
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *e) override;
     QString toolTipText(int value) const;
 
 private slots:
