@@ -457,12 +457,19 @@ void NPlaylistWidget::on_playbackEngine_mediaFinished(const QString &, int id)
         return;
     }
 
-    NPlaylistWidgetItem *item = m_itemMap[id];
+    NPlaylistWidgetItem *item = NULL;
     if (m_repeatMode) {
-        playItem(item);
+        item = m_itemMap[id];
     } else {
-        playItem(nextItem(item));
+        item = nextItem(item);
     }
+
+    if (!item) {
+        emit playlistFinished();
+        return;
+    }
+
+    playItem(nextItem(item));
 }
 
 void NPlaylistWidget::on_playbackEngine_mediaFailed(const QString &file, int id)

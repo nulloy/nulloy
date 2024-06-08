@@ -587,6 +587,11 @@ void NPlayer::connectSignals()
     });
     connect(m_playlistWidget, &NPlaylistWidget::playingItemChanged,
             [this]() { savePlaybackState(); });
+    connect(m_playlistWidget, &NPlaylistWidget::playlistFinished, [this]() {
+        if (NSettings::instance()->value("QuitWhenFinished").toBool()) {
+            quit();
+        }
+    });
 
     connect(m_waveformSlider, &NWaveformSlider::filesDropped,
             [this](const QList<NPlaylistDataItem> &dataItems) {

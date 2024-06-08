@@ -118,6 +118,7 @@ signals:
     void itemsChanged();
     void playingItemChanged();
     void durationChanged(int seconds);
+    void playlistFinished();
 
     // DRAG & DROP >>
 public:

@@ -129,6 +129,8 @@ NSettings::NSettings(QObject *parent)
     initValue("MinimizeToTray", false);
 #endif
 
+    initValue("QuitWhenFinished", false);
+
     initValue("CustomTrash", false);
     initValue("CustomTrashCommand", "");
     initValue("CustomFileManager", false);
