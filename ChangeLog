@@ -1,3 +1,10 @@
+* 0.9.9, Sat Jun 8 2024
+- Playlist shuffle now visibly reorders the items
+- New option to quit when playback is finished
+- Fix: dragging volume slider did not adjust volume
+- Fix: AppImage failed to run if Qt Bearer plugin is installed
+- Other minor bug fixes
+
 * 0.9.8.7, Thu Feb 22 2024
 - Cannot play after stopped fix
 - Start in paused state fix
