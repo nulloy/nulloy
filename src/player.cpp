@@ -589,7 +589,7 @@ void NPlayer::connectSignals()
             [this]() { savePlaybackState(); });
     connect(m_playlistWidget, &NPlaylistWidget::playlistFinished, [this]() {
         if (NSettings::instance()->value("QuitWhenFinished").toBool()) {
-            quit();
+            QCoreApplication::quit();
         }
     });
 
@@ -613,7 +613,7 @@ void NPlayer::connectSignals()
     connect(m_prevAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playPrevItem()));
     connect(m_nextAction, SIGNAL(triggered()), m_playlistWidget, SLOT(playNextItem()));
     connect(m_preferencesAction, SIGNAL(triggered()), m_preferencesDialog, SLOT(exec()));
-    connect(m_exitAction, SIGNAL(triggered()), this, SLOT(quit()));
+    connect(m_exitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()));
     connect(m_addFilesAction, SIGNAL(triggered()), this, SLOT(showOpenFileDialog()));
     connect(m_addDirAction, SIGNAL(triggered()), this, SLOT(showOpenDirDialog()));
     connect(m_savePlaylistAction, SIGNAL(triggered()), this, SLOT(showSavePlaylistDialog()));
@@ -896,10 +896,10 @@ void NPlayer::on_mainWindow_closed()
     } else {
 #ifdef Q_OS_MAC
         if (m_settings->value("QuitOnClose").toBool()) {
-            quit();
+            QCoreApplication::quit();
         }
 #else
-        quit();
+        QCoreApplication::quit();
 #endif
     }
 }
@@ -954,7 +954,6 @@ void NPlayer::trayIconCountClicks(int clicks)
 void NPlayer::quit()
 {
     saveSettings();
-    QCoreApplication::quit();
 }
 
 void NPlayer::on_playbackEngine_mediaChanged(const QString &file, int)
