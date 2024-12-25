@@ -32,8 +32,8 @@ class NTagReaderTaglib : public NTagReaderInterface, public NPlugin
 
 private:
     bool m_isValid;
-    bool m_isUtf8;
     QTextCodec *m_codec;
+    QTextCodec *m_utf8Codec;
 
 public:
     NTagReaderTaglib(QObject *parent = 0);
@@ -48,6 +48,8 @@ public:
     QString getTag(QChar ch) const;
     N::Tag tagFromKey(const QString &key) const;
     QString tagToKey(N::Tag tag) const;
+
+    QString toUnicode(const TagLib::String &tstr) const;
 
     bool isWriteSupported() const { return true; }
     QMap<QString, QStringList> getTags() const;

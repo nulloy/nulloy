@@ -35,8 +35,8 @@ QString NTaglib::_filePath;
 NTagReaderTaglib::NTagReaderTaglib(QObject *parent) : NTagReaderInterface(parent)
 {
     m_isValid = false;
-    m_isUtf8 = false;
     m_codec = nullptr;
+    m_utf8Codec = QTextCodec::codecForName("UTF-8");
 }
 
 void NTagReaderTaglib::init()
@@ -82,7 +82,6 @@ void NTagReaderTaglib::setSource(const QString &file)
 void NTagReaderTaglib::setEncoding(const QString &encoding)
 {
     m_codec = QTextCodec::codecForName(encoding.toUtf8());
-    m_isUtf8 = (encoding == QLatin1String("UTF-8"));
 }
 
 NTagReaderTaglib::~NTagReaderTaglib()
@@ -97,6 +96,18 @@ NTagReaderTaglib::~NTagReaderTaglib()
     }
 }
 
+QString NTagReaderTaglib::toUnicode(const TagLib::String &tstr) const
+{
+    const char *cstr = tstr.toCString(false);
+    QTextCodec::ConverterState state;
+    m_utf8Codec->toUnicode(cstr, tstr.size(), &state);
+    if (state.invalidChars == 0) {
+        return m_utf8Codec->toUnicode(tstr.toCString(true));
+    } else {
+        return m_codec->toUnicode(cstr);
+    }
+}
+
 QString NTagReaderTaglib::getTag(QChar ch) const
 {
     if (!m_isValid) {
@@ -105,13 +116,13 @@ QString NTagReaderTaglib::getTag(QChar ch) const
 
     switch (ch.unicode()) {
         case 'a': // artist
-            return m_codec->toUnicode(NTaglib::_tagRef->tag()->artist().toCString(m_isUtf8));
+            return toUnicode(NTaglib::_tagRef->tag()->artist());
         case 't': // title
-            return m_codec->toUnicode(NTaglib::_tagRef->tag()->title().toCString(m_isUtf8));
+            return toUnicode(NTaglib::_tagRef->tag()->title());
         case 'A': // album
-            return m_codec->toUnicode(NTaglib::_tagRef->tag()->album().toCString(m_isUtf8));
+            return toUnicode(NTaglib::_tagRef->tag()->album());
         case 'c': // comment
-            return m_codec->toUnicode(NTaglib::_tagRef->tag()->comment().toCString(m_isUtf8));
+            return toUnicode(NTaglib::_tagRef->tag()->comment());
         case 'g': // genre
             return TStringToQString(NTaglib::_tagRef->tag()->genre());
         case 'y': { // year
@@ -177,7 +188,7 @@ QString NTagReaderTaglib::getTag(QChar ch) const
             return QString::number(res);
         }
         case 'M': { // beats per minute
-            return NTaglib::_tagRef->file()->properties()["BPM"].toString().toCString(m_isUtf8);
+            return TStringToQString(NTaglib::_tagRef->file()->properties()["BPM"].toString());
         }
         default: // unsupported, convert to a tag and return
             return QString('%') + ch;
@@ -257,7 +268,7 @@ NTagReaderTaglib::TMapToQMap(const TagLib::Map<TagLib::String, TagLib::StringLis
         QStringList values;
         TagLib::StringList tlist = iter->second;
         for (auto iter = tlist.begin(); iter != tlist.end(); ++iter) {
-            values << m_codec->toUnicode((*iter).toCString(m_isUtf8));
+            values << toUnicode((*iter));
         }
         qmap[TStringToQString(iter->first)] = values;
     }
