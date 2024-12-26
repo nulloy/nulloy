@@ -245,7 +245,8 @@ void NPreferencesDialog::on_customTrashHelpButton_clicked()
         "</ul>" +
         tr("Examples:") +
         "<ul style=\"font-family: 'Lucida Console', Monaco, monospace\">" +
-            "<li>trash-put '%p'</li>" + "<li>mv '%p' $HOME/.Trash</li>" +
+            "<li>trash-put '%p'</li>" +
+            "<li>mkdir -p \"$HOME/.Trash\" && mv '%p' \"$HOME/.Trash/\"</li>" +
         "</ul>");
     // clang-format on
     textBrowser->setStyleSheet("QTextBrowser { background: transparent }");

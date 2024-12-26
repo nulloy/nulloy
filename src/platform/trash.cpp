@@ -15,6 +15,9 @@
 
 #include "trash.h"
 
+#include "settings.h"
+
+#include <QCheckBox>
 #include <QFile>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -25,6 +28,27 @@ int _trash(const QString &file, QString *error);
 QStringList NTrash::moveToTrash(QStringList files)
 {
     foreach (QString file, files) {
+        if (NSettings::instance()->value("DisplayMoveToTrashConfirmDialog").toBool()) {
+            QCheckBox *checkBox = new QCheckBox(QObject::tr("Don't show this dialog anymore"));
+
+            QMessageBox msgBox(QMessageBox::Question, QObject::tr("Confirmation"),
+                               QObject::tr("Do you want to move <b>%1</b> to Trash?<br><br>Please "
+                                           "backup the file before trying this for the "
+                                           "first time.")
+                                   .arg(QFileInfo(file).fileName()),
+                               QMessageBox::Yes | QMessageBox::Cancel, NULL);
+            msgBox.setDefaultButton(QMessageBox::Cancel);
+            msgBox.setCheckBox(checkBox);
+            int res = msgBox.exec();
+
+            if (res != QMessageBox::Yes) {
+                return files;
+            }
+
+            NSettings::instance()->setValue("DisplayMoveToTrashConfirmDialog",
+                                            !checkBox->isChecked());
+        }
+
         QString error;
         if (_trash(file, &error) != 0) {
             QMessageBox box(QMessageBox::Warning, QObject::tr("Trash Error"), "",
