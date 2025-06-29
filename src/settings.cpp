@@ -245,7 +245,9 @@ void NSettings::setValue(const QString &key, const QVariant &value)
 
 void NSettings::initValue(const QString &key, const QVariant &defaultValue)
 {
-    setValue(key, value(key, defaultValue));
+    QVariant val = value(key, defaultValue);
+    val.convert(defaultValue.type());
+    setValue(key, val);
 }
 
 void NSettings::remove(const QString &key)
