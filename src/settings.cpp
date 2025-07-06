@@ -52,12 +52,12 @@ NSettings::NSettings(QObject *parent)
     initValue("Shortcuts/RemoveFromPlaylistAction", "Delete");
     initValue("Shortcuts/MoveToTrashAction", "Ctrl+Delete");
     initValue("Shortcuts/TagEditorAction", "F4");
-    initValue("Shortcuts/PlayAction", QStringList() << "X"
-                                                    << "C"
-                                                    << "Space");
-    initValue("Shortcuts/StopAction", "V");
     initValue("Shortcuts/PrevAction", "Z");
+    initValue("Shortcuts/PlayAction", "X");
+    initValue("Shortcuts/PauseAction", "C");
+    initValue("Shortcuts/StopAction", "V");
     initValue("Shortcuts/NextAction", "B");
+    initValue("Shortcuts/PlayPauseAction", "Space");
 
     initValue("Shortcuts/Jump1ForwardAction", "Shift+Right");
     initValue("Shortcuts/Jump1BackwardsAction", "Shift+Left");

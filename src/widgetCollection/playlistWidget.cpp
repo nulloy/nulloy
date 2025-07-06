@@ -18,10 +18,7 @@
 #include <QContextMenuEvent>
 #include <QDrag>
 #include <QMap>
-#include <QMenu>
-#include <QMessageBox>
 #include <QScrollBar>
-#include <QShortcut>
 
 #include "action.h"
 #include "playbackEngineInterface.h"
@@ -31,12 +28,7 @@
 #include "pluginLoader.h"
 #include "settings.h"
 #include "trackInfoReader.h"
-#include "trash.h"
 #include "utils.h"
-
-#ifdef Q_OS_WIN
-#include "winIcon.h"
-#endif
 
 NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 {
@@ -51,12 +43,6 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     m_playbackEngine = dynamic_cast<NPlaybackEngineInterface *>(
         NPluginLoader::getPlugin(N::PlaybackEngine));
     Q_ASSERT(m_playbackEngine);
-
-    QList<QIcon> winIcons;
-#ifdef Q_OS_WIN
-    winIcons = NWinIcon::getIcons(QProcessEnvironment::systemEnvironment().value("SystemRoot") +
-                                  "/system32/imageres.dll");
-#endif
 
     // triggered bu user input (double click or enter, depending on platform):
     connect(this, &QListWidget::itemActivated, [this](QListWidgetItem *item) {
@@ -73,47 +59,6 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
 
     setItemDelegate(new NPlaylistWidgetItemDelegate(this));
     m_playingItem = NULL;
-
-    NAction *revealAction = new NAction(QIcon::fromTheme("fileopen", winIcons.value(13)),
-                                        tr("Reveal in File Manager..."), this);
-    revealAction->setObjectName("RevealInFileManagerAction");
-    revealAction->setStatusTip(tr("Open file manager for selected file"));
-    revealAction->setCustomizable(true);
-    this->addAction(revealAction);
-    connect(revealAction, SIGNAL(triggered()), this, SLOT(on_revealAction_triggered()));
-
-    NAction *removeAction = new NAction(QIcon::fromTheme("remove"), tr("Remove From Playlist"),
-                                        this);
-    removeAction->setObjectName("RemoveFromPlaylistAction");
-    removeAction->setStatusTip(tr("Remove selected files from playlist"));
-    removeAction->setCustomizable(true);
-    this->addAction(removeAction);
-    connect(removeAction, SIGNAL(triggered()), this, SLOT(on_removeAction_triggered()));
-
-    NAction *trashAction = new NAction(QIcon::fromTheme("trashcan_empty", winIcons.value(49)),
-                                       tr("Move To Trash"), this);
-    trashAction->setObjectName("MoveToTrashAction");
-    trashAction->setStatusTip(tr("Move selected files to trash bin"));
-    trashAction->setCustomizable(true);
-    this->addAction(trashAction);
-    connect(trashAction, SIGNAL(triggered()), this, SLOT(on_trashAction_triggered()));
-
-    m_contextMenu = new QMenu(this);
-    m_contextMenu->addAction(revealAction);
-    m_contextMenu->addAction(removeAction);
-    m_contextMenu->addAction(trashAction);
-
-    if (dynamic_cast<NTagReaderInterface *>(NPluginLoader::getPlugin(N::TagReader))
-            ->isWriteSupported()) {
-        NAction *tagEditorAction = new NAction(QIcon::fromTheme("edit", winIcons.value(289)),
-                                               tr("Tag Editor"), this);
-        tagEditorAction->setObjectName("TagEditorAction");
-        tagEditorAction->setStatusTip(tr("Open tag editor for selected file"));
-        tagEditorAction->setCustomizable(true);
-        this->addAction(tagEditorAction);
-        connect(tagEditorAction, SIGNAL(triggered()), this, SLOT(on_tagEditorAction_triggered()));
-        m_contextMenu->addAction(tagEditorAction);
-    }
 
     m_itemDrag = NULL;
     m_fileDrop = false;
@@ -179,6 +124,15 @@ void NPlaylistWidget::processVisibleItems()
     }
 }
 
+QStringList NPlaylistWidget::selectedFiles() const
+{
+    QStringList files;
+    for (QListWidgetItem *item : selectedItems()) {
+        files << item->data(N::PathRole).toString();
+    }
+    return files;
+}
+
 void NPlaylistWidget::wheelEvent(QWheelEvent *event)
 {
     QListWidget::wheelEvent(event);
@@ -188,31 +142,30 @@ void NPlaylistWidget::wheelEvent(QWheelEvent *event)
 void NPlaylistWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     if (selectedItems().size() != 0 && itemAt(event->pos())) {
-        m_contextMenu->exec(mapToGlobal(event->pos()));
+        emit contextMenuRequested(mapToGlobal(event->pos()));
     } else {
         QListWidget::contextMenuEvent(event);
     }
 }
 
-void NPlaylistWidget::on_trashAction_triggered()
+void NPlaylistWidget::removeFiles(const QStringList &files)
 {
-    QStringList files;
-    foreach (QListWidgetItem *item, selectedItems())
-        files << QFileInfo(item->data(N::PathRole).toString()).canonicalFilePath();
-
-    QStringList undeleted = NTrash::moveToTrash(files);
-    foreach (QListWidgetItem *item, selectedItems()) {
-        if (undeleted.contains(QFileInfo(item->data(N::PathRole).toString()).canonicalFilePath())) {
-            continue;
+    QList<int> rowsToRemove;
+    for (size_t row = 0; row < count(); ++row) {
+        if (files.contains(item(row)->data(N::PathRole).toString())) {
+            rowsToRemove << row;
         }
+    }
 
-        delete takeItem(row(item));
+    std::reverse(rowsToRemove.begin(), rowsToRemove.end());
+    for (int row : rowsToRemove) {
+        delete takeItem(row);
     }
 
     viewport()->update();
 }
 
-void NPlaylistWidget::on_removeAction_triggered()
+void NPlaylistWidget::removeSelected()
 {
     int firstSelectedRow = count() - 1; // set to last row
     bool playingItemRemoved = false;
@@ -235,6 +188,7 @@ void NPlaylistWidget::on_removeAction_triggered()
     viewport()->update();
 
     updateTrackIndexes();
+    processVisibleItems();
     calculateDuration();
     emit itemsChanged();
 
@@ -261,93 +215,6 @@ void NPlaylistWidget::on_removeAction_triggered()
     if (newCurrentItem) {
         QListWidget::setCurrentItem(newCurrentItem);
     }
-}
-
-void NPlaylistWidget::on_revealAction_triggered()
-{
-    QString error;
-    if (!revealInFileManager(selectedItems().first()->data(N::PathRole).toString(), &error)) {
-        QMessageBox::warning(this, tr("Reveal in File Manager Error"), error, QMessageBox::Close);
-    }
-}
-
-void NPlaylistWidget::on_tagEditorAction_triggered()
-{
-    if (selectedItems().isEmpty()) {
-        return;
-    }
-    emit tagEditorRequested(selectedItems().first()->data(N::PathRole).toString());
-}
-
-bool NPlaylistWidget::revealInFileManager(const QString &file, QString *error) const
-{
-    QFileInfo fileInfo(file);
-
-    if (!fileInfo.exists()) {
-        *error = tr("File doesn't exist: <b>%1</b>").arg(QFileInfo(file).fileName());
-        return false;
-    }
-
-    QString cmd;
-    int res = 0;
-
-    bool customFileManager = NSettings::instance()->value("CustomFileManager").toBool();
-    if (customFileManager) {
-        cmd = NSettings::instance()->value("CustomFileManagerCommand").toString();
-        if (cmd.isEmpty()) {
-            *error = tr("Custom File Manager is enabled but not configured.");
-            return false;
-        }
-        QString filePath = file;
-        QString fileName = fileInfo.fileName();
-        QString canonicalPath = fileInfo.canonicalPath();
-#if defined Q_OS_WIN
-        filePath.replace('/', '\\');
-        fileName.replace('/', '\\');
-        canonicalPath.replace('/', '\\');
-#else
-        // escape single quote
-        filePath.replace("'", "'\\''");
-        fileName.replace("'", "'\\''");
-        canonicalPath.replace("'", "'\\''");
-#endif
-        cmd.replace("%p", filePath);
-        cmd.replace("%F", fileName);
-        cmd.replace("%P", canonicalPath);
-
-#if !defined Q_OS_WIN
-        res = QProcess::execute("sh", QStringList{"-c", cmd});
-#else
-        res = QProcess::execute(cmd);
-#endif
-    } else {
-        QString path = fileInfo.canonicalFilePath();
-        QStringList args;
-#if defined Q_OS_WIN
-        cmd = "explorer.exe";
-        args = QStringList{"/n", ",", "/select", ",", path.replace('/', '\\')};
-#elif defined Q_OS_LINUX
-        cmd = "xdg-open";
-        args = QStringList{fileInfo.canonicalPath().replace("'", "'\\''")};
-#elif defined Q_OS_MAC
-        cmd = "open";
-        args = QStringList{"-R", path.replace("'", "'\\''")};
-#endif
-        res = QProcess::execute(cmd, args);
-        cmd += " " + args.join(' ');
-    }
-
-#ifndef Q_OS_WIN
-    if (res != 0) {
-        *error = tr("File manager command failed with exit code <b>%1</b>:").arg(res) +
-                 QString("<br><br><span style=\"font-family: 'Lucida Console', Monaco, "
-                         "monospace\">%1</span>")
-                     .arg(cmd);
-        return false;
-    }
-#endif
-
-    return true;
 }
 
 void NPlaylistWidget::calculateDuration()
@@ -831,6 +698,7 @@ void NPlaylistWidget::mouseMoveEvent(QMouseEvent *event)
     QList<QUrl> urls;
     foreach (QListWidgetItem *item, selectedItems())
         urls << QUrl::fromLocalFile(item->data(N::PathRole).toString());
+    QStringList files = selectedFiles();
 
     QMimeData *mimeData = new QMimeData;
     mimeData->setUrls(urls);
@@ -841,7 +709,7 @@ void NPlaylistWidget::mouseMoveEvent(QMouseEvent *event)
     Qt::DropAction dropAction = m_itemDrag->exec(Qt::CopyAction | Qt::MoveAction,
                                                  Qt::MoveAction);      // blocking
     if (dropAction == Qt::MoveAction && m_dropEnd == DropEndOutside) { // dropping to file manager
-        on_removeAction_triggered();
+        removeFiles(files);
     }
 }
 

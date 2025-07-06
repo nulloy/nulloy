@@ -44,7 +44,6 @@ class NPlaylistWidget : public QListWidget
 private:
     NPlaylistWidgetItem *m_playingItem;
     QMap<int, NPlaylistWidgetItem *> m_itemMap;
-    QMenu *m_contextMenu;
     NTrackInfoReader *m_trackInfoReader;
     NPlaybackEngineInterface *m_playbackEngine;
     QTimer *m_processVisibleItemsTimer;
@@ -67,10 +66,6 @@ protected slots:
     void rowsInserted(const QModelIndex &parent, int start, int end);
 
 private slots:
-    void on_trashAction_triggered();
-    void on_removeAction_triggered();
-    void on_revealAction_triggered();
-    void on_tagEditorAction_triggered();
     void startProcessVisibleItemsTimer();
 
     void on_playbackEngine_mediaChanged(const QString &file, int id);
@@ -82,6 +77,7 @@ public:
     NPlaylistWidget(QWidget *parent = 0);
     ~NPlaylistWidget();
 
+    QStringList selectedFiles() const;
     NPlaylistWidgetItem *itemAtRow(int row) const;
     NPlaylistWidgetItem *playingItem() const;
     int playingRow() const;
@@ -108,10 +104,12 @@ public slots:
     void updateTrackIndexes();
     void calculateDuration();
     void setRepeatMode(bool enable);
+    void removeSelected();
+    void removeFiles(const QStringList &files);
 
 signals:
-    void tagEditorRequested(const QString &file);
     void addMoreRequested();
+    void contextMenuRequested(const QPoint &pos);
 
     void repeatModeChanged(bool enable);
 
