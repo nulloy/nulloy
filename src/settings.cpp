@@ -48,36 +48,36 @@ NSettings::NSettings(QObject *parent)
 
     initValue("Style", "Fusion");
 
-    initValue("Shortcuts/RevealInFileManagerAction", "Ctrl+Return");
-    initValue("Shortcuts/RemoveFromPlaylistAction", "Delete");
-    initValue("Shortcuts/MoveToTrashAction", "Ctrl+Delete");
-    initValue("Shortcuts/TagEditorAction", "F4");
-    initValue("Shortcuts/PrevAction", "Z");
-    initValue("Shortcuts/PlayAction", "X");
-    initValue("Shortcuts/PauseAction", "C");
-    initValue("Shortcuts/StopAction", "V");
-    initValue("Shortcuts/NextAction", "B");
-    initValue("Shortcuts/PlayPauseAction", "Space");
+    initValue("Shortcuts/RevealInFileManagerAction", QStringList() << "Ctrl+Return");
+    initValue("Shortcuts/RemoveFromPlaylistAction", QStringList() << "Delete");
+    initValue("Shortcuts/MoveToTrashAction", QStringList() << "Ctrl+Delete");
+    initValue("Shortcuts/TagEditorAction", QStringList() << "F4");
+    initValue("Shortcuts/PrevAction", QStringList() << "Z");
+    initValue("Shortcuts/PlayAction", QStringList() << "X");
+    initValue("Shortcuts/PauseAction", QStringList() << "C");
+    initValue("Shortcuts/StopAction", QStringList() << "V");
+    initValue("Shortcuts/NextAction", QStringList() << "B");
+    initValue("Shortcuts/PlayPauseAction", QStringList() << "Space");
 
-    initValue("Shortcuts/Jump1ForwardAction", "Shift+Right");
-    initValue("Shortcuts/Jump1BackwardsAction", "Shift+Left");
-    initValue("Shortcuts/Jump2ForwardAction", "Right");
-    initValue("Shortcuts/Jump2BackwardsAction", "Left");
-    initValue("Shortcuts/Jump3ForwardAction", "Ctrl+Right");
-    initValue("Shortcuts/Jump3BackwardsAction", "Ctrl+Left");
+    initValue("Shortcuts/Jump1ForwardAction", QStringList() << "Shift+Right");
+    initValue("Shortcuts/Jump1BackwardsAction", QStringList() << "Shift+Left");
+    initValue("Shortcuts/Jump2ForwardAction", QStringList() << "Right");
+    initValue("Shortcuts/Jump2BackwardsAction", QStringList() << "Left");
+    initValue("Shortcuts/Jump3ForwardAction", QStringList() << "Ctrl+Right");
+    initValue("Shortcuts/Jump3BackwardsAction", QStringList() << "Ctrl+Left");
     initValue("Jump1", 5);
     initValue("Jump2", 30);
     initValue("Jump3", 180);
 
-    initValue("Shortcuts/SpeedIncreaseAction", "]");
-    initValue("Shortcuts/SpeedDecreaseAction", "[");
-    initValue("Shortcuts/SpeedResetAction", "Backspace");
+    initValue("Shortcuts/SpeedIncreaseAction", QStringList() << "]");
+    initValue("Shortcuts/SpeedDecreaseAction", QStringList() << "[");
+    initValue("Shortcuts/SpeedResetAction", QStringList() << "Backspace");
     initValue("SpeedStep", 0.01);
 
     /*
-    initValue("Shortcuts/PitchIncreaseAction", "}");
-    initValue("Shortcuts/PitchDecreaseAction", "{");
-    initValue("Shortcuts/PitchResetAction", "Shift+Backspace");
+    initValue("Shortcuts/PitchIncreaseAction", QStringList() << "}");
+    initValue("Shortcuts/PitchDecreaseAction", QStringList() << "{");
+    initValue("Shortcuts/PitchResetAction", QStringList() << "Shift+Backspace");
     initValue("PitchStep", 0.01);
     */
 
@@ -86,7 +86,7 @@ NSettings::NSettings(QObject *parent)
         foreach (QKeySequence seq, QKeySequence::keyBindings(QKeySequence::FullScreen)) {
             fullScreenKeys << seq.toString();
         }
-        initValue("Shortcuts/FullScreenAction", fullScreenKeys);
+        initValue("Shortcuts/FullScreenAction", QStringList() << fullScreenKeys);
     }
 
     initValue("PlaylistTrackInfo", "%F{ (%d)}");
