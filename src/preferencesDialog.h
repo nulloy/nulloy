@@ -24,6 +24,7 @@
 
 class QGroupBox;
 class QRadioButton;
+class NPlayer;
 
 class NPreferencesDialog : public QDialog
 {
@@ -35,9 +36,10 @@ private:
     QGroupBox *createGroupBox(N::PluginType type);
     QString selectedContainer(N::PluginType type);
     QMap<QRadioButton *, NPluginLoader::Descriptor> m_radioButtons;
+    NPlayer *m_player;
 
 public:
-    NPreferencesDialog(QWidget *parent = 0);
+    NPreferencesDialog(NPlayer *player, QWidget *parent = 0);
     ~NPreferencesDialog();
 
 private slots:

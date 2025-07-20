@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2024 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2025 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -16,50 +16,95 @@
 #include "action.h"
 #include "qxtglobalshortcut.h"
 
-void NAction::init()
+bool NAction::isEnabled() const
 {
-    m_customizable = false;
+    return QAction::isEnabled();
 }
 
 void NAction::setEnabled(bool enable)
 {
-    foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
+    for (QxtGlobalShortcut *shortcut : m_globalShortcuts) {
         shortcut->setEnabled(enable);
+    }
     QAction::setEnabled(enable);
 }
 
-QList<QKeySequence> NAction::globalShortcuts()
+void NAction::setCustomizable(bool enable)
 {
-    QList<QKeySequence> list;
-    foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
-        list << shortcut->shortcut();
-    return list;
+    m_isCustomizable = enable;
 }
 
-void NAction::setGlobalShortcut(const QKeySequence &shortcut)
+bool NAction::isCustomizable() const
 {
-    QList<QKeySequence> list;
-    if (!shortcut.isEmpty()) {
-        list << shortcut;
+    return m_isCustomizable;
+}
+
+QList<QKeySequence> NAction::sequences() const
+{
+    return QAction::shortcuts();
+}
+
+QStringList NAction::shortcuts() const
+{
+    QStringList shortcuts;
+    for (const QKeySequence &seq : sequences()) {
+        shortcuts << seq.toString();
     }
-    setGlobalShortcuts(list);
+    return shortcuts;
 }
 
-void NAction::setGlobalShortcuts(QKeySequence::StandardKey key)
+void NAction::setSequences(const QList<QKeySequence> &sequences)
 {
-    setGlobalShortcuts(QList<QKeySequence>() << QKeySequence(key));
+    QAction::setShortcuts(sequences);
 }
 
-void NAction::setGlobalShortcuts(const QList<QKeySequence> &shortcuts)
+void NAction::setShortcuts(const QStringList &shortcuts)
 {
-    foreach (QxtGlobalShortcut *shortcut, m_globalShortcuts)
+    QList<QKeySequence> sequences;
+    for (const QString &str : shortcuts) {
+        sequences << QKeySequence(str);
+    }
+    setSequences(sequences);
+}
+
+QList<QKeySequence> NAction::globalSequences() const
+{
+    QList<QKeySequence> sequences;
+    for (QxtGlobalShortcut *shortcut : m_globalShortcuts) {
+        sequences << shortcut->shortcut();
+    }
+    return sequences;
+}
+
+QStringList NAction::globalShortcuts() const
+{
+    QStringList shortcuts;
+    for (const QKeySequence &seq : globalSequences()) {
+        shortcuts << seq.toString();
+    }
+    return shortcuts;
+}
+
+void NAction::setGlobalSequences(const QList<QKeySequence> &sequences)
+{
+    for (QxtGlobalShortcut *shortcut : m_globalShortcuts) {
         delete shortcut;
+    }
     m_globalShortcuts.clear();
 
-    foreach (QKeySequence seq, shortcuts) {
+    for (const QKeySequence &seq : sequences) {
         QxtGlobalShortcut *s = new QxtGlobalShortcut(this);
-        connect(s, SIGNAL(activated()), this, SLOT(trigger()));
+        connect(s, &QxtGlobalShortcut::activated, this, &QAction::trigger);
         s->setShortcut(seq);
         m_globalShortcuts << s;
     }
+}
+
+void NAction::setGlobalShortcuts(const QStringList &shortcuts)
+{
+    QList<QKeySequence> sequences;
+    for (const QString &str : shortcuts) {
+        sequences << QKeySequence(str);
+    }
+    setGlobalSequences(sequences);
 }

@@ -110,7 +110,7 @@ NPlayer::NPlayer()
 
     m_aboutDialog = NULL;
     m_logDialog = new NLogDialog(m_mainWindow);
-    m_preferencesDialog = new NPreferencesDialog(m_mainWindow);
+    m_preferencesDialog = new NPreferencesDialog(this, m_mainWindow);
     m_volumeSlider = m_mainWindow->findChild<NVolumeSlider *>("volumeSlider");
     m_coverWidget = m_mainWindow->findChild<NCoverWidget *>("coverWidget");
 
@@ -159,7 +159,6 @@ NPlayer::NPlayer()
 
     m_actionManager = new NActionManager(this);
     // keyboard shortcuts
-    m_settings->initShortcuts(this);
     foreach (NAction *action, findChildren<NAction *>()) {
         if (!action->shortcuts().isEmpty()) {
             m_mainWindow->addAction(action);
@@ -221,8 +220,8 @@ void NPlayer::connectSignals()
 
     connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
 
-    connect(m_preferencesDialog, SIGNAL(settingsChanged()), this,
-            SLOT(on_preferencesDialog_settingsChanged()));
+    connect(m_preferencesDialog, &NPreferencesDialog::settingsChanged, this,
+            &NPlayer::applySettings);
 
     if (QAbstractButton *playButton = m_mainWindow->findChild<QAbstractButton *>("playButton")) {
         connect(playButton, SIGNAL(clicked()), this, SLOT(playPause()));
@@ -475,6 +474,7 @@ void NPlayer::saveSettings()
     m_settings->setValue("Volume", QString::number(m_playbackEngine->volume()));
     m_mainWindow->saveSettings();
     savePlaybackState();
+    m_actionManager->saveSettings();
 }
 
 void NPlayer::savePlaybackState()
@@ -485,12 +485,13 @@ void NPlayer::savePlaybackState()
                                             << QString::number(row) << QString::number(pos));
 }
 
-void NPlayer::on_preferencesDialog_settingsChanged()
+void NPlayer::applySettings()
 {
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
     m_trackInfoWidget->loadSettings();
     m_trackInfoWidget->updateFileLabels(m_playbackEngine->currentMedia());
     m_playlistWidget->processVisibleItems();
+    m_actionManager->saveSettings();
 }
 
 #ifndef _N_NO_UPDATE_CHECK_

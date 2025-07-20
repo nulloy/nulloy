@@ -80,8 +80,6 @@ NPlaylistWidget::NPlaylistWidget(QWidget *parent) : QListWidget(parent)
     });
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this,
             SLOT(startProcessVisibleItemsTimer()));
-
-    NSettings::instance()->initShortcuts(this);
 }
 
 void NPlaylistWidget::setTrackInfoReader(NTrackInfoReader *reader)

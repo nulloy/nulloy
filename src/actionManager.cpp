@@ -33,12 +33,14 @@
 
 NActionManager::NActionManager(NPlayer *player) : QObject(player)
 {
+    m_player = player;
+
     m_contextMenu = new QMenu(player->mainWindow());
     player->mainWindow()->setContextMenuPolicy(Qt::CustomContextMenu);
     QMenu *windowSubMenu = new QMenu(tr("Window"), player->mainWindow());
     QMenu *playlistSubMenu = new QMenu(tr("Playlist"), player->mainWindow());
 
-    QMenuBar *menuBar = new QMenuBar();
+    QMenuBar *menuBar = new QMenuBar(player->mainWindow());
     QMenu *fileMenu = menuBar->addMenu(tr("File"));
     QMenu *controlsMenu = menuBar->addMenu(tr("Controls"));
     QMenu *controlsPlaylistSubMenu = controlsMenu->addMenu(tr("Playlist"));
@@ -568,13 +570,32 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
     }
     */
 
+    for (NAction *action : m_player->findChildren<NAction *>()) {
 #ifdef Q_OS_MAC
-    // removing icons from context menu:
-    foreach (NAction *action, player->findChildren<NAction *>()) {
+        // remove icons for macOS:
         action->setIcon(QIcon());
-    }
-    menuBar->setParent(player->mainWindow());
 #endif
+        if (action->objectName().isEmpty() || !action->isCustomizable()) {
+            continue;
+        }
+        // load settings:
+        action->setShortcuts(
+            player->settings()->value("Shortcuts/" + action->objectName()).toStringList());
+        action->setGlobalShortcuts(
+            player->settings()->value("GlobalShortcuts/" + action->objectName()).toStringList());
+    }
+}
+
+void NActionManager::saveSettings()
+{
+    for (NAction *action : m_player->findChildren<NAction *>()) {
+        if (action->objectName().isEmpty() || !action->isCustomizable()) {
+            continue;
+        }
+        m_player->settings()->setValue("Shortcuts/" + action->objectName(), action->shortcuts());
+        m_player->settings()->setValue("GlobalShortcuts/" + action->objectName(),
+                                       action->globalShortcuts());
+    }
 }
 
 QMenu *NActionManager::contextMenu()

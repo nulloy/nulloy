@@ -28,17 +28,12 @@ class NSettings : public QSettings
 
 private:
     static NSettings *m_instance;
-    QList<NAction *> m_actionList;
     void initValue(const QString &key, const QVariant &defaultValue);
 
 public:
     NSettings(QObject *parent = 0);
     ~NSettings();
     static NSettings *instance();
-
-    void initShortcuts(QObject *instance);
-    void saveShortcuts();
-    QList<NAction *> shortcuts() const;
 
     Q_INVOKABLE QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value);

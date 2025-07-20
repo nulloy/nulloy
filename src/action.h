@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2024 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2025 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -23,28 +23,28 @@ class QxtGlobalShortcut;
 class NAction : public QAction
 {
     Q_OBJECT
-    Q_PROPERTY(bool customizable READ isCustomizable WRITE setCustomizable)
 
 public:
-    NAction(QObject *parent) : QAction(parent) { init(); }
-    NAction(const QString &text, QObject *parent) : QAction(text, parent) { init(); }
-    NAction(const QIcon &icon, const QString &text, QObject *parent) : QAction(icon, text, parent)
-    {
-        init();
-    }
+    using QAction::QAction;
 
+    bool isEnabled() const;
     void setEnabled(bool enable);
-    void setCustomizable(bool enable) { m_customizable = enable; }
-    bool isCustomizable() const { return m_customizable; }
 
-    QList<QKeySequence> globalShortcuts();
-    void setGlobalShortcut(const QKeySequence &shortcut);
-    void setGlobalShortcuts(QKeySequence::StandardKey key);
-    void setGlobalShortcuts(const QList<QKeySequence> &shortcuts);
+    bool isCustomizable() const;
+    void setCustomizable(bool enable);
+
+    QList<QKeySequence> sequences() const;
+    void setSequences(const QList<QKeySequence> &sequences);
+    QStringList shortcuts() const;
+    void setShortcuts(const QStringList &shortcuts);
+
+    QList<QKeySequence> globalSequences() const;
+    void setGlobalSequences(const QList<QKeySequence> &sequences);
+    QStringList globalShortcuts() const;
+    void setGlobalShortcuts(const QStringList &shortcuts);
 
 private:
-    void init();
-    bool m_customizable;
+    bool m_isCustomizable = false;
     QList<QxtGlobalShortcut *> m_globalShortcuts;
 };
 

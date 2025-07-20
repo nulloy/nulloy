@@ -80,6 +80,7 @@ private:
 
     void loadDefaultPlaylist();
     void loadSettings();
+    void applySettings();
     void saveSettings();
     void savePlaybackState();
 
@@ -94,7 +95,6 @@ public:
     NSettings *settings();
 
 private slots:
-    void on_preferencesDialog_settingsChanged();
     void on_playbackEngine_mediaChanged(const QString &path, int);
     void on_playbackEngine_mediaFailed(const QString &, int);
     void on_playbackEngine_stateChanged(N::PlaybackState state);

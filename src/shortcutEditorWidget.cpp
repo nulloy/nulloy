@@ -62,19 +62,8 @@ void NShortcutEditorWidget::init(const QList<NAction *> &actionList)
                                   Qt::ItemIsSelectable);
         setItem(i, Description, descriptionItem);
 
-        QList<QKeySequence> shortcut = action->shortcuts();
-        QStringList shortcutStr;
-        foreach (QKeySequence seq, shortcut)
-            shortcutStr << seq.toString();
-        QTableWidgetItem *shortcutItem = new QTableWidgetItem(shortcutStr.join(", "));
-        setItem(i, Shortcut, shortcutItem);
-
-        QList<QKeySequence> globalShortcut = action->globalShortcuts();
-        QStringList globalShortcutStr;
-        foreach (QKeySequence seq, globalShortcut)
-            globalShortcutStr << seq.toString();
-        QTableWidgetItem *globalShortcutItem = new QTableWidgetItem(globalShortcutStr.join(", "));
-        setItem(i, GlobalShortcut, globalShortcutItem);
+        setItem(i, Shortcut, new QTableWidgetItem(action->shortcuts().join(", ")));
+        setItem(i, GlobalShortcut, new QTableWidgetItem(action->globalShortcuts().join(", ")));
     }
 
     resizeColumnToContents(Name);
@@ -95,23 +84,8 @@ void NShortcutEditorWidget::applyShortcuts()
                 continue;
             }
 
-            QList<QKeySequence> localShortcuts;
-            QString localText = item(i, Shortcut)->text();
-            if (!localText.isEmpty()) {
-                QStringList localsList = localText.split(", ");
-                foreach (QString str, localsList)
-                    localShortcuts << QKeySequence(str);
-            }
-            action->setShortcuts(localShortcuts);
-
-            QList<QKeySequence> globalShortcuts;
-            QString globalText = item(i, GlobalShortcut)->text();
-            if (!globalText.isEmpty()) {
-                QStringList globalsList = globalText.split(", ");
-                foreach (QString str, globalsList)
-                    globalShortcuts << QKeySequence(str);
-            }
-            action->setGlobalShortcuts(globalShortcuts);
+            action->setShortcuts(item(i, Shortcut)->text().split(", "));
+            action->setGlobalShortcuts(item(i, GlobalShortcut)->text().split(", "));
         }
     }
 }

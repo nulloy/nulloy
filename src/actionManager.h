@@ -26,12 +26,14 @@ class NActionManager : public QObject
 
 public:
     NActionManager(NPlayer *player);
+    void saveSettings();
 
     QMenu *contextMenu();
     QMenu *playlistContextMenu();
     QMenu *trayIconMenu();
 
 private:
+    NPlayer *m_player;
     QMenu *m_contextMenu;
     QMenu *m_playlistContextMenu;
     QMenu *m_trayIconMenu;

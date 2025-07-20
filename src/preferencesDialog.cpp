@@ -15,6 +15,7 @@
 
 #include "preferencesDialog.h"
 
+#include "action.h"
 #include "i18nLoader.h"
 #include "player.h"
 #include "plugin.h"
@@ -52,8 +53,10 @@ static const char *LANGUAGE = QT_TRANSLATE_NOOP("PreferencesDialog", "English");
 
 NPreferencesDialog::~NPreferencesDialog() {}
 
-NPreferencesDialog::NPreferencesDialog(QWidget *parent) : QDialog(parent)
+NPreferencesDialog::NPreferencesDialog(NPlayer *player, QWidget *parent) : QDialog(parent)
 {
+    m_player = player;
+
     ui.setupUi(this);
 
     connect(ui.buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this,
@@ -551,7 +554,14 @@ void NPreferencesDialog::loadSettings()
     // << styles
 
     // shortcuts >>
-    ui.shortcutEditorWidget->init(NSettings::instance()->shortcuts());
+    QList<NAction *> actionList;
+    for (NAction *action : m_player->findChildren<NAction *>()) {
+        if (action->objectName().isEmpty() || !action->isCustomizable()) {
+            continue;
+        }
+        actionList << action;
+    }
+    ui.shortcutEditorWidget->init(actionList);
     // << shortcuts
 }
 
@@ -655,9 +665,9 @@ void NPreferencesDialog::saveSettings()
 
     // shortcuts >>
     ui.shortcutEditorWidget->applyShortcuts();
-    NSettings::instance()->saveShortcuts();
-    emit settingsChanged();
     // << shortcuts
+
+    emit settingsChanged();
 
     // systray check >>
     if (ui.trayIconCheckBox->isChecked() && !QSystemTrayIcon::isSystemTrayAvailable()) {
