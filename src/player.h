@@ -41,11 +41,6 @@ class QString;
 class QTimer;
 class NTagReaderInterface;
 
-#ifndef _N_NO_UPDATE_CHECK_
-class QNetworkAccessManager;
-class QNetworkReply;
-#endif
-
 class NPlayer : public QWidget
 {
     Q_OBJECT
@@ -105,15 +100,6 @@ private slots:
     void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
     void on_trayClickTimer_timeout();
     void trayIconCountClicks(int clicks);
-
-#ifndef _N_NO_UPDATE_CHECK_
-private:
-    QNetworkAccessManager *m_versionDownloader;
-
-private slots:
-    void downloadVersion();
-    void on_versionDownloader_finished(QNetworkReply *reply);
-#endif
 
 public slots:
     void quit();

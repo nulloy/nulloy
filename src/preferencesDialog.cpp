@@ -21,6 +21,9 @@
 #include "plugin.h"
 #include "settings.h"
 #include "skinFileSystem.h"
+#ifndef _N_NO_UPDATE_CHECK_
+#include "updateChecker.h"
+#endif
 
 #ifdef Q_OS_WIN
 #include "w7TaskBar.h"
@@ -92,6 +95,9 @@ NPreferencesDialog::NPreferencesDialog(NPlayer *player, QWidget *parent) : QDial
 
 #ifdef _N_NO_UPDATE_CHECK_
     ui.autoCheckUpdatesContainer->hide();
+#else
+    connect(&NUpdateChecker::instance(), &NUpdateChecker::versionChanged, this,
+            &NPreferencesDialog::setVersionLabel);
 #endif
 
 #if defined Q_OS_WIN || defined Q_OS_MAC
@@ -171,19 +177,24 @@ void NPreferencesDialog::showEvent(QShowEvent *event)
     QDialog::showEvent(event);
 
     resize(ui.generalScrollAreaContents->sizeHint() + QSize(200, 0));
+
+#ifndef _N_NO_UPDATE_CHECK_
+    setVersionLabel(NUpdateChecker::instance().version());
+#endif
 }
 
 #ifndef _N_NO_UPDATE_CHECK_
-void NPreferencesDialog::setVersionLabel(QString text)
+void NPreferencesDialog::setVersionLabel(const QString &version)
 {
-    ui.versionLabel->setText(text);
+    if (!version.isEmpty()) {
+        ui.versionLabel->setText(tr("Latest: ") + version);
+    }
 }
 
 void NPreferencesDialog::on_versionCheckButton_clicked()
 {
-    NSettings::instance()->remove("UpdateIgnore");
     ui.versionLabel->setText(tr("Checking..."));
-    emit versionRequested();
+    NUpdateChecker::instance().checkOnline();
 }
 #endif
 

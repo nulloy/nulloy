@@ -54,14 +54,9 @@ signals:
     void settingsChanged();
 
 #ifndef _N_NO_UPDATE_CHECK_
-public slots:
-    void setVersionLabel(QString text);
-
 private slots:
+    void setVersionLabel(const QString &version);
     void on_versionCheckButton_clicked();
-
-signals:
-    void versionRequested();
 #endif
 };
 

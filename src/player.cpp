@@ -35,6 +35,9 @@
 #include "tagEditorDialog.h"
 #include "trackInfoReader.h"
 #include "trackInfoWidget.h"
+#ifndef _N_NO_UPDATE_CHECK_
+#include "updateChecker.h"
+#endif
 #include "utils.h"
 #include "volumeSlider.h"
 #include "waveformSlider.h"
@@ -60,12 +63,6 @@
 #include <QMetaObject>
 #include <QResizeEvent>
 #include <QToolTip>
-
-#ifndef _N_NO_UPDATE_CHECK_
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QNetworkRequest>
-#endif
 
 NPlayer::NPlayer()
 {
@@ -131,13 +128,6 @@ NPlayer::NPlayer()
     m_waveformSlider = m_mainWindow->findChild<NWaveformSlider *>("waveformSlider");
     m_waveformSlider->setLayout(trackInfoLayout);
 
-#ifndef _N_NO_UPDATE_CHECK_
-    m_versionDownloader = new QNetworkAccessManager(this);
-    connect(m_versionDownloader, SIGNAL(finished(QNetworkReply *)), this,
-            SLOT(on_versionDownloader_finished(QNetworkReply *)));
-    connect(m_preferencesDialog, SIGNAL(versionRequested()), this, SLOT(downloadVersion()));
-#endif
-
 #ifdef Q_OS_WIN
     NW7TaskBar::instance()->setWindow(m_mainWindow);
     NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
@@ -156,6 +146,9 @@ NPlayer::NPlayer()
     m_mainWindow->loadSettings();
     QResizeEvent e(m_mainWindow->size(), m_mainWindow->size());
     QCoreApplication::sendEvent(m_mainWindow, &e);
+#ifndef _N_NO_UPDATE_CHECK_
+    NUpdateChecker::instance().setParentWindow(m_mainWindow);
+#endif
 
     m_actionManager = new NActionManager(this);
     // keyboard shortcuts
@@ -461,7 +454,7 @@ void NPlayer::loadSettings()
 
 #ifndef _N_NO_UPDATE_CHECK_
     if (m_settings->value("AutoCheckUpdates").toBool()) {
-        downloadVersion();
+        NUpdateChecker::instance().checkOnline();
     }
 #endif
 
@@ -493,43 +486,6 @@ void NPlayer::applySettings()
     m_playlistWidget->processVisibleItems();
     m_actionManager->saveSettings();
 }
-
-#ifndef _N_NO_UPDATE_CHECK_
-void NPlayer::downloadVersion()
-{
-    m_versionDownloader->get(QNetworkRequest(
-        QUrl("https://static." + QCoreApplication::organizationDomain() + "/release/version")));
-}
-
-void NPlayer::on_versionDownloader_finished(QNetworkReply *reply)
-{
-    if (!reply->error()) {
-        QString versionOnline = reply->readAll().simplified();
-
-        if (NSettings::instance()->value("UpdateIgnore", "").toString() == versionOnline) {
-            return;
-        }
-
-        if (m_preferencesDialog->isVisible()) {
-            m_preferencesDialog->setVersionLabel(tr("Latest: ") + versionOnline);
-        }
-
-        if (QCoreApplication::applicationVersion() < versionOnline) {
-            QMessageBox::information(m_mainWindow, tr("Update"),
-                                     QCoreApplication::applicationName() + " " + versionOnline +
-                                         " " + tr("released!") + "<br><br>" + "<a href='https://" +
-                                         QCoreApplication::organizationDomain() +
-                                         "/download'>https://" +
-                                         QCoreApplication::organizationDomain() + "/download</a>",
-                                     QMessageBox::Ignore);
-        }
-
-        NSettings::instance()->setValue("UpdateIgnore", versionOnline);
-    }
-
-    reply->deleteLater();
-}
-#endif
 
 void NPlayer::on_mainWindow_closed()
 {
