@@ -160,6 +160,7 @@ void NTagEditorDialog::readTags()
 
     // create raw widgets for standard tags:
     QRegularExpression widgetNameRegex("Tag");
+    m_tagReader->setSource(m_file);
     QMap<QString, QStringList> tags = m_tagReader->getTags();
     QFormLayout *rawTagsFormLayout = new QFormLayout;
     rawTagsFormLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
@@ -281,6 +282,7 @@ bool NTagEditorDialog::writeTags()
         valueList.clear();
     }
 
+    m_tagReader->setSource(m_file);
     QMap<QString, QStringList> unsaved = m_tagReader->setTags(tags);
     if (!unsaved.isEmpty()) {
         if (unsaved.value("Error").join("") == "Write") {
