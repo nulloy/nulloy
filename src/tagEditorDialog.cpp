@@ -42,6 +42,7 @@ NTagEditorDialog::NTagEditorDialog(const QString &file, QWidget *parent) : QDial
     m_tagReader->setSource(m_file);
 
     QMap<QString, QStringList> tags = m_tagReader->getTags();
+    m_tagReader->setSource(""); // release the file
     if (!tags.isEmpty()) {
         if (tags.value("Error").join("") == "Invalid") {
             QMessageBox msgBox(QMessageBox::Information, tr("Unsupported File"),
@@ -102,6 +103,7 @@ NTagEditorDialog::NTagEditorDialog(const QString &file, QWidget *parent) : QDial
         ui.artworkListWidget->addItem(widgetItem);
         ui.artworkListWidget->setItemWidget(widgetItem, label);
     }
+    m_coverReader->setSource(""); // release the file
     ui.artworkListWidget->setMinimumHeight(111);
 
     ui.buttonBox->button(QDialogButtonBox::Reset)->setText(tr("Revert"));
@@ -162,6 +164,7 @@ void NTagEditorDialog::readTags()
     QRegularExpression widgetNameRegex("Tag");
     m_tagReader->setSource(m_file);
     QMap<QString, QStringList> tags = m_tagReader->getTags();
+    m_tagReader->setSource(""); // release the file
     QFormLayout *rawTagsFormLayout = new QFormLayout;
     rawTagsFormLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
     QMetaEnum enumerator = ENUMERATOR(N, Tag);
@@ -284,6 +287,7 @@ bool NTagEditorDialog::writeTags()
 
     m_tagReader->setSource(m_file);
     QMap<QString, QStringList> unsaved = m_tagReader->setTags(tags);
+    m_tagReader->setSource(""); // release the file
     if (!unsaved.isEmpty()) {
         if (unsaved.value("Error").join("") == "Write") {
             QMessageBox msgBox(QMessageBox::Critical, tr("Write Fail"),
