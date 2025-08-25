@@ -15,6 +15,7 @@
 
 #include "updateChecker.h"
 
+#include "messageBox.h"
 #include "settings.h"
 
 #include <QCoreApplication>
@@ -40,9 +41,9 @@ QString NUpdateChecker::version() const
     return m_version;
 }
 
-void NUpdateChecker::setParentWindow(QObject *parentWindow)
+void NUpdateChecker::setCenterInWindow(QObject *centerInWindow)
 {
-    m_parentWindow = parentWindow;
+    m_centerInWindow = centerInWindow;
 }
 
 void NUpdateChecker::checkOnline()
@@ -65,7 +66,7 @@ void NUpdateChecker::on_finished(QNetworkReply *reply)
         }
 
         if (QCoreApplication::applicationVersion() < m_version) {
-            QMessageBox msgBox;
+            NMessageBox msgBox(300, *m_centerInWindow);
             msgBox.setWindowTitle(tr("Update"));
             msgBox.setText(QCoreApplication::applicationName() + " " + m_version + " " +
                            tr("released!") + "<br><br>" + "<a href='https://" +
@@ -74,18 +75,6 @@ void NUpdateChecker::on_finished(QNetworkReply *reply)
             msgBox.setStandardButtons(QMessageBox::Ignore);
             msgBox.setWindowModality(Qt::ApplicationModal);
             msgBox.setIcon(QMessageBox::Information);
-
-            const int width = 300;
-            const int height = 150;
-            msgBox.resize(width, height);
-
-            if (m_parentWindow) {
-                msgBox.move(m_parentWindow->property("x").toInt() +
-                                (m_parentWindow->property("width").toInt() - width) / 2,
-                            m_parentWindow->property("y").toInt() +
-                                (m_parentWindow->property("height").toInt() - height) / 2);
-            }
-
             msgBox.exec();
         }
 

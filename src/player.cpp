@@ -147,7 +147,7 @@ NPlayer::NPlayer()
     QResizeEvent e(m_mainWindow->size(), m_mainWindow->size());
     QCoreApplication::sendEvent(m_mainWindow, &e);
 #ifndef _N_NO_UPDATE_CHECK_
-    NUpdateChecker::instance().setParentWindow(m_mainWindow);
+    NUpdateChecker::instance().setCenterInWindow(m_mainWindow);
 #endif
 
     m_actionManager = new NActionManager(this);

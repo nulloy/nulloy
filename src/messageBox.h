@@ -13,33 +13,18 @@
 **
 *********************************************************************/
 
-#include <QObject>
+#include <QMessageBox>
 
-class QNetworkAccessManager;
-class QNetworkReply;
-
-class NUpdateChecker : public QObject
+class NMessageBox : public QMessageBox
 {
-    Q_OBJECT
-    Q_PROPERTY(QString version READ version NOTIFY versionChanged)
-
 public:
-    static NUpdateChecker &instance();
-    QString version() const;
-    void setCenterInWindow(QObject *centerInWindow);
+    NMessageBox(int width, QObject &centerInTarget, QWidget *parent = nullptr);
 
-public slots:
-    void checkOnline();
-
-private slots:
-    void on_finished(QNetworkReply *reply);
-
-signals:
-    void versionChanged(const QString &version);
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
-    QString m_version;
-    NUpdateChecker();
-    QNetworkAccessManager *m_networkManager;
-    QObject *m_centerInWindow;
+    int m_width;
+    bool m_resized;
+    QObject &m_centerInWindow;
 };
