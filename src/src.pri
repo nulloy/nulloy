@@ -15,8 +15,6 @@ HEADERS += $$SRC_DIR/*.h
 SOURCES += $$files($$SRC_DIR/*.cpp)
 SOURCES -= $$SRC_DIR/main.cpp
 
-FORMS += $$SRC_DIR/*.ui
-
 CONFIG += app_bundle
 
 include($$SRC_DIR/func.pri)

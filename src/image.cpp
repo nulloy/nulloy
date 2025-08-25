@@ -33,6 +33,7 @@ NImage::NImage(QQuickItem *parent) : QQuickPaintedItem(parent)
     setImplicitHeight(1);
     connect(this, &QQuickItem::heightChanged, [&]() { scale(false); });
     connect(this, &QQuickItem::widthChanged, [&]() { scale(false); });
+    connect(this, &QQuickItem::enabledChanged, [&]() { update(); });
 }
 
 void NImage::scale(bool force)
@@ -100,11 +101,17 @@ void NImage::paint(QPainter *painter)
         return;
     }
 
+    QImage image = m_scaledImage;
+    if (!QQuickItem::isEnabled()) {
+        // TODO: also make it brighter
+        image = image.convertToFormat(QImage::Format_Grayscale8);
+    }
+
     const qreal dpr = QGuiApplication::primaryScreen()->devicePixelRatio();
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
     painter->scale(1.0 / dpr, 1.0 / dpr);
     painter->drawImage(
         qCeil((m_margin + (width() - m_margin * 2) / 2.0 - m_scaledSize.width() / 2.0) * dpr),
         qCeil((m_margin + (height() - m_margin * 2) / 2.0 - m_scaledSize.height() / 2.0) * dpr),
-        m_scaledImage);
+        image);
 }

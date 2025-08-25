@@ -36,7 +36,7 @@
 #include "scriptEngine.h"
 #include "settings.h"
 #include "svgImage.h"
-#include "tagEditorDialog.h"
+#include "tagEditorDialogHandler.h"
 #include "trackInfoModel.h"
 #include "trackInfoReader.h"
 #include "trackInfoWidget.h"
@@ -62,12 +62,15 @@
 #include "macDock.h"
 #endif
 
+#include <QAbstractButton>
+#include <QApplication>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMetaObject>
 #include <QQmlApplicationEngine>
+#include <QVBoxLayout>
 //#include <QQuickWindow>
 #include <QResizeEvent>
 #include <QToolTip>
@@ -762,7 +765,9 @@ void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
 
 void NPlayer::showTagEditor(const QString &path)
 {
-    NTagEditorDialog(path, m_mainWindow);
+    NTagEditorDialogHandler *dialogHandler = new NTagEditorDialogHandler(path, m_qmlMainWindow);
+    connect(dialogHandler, &NDialogHandler::closed, dialogHandler, &QObject::deleteLater);
+    dialogHandler->showDialog();
 }
 
 void NPlayer::on_playlist_addMoreRequested()
