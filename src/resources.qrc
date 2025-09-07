@@ -1,0 +1,6 @@
+<RCC>
+  <qresource>
+    <file alias="ChangeLog">../ChangeLog</file>
+    <file alias="THANKS">../THANKS</file>
+  </qresource>
+</RCC>

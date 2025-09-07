@@ -3,10 +3,10 @@ mac:SKIN_DEST_DIR = $$PROJECT_DIR/$${APP_NAME}.app/Contents/MacOS/skins
 win32:SKIN_DEST_DIR = $$PROJECT_DIR/Skins
 system($$QMAKE_MKDIR $$fixSlashes($$SKIN_DEST_DIR))
 
-unix:SKINS =  metro silver slim
-win32:SKINS = Metro Silver Slim
+SKINS = Native Metro Silver Slim
 for(skin, SKINS) {
-    _depends = $$SRC_DIR/skins/$$lower($${skin})
+    unix:skin = $$lower($${skin})
+    _depends = $$SRC_DIR/skins/$${skin}
     _target = $$SKIN_DEST_DIR/$${skin}.nzs
     _commands = zip -j -X -x\*design.svg $$_target $$_depends/*
     win32:!unix_mingw:_commands = 7z a -tzip -w$$_depends -x\!design.svg $$_target $$_depends/*

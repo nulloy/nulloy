@@ -43,7 +43,7 @@ QT += uitools
 INCLUDEPATH += $$SRC_DIR/widgetCollection
 LIBS += -L$$SRC_DIR/widgetCollection -lwidget_collection
 PRE_TARGETDEPS += $$SRC_DIR/widgetCollection/libwidget_collection.a
-RESOURCES += $$SRC_DIR/native-skin-embedded.qrc
+RESOURCES += $$SRC_DIR/resources.qrc
 
 no-update-check:DEFINES += _N_NO_UPDATE_CHECK_
 
