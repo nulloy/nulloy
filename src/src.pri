@@ -38,31 +38,12 @@ unix:!mac:include($$SRC_DIR/platform/xcb.pri)
 
 unix:!mac:PKGCONFIG += x11
 
-# qmake -config no-skins
-!no-skins {
-    include($$SRC_DIR/skins/skins.pri)
-    QT += uitools
-    INCLUDEPATH += $$SRC_DIR/widgetCollection
-    LIBS += -L$$SRC_DIR/widgetCollection -lwidget_collection
-    PRE_TARGETDEPS += $$SRC_DIR/widgetCollection/libwidget_collection.a
-    RESOURCES += $$SRC_DIR/native-skin-embedded.qrc
-} else {
-    DEFINES += _N_NO_SKINS_
-
-    HEADERS -= $$SRC_DIR/skinFileSystem.h   $$SRC_DIR/skinLoader.h
-    SOURCES -= $$SRC_DIR/skinFileSystem.cpp $$SRC_DIR/skinLoader.cpp
-
-    HEADERS += $$files($$SRC_DIR/widgetCollection/*.h)
-    SOURCES += $$files($$SRC_DIR/widgetCollection/*.cpp)
-    HEADERS -= $$SRC_DIR/widgetCollection/widgetCollection.h
-    SOURCES -= $$SRC_DIR/widgetCollection/widgetCollection.cpp
-
-    DEPENDPATH +=  $$SRC_DIR/widgetCollection
-    INCLUDEPATH += $$SRC_DIR/widgetCollection
-
-    RESOURCES += $$SRC_DIR/no-skins.qrc
-    FORMS += $$SRC_DIR/skins/native/form.ui
-}
+include($$SRC_DIR/skins/skins.pri)
+QT += uitools
+INCLUDEPATH += $$SRC_DIR/widgetCollection
+LIBS += -L$$SRC_DIR/widgetCollection -lwidget_collection
+PRE_TARGETDEPS += $$SRC_DIR/widgetCollection/libwidget_collection.a
+RESOURCES += $$SRC_DIR/native-skin-embedded.qrc
 
 no-update-check:DEFINES += _N_NO_UPDATE_CHECK_
 

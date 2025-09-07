@@ -15,7 +15,6 @@ BUILD_TAGLIB=yes
 BUILD_VLC=no
 BUILD_TESTS=no
 UPDATE_CHECK=yes
-SUPPORT_SKINS=yes
 
 echo_err() {
     echo "$BASENAME: $@" >&2
@@ -28,7 +27,6 @@ echo_help() {
     echo '    --gstreamer-tagreader       include TagReader in GStreamer plugin'
     echo '    --vlc                       build VLC plugin'
     echo '    --no-taglib                 do not build TagLib plugin'
-    echo '    --no-skins                  disable skins support'
     echo '    --force-version VERSION     overrides version.pri'
     echo '    --no-update-check           disable online check functionality'
     echo '    --prefix PREFIX             installation prefix (default: /usr, ignored on macOS)'
@@ -68,8 +66,6 @@ while test $# -gt 0; do
             BUILD_TAGLIB=no ;;
         --tests)
             BUILD_TESTS=yes ;;
-        --no-skins)
-            SUPPORT_SKINS=no ;;
         --libdir)
             shift; LIBDIR=$1 ;;
         --no-update-check)
@@ -157,7 +153,6 @@ pkg_check_lib() {
 [[ $BUILD_GSTREAMER_TAGREADER == "yes" ]] && echo "CONFIG += gstreamer-tagreader" >> $QMAKE_CACHE
 [[ $BUILD_VLC == "yes" ]]                 && echo "CONFIG += vlc" >> $QMAKE_CACHE
 [[ $BUILD_TAGLIB == "yes" ]]              && echo "CONFIG += taglib" >> $QMAKE_CACHE
-[[ $SUPPORT_SKINS == "no" ]]              && echo "CONFIG += no-skins" >> $QMAKE_CACHE
 [[ $UPDATE_CHECK == "no" ]]               && echo "CONFIG += no-update-check" >> $QMAKE_CACHE
 [[ $BUILD_TESTS == "yes" ]]               && echo "CONFIG += tests" >> $QMAKE_CACHE \
                                           && echo "DEFINES += _TESTS_" >> $QMAKE_CACHE

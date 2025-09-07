@@ -24,10 +24,6 @@
 #include "shortcutEditorModel.h"
 #include "skinLoader.h"
 
-#ifndef _N_NO_SKINS_
-#include "skinLoader.h"
-#endif
-
 #include <QStyleFactory>
 #include <QTextCodec>
 
@@ -55,7 +51,6 @@ NPreferencesDialogHandler::NPreferencesDialogHandler(NPlayer *player, QObject *p
             context->setContextProperty("NLanguageModel", QVariant::fromValue(data));
         }
 
-#ifndef _N_NO_SKINS_
         { // skins
             QList<QVariantMap> data;
             foreach (QString str, NSkinLoader::skinIdentifiers()) {
@@ -68,7 +63,6 @@ NPreferencesDialogHandler::NPreferencesDialogHandler(NPlayer *player, QObject *p
             }
             context->setContextProperty("NSkinModel", QVariant::fromValue(data));
         }
-#endif
 
         { // encodings
             QStringList data;

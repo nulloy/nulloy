@@ -19,10 +19,8 @@
 #include "player.h"
 #include "settings.h"
 
-#ifndef _N_NO_SKINS_
 #include "skinFileSystem.h"
 Q_IMPORT_PLUGIN(NWidgetCollection)
-#endif
 
 bool logToFile = false;
 
@@ -179,9 +177,7 @@ int main(int argc, char *argv[])
     }
     QGuiApplication::setWindowIcon(icon);
 
-#ifndef _N_NO_SKINS_
     NSkinFileSystem::instance();
-#endif
 
     NPlayer p;
     QObject::connect(&instance, SIGNAL(messageReceived(const QString &)), &p,

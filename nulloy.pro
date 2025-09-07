@@ -6,11 +6,8 @@ isEmpty(N_CONFIG_SUCCESS) {
     win32:error("Please run 'configure.bat'")
 }
 
-# qmake -config no-skins
-!no-skins {
-    widgets.subdir = $$SRC_DIR/widgetCollection
-    SUBDIRS += widgets
-}
+widgets.subdir = $$SRC_DIR/widgetCollection
+SUBDIRS += widgets
 
 # qmake -config gstreamer
 gstreamer {

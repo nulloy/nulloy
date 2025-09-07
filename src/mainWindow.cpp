@@ -17,12 +17,7 @@
 
 #include "common.h"
 #include "settings.h"
-
-#ifndef _N_NO_SKINS_
-#include <QUiLoader>
-
 #include "skinFileSystem.h"
-#endif
 
 #ifdef Q_OS_WIN
 #include <dwmapi.h>
@@ -41,6 +36,7 @@
 #include <QIcon>
 #include <QLayout>
 #include <QTime>
+#include <QUiLoader>
 #include <QWindowStateChangeEvent>
 
 #define RESIZE_BORDER 5
@@ -53,7 +49,6 @@ NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(paren
 
     setObjectName("mainWindow");
 
-#ifndef _N_NO_SKINS_
     QUiLoader loader;
     QFile formFile(uiFile);
     formFile.open(QIODevice::ReadOnly);
@@ -66,10 +61,6 @@ NMainWindow::NMainWindow(const QString &uiFile, QWidget *parent) : QDialog(paren
     setLayout(layout);
     setStyleSheet(form->styleSheet());
     form->setStyleSheet("");
-#else
-    Q_UNUSED(uiFile)
-    ui.setupUi(this);
-#endif
 
     m_unmaximizedSize = QSize();
     m_unmaximizedPos = QPoint();

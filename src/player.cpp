@@ -43,15 +43,13 @@
 #ifndef _N_NO_UPDATE_CHECK_
 #include "updateChecker.h"
 #endif
+#include "skinFileSystem.h"
+#include "skinLoader.h"
 #include "utils.h"
 #include "volumeSlider.h"
 #include "waveformBuilderInterface.h"
 #include "waveformSlider.h"
 #include "waveformView.h"
-#ifndef _N_NO_SKINS_
-#include "skinFileSystem.h"
-#include "skinLoader.h"
-#endif
 
 #ifdef Q_OS_WIN
 #include "w7TaskBar.h"
@@ -93,19 +91,11 @@ NPlayer::NPlayer()
     Q_ASSERT(m_playbackEngine);
     m_playbackEngine->setParent(this);
 
-#ifndef _N_NO_SKINS_
     m_mainWindow = new NMainWindow(NSkinLoader::skinUiFormFile());
-#else
-    m_mainWindow = new NMainWindow();
-#endif
 
     // loading skin script
     m_scriptEngine = new NScriptEngine(this);
-#ifndef _N_NO_SKINS_
     QString scriptFileName(NSkinLoader::skinScriptFile());
-#else
-    QString scriptFileName(":skins/native/script.js");
-#endif
     QFile scriptFile(scriptFileName);
     scriptFile.open(QIODevice::ReadOnly);
     m_scriptEngine->evaluate(scriptFile.readAll(), scriptFileName);

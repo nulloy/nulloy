@@ -13,7 +13,6 @@ set BUILD_GSTREAMER_TAGREADER=no
 set BUILD_TAGLIB=yes
 set BUILD_VLC=no
 set BUILD_TESTS=no
-set SUPPORT_SKINS=yes
 
 :getopt
     shift
@@ -35,10 +34,6 @@ set SUPPORT_SKINS=yes
     )
     if "%0" == "--tests" (
         set BUILD_TESTS=yes
-        goto getopt
-    )
-    if "%0" == "--no-skins" (
-        set SUPPORT_SKINS=no
         goto getopt
     )
     if "%0" == "--force-version" (
@@ -72,7 +67,6 @@ set SUPPORT_SKINS=yes
     echo     --gstreamer-tagreader       include TagReader in GStreamer plugin
     echo     --vlc                       build VLC plugin
     echo     --no-taglib                 do not build TagLib plugin
-    echo     --no-skins                  disable skins support
     echo     --console                   build with console output support
     echo     --force-version VERSION     overrides version.pri
     echo     --debug                     build in debug mode
@@ -112,7 +106,6 @@ if "%BUILD_GSTREAMER_TAGREADER%" == "yes" echo CONFIG += gstreamer-tagreader>> %
 if "%BUILD_VLC%" == "yes"                 echo CONFIG += vlc>> %QMAKE_CACHE%
 if "%BUILD_TAGLIB%" == "yes"              echo CONFIG += taglib>> %QMAKE_CACHE%
 if "%BUILD_TESTS%" == "yes"               echo CONFIG += tests>> %QMAKE_CACHE%
-if "%SUPPORT_SKINS%" == "no"              echo CONFIG += no-skins>> %QMAKE_CACHE%
 if "%CONSOLE%" == "yes"                   echo CONFIG += console>> %QMAKE_CACHE%
 if "%DEBUG%" == "yes" (
     echo CONFIG += debug>> %QMAKE_CACHE%

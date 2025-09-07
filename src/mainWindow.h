@@ -17,18 +17,12 @@
 #define N_MAIN_WINDOW_H
 
 #include <QDialog>
-#ifdef _N_NO_SKINS_
-#include "ui_form.h"
-#endif
 
 class NMainWindow : public QDialog
 {
     Q_OBJECT
 
 private:
-#ifdef _N_NO_SKINS_
-    Ui::mainWindow ui;
-#endif
     bool m_resizeActive;
     Qt::WindowFrameSection m_resizeSection;
     QPoint m_resizePoint;
@@ -77,7 +71,7 @@ public slots:
     void setTitle(QString title);
     void setOnTop(bool onTop);
     void showPlaybackControls(bool enable);
-    void reject(){};
+    void reject() {};
 
 signals:
     void closed();
