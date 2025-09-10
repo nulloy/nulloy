@@ -22,7 +22,7 @@
 #include "cursorOverride.h"
 #include "i18nLoader.h"
 #include "image.h"
-#include "logDialog.h"
+#include "logDialogHandler.h"
 #include "mainWindow.h"
 #include "playbackEngineInterface.h"
 #include "playlistController.h"
@@ -102,7 +102,6 @@ NPlayer::NPlayer()
     scriptFile.close();
     QScriptValue skinProgram = m_scriptEngine->evaluate("Main").construct();
 
-    m_logDialog = new NLogDialog(m_mainWindow);
     m_volumeSlider = m_mainWindow->findChild<NVolumeSlider *>("volumeSlider");
     m_coverWidget = m_mainWindow->findChild<NCoverWidget *>("coverWidget");
 
@@ -222,6 +221,8 @@ NPlayer::NPlayer()
     NUpdateChecker::instance().setCenterInWindow(m_qmlMainWindow);
 #endif
 
+    m_logDialogHandler = new NLogDialogHandler(m_qmlMainWindow);
+
     m_coverImage = m_qmlEngine->rootObjects().first()->findChild<NImage *>("coverImage");
 
     skinProgram.property("afterShow").call(skinProgram);
@@ -268,7 +269,8 @@ void NPlayer::connectSignals()
             SLOT(updatePlaybackLabels(qint64)));
     connect(m_playbackEngine, SIGNAL(tick(qint64)), m_trackInfoModel, SLOT(updatePlayback(qint64)));
     connect(m_playbackEngine, SIGNAL(message(N::MessageIcon, const QString &, const QString &)),
-            m_logDialog, SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
+            m_logDialogHandler,
+            SLOT(showMessage(N::MessageIcon, const QString &, const QString &)));
 
     connect(m_mainWindow, SIGNAL(closed()), this, SLOT(on_mainWindow_closed()));
 

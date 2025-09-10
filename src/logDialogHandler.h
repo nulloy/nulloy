@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2024 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2025 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -13,36 +13,31 @@
 **
 *********************************************************************/
 
-#ifndef N_LOG_DIALOG_H
-#define N_LOG_DIALOG_H
+#ifndef N_LOG_DIALOG_HANDLER_H
+#define N_LOG_DIALOG_HANDLER_H
 
-#include <QDialog>
-
+#include "dialogHandler.h"
 #include "global.h"
 
-class QCheckBox;
-class QString;
-class QTextBrowser;
-class QTextBrowser;
-
-class NLogDialog : public QDialog
+class NLogDialogHandler : public NDialogHandler
 {
     Q_OBJECT
-
-private:
-    QTextBrowser *m_textBrowser;
-    QCheckBox *m_checkBox;
-    QString m_oldTitle;
-    QString m_text;
-
-    void hideEvent(QHideEvent *event);
+    Q_PROPERTY(QString text READ text NOTIFY textChanged)
 
 public:
-    NLogDialog(QWidget *parent = 0);
-    ~NLogDialog();
+    NLogDialogHandler(QObject *parentWindow = nullptr);
+
+    QString text() const;
 
 public slots:
     void showMessage(N::MessageIcon icon, const QString &title, const QString &msg);
+
+signals:
+    void textChanged();
+
+private:
+    QString m_text;
+    QString m_oldTitle;
 };
 
 #endif

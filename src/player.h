@@ -21,7 +21,7 @@
 
 #include "global.h"
 
-class NLogDialog;
+class NLogDialogHandler;
 class NMainWindow;
 class NPlaybackEngineInterface;
 class NPlaylistWidget;
@@ -66,7 +66,7 @@ private:
     NPlaylistController *m_playlistController;
     NTrackInfoWidget *m_trackInfoWidget;
     NTrackInfoModel *m_trackInfoModel;
-    NLogDialog *m_logDialog;
+    NLogDialogHandler *m_logDialogHandler;
     QSystemTrayIcon *m_systemTray;
     QTimer *m_trayClickTimer;
     QTimer *m_settingsSaveTimer;
