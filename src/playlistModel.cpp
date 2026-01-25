@@ -432,6 +432,11 @@ ssize_t NPlaylistModel::getRowById(unsigned int id) const
     return -1;
 }
 
+QList<NPlaylistModel::DataItem> NPlaylistModel::items() const
+{
+    return m_data;
+}
+
 void NPlaylistModel::calculateDuration()
 {
     size_t secondsTotal = 0;

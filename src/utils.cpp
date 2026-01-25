@@ -20,9 +20,10 @@
 
 NUtils::NUtils(QObject *parent) : QObject(parent) {}
 
-static QList<NPlaylistDataItem> _processPath(const QString &path, const QStringList &nameFilters)
+static QList<NPlaylistModel::DataItem> _processPath(const QString &path,
+                                                    const QStringList &nameFilters)
 {
-    QList<NPlaylistDataItem> dataItemsList;
+    QList<NPlaylistModel::DataItem> dataItemsList;
     QFileInfo fileInfo = QFileInfo(path);
     if (fileInfo.isDir()) {
         QStringList entryList;
@@ -40,7 +41,9 @@ static QList<NPlaylistDataItem> _processPath(const QString &path, const QStringL
             if (path.endsWith(".m3u") || path.endsWith(".m3u8")) {
                 dataItemsList << NPlaylistStorage::readM3u(path);
             } else {
-                dataItemsList << NPlaylistDataItem(path);
+                NPlaylistModel::DataItem item;
+                item.filePath = path;
+                dataItemsList << item;
             }
         }
     }
@@ -48,33 +51,12 @@ static QList<NPlaylistDataItem> _processPath(const QString &path, const QStringL
     return dataItemsList;
 }
 
-QList<NPlaylistDataItem> NUtils::dirListRecursive(const QString &path)
-{
-    QStringList nameFilters = NSettings::instance()->value("FileFilters").toString().split(' ');
-    return _processPath(path, nameFilters);
-}
-
-NPlaylistModel::DataItem NUtils::toModelItem(const NPlaylistDataItem &dataItem)
-{
-    NPlaylistModel::DataItem modelItem;
-    modelItem.text = dataItem.title;
-    modelItem.textFormat = dataItem.titleFormat;
-    modelItem.filePath = dataItem.path;
-    modelItem.durationSec = dataItem.duration;
-    modelItem.playbackCount = dataItem.playbackCount;
-    modelItem.playbackPosition = dataItem.playbackPosition;
-    modelItem.isFailed = dataItem.failed;
-    modelItem.id = dataItem.id;
-    return modelItem;
-}
-
 QList<NPlaylistModel::DataItem> NUtils::processPathsRecursive(const QStringList &paths)
 {
+    QStringList nameFilters = NSettings::instance()->value("FileFilters").toString().split(' ');
     QList<NPlaylistModel::DataItem> output;
     for (const QString &path : paths) {
-        for (const NPlaylistDataItem &dataItem : NUtils::dirListRecursive(path)) {
-            output << toModelItem(dataItem);
-        }
+        output << _processPath(path, nameFilters);
     }
     return output;
 }

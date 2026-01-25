@@ -13,34 +13,61 @@
 **
 *********************************************************************/
 
-#include <QGridLayout>
-#include <QResizeEvent>
-#include <QSpacerItem>
-
 #include "messageBox.h"
 
-NMessageBox::NMessageBox(int width, QObject &centerInTarget, QWidget *parent)
-    : QMessageBox(parent), m_centerInWindow{centerInTarget}
+#include <QQmlContext>
+
+NMessageBox::NMessageBox(const QString &title, const QString &text,
+                         QMessageBox::StandardButtons buttons, QObject *parentWindow)
+    : NDialogHandler(QUrl::fromLocalFile("src/messageBox.qml"), parentWindow), m_title(title),
+      m_text(text), m_buttons(buttons), m_checkBoxChecked(false)
 {
-    m_width = width;
-    m_resized = false;
+    connect(this, &NDialogHandler::setupContext, [this](QQmlContext *context) {
+        context->setContextProperty("NMessageBoxHandler", this);
+    });
+
+    connect(this, &NDialogHandler::setupRoot, [this](QObject *root) {
+        connect(root, SIGNAL(accepted()), this, SIGNAL(accepted()));
+        connect(root, SIGNAL(rejected()), this, SIGNAL(rejected()));
+    });
 }
 
-void NMessageBox::resizeEvent(QResizeEvent *event)
+NMessageBox::~NMessageBox()
 {
-    QMessageBox::resizeEvent(event);
+    destroyEngine();
+}
 
-    if (!m_resized) {
-        QSpacerItem *spacer = new QSpacerItem(m_width, 0, QSizePolicy::Minimum,
-                                              QSizePolicy::Expanding);
-        QGridLayout *layout = (QGridLayout *)this->layout();
-        layout->addItem(spacer, layout->rowCount(), 0, 1, layout->columnCount());
+QString NMessageBox::title() const
+{
+    return m_title;
+}
 
-        move(m_centerInWindow.property("x").toInt() +
-                 (m_centerInWindow.property("width").toInt() - m_width) / 2,
-             m_centerInWindow.property("y").toInt() +
-                 (m_centerInWindow.property("height").toInt() - event->size().height()) / 2);
+QString NMessageBox::text() const
+{
+    return m_text;
+}
 
-        m_resized = true;
-    }
+int NMessageBox::standardButtons() const
+{
+    return (int)m_buttons;
+}
+
+void NMessageBox::setCheckBoxText(const QString &text)
+{
+    m_checkBoxText = text;
+}
+
+QString NMessageBox::checkBoxText() const
+{
+    return m_checkBoxText;
+}
+
+bool NMessageBox::isCheckBoxChecked() const
+{
+    return m_checkBoxChecked;
+}
+
+void NMessageBox::setCheckBoxChecked(bool checked)
+{
+    m_checkBoxChecked = checked;
 }

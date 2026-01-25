@@ -19,10 +19,8 @@
 #include "image.h"
 #include "messageBox.h"
 #include "pluginLoader.h"
-#include "qcheckbox.h"
 #include "settings.h"
 
-#include <QCheckBox>
 #include <QMessageBox>
 #include <QQmlPropertyMap>
 #include <QTextCodec>
@@ -142,12 +140,13 @@ void NTagEditorDialogHandler::setEncodingCurrentIndex(int index)
         m_encodingCurrentIndex = m_encodingPreviousIndex;
         emit encodingCurrentIndexChanged();
 
-        NMessageBox msgBox(400, *m_root);
-        msgBox.setWindowTitle(tr("Warning"));
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setText(tr("Tags have been modified."));
-        msgBox.setInformativeText(tr("Save or revert the changes before switching encoding."));
-        msgBox.exec();
+        NMessageBox *msgBox =
+            new NMessageBox(tr("Warning"),
+                            tr("Tags have been modified.") + "\n\n" +
+                                tr("Save or revert the changes before switching encoding."),
+                            QMessageBox::Ok, m_root);
+        connect(msgBox, &NMessageBox::closed, msgBox, &QObject::deleteLater);
+        msgBox->showDialog();
         return;
     }
 
@@ -181,11 +180,11 @@ void NTagEditorDialogHandler::readTags()
     m_tagReader->setSource(""); // release the file
     if (!tags.isEmpty()) {
         if (tags.value("Error").join("") == "Invalid") {
-            NMessageBox msgBox(400, *m_root);
-            msgBox.setWindowTitle(tr("Unsupported File"));
-            msgBox.setIcon(QMessageBox::Information);
-            msgBox.setText(tr("This file format does not support tags."));
-            msgBox.exec();
+            NMessageBox *msgBox = new NMessageBox(tr("Unsupported File"),
+                                                  tr("This file format does not support tags."),
+                                                  QMessageBox::Ok, m_root);
+            connect(msgBox, &NMessageBox::closed, msgBox, &QObject::deleteLater);
+            msgBox->showDialog();
             return;
         }
     }
@@ -225,19 +224,18 @@ bool NTagEditorDialogHandler::writeTags()
     QMap<QString, QStringList> unsaved = m_tagReader->setTags(tags);
     m_tagReader->setSource(""); // release the file
     if (!unsaved.isEmpty()) {
-        m_tagReader->setTags(tagsBackup);
-        NMessageBox msgBox(400, *m_root);
-        msgBox.setStandardButtons(QMessageBox::Close);
+        QString title;
+        QString text;
         if (unsaved.value("Error").join("") == "Write") {
-            msgBox.setWindowTitle(tr("Write Fail"));
-            msgBox.setIcon(QMessageBox::Critical);
-            msgBox.setText(tr("Write operation did not succeed."));
+            title = tr("Write Fail");
+            text = tr("Write operation did not succeed.");
         } else {
-            msgBox.setWindowTitle(tr("Save Fail"));
-            msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setText(tr("Saving aborted. Failed tags: %1").arg(unsaved.keys().join(", ")));
+            title = tr("Save Fail");
+            text = tr("Saving aborted. Failed tags: %1").arg(unsaved.keys().join(", "));
         }
-        msgBox.exec();
+        NMessageBox *msgBox = new NMessageBox(title, text, QMessageBox::Close, m_root);
+        connect(msgBox, &NMessageBox::closed, msgBox, &QObject::deleteLater);
+        msgBox->showDialog();
         return false;
     }
 
@@ -247,24 +245,23 @@ bool NTagEditorDialogHandler::writeTags()
 void NTagEditorDialogHandler::on_saveClicked()
 {
     if (NSettings::instance()->value("DisplayTagEditorConfirmDialog").toBool()) {
-        NMessageBox msgBox(400, *m_root);
-        msgBox.setWindowTitle(tr("Confirmation"));
-        msgBox.setIcon(QMessageBox::Question);
-        msgBox.setText(tr("Do you want to save your changes?"));
-        msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
-        msgBox.setDefaultButton(QMessageBox::Save);
+        NMessageBox *msgBox = new NMessageBox(tr("Confirmation"),
+                                              tr("Do you want to save your changes?"),
+                                              QMessageBox::Save | QMessageBox::Cancel, m_root);
+        msgBox->setCheckBoxText(tr("Don't show this dialog anymore"));
 
-        QCheckBox *checkBox = new QCheckBox(tr("Don't show this dialog anymore"));
-        msgBox.setCheckBox(checkBox);
-
-        if (msgBox.exec() != QMessageBox::Save) {
-            return;
+        connect(msgBox, &NMessageBox::accepted, this, [this, msgBox]() {
+            NSettings::instance()->setValue("DisplayTagEditorConfirmDialog",
+                                            !msgBox->isCheckBoxChecked());
+            if (writeTags()) {
+                readTags();
+            }
+        });
+        connect(msgBox, &NMessageBox::closed, msgBox, &QObject::deleteLater);
+        msgBox->showDialog();
+    } else {
+        if (writeTags()) {
+            readTags();
         }
-
-        NSettings::instance()->setValue("DisplayTagEditorConfirmDialog", !checkBox->isChecked());
-    }
-
-    if (writeTags()) {
-        readTags();
     }
 }

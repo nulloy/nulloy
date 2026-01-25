@@ -93,6 +93,8 @@ public:
     void setFocusedRowRelative(int offset);
     ssize_t getRowById(unsigned int id) const;
 
+    QList<DataItem> items() const;
+
     void calculateDuration();
     void shuffle();
 

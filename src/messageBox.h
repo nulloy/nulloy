@@ -13,18 +13,47 @@
 **
 *********************************************************************/
 
+#ifndef N_MESSAGE_BOX_H
+#define N_MESSAGE_BOX_H
+
+#include "dialogHandler.h"
+
 #include <QMessageBox>
 
-class NMessageBox : public QMessageBox
+class NMessageBox : public NDialogHandler
 {
-public:
-    NMessageBox(int width, QObject &centerInTarget, QWidget *parent = nullptr);
+    Q_OBJECT
+    Q_PROPERTY(QString title READ title CONSTANT)
+    Q_PROPERTY(QString text READ text CONSTANT)
+    Q_PROPERTY(int standardButtons READ standardButtons CONSTANT)
+    Q_PROPERTY(QString checkBoxText READ checkBoxText CONSTANT)
+    Q_PROPERTY(bool checkBoxChecked READ isCheckBoxChecked WRITE setCheckBoxChecked)
 
-protected:
-    void resizeEvent(QResizeEvent *event) override;
+public:
+    NMessageBox(const QString &title, const QString &text, QMessageBox::StandardButtons buttons,
+                QObject *parentWindow = nullptr);
+    ~NMessageBox() override;
+
+    QString title() const;
+    QString text() const;
+    int standardButtons() const;
+
+    void setCheckBoxText(const QString &text);
+    QString checkBoxText() const;
+
+    bool isCheckBoxChecked() const;
+    void setCheckBoxChecked(bool checked);
+
+signals:
+    void accepted();
+    void rejected();
 
 private:
-    int m_width;
-    bool m_resized;
-    QObject &m_centerInWindow;
+    QString m_title;
+    QString m_text;
+    QMessageBox::StandardButtons m_buttons;
+    QString m_checkBoxText;
+    bool m_checkBoxChecked;
 };
+
+#endif

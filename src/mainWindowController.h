@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2024 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2026 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -13,25 +13,32 @@
 **
 *********************************************************************/
 
-#ifndef N_PLAYLIST_DATA_ITEM_H
-#define N_PLAYLIST_DATA_ITEM_H
+#ifndef N_MAIN_WINDOW_CONTROLLER_H
+#define N_MAIN_WINDOW_CONTROLLER_H
 
-#include <QString>
+#include <QCursor>
+#include <QObject>
 
-struct NPlaylistDataItem
+class QWindow;
+
+class NMainWindowController : public QObject
 {
-    QString title;
-    QString path;
-    int duration;
-    bool playing;
-    bool failed;
-    int playbackCount;
-    float playbackPosition;
-    QString titleFormat;
-    int trackIndex;
-    unsigned int id;
+    Q_OBJECT
+public:
+    explicit NMainWindowController(QWindow &window, QObject *parent = nullptr);
 
-    NPlaylistDataItem(const QString &file = "");
+    bool isOnTop();
+
+public slots:
+    void show();
+    void toggleFullScreen();
+    void setTitle(const QString &title);
+    void setOnTop(bool onTop);
+    void loadSettings();
+    void saveSettings();
+
+private:
+    QWindow &m_window;
 };
 
 #endif

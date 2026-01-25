@@ -51,7 +51,7 @@ Rectangle {
   Connections {
     target: Qt.application
     function onAboutToQuit() {
-    //NSettings.setValue(settingsPrefix + "Splitter", splitter.states);
+      NSettings.setValue(settingsPrefix + "Splitter", splitter.states);
     }
   }
 
@@ -77,8 +77,7 @@ Rectangle {
     id: splitter
     anchors.fill: parent
 
-    // FIXME: temporal adjustment for compatibility with the old skin:
-    states: [parseInt(NSettings.value(settingsPrefix + "Splitter")[0])]
+    states: NSettings.value(settingsPrefix + "Splitter", [150, 1])
 
     handleDelegate: Rectangle {
       height: 5
@@ -137,6 +136,7 @@ Rectangle {
           NCoverImage {
             Layout.fillHeight: true
             growHorizontally: true
+            states: NSettings.value(settingsPrefix + "Splitter", [200, 200])
 
             Rectangle {
               anchors.fill: parent
@@ -236,9 +236,20 @@ Rectangle {
         }
 
         RowLayout {
+          id: playbackControls
           Layout.fillWidth: true
           Layout.minimumHeight: 30
           Layout.maximumHeight: 30
+
+          visible: NSettings.value("ShowPlaybackControls")
+          Connections {
+            target: NSettings
+            function onValueChanged(key, value) {
+              if (key === "ShowPlaybackControls") {
+                playbackControls.visible = value;
+              }
+            }
+          }
 
           SvgButton {
             Layout.preferredWidth: 50

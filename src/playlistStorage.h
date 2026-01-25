@@ -20,12 +20,12 @@
 #include <QString>
 
 #include "global.h"
-#include "playlistDataItem.h"
+#include "playlistModel.h"
 
 namespace NPlaylistStorage
 {
-    QList<NPlaylistDataItem> readM3u(const QString &file);
-    void writeM3u(const QString &file, QList<NPlaylistDataItem> items, N::M3uExtention ext);
+    QList<NPlaylistModel::DataItem> readM3u(const QString &file);
+    void writeM3u(const QString &file, QList<NPlaylistModel::DataItem> items, N::M3uExtention ext);
 }; // namespace NPlaylistStorage
 
 #endif

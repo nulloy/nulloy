@@ -7,9 +7,9 @@ SKINS = Native Metro Silver Slim
 for(skin, SKINS) {
     unix:skin = $$lower($${skin})
     _depends = $$SRC_DIR/skins/$${skin}
-    _target = $$SKIN_DEST_DIR/$${skin}.nzs
-    _commands = zip -j -X -x\*design.svg $$_target $$_depends/*
-    win32:!unix_mingw:_commands = 7z a -tzip -w$$_depends -x\!design.svg $$_target $$_depends/*
+    _target = $$SKIN_DEST_DIR/$${skin}.nzq
+    _commands = zip -j -X $$_target $$_depends/*
+    win32:!unix_mingw:_commands = 7z a -tzip -w$$_depends $$_target $$_depends/*
     eval($${skin}.depends = $$_depends/*)
     eval($${skin}.target = $$_target)
     eval($${skin}.commands = $$_commands)
@@ -18,7 +18,7 @@ for(skin, SKINS) {
     PRE_TARGETDEPS += $$_target
     system($$_commands)
 
-    unix:!mac:system($$QMAKE_LN_SHLIB -f $$_depends $$SKIN_DEST_DIR/$$skin)
+    unix:!mac:system($$QMAKE_LN_SHLIB -fT $$_depends $$SKIN_DEST_DIR/$$skin)
 }
 
 # install

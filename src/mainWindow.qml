@@ -21,9 +21,8 @@ import "utils.js" as NUtilsJS
 
 ApplicationWindow {
   id: mainWindow
-  visible: true
+  visible: false
   flags: Qt.FramelessWindowHint
-  title: _oldMainWindow.windowTitle
 
   property int resizerWidth: 5
 
@@ -45,7 +44,7 @@ ApplicationWindow {
     acceptedButtons: Qt.RightButton | Qt.LeftButton
     onPressed: {
       if (mouse.button == Qt.RightButton) {
-        NPlayer.showContextMenu(Qt.point(mouseX + mainWindow.x - _oldMainWindow.x, mouseY + mainWindow.y - _oldMainWindow.y));
+        NPlayer.showContextMenu(Qt.point(mouseX + mainWindow.x, mouseY + mainWindow.y));
       } else {
         mainWindow.startSystemMove();
       }

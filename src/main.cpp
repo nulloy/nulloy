@@ -20,7 +20,6 @@
 #include "settings.h"
 
 #include "skinFileSystem.h"
-Q_IMPORT_PLUGIN(NWidgetCollection)
 
 bool logToFile = false;
 

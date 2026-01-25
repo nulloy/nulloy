@@ -16,7 +16,6 @@
 #ifndef N_UTILS_H
 #define N_UTILS_H
 
-#include "playlistDataItem.h"
 #include "playlistModel.h"
 
 #include <QObject>
@@ -27,8 +26,6 @@ class NUtils : public QObject
 
 public:
     explicit NUtils(QObject *parent = nullptr);
-    static QList<NPlaylistDataItem> dirListRecursive(const QString &path);
-    static NPlaylistModel::DataItem toModelItem(const NPlaylistDataItem &dataItem);
     static QList<NPlaylistModel::DataItem> processPathsRecursive(const QStringList &path);
     Q_INVOKABLE static QString readFile(const QString &path);
     Q_INVOKABLE static QString pathToUri(const QString &path);

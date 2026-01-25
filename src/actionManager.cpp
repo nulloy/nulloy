@@ -16,12 +16,11 @@
 #include "actionManager.h"
 
 #include "action.h"
-#include "coverWidget.h"
-#include "mainWindow.h"
+#include "image.h"
+#include "mainWindowController.h"
 #include "playbackEngineInterface.h"
 #include "player.h"
 #include "playlistController.h"
-#include "playlistWidget.h"
 #include "settings.h"
 #include "tagReaderInterface.h"
 #include "trash.h"
@@ -30,26 +29,27 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QQuickWindow>
 #include <QStyle>
 
 NActionManager::NActionManager(NPlayer *player) : QObject(player)
 {
     m_player = player;
 
-    m_contextMenu = new QMenu(player->mainWindow());
-    player->mainWindow()->setContextMenuPolicy(Qt::CustomContextMenu);
-    QMenu *windowSubMenu = new QMenu(tr("Window"), player->mainWindow());
-    QMenu *playlistSubMenu = new QMenu(tr("Playlist"), player->mainWindow());
+    m_contextMenu = new QMenu(nullptr);
+    QMenu *windowSubMenu = new QMenu(tr("Window"), nullptr);
+    QMenu *playlistSubMenu = new QMenu(tr("Playlist"), nullptr);
 
-    QMenuBar *menuBar = new QMenuBar(player->mainWindow());
+    // FIXME: just a stub for now:
+    QMenuBar *menuBar = new QMenuBar(nullptr);
     QMenu *fileMenu = menuBar->addMenu(tr("File"));
     QMenu *controlsMenu = menuBar->addMenu(tr("Controls"));
     QMenu *controlsPlaylistSubMenu = controlsMenu->addMenu(tr("Playlist"));
     controlsMenu->addMenu(controlsPlaylistSubMenu);
     QMenu *windowMenu = menuBar->addMenu(tr("Window"));
 
-    m_trayIconMenu = new QMenu(player);
-    m_playlistContextMenu = new QMenu(player->mainWindow());
+    m_trayIconMenu = new QMenu(nullptr);
+    m_playlistContextMenu = new QMenu(nullptr);
 
     QStyle *style = QApplication::style();
     QList<QIcon> winIcons;
@@ -135,8 +135,6 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         prevAction->setObjectName("PrevAction");
         prevAction->setStatusTip(tr("Play previous track in playlist"));
         prevAction->setCustomizable(true);
-        //connect(prevAction, &NAction::triggered, player->playlistWidget(),
-        //        &NPlaylistWidget::playPrevItem);
         connect(prevAction, &NAction::triggered, player->playlistController(),
                 &NPlaylistController::playPrevRow);
         m_trayIconMenu->addAction(prevAction);
@@ -151,8 +149,6 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         nextAction->setObjectName("NextAction");
         nextAction->setStatusTip(tr("Play next track in playlist"));
         nextAction->setCustomizable(true);
-        //connect(nextAction, &NAction::triggered, player->playlistWidget(),
-        //        &NPlaylistWidget::playNextItem);
         connect(nextAction, &NAction::triggered, player->playlistController(),
                 &NPlaylistController::playNextRow);
         m_trayIconMenu->addAction(nextAction);
@@ -205,15 +201,15 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
 
     m_contextMenu->addSeparator();
 
-    if (player->coverWidget()) {
+    if (player->coverImage()) {
         NAction *showCoverAction = new NAction(tr("Show Cover Art"), player);
         showCoverAction->setCheckable(true);
         showCoverAction->setObjectName("ShowCoverAction");
+        showCoverAction->setChecked(player->settings()->value("ShowCoverArt").toBool());
         connect(showCoverAction, &NAction::toggled, [player](bool checked) {
             player->settings()->setValue("ShowCoverArt", checked);
-            player->coverWidget()->setVisible(checked);
+            player->coverImage()->setVisible(checked);
         });
-        showCoverAction->setChecked(player->settings()->value("ShowCoverArt").toBool());
         windowSubMenu->addAction(showCoverAction);
         windowMenu->addAction(showCoverAction);
     }
@@ -222,8 +218,9 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         NAction *showPlaybackControlsAction = new NAction(tr("Show Playback Controls"), player);
         showPlaybackControlsAction->setCheckable(true);
         showPlaybackControlsAction->setObjectName("ShowPlaybackControls");
-        connect(showPlaybackControlsAction, &NAction::toggled, player->mainWindow(),
-                &NMainWindow::showPlaybackControls);
+        connect(showPlaybackControlsAction, &NAction::toggled, [player](bool checked) {
+            player->settings()->setValue("ShowPlaybackControls", checked);
+        });
         showPlaybackControlsAction->setChecked(
             player->settings()->value("ShowPlaybackControls").toBool());
         windowSubMenu->addAction(showPlaybackControlsAction);
@@ -260,8 +257,8 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
 
             bool alwaysOnTop = player->settings()->value("AlwaysOnTop").toBool();
             if (!alwaysOnTop) {
-                player->mainWindow()->setOnTop(checked && player->playbackEngine()->state() ==
-                                                              N::PlaybackPlaying);
+                player->mainWindowController()->setOnTop(
+                    checked && player->playbackEngine()->state() == N::PlaybackPlaying);
             }
         });
         playingOnTopAction->setChecked(player->settings()->value("WhilePlayingOnTop").toBool());
@@ -278,7 +275,7 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
 
             bool whilePlaying = player->settings()->value("WhilePlayingOnTop").toBool();
             if (!whilePlaying || player->playbackEngine()->state() != N::PlaybackPlaying) {
-                player->mainWindow()->setOnTop(checked);
+                player->mainWindowController()->setOnTop(checked);
             }
         });
         alwaysOnTopAction->setChecked(player->settings()->value("AlwaysOnTop").toBool());
@@ -291,8 +288,8 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         fullScreenAction->setStatusTip(tr("Hide all controls except waveform"));
         fullScreenAction->setObjectName("FullScreenAction");
         fullScreenAction->setCustomizable(true);
-        connect(fullScreenAction, &NAction::triggered, player->mainWindow(),
-                &NMainWindow::toggleFullScreen);
+        connect(fullScreenAction, &NAction::triggered,
+                [player]() { player->mainWindowController()->toggleFullScreen(); });
         windowSubMenu->addAction(fullScreenAction);
         windowMenu->addAction(fullScreenAction);
     }
@@ -302,8 +299,6 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         shufflePlaylistAction->setObjectName("ShufflePlaylistAction");
         shufflePlaylistAction->setStatusTip(tr("Shuffle items in playlist"));
         shufflePlaylistAction->setCustomizable(true);
-        //connect(shufflePlaylistAction, &NAction::triggered, player->playlistWidget(),
-        //        &NPlaylistWidget::shufflePlaylist);
         connect(shufflePlaylistAction, &NAction::triggered, player->playlistController(),
                 &NPlaylistController::shuffleRows);
         playlistSubMenu->addAction(shufflePlaylistAction);
@@ -425,7 +420,6 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         revealAction->setStatusTip(tr("Open file manager for selected file"));
         revealAction->setCustomizable(true);
         connect(revealAction, &NAction::triggered, [player]() {
-            //QStringList files = player->playlistWidget()->selectedFiles();
             QStringList files = player->playlistController()->selectedFiles();
             if (files.isEmpty()) {
                 return;
@@ -433,8 +427,8 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
 
             QString error;
             if (!player->revealInFileManager(files.first(), &error)) {
-                QMessageBox::warning(player->mainWindow(), tr("Reveal in File Manager Error"),
-                                     error, QMessageBox::Close);
+                QMessageBox::warning(nullptr, tr("Reveal in File Manager Error"), error,
+                                     QMessageBox::Close);
             }
         });
         m_playlistContextMenu->addAction(revealAction);
@@ -446,8 +440,6 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         removeSelectedAction->setObjectName("RemoveFromPlaylistAction");
         removeSelectedAction->setStatusTip(tr("Remove selected files from playlist"));
         removeSelectedAction->setCustomizable(true);
-        //connect(removeSelectedAction, &NAction::triggered, player->playlistWidget(),
-        //        &NPlaylistWidget::removeSelected);
         connect(removeSelectedAction, &NAction::triggered, player->playlistController(),
                 &NPlaylistController::removeSelected);
         m_playlistContextMenu->addAction(removeSelectedAction);
@@ -461,14 +453,12 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         trashSelectedAction->setStatusTip(tr("Move selected files to trash bin"));
         trashSelectedAction->setCustomizable(true);
         connect(trashSelectedAction, &NAction::triggered, [player]() {
-            //QStringList files = player->playlistWidget()->selectedFiles();
             QStringList files = player->playlistController()->selectedFiles();
             if (files.isEmpty()) {
                 return;
             }
 
             QStringList deleted = NTrash::moveToTrash(files);
-            //player->playlistWidget()->removeFiles(deleted);
             player->playlistController()->removeFiles(deleted);
         });
         m_playlistContextMenu->addAction(trashSelectedAction);
@@ -481,7 +471,6 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
         tagEditorAction->setStatusTip(tr("Open tag editor for selected file"));
         tagEditorAction->setCustomizable(true);
         connect(tagEditorAction, &NAction::triggered, [player]() {
-            //QStringList files = player->playlistWidget()->selectedFiles();
             QStringList files = player->playlistController()->selectedFiles();
             if (files.isEmpty()) {
                 return;

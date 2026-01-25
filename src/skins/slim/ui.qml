@@ -48,7 +48,7 @@ Rectangle {
   Connections {
     target: Qt.application
     function onAboutToQuit() {
-    //NSettings.setValue(settingsPrefix + "Splitter", splitter.states);
+      NSettings.setValue(settingsPrefix + "Splitter", splitter.states);
     }
   }
 
@@ -118,8 +118,7 @@ Rectangle {
       Layout.fillWidth: true
       Layout.fillHeight: true
 
-      // FIXME: temporal adjustment for compatibility with the old skin:
-      states: [parseInt(NSettings.value(settingsPrefix + "Splitter")[0]) + 4]
+      states: NSettings.value(settingsPrefix + "Splitter", [30, 1])
 
       handleDelegate: NSvgImage {
         height: 7
@@ -150,9 +149,20 @@ Rectangle {
           spacing: 5
 
           Item {
+            id: playbackControls
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumHeight: 30
+
+            visible: NSettings.value("ShowPlaybackControls")
+            Connections {
+              target: NSettings
+              function onValueChanged(key, value) {
+                if (key === "ShowPlaybackControls") {
+                  playbackControls.visible = value;
+                }
+              }
+            }
 
             Rectangle {
               anchors.fill: parent

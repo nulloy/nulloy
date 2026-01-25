@@ -66,16 +66,15 @@ void NUpdateChecker::on_finished(QNetworkReply *reply)
         }
 
         if (QCoreApplication::applicationVersion() < m_version) {
-            NMessageBox msgBox(300, *m_centerInWindow);
-            msgBox.setWindowTitle(tr("Update"));
-            msgBox.setText(QCoreApplication::applicationName() + " " + m_version + " " +
-                           tr("released!") + "<br><br>" + "<a href='https://" +
-                           QCoreApplication::organizationDomain() + "/download'>https://" +
-                           QCoreApplication::organizationDomain() + "/download</a>");
-            msgBox.setStandardButtons(QMessageBox::Ignore);
-            msgBox.setWindowModality(Qt::ApplicationModal);
-            msgBox.setIcon(QMessageBox::Information);
-            msgBox.exec();
+            QString text = QCoreApplication::applicationName() + " " + m_version + " " +
+                           tr("released!") + "\n\n" + "[https://" +
+                           QCoreApplication::organizationDomain() + "/download](https://" +
+                           QCoreApplication::organizationDomain() + "/download)";
+
+            NMessageBox *msgBox = new NMessageBox(tr("Update"), text, QMessageBox::Ignore,
+                                                  m_centerInWindow);
+            connect(msgBox, &NMessageBox::closed, msgBox, &QObject::deleteLater);
+            msgBox->showDialog();
         }
 
         NSettings::instance()->setValue("UpdateIgnore", m_version);

@@ -16,26 +16,19 @@
 #ifndef N_PLAYER_H
 #define N_PLAYER_H
 
+#include <QObject>
 #include <QSystemTrayIcon>
-#include <QWidget>
 
 #include "global.h"
 
 class NLogDialogHandler;
-class NMainWindow;
 class NPlaybackEngineInterface;
-class NPlaylistWidget;
 class NPlaylistController;
-class NWaveformSlider;
-class NCoverWidget;
 class NImage;
 class NCoverReaderInterface;
-class NVolumeSlider;
-class NScriptEngine;
 class QQmlApplicationEngine;
 class NSettings;
 class NTrackInfoReader;
-class NTrackInfoWidget;
 class NTrackInfoModel;
 class QMenu;
 class NActionManager;
@@ -43,36 +36,33 @@ class QString;
 class QTimer;
 class NTagReaderInterface;
 class NUtils;
+class NWaveformBuilderInterface;
+class NMainWindowController;
 
-class NPlayer : public QWidget
+class NPlayer : public QObject
 {
     Q_OBJECT
 
 private:
-    NSettings *m_settings;
-    NActionManager *m_actionManager;
-    NScriptEngine *m_scriptEngine;
-    QQmlApplicationEngine *m_qmlEngine;
-    NMainWindow *m_mainWindow;
-    QObject *m_qmlMainWindow;
-    NCoverWidget *m_coverWidget;
-    NImage *m_coverImage;
-    NCoverReaderInterface *m_coverReader;
-    NWaveformSlider *m_waveformSlider;
-    NVolumeSlider *m_volumeSlider;
-    NTrackInfoReader *m_trackInfoReader;
-    NPlaybackEngineInterface *m_playbackEngine;
-    NPlaylistWidget *m_playlistWidget;
-    NPlaylistController *m_playlistController;
-    NTrackInfoWidget *m_trackInfoWidget;
-    NTrackInfoModel *m_trackInfoModel;
-    NLogDialogHandler *m_logDialogHandler;
-    QSystemTrayIcon *m_systemTray;
-    QTimer *m_trayClickTimer;
-    QTimer *m_settingsSaveTimer;
-    QTimer *m_writeDefaultPlaylistTimer;
-    bool m_trayIconDoubleClickCheck;
-    NUtils *m_utils;
+    NSettings *m_settings{nullptr};
+    NActionManager *m_actionManager{nullptr};
+    QQmlApplicationEngine *m_qmlEngine{nullptr};
+    QWindow *m_mainWindow{nullptr};
+    NMainWindowController *m_mainWindowController{nullptr};
+    NImage *m_coverImage{nullptr};
+    NCoverReaderInterface *m_coverReader{nullptr};
+    NTrackInfoReader *m_trackInfoReader{nullptr};
+    NPlaybackEngineInterface *m_playbackEngine{nullptr};
+    NPlaylistController *m_playlistController{nullptr};
+    NTrackInfoModel *m_trackInfoModel{nullptr};
+    NLogDialogHandler *m_logDialogHandler{nullptr};
+    QSystemTrayIcon *m_systemTray{nullptr};
+    QTimer *m_trayClickTimer{nullptr};
+    QTimer *m_settingsSaveTimer{nullptr};
+    QTimer *m_writeDefaultPlaylistTimer{nullptr};
+    bool m_trayIconDoubleClickCheck{nullptr};
+    NUtils *m_utils{nullptr};
+    NWaveformBuilderInterface *m_waveBuilder{nullptr};
 
     bool eventFilter(QObject *obj, QEvent *event);
     void writePlaylist(const QString &file, N::M3uExtention ext);
@@ -89,13 +79,11 @@ private:
 public:
     NPlayer();
     ~NPlayer();
-    NMainWindow *mainWindow();
-    QObject *qmlMainWindow();
+    NMainWindowController *mainWindowController();
     NPlaybackEngineInterface *playbackEngine();
-    NPlaylistWidget *playlistWidget();
     NPlaylistController *playlistController();
     NTagReaderInterface *tagReader();
-    NCoverWidget *coverWidget();
+    NImage *coverImage();
     NSettings *settings();
     Q_INVOKABLE QString volumeTooltipText(qreal value) const;
 
@@ -106,7 +94,6 @@ private slots:
     void on_playlist_addMoreRequested();
 
     void on_mainWindow_closed();
-    void on_mainWindow_scrolled(int delta);
     void on_trayIcon_activated(QSystemTrayIcon::ActivationReason reason);
     void on_trayClickTimer_timeout();
     void trayIconCountClicks(int clicks);

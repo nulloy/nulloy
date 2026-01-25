@@ -1,4 +1,4 @@
-QT += script gui svg core-private
+QT += svg widgets
 
 QT += quick
 qml.files = $$files(*.qml) $$files(*.js) qmldir
@@ -39,10 +39,6 @@ unix:!mac:include($$SRC_DIR/platform/xcb.pri)
 unix:!mac:PKGCONFIG += x11
 
 include($$SRC_DIR/skins/skins.pri)
-QT += uitools
-INCLUDEPATH += $$SRC_DIR/widgetCollection
-LIBS += -L$$SRC_DIR/widgetCollection -lwidget_collection
-PRE_TARGETDEPS += $$SRC_DIR/widgetCollection/libwidget_collection.a
 RESOURCES += $$SRC_DIR/resources.qrc
 
 no-update-check:DEFINES += _N_NO_UPDATE_CHECK_

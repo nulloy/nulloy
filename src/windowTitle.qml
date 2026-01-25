@@ -14,6 +14,7 @@
 *********************************************************************/
 
 import QtQuick 2.15
+import QtQuick.Window 2.15
 
 NFadeOut {
   property Component itemDelegate: Text {}
@@ -24,6 +25,23 @@ NFadeOut {
     anchors.left: parent.width >= loader.width ? undefined : parent.left
     anchors.verticalCenter: parent.verticalCenter
     sourceComponent: itemDelegate
+  }
+
+  MouseArea {
+    anchors.fill: parent
+    acceptedButtons: Qt.LeftButton
+
+    onPressed: {
+      mainWindow.startSystemMove();
+    }
+
+    onDoubleClicked: {
+      if (mainWindow.visibility === Window.FullScreen || mainWindow.visibility === Window.Maximized) {
+        mainWindow.visibility = Window.Windowed;
+      } else {
+        mainWindow.visibility = Window.Maximized;
+      }
+    }
   }
 
   function findTextItem(item) {

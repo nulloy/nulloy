@@ -16,23 +16,18 @@
 #ifndef N_SKIN_FILE_SYSTEM_H
 #define N_SKIN_FILE_SYSTEM_H
 
-//#include <QAbstractFileEngineHandler>
-#include <QtCore/private/qabstractfileengine_p.h>
-
 #include <QHash>
+#include <QObject>
 
 class QByteArray;
 class QString;
-// class QAbstractFileEngineHandler;
 
-class NSkinFileSystem : public QObject, public QAbstractFileEngineHandler
+class NSkinFileSystem : public QObject
 {
     Q_OBJECT
 public:
-    QAbstractFileEngine *create(const QString &fileName) const;
     static void addFile(const QString &filePath, const QByteArray &ba);
     Q_INVOKABLE static QByteArray readFile(const QString &filePath);
-    static QString prefix();
     static NSkinFileSystem *instance();
 
 private:

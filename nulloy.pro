@@ -6,9 +6,6 @@ isEmpty(N_CONFIG_SUCCESS) {
     win32:error("Please run 'configure.bat'")
 }
 
-widgets.subdir = $$SRC_DIR/widgetCollection
-SUBDIRS += widgets
-
 # qmake -config gstreamer
 gstreamer {
     gstreamer.subdir = $$SRC_DIR/plugins/pluginGstreamer

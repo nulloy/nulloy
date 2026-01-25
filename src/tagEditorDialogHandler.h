@@ -43,7 +43,6 @@ public:
     Q_INVOKABLE void switchEncodingToUtf8();
 
 private:
-    QObject *m_parentWindow;
     QObject *m_root;
     NTagReaderInterface *m_tagReader;
     NCoverReaderInterface *m_coverReader;

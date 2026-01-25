@@ -19,6 +19,9 @@
 
 #include <QBuffer>
 #include <QCoreApplication>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QMessageBox>
 
 #include "common.h"
@@ -26,21 +29,16 @@
 #include "skinFileSystem.h"
 
 static const char _skinPrefer[] = "Slim";
-static const char _skinSuffix[] = "nzs";
+static const char _skinSuffix[] = "nzq";
 static const char _idFileName[] = "id.txt";
-static const char _formFileName[] = "form.ui";
-static const char _scriptFileName[] = "script.js";
 static const char _skinsDirName[] = "skins";
 
 namespace NSkinLoader
 {
     bool __init = false;
     QMap<int, QString> _identifiers;
-    QString _formPath;
-    QString _scriptPath;
 
     bool _nextFile(QFile &zipFile, QString &fileName, QByteArray &data);
-    void _init();
 } // namespace NSkinLoader
 
 bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
@@ -81,7 +79,7 @@ bool NSkinLoader::_nextFile(QFile &zipFile, QString &fileName, QByteArray &data)
     return true;
 }
 
-void NSkinLoader::_init()
+void NSkinLoader::init()
 {
     if (__init) {
         return;
@@ -186,20 +184,7 @@ void NSkinLoader::_init()
         QString fileName;
         QByteArray data;
         while (_nextFile(zipFile, fileName, data)) {
-            if (fileName != _scriptFileName && fileName != _formFileName) {
-                NSkinFileSystem::addFile(fileName, data);
-                continue;
-            }
-            QString str(data);
-            QRegExp rx("(url\\()([^:])");
-            str.replace(rx, "\\1" + NSkinFileSystem::prefix() + "\\2");
-            NSkinFileSystem::addFile(fileName, str.toUtf8());
-
-            if (fileName == _formFileName) {
-                _formPath = NSkinFileSystem::prefix() + fileName;
-            } else if (fileName == _scriptFileName) {
-                _scriptPath = NSkinFileSystem::prefix() + fileName;
-            }
+            NSkinFileSystem::addFile(fileName, data);
         }
         zipFile.close();
     } else if (skinContainer.isDir()) {
@@ -209,21 +194,7 @@ void NSkinLoader::_init()
             QFile file(fileInfo.absoluteFilePath());
             file.open(QIODevice::ReadOnly);
             QByteArray data = file.readAll();
-            if (fileInfo.fileName() != _scriptFileName && fileInfo.fileName() != _formFileName) {
-                NSkinFileSystem::addFile(fileInfo.fileName(), data);
-                continue;
-            }
-            QString str(data);
-            QRegExp rx("(url\\()([^:])");
-            str.replace(rx, "\\1" + NSkinFileSystem::prefix() + "\\2");
-            str.replace("<iconset resource=\"resources.qrc\">", "<iconset>");
-            NSkinFileSystem::addFile(fileInfo.fileName(), str.toUtf8());
-
-            if (fileInfo.fileName() == _formFileName) {
-                _formPath = NSkinFileSystem::prefix() + fileInfo.fileName();
-            } else if (fileInfo.fileName() == _scriptFileName) {
-                _scriptPath = NSkinFileSystem::prefix() + fileInfo.fileName();
-            }
+            NSkinFileSystem::addFile(fileInfo.fileName(), data);
         }
     }
 
@@ -232,18 +203,6 @@ void NSkinLoader::_init()
 
 QStringList NSkinLoader::skinIdentifiers()
 {
-    _init();
+    init();
     return _identifiers.values();
-}
-
-QString NSkinLoader::skinUiFormFile()
-{
-    _init();
-    return _formPath;
-}
-
-QString NSkinLoader::skinScriptFile()
-{
-    _init();
-    return _scriptPath;
 }
