@@ -41,8 +41,9 @@
 
 #include "qtlocalpeer.h"
 #include <QCoreApplication>
-#include <QTime>
 #include <QDataStream>
+#include <QRegularExpression>
+#include <QTime>
 
 #if defined(Q_OS_WIN)
 #include <QLibrary>
@@ -78,7 +79,7 @@ QtLocalPeer::QtLocalPeer(QObject* parent, const QString &appId)
 #endif
         prefix = id.section(QLatin1Char('/'), -1);
     }
-    prefix.remove(QRegExp("[^a-zA-Z]"));
+    prefix.remove(QRegularExpression("[^a-zA-Z]"));
     prefix.truncate(6);
 
     QByteArray idc = id.toUtf8();
@@ -176,8 +177,17 @@ void QtLocalPeer::receiveConnection()
     if (!socket)
         return;
 
-    while (socket->bytesAvailable() < (int)sizeof(quint32))
+    while (true) {
+        if (socket->state() == QLocalSocket::UnconnectedState) {
+            qWarning("QtLocalPeer: Peer disconnected");
+            delete socket;
+            return;
+        }
+        if (socket->bytesAvailable() >= qint64(sizeof(quint32)))
+            break;
         socket->waitForReadyRead();
+    }
+
     QDataStream ds(socket);
     QByteArray uMsg;
     quint32 remaining;

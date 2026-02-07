@@ -1,6 +1,5 @@
 diff --git src/widgets/x11/keymapper_x11.h src/widgets/x11/keymapper_x11.h
 new file mode 100644
-index 0000000..f9a68b5
 --- /dev/null
 +++ src/widgets/x11/keymapper_x11.h
 @@ -0,0 +1,372 @@
@@ -377,7 +376,6 @@ index 0000000..f9a68b5
 +
 +#endif // KEYMAPPER_X11_H
 diff --git src/widgets/x11/qxtglobalshortcut_x11.cpp src/widgets/x11/qxtglobalshortcut_x11.cpp
-index f74d6e8..920da30 100644
 --- src/widgets/x11/qxtglobalshortcut_x11.cpp
 +++ src/widgets/x11/qxtglobalshortcut_x11.cpp
 @@ -39,6 +39,8 @@

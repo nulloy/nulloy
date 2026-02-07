@@ -34,7 +34,9 @@
 #   include <QX11Info>
 #else
 #   include <QApplication>
-#   include <qpa/qplatformnativeinterface.h>
+#   if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+#       include <qpa/qplatformnativeinterface.h>
+#   endif
 #   include <xcb/xcb.h>
 #endif
 #include <X11/Xlib.h>
@@ -95,11 +97,17 @@ public:
     {
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0)
         m_display = QX11Info::display();
-#else
+#elif QT_VERSION < QT_VERSION_CHECK(6,0,0)
         QPlatformNativeInterface *native = qApp->platformNativeInterface();
         void *display = native->nativeResourceForScreen(QByteArray("display"),
                                                         QGuiApplication::primaryScreen());
         m_display = reinterpret_cast<Display *>(display);
+#else
+        auto native = qApp->nativeInterface<QNativeInterface::QX11Application>();
+        if (native)
+            m_display = native->display();
+        else
+            m_display = nullptr;
 #endif
     }
 
@@ -164,7 +172,12 @@ bool QxtGlobalShortcutPrivate::eventFilter(void *message)
         unsigned int keystate = key->state;
 #else
 bool QxtGlobalShortcutPrivate::nativeEventFilter(const QByteArray & eventType,
-    void *message, long *result)
+    void *message,
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    qintptr *result)
+#else
+    long *result)
+#endif
 {
     Q_UNUSED(result);
 
