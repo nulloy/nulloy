@@ -13,9 +13,9 @@
 **
 *********************************************************************/
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 import "utils.js" as NUtilsJS
 
@@ -42,7 +42,7 @@ ApplicationWindow {
   MouseArea {
     anchors.fill: parent
     acceptedButtons: Qt.RightButton | Qt.LeftButton
-    onPressed: {
+    onPressed: mouse => {
       if (mouse.button == Qt.RightButton) {
         NPlayer.showContextMenu(Qt.point(mouseX + mainWindow.x, mouseY + mainWindow.y));
       } else {

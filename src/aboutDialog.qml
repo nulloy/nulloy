@@ -13,10 +13,9 @@
 **
 *********************************************************************/
 
-import QtQuick 2.2
-import QtQuick.Controls 1.4
-import QtQuick.Dialogs 1.2
-import QtQuick.Layouts 1.4
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 NDialog {
   id: dialog
@@ -24,14 +23,16 @@ NDialog {
   title: qsTr("About ") + Qt.application.name
   width: 450
   height: 330
+  minimumWidth: 400
+  minimumHeight: 300
 
   standardButtons: Dialog.Close
 
-  TabView {
+  NTabView {
     id: tabView
     anchors.fill: parent
 
-    Tab {
+    NTab {
       title: qsTr("Common")
       NScrollView {
         Item {
@@ -47,13 +48,13 @@ NDialog {
           Layout.alignment: Qt.AlignHCenter
         }
 
-        TextEdit {
+        TextArea {
           readOnly: true
           Layout.fillWidth: true
           horizontalAlignment: TextInput.AlignHCenter
           wrapMode: Text.WordWrap
-          selectByMouse: true
           textFormat: Text.MarkdownText
+          background: null
           Component.onCompleted: {
             let txt = "";
             txt += "**%1 Music Player**".arg(text += Qt.application.name);
@@ -73,14 +74,14 @@ NDialog {
       }
     }
 
-    Tab {
+    NTab {
       title: qsTr("Thanks")
       NScrollView {
-        TextEdit {
+        TextArea {
           readOnly: true
           Layout.fillWidth: true
           wrapMode: Text.WordWrap
-          selectByMouse: true
+          background: null
           text: NUtils.readFile(":/THANKS").replace(/(\S)\n(\S)/g, '$1 $1')
         }
         Item {
@@ -89,15 +90,15 @@ NDialog {
       }
     }
 
-    Tab {
+    NTab {
       title: qsTr("Changelog")
       NScrollView {
-        TextEdit {
+        TextArea {
           readOnly: true
           Layout.fillWidth: true
           wrapMode: Text.WordWrap
-          selectByMouse: true
           textFormat: Text.RichText
+          background: null
           text: NUtils.readFile(":/ChangeLog").replace(/\n/g, '<br>').replace(/(\*[^<]*)(<br>)/g, '<b>$1</b>$2')
         }
         Item {
@@ -106,15 +107,15 @@ NDialog {
       }
     }
 
-    Tab {
+    NTab {
       title: qsTr("License")
       NScrollView {
-        TextEdit {
+        TextArea {
           readOnly: true
           Layout.fillWidth: true
           wrapMode: Text.WordWrap
           textFormat: Text.MarkdownText
-          selectByMouse: true
+          background: null
           Component.onCompleted: {
             let txt = "";
             txt += "This program is free software: you can redistribute it and/or modify ";

@@ -111,8 +111,9 @@ NPreferencesDialogHandler::NPreferencesDialogHandler(NPlayer *player, QObject *p
     });
 
     connect(this, &NDialogHandler::setupRoot, [this](QObject *root) {
-        connect(root, SIGNAL(apply()), this, SLOT(applySettings()));
-        connect(root, SIGNAL(accepted()), this, SLOT(applySettings()));
+        QObject *buttonBox = root->findChild<QObject *>("buttonBox");
+        connect(buttonBox, SIGNAL(applied()), this, SLOT(applySettings()));
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(applySettings()));
     });
 }
 

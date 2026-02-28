@@ -13,9 +13,9 @@
 **
 *********************************************************************/
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Window 2.2
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
 
 import NCursorOverride 1.0
 import "utils.js" as NUtilsJS

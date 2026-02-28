@@ -18,7 +18,6 @@
 
 #include <QPainter>
 #include <QtCore>
-#include <QtQml/qqml.h>
 
 template <typename T> class NFlagIterator
 {
@@ -54,7 +53,6 @@ private:
 namespace N
 {
     Q_NAMESPACE
-    QML_ELEMENT
 
     enum Tag
     {
@@ -157,7 +155,6 @@ namespace N
     Q_ENUM_NS(CompositionMode)
     // clang-format on
 
-    extern const QMetaObject staticMetaObject;
 }; // namespace N
 
 #endif

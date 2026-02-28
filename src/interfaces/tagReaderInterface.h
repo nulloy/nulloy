@@ -38,7 +38,7 @@ public:
 
     virtual bool isWriteSupported() const { return false; }
     virtual QMap<QString, QStringList> getTags() const { return QMap<QString, QStringList>(); }
-    virtual QMap<QString, QStringList> setTags(const QMap<QString, QStringList> &) {}
+    virtual QMap<QString, QStringList> setTags(const QMap<QString, QStringList> &) { return {}; }
 };
 
 Q_DECLARE_INTERFACE(NTagReaderInterface, TAGREADER_INTERFACE)

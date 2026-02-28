@@ -25,6 +25,7 @@
 #include "tagReaderInterface.h"
 #include "trash.h"
 
+#include <QActionGroup>
 #include <QApplication>
 #include <QMenu>
 #include <QMenuBar>

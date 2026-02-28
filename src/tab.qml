@@ -1,6 +1,6 @@
 /********************************************************************
 **  Nulloy Music Player, http://nulloy.com
-**  Copyright (C) 2010-2024 Sergey Vlasov <sergey@vlasov.me>
+**  Copyright (C) 2010-2026 Sergey Vlasov <sergey@vlasov.me>
 **
 **  This program can be distributed under the terms of the GNU
 **  General Public License version 3.0 as published by the Free
@@ -13,21 +13,12 @@
 **
 *********************************************************************/
 
-import QtQuick 2.2
-import QtQuick.Controls 1.4
+import QtQuick
 
-MouseArea {
-  property ScrollView target: null
-  anchors.fill: parent
-  onPressed: {
-    mouse.accepted = false;
-  }
-  onReleased: {
-    mouse.accepted = false;
-  }
-  onWheel: {
-    const speed = 0.4;
-    const newY = target.flickableItem.contentY - wheel.angleDelta.y * speed;
-    target.flickableItem.contentY = Math.max(0, Math.min(newY, target.flickableItem.contentHeight - target.flickableItem.height));
-  }
+QtObject {
+  default property Item contentItem
+  property string title
+  property bool visible: true
+  property bool enabled: true
+  property int padding: 1
 }

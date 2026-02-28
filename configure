@@ -129,6 +129,8 @@ echo "LRELEASE = $LRELEASE" >> $QMAKE_CACHE
 check_executable PKG_CONFIG pkg-config
 echo "PKG_CONFIG = $PKG_CONFIG" >> $QMAKE_CACHE
 
+echo "CONFIG += c++17" >> $QMAKE_CACHE
+
 [[ -n "$CFLAGS" ]]   && echo "QMAKE_CFLAGS += ${CFLAGS}"     >> $QMAKE_CACHE
 [[ -n "$CXXFLAGS" ]] && echo "QMAKE_CXXFLAGS += ${CXXFLAGS}" >> $QMAKE_CACHE
 [[ -n "$LDFLAGS" ]]  && echo "QMAKE_LFLAGS += ${LDFLAGS}"    >> $QMAKE_CACHE

@@ -13,6 +13,7 @@
 **
 *********************************************************************/
 
+#include <QIcon>
 #include <qtsingleapplication.h>
 
 #include "common.h"
@@ -83,7 +84,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
         stream << QString("%1 %2: %3")
                       .arg(QTime::currentTime().toString("hh:mm:ss.zzz"), prefix,
                            msg.toLocal8Bit().constData())
-               << endl;
+               << "\n";
         logFile.close();
     }
 }
@@ -97,23 +98,16 @@ int main(int argc, char *argv[])
     QCoreApplication::addLibraryPath(QFileInfo(argv[0]).dir().path() + "/plugins/");
 #endif
 
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#ifndef Q_OS_MAC
+    if (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE")) {
+        qputenv("QT_QUICK_CONTROLS_STYLE", "Fusion");
+    }
+#endif
 
     qputenv("QT_QUICK_CONTROLS_HOVER_ENABLED", "1");
 
     qputenv("QML_DISABLE_DISTANCEFIELD", "1");
     //qputenv("QSG_RENDER_LOOP", "basic");
-
-#ifdef Q_OS_MAC
-    // https://bugreports.qt-project.org/browse/QTBUG-32789
-    if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_8)
-        QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
-
-    // https://bugreports.qt-project.org/browse/QTBUG-40833
-    if (QSysInfo::MacintoshVersion > QSysInfo::MV_10_9)
-        QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Helvetica Neue");
-#endif
 
     QtSingleApplication instance(argc, argv);
     instance.setApplicationName("Nulloy");

@@ -13,9 +13,9 @@
 **
 *********************************************************************/
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 Item {
   property alias model: listView.model
@@ -183,14 +183,24 @@ Item {
         propagateComposedEvents: true
         hoverEnabled: true
 
-        onWheel: {
-          listView.focus = true;
-          const speed = 0.4;
-          const newY = listView.contentY - wheel.angleDelta.y * speed;
-          listView.contentY = Math.max(0, Math.min(newY, listView.contentHeight - listView.height));
+        NumberAnimation {
+          id: scrollAnimation
+          target: listView
+          property: "contentY"
+          duration: 200
+          easing.type: Easing.OutCubic
         }
 
-        onPressed: {
+        onWheel: wheel => {
+          listView.focus = true;
+          const speed = 0.4;
+          const currentY = scrollAnimation.running ? scrollAnimation.to : listView.contentY;
+          const newY = currentY - wheel.angleDelta.y * speed;
+          scrollAnimation.to = Math.max(0, Math.min(newY, listView.contentHeight - listView.height));
+          scrollAnimation.restart();
+        }
+
+        onPressed: mouse => {
           updateHoveredRow();
           listView.focus = true;
           if (mouse.button == Qt.RightButton) {
@@ -200,7 +210,7 @@ Item {
           }
         }
 
-        onReleased: {
+        onReleased: mouse => {
           updateHoveredRow();
           NPlaylistController.mouseRelease(_hoveredRow, mouse.modifiers);
         }

@@ -1,9 +1,12 @@
 TEMPLATE = lib
 CONFIG += plugin
 
+OBJECTS_DIR = .obj
+MOC_DIR = .moc
+
 INCLUDEPATH += $$SRC_DIR $$SRC_DIR/interfaces $$SRC_DIR/plugins
 
-HEADERS += common.h
+HEADERS += $$SRC_DIR/common.h $$SRC_DIR/global.h
 SOURCES += $$SRC_DIR/common.cpp $$SRC_DIR/plugins/abstractWaveformBuilder.cpp $$SRC_DIR/waveformPeaks.cpp
 
 win32:DESTDIR = $$PROJECT_DIR/Plugins

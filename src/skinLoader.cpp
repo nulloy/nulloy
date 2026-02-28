@@ -23,6 +23,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QRegularExpression>
 
 #include "common.h"
 #include "settings.h"
@@ -164,7 +165,7 @@ void NSkinLoader::init()
     int index;
     index = values.indexOf("Nulloy/Skin/" + skinStr);
     if (index == -1) {
-        index = values.indexOf(QRegExp(QString() + "Nulloy/Skin/" + _skinPrefer + ".*"));
+        index = values.indexOf(QRegularExpression(QString() + "Nulloy/Skin/" + _skinPrefer + ".*"));
     }
     if (index == -1) {
         index = 0;

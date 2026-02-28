@@ -13,12 +13,10 @@
 **
 *********************************************************************/
 
-import QtQuick 2.2
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.4
-import QtQuick.Dialogs 1.2
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import NImage 1.0
-import src 1.0
 
 NDialog {
   id: dialog
@@ -26,8 +24,10 @@ NDialog {
   title: Qt.application.name + " " + qsTr("Tag Editor")
   width: 750
   height: 450
+  minimumWidth: 500
+  minimumHeight: 300
 
-  standardButtons: StandardButton.Close | StandardButton.Apply | StandardButton.Reset
+  standardButtons: Dialog.Close | Dialog.Apply | Dialog.Reset
 
   SystemPalette {
     id: systemPalette
@@ -44,16 +44,18 @@ NDialog {
 
     text: NTags[tagName].join(' / ').replace(/\n/g, ' / ')
     readOnly: !editable
-    enabled: editable // TODO: show "why" ToolTip from QtQuick.Controls 2
+    enabled: editable
 
-    // TODO: TextField in QtQuick.Controls 2 has textEdited signal.
-    // onEditingFinished is triggered only when focus goes away, not triggered when e.g. Save is clicked.
-    onEditingFinished: {
+    ToolTip.visible: hovered && !editable
+    ToolTip.delay: 500
+    ToolTip.text: qsTr("This tag contains multiple values or lines and can be only edited in Raw Tags tab.")
+
+    onTextEdited: {
       if (!editable) {
         return;
       }
-      var oldValue = NTags[tagName];
-      var newValue = [text];
+      let oldValue = NTags[tagName];
+      let newValue = [text];
       if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
         return;
       }
@@ -61,23 +63,22 @@ NDialog {
     }
   }
 
-  // FIXME: standardButton() available since QtQuick.Controls 2
-  //Component.onCompleted: {
-  //  let enabled = () => !NTagEditorDialogHandler.readOnly && NTagEditorDialogHandler.modifiedAndUnsaved;
+  Component.onCompleted: {
+    let enabled = () => !NTagEditorDialogHandler.readOnly && NTagEditorDialogHandler.modifiedAndUnsaved;
 
-  //  let resetButton = dialog.standardButton(StandardButton.Reset);
-  //  resetButton.text = qsTr("Revert");
-  //  resetButton.enabled = Qt.binding(enabled);
+    let resetButton = dialog.standardButton(Dialog.Reset);
+    resetButton.text = qsTr("Revert");
+    resetButton.enabled = Qt.binding(enabled);
 
-  //  let applyButton = dialog.standardButton(StandardButton.Apply);
-  //  applyButton.text = qsTr("Save");
-  //  applyButton.enabled = Qt.binding(enabled);
-  //}
+    let applyButton = dialog.standardButton(Dialog.Apply);
+    applyButton.text = qsTr("Save");
+    applyButton.enabled = Qt.binding(enabled);
+  }
 
-  // FIXME: Qt bug? multiple top-level children make dialog vertically non-resizable
   RowLayout {
     anchors.right: parent.right
     anchors.top: parent.top
+    anchors.margins: 10
 
     Label {
       visible: NTagEditorDialogHandler.readOnly
@@ -142,25 +143,26 @@ NDialog {
     }
   }
 
-  TabView {
+  NTabView {
     id: tabView
     anchors.fill: parent
 
-    Tab {
+    NTab {
       title: qsTr("General")
-      anchors.margins: 10
+      padding: 10
 
       SplitView {
         clip: true
 
-        handleDelegate: Rectangle {
+        handle: Rectangle {
           implicitWidth: 7
           color: "transparent"
         }
 
         GridLayout {
           enabled: !NTagEditorDialogHandler.readOnly
-          width: parent.width * 0.55
+          SplitView.preferredWidth: parent.width * 0.55
+          SplitView.fillHeight: true
           columns: 2
 
           Label {
@@ -225,33 +227,40 @@ NDialog {
           NScrollView {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            padding: 0
+
+            background: Rectangle {
+              border.color: commentTextArea.activeFocus ? systemPalette.highlight : systemPalette.mid
+              color: systemPalette.base
+            }
 
             TextArea {
+              id: commentTextArea
               Layout.fillWidth: true
               Layout.fillHeight: true
+              leftPadding: 5
+              rightPadding: 5
+              topPadding: 5
+              bottomPadding: 5
 
               property bool hasSingleValue: NTags.COMMENT === undefined ? true : NTags.COMMENT.length == 1
               property bool editable: hasSingleValue
-              enabled: editable // TODO: show "why" ToolTip from QtQuick.Controls 2
+              enabled: editable
+
+              ToolTip.visible: hovered && !editable
+              ToolTip.delay: 500
+              ToolTip.text: qsTr("This tag contains multiple values and can be only edited in Raw Tags tab.")
 
               text: NTags.COMMENT.join("\n")
               // TODO: TextArea has textEdited signal since Qt 6.9.
               // onEditingFinished is triggered only when focus goes away, not triggered when e.g. Save is clicked.
               onEditingFinished: {
-                var oldValue = NTags.COMMENT;
-                var newValue = [text];
+                let oldValue = NTags.COMMENT;
+                let newValue = [text];
                 if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
                   return;
                 }
 
                 NTags.COMMENT = newValue;
-              }
-
-              Rectangle {
-                anchors.fill: parent
-                border.color: parent.activeFocus ? systemPalette.highlight : systemPalette.mid
-                color: "transparent"
               }
             }
           }
@@ -259,7 +268,8 @@ NDialog {
 
         GridLayout {
           enabled: !NTagEditorDialogHandler.readOnly
-          width: parent.width * 0.45
+          SplitView.preferredWidth: parent.width * 0.45
+          SplitView.fillHeight: true
           columns: 2
 
           Label {
@@ -321,6 +331,7 @@ NDialog {
                 Layout.fillHeight: true
                 spacing: artworkWrapper.spacing
                 columns: Math.floor((width - artworkWrapper.spacing) / (artworkWrapper.tileWidth + artworkWrapper.spacing))
+                padding: 5
 
                 Repeater {
                   model: NTagEditorDialogHandler.coverImages()
@@ -343,14 +354,14 @@ NDialog {
       }
     }
 
-    Tab {
+    NTab {
       title: qsTr("Raw Tags")
 
       NScrollView {
-        id: scrollView
-
         GridLayout {
           id: grid
+          Layout.margins: 10
+          Layout.bottomMargin: 5
           Layout.fillWidth: true
           enabled: !NTagEditorDialogHandler.readOnly
           columns: 2
@@ -386,36 +397,27 @@ NDialog {
               Layout.row: index
               Layout.column: 1
               Layout.fillWidth: true
-              Layout.preferredHeight: Math.max(contentHeight, 25)
-              horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-              verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+              Layout.preferredHeight: contentHeight + topPadding + bottomPadding
+
+              leftPadding: 5
+              rightPadding: 5
 
               text: modelData.value
 
               // TODO: TextArea has textEdited signal since Qt 6.9.
               // onEditingFinished is triggered only when focus goes away, not triggered when e.g. Save is clicked.
               onEditingFinished: {
-                var oldValue = NTags[modelData.tagName][modelData.valueIndex];
-                var newValue = text;
+                let oldValue = NTags[modelData.tagName][modelData.valueIndex];
+                let newValue = text;
                 if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
                   return;
                 }
-                // FIXME: Qt bug? this does not work:
-                //NTags[modelData.tagName][modelData.valueIndex] = newValue;
-                // but this does:
-                var tag = NTags[modelData.tagName];
-                tag[modelData.valueIndex] = newValue;
-                NTags[modelData.tagName] = tag;
+                NTags[modelData.tagName][modelData.valueIndex] = newValue;
               }
 
-              Rectangle {
-                anchors.fill: parent
+              background: Rectangle {
                 border.color: parent.activeFocus ? systemPalette.highlight : systemPalette.mid
-                color: "transparent"
-              }
-
-              NScrollRedirect {
-                target: scrollView
+                color: systemPalette.base
               }
             }
           }

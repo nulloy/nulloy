@@ -40,7 +40,6 @@ QList<NPlaylistModel::DataItem> NPlaylistStorage::readM3u(const QString &file)
     QFileInfo playlistInfo(file);
     NPlaylistModel::DataItem dataItem;
     QTextStream in(&playlist);
-    in.setCodec("UTF-8");
     while (!in.atEnd()) {
         line = in.readLine();
         if (line.trimmed().isEmpty()) {
@@ -112,7 +111,6 @@ void NPlaylistStorage::writeM3u(const QString &file, QList<NPlaylistModel::DataI
     QString playlistPath = QFileInfo(file).absolutePath();
 
     QTextStream out(&playlist);
-    out.setCodec("UTF-8");
     if (ext >= N::ExtM3u) {
         out << "#EXTM3U\n";
     }

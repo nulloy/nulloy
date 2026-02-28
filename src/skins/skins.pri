@@ -5,8 +5,8 @@ system($$QMAKE_MKDIR $$fixSlashes($$SKIN_DEST_DIR))
 
 SKINS = Native Metro Silver Slim
 for(skin, SKINS) {
+    _depends = $$SRC_DIR/skins/$$lower($${skin})
     unix:skin = $$lower($${skin})
-    _depends = $$SRC_DIR/skins/$${skin}
     _target = $$SKIN_DEST_DIR/$${skin}.nzq
     _commands = zip -j -X $$_target $$_depends/*
     win32:!unix_mingw:_commands = 7z a -tzip -w$$_depends $$_target $$_depends/*

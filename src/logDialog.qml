@@ -13,43 +13,36 @@
 **
 *********************************************************************/
 
-import QtQuick 2.2
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.4
-import QtQuick.Dialogs 1.2
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Dialogs
 
 NDialog {
   title: Qt.application.name + " " + qsTr("Log")
   standardButtons: Dialog.Close
   width: 450
+  height: 200
+  minimumHeight: 100
+  minimumWidth: footer.implicitWidth
 
   modality: Qt.NonModal
 
-  ColumnLayout {
+  NScrollView {
     anchors.fill: parent
-    spacing: 20
-
-    NScrollView {
+    TextArea {
       Layout.fillWidth: true
       Layout.fillHeight: true
-      padding: 0
-
-      TextEdit {
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-        readOnly: true
-        selectByMouse: true
-        textFormat: Text.RichText
-        wrapMode: Text.WordWrap
-        text: NLogDialogHandler.text
-      }
+      readOnly: true
+      textFormat: Text.RichText
+      wrapMode: Text.WordWrap
+      text: NLogDialogHandler.text
     }
+  }
 
-    CheckBox {
-      Layout.fillWidth: true
-      text: qsTr("Don't show this dialog anymore")
-      checked: !NSettings.value("DisplayLogDialog")
-      onCheckedChanged: NSettings.setValue("DisplayLogDialog", !checked)
-    }
+  footerExtra: CheckBox {
+    text: qsTr("Don't show this dialog anymore")
+    checked: !NSettings.value("DisplayLogDialog")
+    onCheckedChanged: NSettings.setValue("DisplayLogDialog", !checked)
   }
 }

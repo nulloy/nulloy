@@ -38,8 +38,6 @@ NSettings::NSettings(QObject *parent)
     Q_ASSERT_X(!m_instance, "NSettings", "NSettings instance already exists.");
     m_instance = this;
 
-    setIniCodec("UTF-8");
-
     QString version = value("SettingsVersion").toString();
     if (version.isEmpty() || version < MIN_VERSION) {
         foreach (QString key, allKeys())

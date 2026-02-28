@@ -63,8 +63,10 @@ NTagEditorDialogHandler::NTagEditorDialogHandler(const QString &file, QObject *p
 
     connect(this, &NDialogHandler::setupRoot, [this](QObject *root) {
         m_root = root;
-        connect(root, SIGNAL(apply()), this, SLOT(on_saveClicked()));
-        connect(root, SIGNAL(reset()), this, SLOT(on_revertClicked()));
+
+        QObject *buttonBox = root->findChild<QObject *>("buttonBox");
+        connect(buttonBox, SIGNAL(applied()), this, SLOT(on_saveClicked()));
+        connect(buttonBox, SIGNAL(reset()), this, SLOT(on_revertClicked()));
     });
 
     m_encodingPreviousIndex = m_encodingSettingsIndex;

@@ -13,7 +13,7 @@
 **
 *********************************************************************/
 
-import QtQuick 2.15
+import QtQuick
 import NWaveformView 1.0
 
 Item {
@@ -33,6 +33,8 @@ Item {
     id: waveform
     anchors.fill: parent
     visible: false
+    layer.enabled: true
+    layer.smooth: true
   }
 
   MouseArea {

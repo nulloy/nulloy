@@ -58,6 +58,7 @@
 #include <QMenu>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
+#include <QRegularExpression>
 #include <QToolTip>
 
 static const qreal kLog10over20 = qLn(10) / 20;
@@ -109,6 +110,9 @@ NPlayer::NPlayer()
     qmlRegisterType<NWaveformView>("NWaveformView", 1, 0, "NWaveformView");
     qmlRegisterType<NSvgImage>("NSvgImage", 1, 0, "NSvgImage");
     qmlRegisterType<NImage>("NImage", 1, 0, "NImage");
+
+    qmlRegisterUncreatableMetaObject(N::staticMetaObject, "Nulloy", 1, 0, "N",
+                                     "Access to enums & flags only");
 
     qmlRegisterSingletonType<NCursorOverride>("NCursorOverride", 1, 0, "NCursorOverride",
                                               [](QQmlEngine *, QJSEngine *) {
@@ -548,7 +552,8 @@ void NPlayer::loadCoverArt(const QString &file)
         // search for cover.* or folder.* or front.*:
         if (imageFile.isEmpty()) {
             QStringList matchedImages = images.filter(
-                QRegExp("^(cover|folder|front)\\..*$", Qt::CaseInsensitive));
+                QRegularExpression("^(cover|folder|front)\\..*$",
+                                   QRegularExpression::CaseInsensitiveOption));
             if (!matchedImages.isEmpty()) {
                 imageFile = dir.absolutePath() + "/" + matchedImages.first();
             }

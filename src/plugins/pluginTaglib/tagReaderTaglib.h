@@ -24,6 +24,7 @@
 #include <tmap.h>
 
 class QString;
+class QTextCodec;
 
 class NTagReaderTaglib : public NTagReaderInterface, public NPlugin
 {

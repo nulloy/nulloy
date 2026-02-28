@@ -13,10 +13,9 @@
 **
 *********************************************************************/
 
-import QtQuick 2.2
-import QtQuick.Controls 1.4
-import QtQuick.Dialogs 1.2
-import QtQuick.Layouts 1.4
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 NDialog {
   id: dialog
@@ -24,6 +23,9 @@ NDialog {
   title: Qt.application.name + qsTr(" Preferences")
   width: 620
   height: 650
+  minimumWidth: 450
+  minimumHeight: 300
+
   standardButtons: Dialog.Ok | Dialog.Apply | Dialog.Cancel
 
   property bool checkUpdate: false
@@ -39,24 +41,34 @@ NDialog {
   }
 
   component HelpDialog: Dialog {
+    popupType: Popup.Window
     standardButtons: Dialog.Close
 
     property alias text: textArea.text
 
-    ScrollView {
-      id: scrollView
-      anchors.fill: parent
-      horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-      verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
+    background: Rectangle {
+      color: systemPalette.window
+    }
 
-      TextEdit {
+    NScrollView {
+      anchors.fill: parent
+      TextArea {
         id: textArea
         readOnly: true
-        width: scrollView.width - scrollView.__verticalScrollBar.width
-        wrapMode: TextEdit.WordWrap
-        selectByMouse: true
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        wrapMode: Text.WordWrap
         textFormat: Text.MarkdownText
+        background: null
       }
+      Item {
+        Layout.fillHeight: true
+      }
+    }
+
+    footer: DialogButtonBox {
+      padding: 10
+      topPadding: 0
     }
   }
 
@@ -66,7 +78,7 @@ NDialog {
     checked: NSettings.value(settingsName)
     onCheckedChanged: NSettings.setValue(settingsName, checked)
     implicitHeight: 20
-    Layout.leftMargin: 0
+    Layout.leftMargin: 5
   }
 
   component TrackInfoTextArea: TextArea {
@@ -85,10 +97,36 @@ NDialog {
 
     Keys.onPressed: filterLineBreaks(event)
 
+    background: Rectangle {
+      border.color: parent.activeFocus ? systemPalette.highlight : systemPalette.mid
+      color: systemPalette.base
+    }
+  }
+
+  component ShortcutsTableHeader: Label {
+    horizontalAlignment: TextInput.AlignHCenter
+    verticalAlignment: TextEdit.AlignVCenter
+
+    Layout.fillWidth: true
+    Layout.preferredWidth: 1
+    Layout.preferredHeight: 20
+
     Rectangle {
       anchors.fill: parent
-      border.color: parent.activeFocus ? systemPalette.highlight : systemPalette.mid
-      color: "transparent"
+      border.width: 1
+      border.color: Qt.platform.os == "osx" ? systemPalette.mid : systemPalette.midlight
+      z: -1
+
+      gradient: Gradient {
+        GradientStop {
+          position: 0.0
+          color: systemPalette.base
+        }
+        GradientStop {
+          position: 1.0
+          color: systemPalette.alternateBase
+        }
+      }
     }
   }
 
@@ -99,11 +137,9 @@ NDialog {
     required property var cellModel
     required property string cellRole
 
-    readOnly: !editable
     text: cellModel[cellRole]
-    frameVisible: false
-    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-    verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+    padding: 0
+    readOnly: !editable
 
     verticalAlignment: TextEdit.AlignVCenter
     wrapMode: Text.WordWrap
@@ -114,11 +150,11 @@ NDialog {
 
     Layout.fillWidth: true
     Layout.fillHeight: true
+    Layout.preferredWidth: 999
 
     Rectangle {
       anchors.fill: parent
-      anchors.margins: -1
-      color: "transparent"
+      color: systemPalette.base
       border.width: 1
       border.color: Qt.platform.os == "osx" ? systemPalette.mid : systemPalette.midlight
       z: -1
@@ -126,7 +162,7 @@ NDialog {
 
     Rectangle {
       anchors.fill: parent
-      anchors.rightMargin: 1
+      anchors.margins: 1
       visible: delegate.editable && delegate.activeFocus
       radius: 3
       border.width: 1
@@ -134,35 +170,35 @@ NDialog {
       color: "transparent"
     }
 
-    Label {
+    Button {
       anchors.right: parent.right
       anchors.top: parent.top
       anchors.margins: 2
       visible: delegate.editable
-      horizontalAlignment: Text.AlignHCenter
-      verticalAlignment: Text.AlignVCenter
 
       opacity: 0.6
       width: 20
       height: 20
       text: "×"
 
-      Rectangle {
-        anchors.fill: parent
-        color: mouseArea.containsMouse ? systemPalette.midlight : "transparent"
+      background: Rectangle {
+        color: parent.hovered ? systemPalette.midlight : "transparent"
         radius: 12
-        z: -1
       }
 
       MouseArea {
-        id: mouseArea
         anchors.fill: parent
         onClicked: {
           cellModel[cellRole] = "";
         }
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
       }
+    }
+
+    MouseArea {
+      anchors.fill: parent
+      visible: !delegate.editable
+      cursorShape: Qt.ArrowCursor
     }
 
     Keys.onPressed: event => {
@@ -171,30 +207,16 @@ NDialog {
     }
   }
 
-  TabView {
-    id: tabView
+  NTabView {
     anchors.fill: parent
 
-    Timer {
-      id: hidePluginsTabTimer
-      interval: 0
-      repeat: false
-      onTriggered: {
-        if (!NPluginModel.some(item => item.plugins.length > 1)) {
-          tabView.removeTab(3); // plugins tab
-        }
-      }
-    }
-    Component.onCompleted: {
-      hidePluginsTabTimer.start();
-    }
-
-    Tab {
+    NTab {
       title: qsTr("General")
 
       NScrollView {
-        id: scrollView
         GridLayout {
+          Layout.margins: 10
+          Layout.bottomMargin: 0
           columns: 3
           Component.onCompleted: {
             if (typeof NSkinModel === undefined) {
@@ -218,9 +240,6 @@ NDialog {
               NSettings.setValue("Language", NLanguageModel[currentIndex].value);
               languageRestartLabel.visible = true;
             }
-            NScrollRedirect {
-              target: scrollView
-            }
           }
           RowLayout {
             Label {
@@ -231,9 +250,6 @@ NDialog {
             }
             Item {
               Layout.fillWidth: true
-            }
-            NScrollRedirect {
-              target: scrollView
             }
           }
 
@@ -249,9 +265,6 @@ NDialog {
             onActivated: {
               NSettings.setValue("Skin", NSkinModel[currentIndex].value);
               skinRestartLabel.visible = true;
-            }
-            NScrollRedirect {
-              target: scrollView
             }
           }
           RowLayout {
@@ -365,6 +378,7 @@ NDialog {
         }
 
         RowLayout {
+          Layout.rightMargin: 10
           visible: Qt.platform.os != "osx" && Qt.platform.os != "windows"
           SettingsCheckBox {
             id: customFileManagerCheckBox
@@ -388,7 +402,7 @@ NDialog {
             HelpDialog {
               id: customFileManagerHelpDialog
               title: qsTr("File Manager Configuration")
-              width: 600
+              contentWidth: 600
 
               Component.onCompleted: {
                 let txt = "";
@@ -412,6 +426,7 @@ NDialog {
         }
 
         RowLayout {
+          Layout.rightMargin: 10
           visible: Qt.platform.os != "osx" && Qt.platform.os != "windows"
           SettingsCheckBox {
             id: customTrashCheckBox
@@ -435,7 +450,7 @@ NDialog {
             HelpDialog {
               id: trashCommandHelpDialog
               title: qsTr("Trash Command Configuration")
-              width: 500
+              contentWidth: 500
 
               Component.onCompleted: {
                 let txt = "";
@@ -459,6 +474,8 @@ NDialog {
         }
 
         RowLayout {
+          Layout.topMargin: 0
+          Layout.margins: 10
           Label {
             text: qsTr("File filters:")
             Layout.alignment: Qt.AlignTop
@@ -474,26 +491,21 @@ NDialog {
             onTextChanged: NSettings.setValue("FileFilters", text)
             Keys.onPressed: filterLineBreaks(event)
 
-            Rectangle {
-              anchors.fill: parent
+            background: Rectangle {
               border.color: parent.activeFocus ? systemPalette.highlight : systemPalette.mid
-              color: "transparent"
-            }
-
-            NScrollRedirect {
-              target: scrollView
+              color: systemPalette.base
             }
           }
         }
       }
     }
 
-    Tab {
+    NTab {
       title: qsTr("Track Information")
 
       NScrollView {
-        id: scrollView
         RowLayout {
+          Layout.margins: 10
           Layout.bottomMargin: 0
 
           GridLayout {
@@ -530,9 +542,6 @@ NDialog {
                 enabled = count > 1;
                 currentIndex = find(NSettings.value("EncodingTrackInfo"));
               }
-              NScrollRedirect {
-                target: scrollView
-              }
             }
 
             Label {
@@ -555,8 +564,8 @@ NDialog {
               id: titleFormatsHelpDialog
               title: qsTr("Title Formats")
 
-              width: 500
-              height: 400
+              contentWidth: 500
+              contentHeight: 400
 
               Component.onCompleted: {
                 let txt = "";
@@ -607,11 +616,9 @@ NDialog {
           }
         }
 
-        Item {
-          Layout.preferredHeight: 5
-        }
-
         RowLayout {
+          Layout.margins: 10
+
           Label {
             text: qsTr("Tooltip offset relative to mouse:")
           }
@@ -625,9 +632,6 @@ NDialog {
             Layout.preferredWidth: 70
             value: NSettings.value("TooltipOffset")[0]
             onValueChanged: NSettings.setValue("TooltipOffset", [tooltipOffsetXSpinBox.value, tooltipOffsetYSpinBox.value])
-            NScrollRedirect {
-              target: scrollView
-            }
           }
 
           Label {
@@ -639,21 +643,18 @@ NDialog {
             Layout.preferredWidth: 70
             value: NSettings.value("TooltipOffset")[1]
             onValueChanged: NSettings.setValue("TooltipOffset", [tooltipOffsetXSpinBox.value, tooltipOffsetYSpinBox.value])
-            NScrollRedirect {
-              target: scrollView
-            }
           }
-        }
-
-        Item {
-          Layout.preferredHeight: 5
         }
 
         Label {
           text: qsTr("Waveform sections:")
+          Layout.leftMargin: 10
+          Layout.rightMargin: 10
         }
 
         RowLayout {
+          Layout.leftMargin: 10
+          Layout.rightMargin: 10
           Layout.fillHeight: false
 
           ColumnLayout {
@@ -697,21 +698,12 @@ NDialog {
 
             TrackInfoTextArea {
               settingsName: "TrackInfo/TopLeft"
-              NScrollRedirect {
-                target: scrollView
-              }
             }
             TrackInfoTextArea {
               settingsName: "TrackInfo/MiddleLeft"
-              NScrollRedirect {
-                target: scrollView
-              }
             }
             TrackInfoTextArea {
               settingsName: "TrackInfo/BottomLeft"
-              NScrollRedirect {
-                target: scrollView
-              }
             }
           }
 
@@ -726,21 +718,12 @@ NDialog {
 
             TrackInfoTextArea {
               settingsName: "TrackInfo/TopCenter"
-              NScrollRedirect {
-                target: scrollView
-              }
             }
             TrackInfoTextArea {
               settingsName: "TrackInfo/MiddleCenter"
-              NScrollRedirect {
-                target: scrollView
-              }
             }
             TrackInfoTextArea {
               settingsName: "TrackInfo/BottomCenter"
-              NScrollRedirect {
-                target: scrollView
-              }
             }
           }
 
@@ -755,21 +738,12 @@ NDialog {
 
             TrackInfoTextArea {
               settingsName: "TrackInfo/TopRight"
-              NScrollRedirect {
-                target: scrollView
-              }
             }
             TrackInfoTextArea {
               settingsName: "TrackInfo/MiddleRight"
-              NScrollRedirect {
-                target: scrollView
-              }
             }
             TrackInfoTextArea {
               settingsName: "TrackInfo/BottomRight"
-              NScrollRedirect {
-                target: scrollView
-              }
             }
           }
         }
@@ -780,85 +754,96 @@ NDialog {
       }
     }
 
-    Tab {
+    NTab {
       title: qsTr("Keyboard")
 
-      Rectangle {
+      Pane {
         clip: true
-        color: "transparent"
+        padding: 10
+        rightPadding: 0
+
+        background: Rectangle {
+          color: "transparent"
+        }
 
         ColumnLayout {
           anchors.fill: parent
-          anchors.margins: 10
+          spacing: -1
 
-          TableView {
-            id: shortcutEditorTable
+          RowLayout {
+            Layout.fillWidth: true
+            Layout.rightMargin: 10
+            spacing: -1
+            ShortcutsTableHeader {
+              text: qsTr("Action")
+            }
+            ShortcutsTableHeader {
+              text: qsTr("Description")
+            }
+            ShortcutsTableHeader {
+              text: qsTr("Shortcut")
+            }
+            ShortcutsTableHeader {
+              text: qsTr("Global Shortcut")
+            }
+          }
+
+          ListView {
+            id: shortcutsTableListView
             model: NShortcutEditorModel
-            alternatingRowColors: false
             Layout.fillWidth: true
             Layout.fillHeight: true
-            property int cellWidth: (shortcutEditorTable.width - shortcutEditorTable.__verticalScrollBar.width) / 4
-            property int cellHeight: 40
-            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+            Layout.minimumHeight: 50
+            clip: true
+            spacing: -1
 
-            rowDelegate: Rectangle {
-              height: shortcutEditorTable.cellHeight
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: ScrollBar {}
+
+            Rectangle {
+              anchors.fill: parent
               color: "transparent"
+              border.width: 1
+              border.color: Qt.platform.os == "osx" ? systemPalette.mid : systemPalette.midlight
+              anchors.rightMargin: 10
             }
 
-            TableViewColumn {
-              title: qsTr("Action")
-              width: shortcutEditorTable.cellWidth
-              delegate: ShortcutsTableTextArea {
+            Rectangle {
+              anchors.fill: parent
+              color: systemPalette.base
+              anchors.rightMargin: 10
+              z: -1
+            }
+
+            delegate: RowLayout {
+              width: shortcutsTableListView.width
+              height: 40
+              spacing: -1
+
+              ShortcutsTableTextArea {
                 editable: false
                 cellModel: model
                 cellRole: "name"
-                NScrollRedirect {
-                  target: shortcutEditorTable
-                }
               }
-            }
-
-            TableViewColumn {
-              title: qsTr("Description")
-              width: shortcutEditorTable.cellWidth
-              delegate: ShortcutsTableTextArea {
+              ShortcutsTableTextArea {
                 editable: false
                 cellModel: model
                 cellRole: "description"
-                NScrollRedirect {
-                  target: shortcutEditorTable
-                }
               }
-            }
-
-            TableViewColumn {
-              title: qsTr("Shortcut")
-              width: shortcutEditorTable.cellWidth
-              delegate: ShortcutsTableTextArea {
+              ShortcutsTableTextArea {
                 cellModel: model
                 cellRole: "shortcut"
-                NScrollRedirect {
-                  target: shortcutEditorTable
-                }
               }
-            }
-
-            TableViewColumn {
-              title: qsTr("Global Shortcut")
-              width: shortcutEditorTable.cellWidth
-              delegate: ShortcutsTableTextArea {
+              ShortcutsTableTextArea {
+                Layout.rightMargin: 10
                 cellModel: model
                 cellRole: "globalShortcut"
-                NScrollRedirect {
-                  target: shortcutEditorTable
-                }
               }
             }
           }
 
           Item {
-            Layout.preferredHeight: 10
+            Layout.preferredHeight: 20
           }
 
           RowLayout {
@@ -881,13 +866,18 @@ NDialog {
                       text: qsTr("Jump #1")
                     }
                     SpinBox {
-                      decimals: 1
-                      stepSize: 0.1
-                      maximumValue: 1000.0
                       Layout.preferredWidth: 70
-                      value: NSettings.value("Jump1")
-                      onValueChanged: NSettings.setValue("Jump1", value)
-                      NScrollRedirect {}
+                      from: 0
+                      to: 10000
+                      stepSize: 1
+                      value: NSettings.value("Jump1") * 10
+                      onValueModified: NSettings.setValue("Jump1", value / 10.0)
+                      textFromValue: function (value, locale) {
+                        return Number(value / 10.0).toLocaleString(locale, 'f', 1);
+                      }
+                      valueFromText: function (text, locale) {
+                        return Number.fromLocaleString(locale, text) * 10;
+                      }
                     }
                   }
 
@@ -896,13 +886,18 @@ NDialog {
                       text: qsTr("Jump #2")
                     }
                     SpinBox {
-                      decimals: 1
-                      stepSize: 0.1
-                      maximumValue: 1000.0
                       Layout.preferredWidth: 70
-                      value: NSettings.value("Jump2")
-                      onValueChanged: NSettings.setValue("Jump2", value)
-                      NScrollRedirect {}
+                      from: 0
+                      to: 10000
+                      stepSize: 1
+                      value: NSettings.value("Jump2") * 10
+                      onValueModified: NSettings.setValue("Jump2", value / 10.0)
+                      textFromValue: function (value, locale) {
+                        return Number(value / 10.0).toLocaleString(locale, 'f', 1);
+                      }
+                      valueFromText: function (text, locale) {
+                        return Number.fromLocaleString(locale, text) * 10;
+                      }
                     }
                   }
 
@@ -911,13 +906,18 @@ NDialog {
                       text: qsTr("Jump #3")
                     }
                     SpinBox {
-                      decimals: 1
-                      stepSize: 0.1
-                      maximumValue: 1000.0
                       Layout.preferredWidth: 70
-                      value: NSettings.value("Jump3")
-                      onValueChanged: NSettings.setValue("Jump3", value)
-                      NScrollRedirect {}
+                      from: 0
+                      to: 10000
+                      stepSize: 1
+                      value: NSettings.value("Jump3") * 10
+                      onValueModified: NSettings.setValue("Jump3", value / 10.0)
+                      textFromValue: function (value, locale) {
+                        return Number(value / 10.0).toLocaleString(locale, 'f', 1);
+                      }
+                      valueFromText: function (text, locale) {
+                        return Number.fromLocaleString(locale, text) * 10;
+                      }
                     }
                   }
                 }
@@ -942,13 +942,18 @@ NDialog {
                       text: qsTr("Increment step")
                     }
                     SpinBox {
-                      decimals: 2
-                      stepSize: 0.01
-                      maximumValue: 0.1
                       Layout.preferredWidth: 70
-                      value: NSettings.value("SpeedStep")
-                      onValueChanged: NSettings.setValue("SpeedStep", value)
-                      NScrollRedirect {}
+                      from: 0
+                      to: 10
+                      stepSize: 1
+                      value: NSettings.value("SpeedStep") * 100
+                      onValueModified: NSettings.setValue("SpeedStep", value / 100.0)
+                      textFromValue: function (value, locale) {
+                        return Number(value / 100.0).toLocaleString(locale, 'f', 2);
+                      }
+                      valueFromText: function (text, locale) {
+                        return Number.fromLocaleString(locale, text) * 100;
+                      }
                     }
                   }
                 }
@@ -973,13 +978,18 @@ NDialog {
                       text: qsTr("Increment step")
                     }
                     SpinBox {
-                      decimals: 2
-                      stepSize: 0.01
-                      maximumValue: 0.1
                       Layout.preferredWidth: 70
-                      value: NSettings.value("PitchStep")
-                      onValueChanged: NSettings.setValue("PitchStep", value)
-                      NScrollRedirect {}
+                      from: 0
+                      to: 10
+                      stepSize: 1
+                      value: NSettings.value("PitchStep") * 100
+                      onValueModified: NSettings.setValue("PitchStep", value / 100.0)
+                      textFromValue: function (value, locale) {
+                        return Number(value / 100.0).toLocaleString(locale, 'f', 2);
+                      }
+                      valueFromText: function (text, locale) {
+                        return Number.fromLocaleString(locale, text) * 100;
+                      }
                     }
                   }
                 }
@@ -990,8 +1000,9 @@ NDialog {
       }
     }
 
-    Tab {
+    NTab {
       title: qsTr("Plugins")
+      visible: NPluginModel.some(item => item.plugins.length > 1)
 
       NScrollView {
         ListView {

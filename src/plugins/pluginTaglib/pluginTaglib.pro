@@ -1,3 +1,5 @@
+QT += core5compat
+
 unix:TARGET = plugin_taglib
 win32:TARGET = PluginTagLib
 

@@ -16,8 +16,7 @@
 #ifndef N_SKIN_LOADER_H
 #define N_SKIN_LOADER_H
 
-class QString;
-class QStringList;
+#include <QStringList>
 
 namespace NSkinLoader
 {

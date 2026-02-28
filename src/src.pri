@@ -1,4 +1,4 @@
-QT += svg widgets
+QT += svg widgets core5compat
 
 QT += quick
 qml.files = $$files(*.qml) $$files(*.js) qmldir

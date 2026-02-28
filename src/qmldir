@@ -1,7 +1,6 @@
 module Nulloy
 NDialog 1.0 dialog.qml
 NScrollView 1.0 scrollView.qml
-NScrollRedirect 1.0 scrollRedirect.qml
 NWindowTitle 1.0 windowTitle.qml
 NResizeHandler 1.0 resizeHandler.qml
 NSvgButton 1.0 svgButton.qml
@@ -11,5 +10,7 @@ NVolumeSlider 1.0 volumeSlider.qml
 NWaveformSlider 1.0 waveformSlider.qml
 NSplitter 1.0 splitter.qml
 NTrackInfoView 1.0 trackInfoView.qml
+NTabView 1.0 tabView.qml
+NTab 1.0 tab.qml
 NCoverImage 1.0 coverImage.qml
 NSizeGrip 1.0 sizeGrip.qml

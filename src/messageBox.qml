@@ -13,39 +13,40 @@
 **
 *********************************************************************/
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls 1.4
-import QtQuick.Dialogs 1.2
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import QtQuick.Dialogs
 
 NDialog {
+  id: dialog
   title: NMessageBoxHandler.title
   standardButtons: NMessageBoxHandler.standardButtons
-  width: 400
+  width: footer.implicitWidth
+  height: contentHeight
+  minimumHeight: contentHeight
+  minimumWidth: footer.implicitWidth
+
+  readonly property real contentHeight: Math.min(textArea.implicitHeight + footer.implicitHeight, 200)
 
   onAccepted: NMessageBoxHandler.closed(true)
   onRejected: NMessageBoxHandler.closed(false)
 
-  ColumnLayout {
+  TextArea {
+    id: textArea
     anchors.fill: parent
-    spacing: 20
+    Layout.fillWidth: true
+    Layout.fillHeight: true
+    readOnly: true
+    wrapMode: Text.WordWrap
+    text: NMessageBoxHandler.text
+    onLinkActivated: Qt.openUrlExternally(link)
+  }
 
-    TextEdit {
-      Layout.fillWidth: true
-      readOnly: true
-      selectByMouse: true
-      wrapMode: Text.WordWrap
-      textFormat: Text.MarkdownText
-      text: NMessageBoxHandler.text
-      onLinkActivated: Qt.openUrlExternally(link)
-    }
-
-    CheckBox {
-      Layout.fillWidth: true
-      visible: NMessageBoxHandler.checkBoxText !== ""
-      text: NMessageBoxHandler.checkBoxText
-      checked: NMessageBoxHandler.checkBoxChecked
-      onCheckedChanged: NMessageBoxHandler.checkBoxChecked = checked
-    }
+  footerExtra: CheckBox {
+    visible: NMessageBoxHandler.checkBoxText !== ""
+    text: NMessageBoxHandler.checkBoxText
+    checked: NMessageBoxHandler.checkBoxChecked
+    onCheckedChanged: NMessageBoxHandler.checkBoxChecked = checked
   }
 }

@@ -12,11 +12,11 @@
 **
 *********************************************************************/
 
-import QtQuick 2.15
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.4
-import QtGraphicalEffects 1.0
-import QtQuick.Window 2.2
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
+import QtQuick.Window
 
 import Nulloy 1.0
 import NSvgImage 1.0
@@ -213,6 +213,7 @@ Rectangle {
               itemDelegate: Text {
                 id: delegate
                 color: "#FFFFFF"
+                topPadding: 1
                 leftPadding: 3
                 rightPadding: 3
                 font.bold: true
@@ -409,7 +410,7 @@ Rectangle {
         }
 
         Text {
-          anchors.topMargin: 2
+          anchors.topMargin: 3
           anchors.leftMargin: 4
           text: itemData.text
           font.bold: itemData.isPlaying

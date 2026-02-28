@@ -13,21 +13,63 @@
 **
 *********************************************************************/
 
-import QtQuick 2.2
-import QtQuick.Dialogs 1.2
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Window
 
-Dialog {
+ApplicationWindow {
+  id: root
   visible: false
   modality: Qt.ApplicationModal
 
+  property alias standardButtons: buttonBox.standardButtons
+  property alias buttonBox: buttonBox
+  property alias footerExtra: footerLeft.data
+
+  function standardButton(button) {
+    return buttonBox.standardButton(button);
+  }
+
   signal closed
+  signal rejected
+  signal accepted
+
+  //Shortcut {
+  //  sequence: StandardKey.Cancel
+  //  onActivated: root.close()
+  //}
+
   onVisibleChanged: {
     if (!visible) {
       closed();
-    } else {
-      // FIXME: flickers:
-      x = NDialogHandler.parentCenterX - width / 2;
-      y = NDialogHandler.parentCenterY - height / 2;
+      //} else {
+      //  // FIXME: flickers:
+      //  x = NDialogHandler.parentCenterX - width / 2;
+      //  y = NDialogHandler.parentCenterY - height / 2;
+    }
+  }
+
+  footer: Pane {
+    padding: 5
+    contentItem: RowLayout {
+      spacing: 10
+
+      Row {
+        id: footerLeft
+        Layout.alignment: Qt.AlignVCenter
+      }
+
+      Item {
+        Layout.fillWidth: true
+      }
+
+      DialogButtonBox {
+        id: buttonBox
+        objectName: "buttonBox"
+        onAccepted: root.close()
+        onRejected: root.close()
+      }
     }
   }
 }

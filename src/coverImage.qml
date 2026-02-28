@@ -13,10 +13,10 @@
 **
 *********************************************************************/
 
-import QtQuick 2.15
+import QtQuick
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 import NImage 1.0
-import QtQuick.Window 2.2
-import QtGraphicalEffects 1.0
 
 NImage {
   id: item
@@ -90,14 +90,24 @@ NImage {
       }
     }
 
-    RectangularGlow {
+    Rectangle {
+      id: glowRect
       anchors.centerIn: parent
       width: popupWrapper.imageWidth
       height: popupWrapper.imageHeight
       color: "black"
+      visible: false
+    }
+
+    DropShadow {
+      anchors.fill: glowRect
+      source: glowRect
+      color: "black"
       opacity: 0.6
-      glowRadius: 30
+      radius: 30
       spread: 0.2
+      samples: 61
+      transparentBorder: true
     }
 
     Rectangle {

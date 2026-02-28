@@ -27,8 +27,9 @@ NMessageBox::NMessageBox(const QString &title, const QString &text,
     });
 
     connect(this, &NDialogHandler::setupRoot, [this](QObject *root) {
-        connect(root, SIGNAL(accepted()), this, SIGNAL(accepted()));
-        connect(root, SIGNAL(rejected()), this, SIGNAL(rejected()));
+        QObject *buttonBox = root->findChild<QObject *>("buttonBox");
+        connect(buttonBox, SIGNAL(accepted()), this, SIGNAL(accepted()));
+        connect(buttonBox, SIGNAL(rejected()), this, SIGNAL(rejected()));
     });
 }
 
