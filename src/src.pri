@@ -70,10 +70,9 @@ build_pass:CONFIG(static, static|shared) {
 system(cp $$SRC_DIR/icons/icon.svg $$TMP_DIR/)
 system(cp $$SRC_DIR/icons/icons.qrc $$TMP_DIR/)
 RESOURCES += $$TMP_DIR/icons.qrc
-CONVERT_CMD = convert
+CONVERT_CMD = magick
 COMPOSITE_CMD = composite
 win32:!unix_mingw {
-    CONVERT_CMD = magick convert
     COMPOSITE_CMD = magick composite
 }
 
