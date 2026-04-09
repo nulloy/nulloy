@@ -332,11 +332,11 @@ NDialog {
           settingsName: "ShowDecibelsVolume"
         }
 
-        SettingsCheckBox {
-          visible: Qt.platform.os == "windows"
-          text: qsTr("Show progress on taskbar")
-          settingsName: "TaskbarProgress"
-        }
+        //SettingsCheckBox {
+        //  visible: Qt.platform.os == "windows"
+        //  text: qsTr("Show progress on taskbar")
+        //  settingsName: "TaskbarProgress"
+        //}
 
         SettingsCheckBox {
           text: qsTr("Display log dialog in case of errors")

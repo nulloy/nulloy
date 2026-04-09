@@ -55,8 +55,8 @@ NActionManager::NActionManager(NPlayer *player) : QObject(player)
     QStyle *style = QApplication::style();
     QList<QIcon> winIcons;
 #ifdef Q_OS_WIN
-    winIcons = NWinIcon::getIcons(QProcessEnvironment::systemEnvironment().value("SystemRoot") +
-                                  "/system32/imageres.dll");
+    //winIcons = NWinIcon::getIcons(QProcessEnvironment::systemEnvironment().value("SystemRoot") +
+    //                              "/system32/imageres.dll");
 #endif
 
     {

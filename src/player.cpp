@@ -44,8 +44,8 @@
 #include "waveformView.h"
 
 #ifdef Q_OS_WIN
-#include "w7TaskBar.h"
-#include "winIcon.h"
+//#include "w7TaskBar.h"
+//#include "winIcon.h"
 #endif
 
 #ifdef Q_OS_MAC
@@ -137,10 +137,10 @@ NPlayer::NPlayer()
     m_trayClickTimer->setSingleShot(true);
 
 #ifdef Q_OS_WIN
-    NW7TaskBar::instance()->setWindow(m_mainWindow);
-    NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
-    connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(),
-            SLOT(setProgress(qreal)));
+    //NW7TaskBar::instance()->setWindow(m_mainWindow);
+    //NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
+    //connect(m_playbackEngine, SIGNAL(positionChanged(qreal)), NW7TaskBar::instance(),
+    //        SLOT(setProgress(qreal)));
 #endif
 
 #ifdef Q_OS_MAC
@@ -429,7 +429,7 @@ void NPlayer::applySettings()
 {
     m_systemTray->setVisible(m_settings->value("TrayIcon").toBool());
 #ifdef Q_OS_WIN
-    NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
+    //NW7TaskBar::instance()->setEnabled(NSettings::instance()->value("TaskbarProgress").toBool());
 #endif
     m_trackInfoModel->loadSettings();
     m_trackInfoModel->updateFileLabels(m_playbackEngine->currentMedia());
@@ -588,16 +588,16 @@ void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
     }
 
 #ifdef Q_OS_WIN
-    if (NW7TaskBar::instance()->isEnabled()) {
-        if (state == N::PlaybackPlaying) {
-            NW7TaskBar::instance()->setState(NW7TaskBar::Normal);
-        } else {
-            if (m_playbackEngine->position() != 0)
-                NW7TaskBar::instance()->setState(NW7TaskBar::Paused);
-            else
-                NW7TaskBar::instance()->setState(NW7TaskBar::NoProgress);
-        }
-    }
+    //if (NW7TaskBar::instance()->isEnabled()) {
+    //    if (state == N::PlaybackPlaying) {
+    //        NW7TaskBar::instance()->setState(NW7TaskBar::Normal);
+    //    } else {
+    //        if (m_playbackEngine->position() != 0)
+    //            NW7TaskBar::instance()->setState(NW7TaskBar::Paused);
+    //        else
+    //            NW7TaskBar::instance()->setState(NW7TaskBar::NoProgress);
+    //    }
+    //}
 #endif
 }
 
