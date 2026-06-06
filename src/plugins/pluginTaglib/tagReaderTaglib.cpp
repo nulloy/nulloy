@@ -302,6 +302,12 @@ QMap<QString, QStringList> NTagReaderTaglib::getTags() const
 
 QMap<QString, QStringList> NTagReaderTaglib::setTags(const QMap<QString, QStringList> &tags)
 {
+    if (!m_isValid) { // workaround to relay the error
+        QMap<QString, QStringList> unsaved;
+        unsaved["Error"] = QStringList() << "Write";
+        return unsaved;
+    }
+
     QMap<QString, QStringList> unsaved = TMapToQMap(
         NTaglib::_tagRef->file()->setProperties(QMapToTMap(tags)));
     if (unsaved.isEmpty()) {

@@ -30,9 +30,17 @@ static void _handleBuffer(GstPad *pad, GstPadProbeInfo *info, gpointer userData)
 {
     QMutexLocker locker(&_mutex);
 
-    int nChannels;
-    GstStructure *structure = gst_caps_get_structure(gst_pad_get_current_caps(pad), 0);
+    GstCaps *caps = gst_pad_get_current_caps(pad);
+    if (!caps) { // pad not negotiated yet
+        return;
+    }
+    int nChannels = 0;
+    GstStructure *structure = gst_caps_get_structure(caps, 0);
     gst_structure_get_int(structure, "channels", &nChannels);
+    gst_caps_unref(caps); // gst_pad_get_current_caps returns a new ref
+    if (nChannels <= 0) { // missing/invalid channel count; avoid divide-by-zero
+        return;
+    }
 
     GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER(info);
     GstMapInfo mapInfo;
