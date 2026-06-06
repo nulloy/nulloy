@@ -137,7 +137,7 @@ NSettings::NSettings(QObject *parent)
         *.mp3 *.ogg *.mp4 *.wma \
         *.flac *.ape *.wav *.wv *.tta \
         *.mpc *.spx *.opus \
-        *.m4a *.aac *.aiff \
+        *.m4a *.aac *.aiff *.aif *.aifc \
         *.xm *.s3m *.it *.mod")
                                  .simplified());
 

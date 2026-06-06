@@ -18,6 +18,8 @@
 
 #include <gst/gst.h>
 
+#include <QMutex>
+
 #include "global.h"
 #include "playbackEngineInterface.h"
 #include "plugin.h"
@@ -47,13 +49,15 @@ private:
     bool m_positionPostponed;
     GstState m_gstState;
     gint64 m_durationNsec;
-    bool m_crossfading;
-    bool m_nextMediaRequestBlock;
 
     QString m_currentMedia;
     int m_currentContext;
-    QString m_bkpMedia;
-    int m_bkpContext;
+
+    QMutex m_nextMediaMutex; // guards the four next/pending fields below
+    QString m_nextMediaFile;
+    int m_nextMediaContext;
+    QString m_pendingMedia;
+    int m_pendingContext;
 
     N::PlaybackState fromGstState(GstState state) const;
     bool gstSetFile(const QString &file, int context, bool prepareNext);
@@ -77,8 +81,7 @@ public:
     Q_INVOKABLE qreal speed() const;
     Q_INVOKABLE qreal pitch() const;
 
-    void _emitNextMediaRequest();
-    bool _nextMediaRequestBlocked();
+    void _handleAboutToFinish();
 
 public slots:
     Q_INVOKABLE void setMedia(const QString &file, int context);

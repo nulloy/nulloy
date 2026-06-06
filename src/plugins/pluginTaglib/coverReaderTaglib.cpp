@@ -42,6 +42,11 @@ void NCoverReaderTaglib::setSource(const QString &file)
 
     if (NTaglib::_tagRef) {
         delete NTaglib::_tagRef;
+        NTaglib::_tagRef = NULL;
+    }
+
+    if (file.isEmpty()) { // release the file
+        return;
     }
 #ifdef WIN32
     NTaglib::_tagRef = new TagLib::FileRef(reinterpret_cast<const wchar_t *>(file.constData()));

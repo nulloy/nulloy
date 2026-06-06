@@ -39,8 +39,14 @@ NPlaylistController::NPlaylistController(NPlaybackEngineInterface &playbackEngin
     connect(m_processVisibleRowsTimer, &QTimer::timeout, this,
             &NPlaylistController::processVisibleRows);
 
+    // Gapless: the engine reads a pre-cached next track on its streaming thread
+    // (NPlaybackEngineGStreamer::_handleAboutToFinish) instead of emitting a blocking
+    // cross-thread request, so this is Qt::QueuedConnection, NOT BlockingQueued --
+    // the blocking variant deadlocked against main-thread seek/set_state and froze
+    // the UI when scrubbing. The successor is pushed eagerly from
+    // on_playbackEngine_mediaChanged() and setRepeatMode().
     connect(&m_playbackEngine, SIGNAL(nextMediaRequested()), this,
-            SLOT(on_playbackEngine_prepareNextMediaRequested()), Qt::BlockingQueuedConnection);
+            SLOT(on_playbackEngine_prepareNextMediaRequested()), Qt::QueuedConnection);
     connect(&m_playbackEngine, SIGNAL(mediaFailed(const QString &, int)), this,
             SLOT(on_playbackEngine_mediaFailed(const QString &, int)));
     connect(&m_playbackEngine, SIGNAL(mediaChanged(const QString &, int)), this,
@@ -81,6 +87,7 @@ void NPlaylistController::setRepeatMode(bool repeat)
     }
     m_settings.setValue("Repeat", repeat);
     emit repeatModeChanged(repeat);
+    on_playbackEngine_prepareNextMediaRequested(); // successor depends on repeat mode
 }
 
 void NPlaylistController::setRowsPerPage(int rows)
@@ -443,6 +450,7 @@ void NPlaylistController::on_playbackEngine_prepareNextMediaRequested()
     }
 
     if (nextPlayingRow < 0) {
+        m_playbackEngine.nextMediaRespond("", 0); // no successor; clear the gapless cache
         return;
     }
 
@@ -474,6 +482,7 @@ void NPlaylistController::on_playbackEngine_mediaChanged(const QString &file, in
     }
 
     m_model->setData(newPlayingRow, NPlaylistModel::IsPlayingtRole, true);
+    on_playbackEngine_prepareNextMediaRequested(); // pre-cache the successor for gapless
 }
 
 void NPlaylistController::on_playbackEngine_mediaFinished(const QString &, int id)
