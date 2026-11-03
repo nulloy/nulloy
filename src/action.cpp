@@ -93,6 +93,9 @@ void NAction::setGlobalSequences(const QList<QKeySequence> &sequences)
     m_globalShortcuts.clear();
 
     for (const QKeySequence &seq : sequences) {
+        if (seq.isEmpty()) { // e.g. "" from an empty shortcut editor cell
+            continue;
+        }
         QxtGlobalShortcut *s = new QxtGlobalShortcut(this);
         connect(s, &QxtGlobalShortcut::activated, this, &QAction::trigger);
         s->setShortcut(seq);
