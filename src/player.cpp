@@ -54,6 +54,7 @@
 
 #ifdef Q_OS_MAC
 #include "macDock.h"
+#include "macMediaKeys.h"
 #endif
 
 #include <QFileDialog>
@@ -138,6 +139,23 @@ NPlayer::NPlayer()
 #ifdef Q_OS_MAC
     NMacDock::instance()->registerClickHandler();
     connect(NMacDock::instance(), SIGNAL(clicked()), m_mainWindow, SLOT(show()));
+
+    NMacMediaKeys *mediaKeys = NMacMediaKeys::instance();
+    mediaKeys->registerHandlers();
+    connect(mediaKeys, &NMacMediaKeys::playPauseRequested, this, &NPlayer::playPause);
+    connect(mediaKeys, &NMacMediaKeys::playRequested, this, [this]() {
+        if (m_playbackEngine->state() != N::PlaybackPlaying) {
+            playPause();
+        }
+    });
+    connect(mediaKeys, &NMacMediaKeys::pauseRequested, m_playbackEngine,
+            &NPlaybackEngineInterface::pause);
+    connect(mediaKeys, &NMacMediaKeys::stopRequested, m_playbackEngine,
+            &NPlaybackEngineInterface::stop);
+    connect(mediaKeys, &NMacMediaKeys::nextRequested, m_playlistWidget,
+            &NPlaylistWidget::playNextItem);
+    connect(mediaKeys, &NMacMediaKeys::prevRequested, m_playlistWidget,
+            &NPlaylistWidget::playPrevItem);
 #endif
 
     m_mainWindow->setTitle(QCoreApplication::applicationName() + " " +
@@ -569,6 +587,17 @@ void NPlayer::on_playbackEngine_mediaChanged(const QString &file, int)
     m_waveformSlider->setMedia(file);
     m_trackInfoWidget->updateFileLabels(file);
     loadCoverArt(file);
+
+#ifdef Q_OS_MAC
+    if (file.isEmpty()) {
+        NMacMediaKeys::instance()->setNowPlaying(QString(), QString(), 0);
+    } else {
+        m_trackInfoReader->setSource(file);
+        NMacMediaKeys::instance()->setNowPlaying(m_trackInfoReader->toString("{%t|%F}"),
+                                                 m_trackInfoReader->toString("%a"),
+                                                 m_playbackEngine->durationMsec());
+    }
+#endif
 }
 
 void NPlayer::loadCoverArt(const QString &file)
@@ -653,6 +682,13 @@ void NPlayer::on_playbackEngine_stateChanged(N::PlaybackState state)
 #endif
 
     m_waveformSlider->setPausedState(state == N::PlaybackPaused);
+
+#ifdef Q_OS_MAC
+    NMacMediaKeys::instance()->setPlaybackState(
+        state == N::PlaybackPlaying  ? NMacMediaKeys::Playing
+        : state == N::PlaybackPaused ? NMacMediaKeys::Paused
+                                     : NMacMediaKeys::Stopped);
+#endif
 }
 
 void NPlayer::showTagEditor(const QString &path)
