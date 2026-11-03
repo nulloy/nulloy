@@ -19,6 +19,7 @@ include($$SRC_DIR/platform/trash.pri)
 win32:include($$SRC_DIR/platform/w7TaskBar.pri)
 win32:include($$SRC_DIR/platform/winIcons.pri)
 mac:include($$SRC_DIR/platform/macDock.pri)
+mac:include($$SRC_DIR/platform/macMediaKeys.pri)
 unix:!mac:include($$SRC_DIR/platform/xcb.pri)
 
 # zlib

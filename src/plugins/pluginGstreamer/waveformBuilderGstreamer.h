@@ -57,6 +57,7 @@ public:
     }
     const NWaveformPeaks &peaks() const { return NAbstractWaveformBuilder::peaks(); }
 
+    void setSampleRate(int rate) { m_peaks.setSampleRate(rate); }
     void handleBuffer(gint16 *pcmBuffer, int nChannels, int nSamples);
 };
 

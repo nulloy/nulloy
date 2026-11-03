@@ -1185,6 +1185,13 @@ padding: 5px;</string>
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="waveformRgbCheckBox">
+         <property name="text">
+          <string>Color waveform by frequency (RGB: bass red, mids green, highs blue)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_5">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

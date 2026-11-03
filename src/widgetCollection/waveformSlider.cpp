@@ -20,6 +20,7 @@
 #include <QPainterPath>
 #include <QStyleOptionFocusRect>
 #include <QStylePainter>
+#include <QtMath>
 
 #include "playlistDataItem.h"
 #include "pluginLoader.h"
@@ -47,6 +48,7 @@ NWaveformSlider::NWaveformSlider(QWidget *parent) : QAbstractSlider(parent)
     m_pausedComposition = QPainter::CompositionMode_Screen;
     m_fileDropBorderColor = QColor(Qt::transparent);
     m_fileDropBackground = QBrush(Qt::NoBrush);
+    m_rgbMode = NSettings::instance()->value("WaveformRgb").toBool();
 
     setMinimum(0);
     setMaximum(10000);
@@ -132,28 +134,32 @@ void NWaveformSlider::checkForUpdate()
 
         // waveform >>
         waveImage.fill(0);
-        painter.begin(&waveImage);
-        painter.setBrush(m_waveBackground);
-        QPen wavePen;
-        wavePen.setWidth(0);
-        wavePen.setColor(m_waveBorderColor);
-        painter.setPen(wavePen);
+        if (m_rgbMode) {
+            drawRgbWave(waveImage);
+        } else {
+            painter.begin(&waveImage);
+            painter.setBrush(m_waveBackground);
+            QPen wavePen;
+            wavePen.setWidth(0);
+            wavePen.setColor(m_waveBorderColor);
+            painter.setPen(wavePen);
 
-        QPainterPath pathPos;
-        QPainterPath pathNeg;
-        const NWaveformPeaks &peaks = m_waveBuilder->peaks();
-        for (int i = 0; i < m_oldBuilderIndex; ++i) {
-            pathPos.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(),
-                           (1 + peaks.positive(i)) * (height() / 2.0));
-            pathNeg.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(),
-                           (1 + peaks.negative(i)) * (height() / 2.0));
+            QPainterPath pathPos;
+            QPainterPath pathNeg;
+            const NWaveformPeaks &peaks = m_waveBuilder->peaks();
+            for (int i = 0; i < m_oldBuilderIndex; ++i) {
+                pathPos.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(),
+                               (1 + peaks.positive(i)) * (height() / 2.0));
+                pathNeg.lineTo((i / (qreal)m_oldBuilderIndex) * m_oldBuilderPos * width(),
+                               (1 + peaks.negative(i)) * (height() / 2.0));
+            }
+            QPainterPath fullPath(pathNeg);
+            fullPath.connectPath(pathPos.toReversed());
+            fullPath.closeSubpath();
+            painter.setRenderHint(QPainter::Antialiasing);
+            painter.drawPath(fullPath);
+            painter.end();
         }
-        QPainterPath fullPath(pathNeg);
-        fullPath.connectPath(pathPos.toReversed());
-        fullPath.closeSubpath();
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.drawPath(fullPath);
-        painter.end();
         // << waveform
 
         // main background >>
@@ -175,7 +181,21 @@ void NWaveformSlider::checkForUpdate()
         QList<QBrush> brushes;
         brushes << m_progressPlayingBackground << m_progressPausedBackground
                 << m_remainingPlayingBackground << m_remainingPausedBackground;
+        // RGB mode keeps the wave colors intact and marks progress by brightness instead
+        QList<qreal> rgbOpacities;
+        rgbOpacities << 1.0 << 0.85 << 0.45 << 0.35;
         for (int i = 0; i < images.size(); ++i) {
+            if (m_rgbMode) {
+                painter.begin(images[i]);
+                images[i]->fill(0);
+                painter.setOpacity(rgbOpacities[i]);
+                painter.drawImage(0, 0, waveImage);
+                painter.setOpacity(1.0);
+                painter.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
+                painter.drawImage(0, 0, m_backgroundImage);
+                painter.end();
+                continue;
+            }
             painter.begin(images[i]);
             images[i]->fill(0);
             painter.setPen(Qt::NoPen);
@@ -192,6 +212,82 @@ void NWaveformSlider::checkForUpdate()
         update();
         m_needsUpdate = false;
     }
+}
+
+void NWaveformSlider::drawRgbWave(QImage &image)
+{
+    const NWaveformPeaks &peaks = m_waveBuilder->peaks();
+    int nPeaks = qMin(m_oldBuilderIndex, peaks.size());
+    if (nPeaks <= 0) {
+        return;
+    }
+
+    // normalize each band to its own maximum so that all three contribute
+    qreal maxLow = 0, maxMid = 0, maxHigh = 0;
+    for (int i = 0; i < nPeaks; ++i) {
+        maxLow = qMax(maxLow, peaks.low(i));
+        maxMid = qMax(maxMid, peaks.mid(i));
+        maxHigh = qMax(maxHigh, peaks.high(i));
+    }
+    if (maxLow <= 0)
+        maxLow = 1;
+    if (maxMid <= 0)
+        maxMid = 1;
+    if (maxHigh <= 0)
+        maxHigh = 1;
+
+    qreal dpr = image.devicePixelRatio();
+    int nColumns = qCeil(m_oldBuilderPos * width() * dpr); // device pixels already built
+    qreal halfHeight = height() / 2.0;
+
+    QPainter painter(&image);
+    QPen pen;
+    pen.setWidthF(1.0 / dpr);
+    pen.setCapStyle(Qt::FlatCap);
+
+    for (int c = 0; c < nColumns; ++c) {
+        int i0 = qFloor((qreal)c / nColumns * nPeaks);
+        int i1 = qMax(i0 + 1, qFloor((qreal)(c + 1) / nColumns * nPeaks));
+        i1 = qMin(i1, nPeaks);
+        if (i0 >= nPeaks) {
+            break;
+        }
+
+        qreal pos = 0, neg = 0, low = 0, mid = 0, high = 0;
+        for (int i = i0; i < i1; ++i) {
+            pos = qMax(pos, peaks.positive(i));
+            neg = qMin(neg, peaks.negative(i));
+            low = qMax(low, peaks.low(i));
+            mid = qMax(mid, peaks.mid(i));
+            high = qMax(high, peaks.high(i));
+        }
+
+        low /= maxLow;
+        mid /= maxMid;
+        high /= maxHigh;
+        qreal strongest = qMax(low, qMax(mid, high));
+        QColor color;
+        if (strongest > 0) {
+            color.setRgbF(low / strongest, mid / strongest, high / strongest);
+        } else {
+            color = QColor(Qt::darkGray);
+        }
+
+        pen.setColor(color);
+        painter.setPen(pen);
+        qreal x = (c + 0.5) / dpr;
+        painter.drawLine(QPointF(x, (1 + neg) * halfHeight), QPointF(x, (1 + pos) * halfHeight));
+    }
+}
+
+void NWaveformSlider::setRgbMode(bool enabled)
+{
+    if (m_rgbMode == enabled) {
+        return;
+    }
+    m_rgbMode = enabled;
+    m_needsUpdate = true;
+    checkForUpdate();
 }
 
 void NWaveformSlider::paintEvent(QPaintEvent *)

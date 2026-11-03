@@ -56,6 +56,7 @@ public:
     const NWaveformPeaks &peaks() const { return NAbstractWaveformBuilder::peaks(); }
 
     void prepareBuffer(uint8_t **pcmBuffer, unsigned int size);
+    void setSampleRate(int rate) { m_peaks.setSampleRate(rate); }
     void handleBuffer(uint8_t *pcmBuffer, unsigned int nChannels, unsigned int nSamples);
 
 private slots:

@@ -30,9 +30,19 @@ static void _handleBuffer(GstPad *pad, GstPadProbeInfo *info, gpointer userData)
 {
     QMutexLocker locker(&_mutex);
 
-    int nChannels;
-    GstStructure *structure = gst_caps_get_structure(gst_pad_get_current_caps(pad), 0);
+    int nChannels = 0;
+    int rate = 0;
+    GstCaps *caps = gst_pad_get_current_caps(pad);
+    if (!caps) {
+        return;
+    }
+    GstStructure *structure = gst_caps_get_structure(caps, 0);
     gst_structure_get_int(structure, "channels", &nChannels);
+    gst_structure_get_int(structure, "rate", &rate);
+    gst_caps_unref(caps);
+    if (nChannels <= 0) {
+        return;
+    }
 
     GstBuffer *buffer = GST_PAD_PROBE_INFO_BUFFER(info);
     GstMapInfo mapInfo;
@@ -41,6 +51,7 @@ static void _handleBuffer(GstPad *pad, GstPadProbeInfo *info, gpointer userData)
     int nSamples = (mapInfo.size / sizeof(gint16)) / nChannels;
 
     NWaveformBuilderGstreamer *obj = reinterpret_cast<NWaveformBuilderGstreamer *>(userData);
+    obj->setSampleRate(rate);
     obj->handleBuffer(pcmBuffer, nChannels, nSamples);
     gst_buffer_unmap(buffer, &mapInfo);
 }

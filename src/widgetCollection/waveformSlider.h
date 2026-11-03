@@ -57,7 +57,9 @@ private:
     float m_oldBuilderPos;
     bool m_hasMedia;
     bool m_needsUpdate;
+    bool m_rgbMode;
 
+    void drawRgbWave(QImage &image);
     void mousePressEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent *event);
     void paintEvent(QPaintEvent *event);
@@ -74,6 +76,7 @@ public slots:
     void setMedia(const QString &file);
     void setPausedState(bool);
     void setValue(qreal value);
+    void setRgbMode(bool enabled);
 
 private slots:
     void checkForUpdate();

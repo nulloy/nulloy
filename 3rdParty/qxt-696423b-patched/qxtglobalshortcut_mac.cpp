@@ -49,8 +49,11 @@ OSStatus qxt_mac_handle_hot_key(EventHandlerCallRef nextHandler, EventRef event,
     {
         EventHotKeyID keyID;
         GetEventParameter(event, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(keyID), NULL, &keyID);
-        Identifier id = keyIDs.key(keyID.id);
-        QxtGlobalShortcutPrivate::activateShortcut(id.second, id.first);
+        // ignore hot keys that are no longer (or were never) tracked
+        const Identifier unknown(~0u, ~0u);
+        Identifier id = keyIDs.key(keyID.id, unknown);
+        if (id != unknown)
+            QxtGlobalShortcutPrivate::activateShortcut(id.second, id.first);
     }
     return noErr;
 }

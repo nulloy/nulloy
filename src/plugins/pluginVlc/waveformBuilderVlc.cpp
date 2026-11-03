@@ -38,11 +38,11 @@ static void _handleBuffer(void *userData, uint8_t *pcmBuffer, unsigned int nChan
     QMutexLocker locker(&_mutex);
 
     Q_UNUSED(pts);
-    Q_UNUSED(frequency);
     Q_UNUSED(bitsPerSample);
     Q_UNUSED(size);
 
     NWaveformBuilderVlc *obj = reinterpret_cast<NWaveformBuilderVlc *>(userData);
+    obj->setSampleRate(frequency);
     obj->handleBuffer(pcmBuffer, nChannels, nSamples);
 }
 
