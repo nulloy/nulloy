@@ -119,6 +119,7 @@ NSettings::NSettings(QObject *parent)
     initValue("LoadNextSort", QDir::Name);
     initValue("Volume", 0.8);
     initValue("ShowDecibelsVolume", false);
+    initValue("WaveformRgb", false);
 
 #ifdef Q_OS_WIN
     initValue("TaskbarProgress", true);

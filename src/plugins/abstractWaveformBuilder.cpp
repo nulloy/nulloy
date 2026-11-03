@@ -21,6 +21,11 @@
 
 #include "common.h"
 
+// Written before the compressed payload. Bump CACHE_VERSION whenever the
+// NWaveformPeaks serialization format changes; mismatching caches are ignored.
+#define CACHE_MAGIC 0x4E50454B // "NPEK"
+#define CACHE_VERSION 2
+
 NAbstractWaveformBuilder::NAbstractWaveformBuilder()
 {
     m_cacheLoaded = false;
@@ -40,6 +45,15 @@ void NAbstractWaveformBuilder::cacheLoad()
     QByteArray compressed;
     cache.open(QIODevice::ReadOnly);
     QDataStream inFile(&cache);
+    quint32 magic = 0;
+    quint32 version = 0;
+    inFile >> magic >> version;
+    if (magic != CACHE_MAGIC || version != CACHE_VERSION) {
+        // old or foreign format, will be overwritten on next save
+        cache.close();
+        m_cacheLoaded = true;
+        return;
+    }
     inFile >> compressed;
     cache.close();
 
@@ -76,7 +90,7 @@ void NAbstractWaveformBuilder::cacheSave()
     QFile cache(m_cacheFile);
     QDataStream outFile(&cache);
     cache.open(QIODevice::WriteOnly);
-    outFile << compressed;
+    outFile << (quint32)CACHE_MAGIC << (quint32)CACHE_VERSION << compressed;
     cache.close();
 }
 
